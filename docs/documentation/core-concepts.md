@@ -1,0 +1,467 @@
+<!--
+   Copyright 2026 UCP Authors
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+
+# Core Concepts { #core-concepts }
+
+The Universal Commerce Protocol (UCP) is an open standard for interoperability
+between commerce entities. It defines a common language and functional
+primitives so that platforms and businesses can interoperate securely and
+reliably across commercial verticals.
+
+This document provides the detailed technical specification for UCP.
+For a complete definition of all data models and schemas, see the
+[Schema Reference](../specification/reference.md).
+
+!!! note "Terminology"
+    Throughout this documentation, **Platform** refers to any entity that
+    *consumes* capabilities — an app, an AI agent, a procurement system, or
+    another business. **Business** refers to any entity that *exposes*
+    capabilities — a retailer, a supplier, a service provider, or any other
+    participant offering commerce functionality. These roles are defined by
+    direction of capability flow, not by industry vertical, making UCP equally
+    applicable to B2C, B2B, and agent-to-agent commerce.
+
+Its primary goal is to enable:
+
+* **Platforms:** To dynamically discover and consume the capabilities a
+    business exposes.
+* **Businesses:** To declare what they offer and how they operate — once —
+    and have any compatible platform discover and use it without bespoke
+    integrations.
+* **Payment & Credential Providers:** To expose their services —
+    tokenization, vaulting, credential issuance — once, and power secure
+    commerce for users across any compatible platform and business.
+
+## High level architecture { #high-level-architecture }
+
+<!-- Responsive image: shows ucp-diagram-mobile.jpg on small screens (<=600px)
+     and ucp-diagram.jpg on larger screens. -->
+<picture>
+  <source media="(max-width: 600px)" srcset="../assets/ucp-diagram-mobile.jpg">
+  <img alt="UCP Diagram" src="../assets/ucp-diagram.jpg">
+</picture>
+
+## Key Goals of UCP { #key-goals-of-ucp }
+
+* **Interoperability:** Bridge the gap between platforms, businesses,
+    and payment ecosystems.
+* **Discovery:** Allow platforms to dynamically discover what
+    capabilities a business supports (e.g., "Do they support checkout?",
+    "Do they support fulfillment options or identity linking?").
+* **Security:** Facilitate secure, standards-based (OAuth 2.0, PCI-DSS
+    compliant patterns) exchanges of sensitive user and payment data.
+* **Agentic Commerce:** Enable AI agents to act on behalf of varied principals
+    (an individual, organization, or another agent) and support different
+    modalities (human-in-the-loop, fully autonomous).
+
+## Roles & Participants { #roles-participants }
+
+UCP defines the interactions between four distinct actors, each playing
+a specific role in the interaction lifecycle.
+
+### Platform (Application/Agent) { #platform-applicationagent }
+
+The platform is any entity that consumes capabilities exposed by a business —
+an AI agent, a mobile app, a procurement system, or another business acting
+as a capability consumer. It orchestrates the interaction by discovering what
+the business supports and invoking the appropriate capabilities on behalf of
+its principal (a user, an automated process, or another system).
+
+* **Responsibilities:** Discovering business capabilities via profiles,
+    initiating and managing capability sessions, and acting on behalf of its
+    principal within the bounds of negotiated capabilities.
+* **Examples:** AI Shopping Assistants, Super Apps, Search Engines,
+    B2B Procurement Systems.
+
+### Business { #business }
+
+The entity exposing capabilities. In transactional contexts, the business
+typically acts as the **Merchant of Record (MoR)**, retaining financial
+liability and ownership of the transaction — though UCP's capability model
+is not limited to transactional use cases.
+
+* **Responsibilities:** Publishing a UCP profile, declaring supported
+    services, capabilities and extensions, processing capability invocations
+    which may be stateful or stateless.
+* **Examples:** Retailers, Airlines, Hotel Chains, Service Providers,
+    Suppliers, Distributors.
+
+### Credential Provider (CP) { #credential-provider-cp }
+
+A trusted entity responsible for securely managing and sharing sensitive user
+data, particularly payment instruments and shipping addresses.
+
+* **Responsibilities:** Authenticating the user, issuing payment tokens (to
+    keep raw card data off the platform), and holding PII securely to minimize
+    compliance scope for other parties.
+* **Examples:** Digital Wallets (e.g., Google Wallet, Apple Pay), Identity
+    Providers.
+
+### Payment Service Provider (PSP) { #payment-service-provider-psp }
+
+The financial infrastructure provider that processes payments on behalf of
+businesses.
+
+* **Responsibilities:** Authorizing and capturing transactions, handling
+    settlements, and communicating with card networks. The PSP often interacts
+    directly with tokens provided by the Credential Provider.
+* **Examples:** Stripe, Adyen, PayPal, Braintree, Chase Paymentech.
+
+## Core Concepts Summary { #core-concepts-summary }
+
+UCP revolves around three fundamental constructs that define how entities
+interact.
+
+### Capabilities { #capabilities }
+
+Capabilities are discrete, versioned features that a Business declares it
+supports. They are the "verbs" of the protocol — units of functionality that
+Platforms can discover, negotiate, and invoke.
+
+Each capability is identified by a reverse-domain name (e.g.,
+`dev.ucp.shopping.checkout`) and carries a date-based version. Capabilities
+are declared in the Business's UCP profile at `/.well-known/ucp`, negotiated
+by exact version, and confirmed in every response so that the Platform always
+knows the active feature set for a given interaction. UCP-authored `dev.ucp.*`
+capabilities and extensions are versioned in lockstep with the specification:
+each declares the date `D` of the UCP release it ships in. Third-party
+extensions publish versions on their own cadence.
+
+The following are examples of capabilities defined in UCP — see the
+[Specification](../specification/overview/index.md) for the authoritative and
+up-to-date list.
+
+| Capability | Description |
+| :--- | :--- |
+| `dev.ucp.shopping.checkout` | Initiates and completes purchase sessions |
+| `dev.ucp.shopping.cart` | Pre-checkout cart management |
+| `dev.ucp.shopping.catalog.search` | Search across a business catalog |
+| `dev.ucp.shopping.catalog.lookup` | Retrieve a specific product by ID |
+| `dev.ucp.shopping.order` | Order lifecycle events |
+| `dev.ucp.shopping.permalink` | Shareable links to pre-populated carts and products |
+| `dev.ucp.common.identity_linking` | OAuth-based account linking |
+| `dev.ucp.common.location.search` | Search for physical stores and pickup locations |
+| `dev.ucp.common.location.lookup` | Retrieve location details, operating hours, and amenities |
+| `dev.ucp.common.ask` | Natural-language questions about a business's resources, policies, and services |
+| `dev.ucp.lodging.booking` | Initiates and completes booking session for hotels |
+
+### Extensions { #extensions }
+
+Extensions optionally augment a base capability. They use the
+`extends` field to declare their parent(s) and compose onto the base schema
+using JSON Schema `allOf`. Extensions appear in `ucp.capabilities{}` alongside
+core capabilities.
+
+<!-- ucp:example schema=profile def=business_schema target=$.ucp.capabilities -->
+```json
+{
+  "dev.ucp.shopping.fulfillment": [
+    {
+      "version": "{{ ucp_version }}",
+      "extends": "dev.ucp.shopping.checkout",
+      "spec": "https://ucp.dev/{{ ucp_version }}/specification/shopping/extensions/fulfillment",
+      "schema": "https://ucp.dev/{{ ucp_version }}/schemas/shopping/fulfillment.json"
+    }
+  ]
+}
+```
+
+An extension that declares `extends` without its parent in the negotiated
+intersection is automatically pruned. This ensures extension coherence —
+you never activate a discount extension without the checkout it extends.
+
+The following are examples of extensions defined in UCP — see the
+[Specification](../specification/overview/index.md) for the authoritative and
+up-to-date list.
+
+| Extension | Extends | Description |
+| :--- | :--- | :--- |
+| `dev.ucp.shopping.discount` | checkout, cart | Discount codes and promotions |
+| `dev.ucp.shopping.fulfillment` | checkout | Shipping and delivery options |
+| `dev.ucp.shopping.buyer_consent` | checkout, cart | Explicit consent capture |
+| `dev.ucp.common.loyalty` | checkout, cart, catalog | Member benefits, rewards, and points earning |
+| `dev.ucp.common.payment.authentication` | checkout | Browser-surface device data collection and 3DS challenges |
+| `dev.ucp.common.payment.ap2_mandate` | checkout | Non-repudiable authorization for autonomous commerce |
+| `dev.ucp.common.payment.split_payments` | checkout | Multi-instrument allocation and split settlements |
+| `dev.ucp.common.payment.terms` | checkout | Deposits, installments, and deferred payment schedules |
+
+### Services { #services }
+
+**Services** group the operations and events for a vertical or common domain under a
+reverse-domain registry key (e.g., `dev.ucp.shopping`, `dev.ucp.common`). The key identifies the
+service: a service declares *what* functionality exists for that vertical or domain, and
+each entry in its array declares *how* it is accessed over a transport binding.
+
+A single service can be accessed via multiple transport bindings:
+
+| Transport | Format | Best For |
+| :--- | :--- | :--- |
+| **REST** | OpenAPI 3.1.0 | Standard server-to-server integrations |
+| **MCP** | OpenRPC | AI agents via Model Context Protocol |
+| **A2A** | Agent Card | Agent-to-Agent protocol integrations |
+| **Embedded** | OpenRPC | Embedded integrations |
+
+A Business declares which transport bindings it supports within each service;
+Platforms pick whichever fits their context — an AI agent may prefer MCP, a
+traditional web app may use REST. Every UCP-defined service declares an explicit
+`version` equal to the selected `ucp.version`, repeated on every entry since they
+differ only by transport binding. Transport bindings have no separate version.
+
+Service namespaces are also UCP's extensibility mechanism for new verticals.
+Businesses opt in by declaring which services they support.
+
+## Discovery & Capability Negotiation { #discovery-capability-negotiation }
+
+UCP uses a profile-based discovery model. Every business publishes a
+machine-readable profile at `/.well-known/ucp` that declares which services,
+capabilities, and payment handlers they support. Platforms advertise their
+own profile URL on each request via the `UCP-Agent` header.
+
+```text
+POST /checkout-sessions HTTP/1.1
+UCP-Agent: profile="https://agent.example/profiles/shopping-agent.json"
+```
+
+This design enables **permissionless onboarding** — any platform with a
+discoverable profile can interact with any business without prior registration.
+Businesses may additionally establish trust with known platforms through
+out-of-band onboarding & verification mechanisms (API keys, OAuth
+credentials, mTLS certificates).
+
+### Capability Intersection { #capability-intersection }
+
+Capability negotiation follows a **server-selects** architecture. The business
+determines the active capabilities by computing the intersection of its own
+declared capabilities with those in the platform's profile:
+
+1. **Intersect by name** — Only capabilities both parties declare are
+   candidates.
+2. **Select version** — For each matched capability, compute the set of
+   versions present in both the business and platform arrays. Select the
+   highest (latest date). If no mutual version exists, exclude the capability.
+3. **Prune orphaned extensions** — Extensions are removed if **none** of their
+   parent capabilities are in the intersection. Pruning repeats until stable
+   (handles chains).
+
+The result is a minimal, mutually compatible capability set. Businesses
+include the active capabilities in every response so platforms always know
+which features apply to a given interaction.
+
+### Profile Structure { #profile-structure }
+
+Both business and platform profiles share a common base structure — a `ucp`
+object declaring protocol version, services, capabilities, and payment handlers,
+alongside a `keys` array of JWK public keys (a valid
+[RFC 7517](https://datatracker.ietf.org/doc/html/rfc7517) JWK Set,
+reusable as a Web Bot Auth key source). The `ucp` object differs
+between the two: the business profile uses a business-specific schema
+(hosted at
+`/.well-known/ucp`), while the platform profile uses a platform-specific schema
+(hosted at a URI the platform advertises per-request). This dual-purpose profile
+— capabilities *and* keys in a single document — means discovery and
+authentication are resolved together.
+
+<!-- ucp:example schema=profile def=business_schema -->
+```json
+{
+  "ucp": {
+    "version": "{{ ucp_version }}",
+    "services": {
+      "dev.ucp.shopping": [
+        {
+          "version": "{{ ucp_version }}",
+          "spec": "https://ucp.dev/{{ ucp_version }}/specification/overview/",
+          "transport": "rest",
+          "schema": "https://ucp.dev/{{ ucp_version }}/services/shopping/rest.openapi.json",
+          "endpoint": "https://business.example.com/ucp/v1"
+        }
+      ]
+    },
+    "capabilities": {
+      "dev.ucp.shopping.checkout": [{
+        "version": "{{ ucp_version }}",
+        "spec": "https://ucp.dev/{{ ucp_version }}/specification/shopping/checkout",
+        "schema": "https://ucp.dev/{{ ucp_version }}/schemas/shopping/checkout.json"
+      }],
+      "dev.ucp.shopping.fulfillment": [{
+        "version": "{{ ucp_version }}",
+        "spec": "https://ucp.dev/{{ ucp_version }}/specification/shopping/extensions/fulfillment",
+        "schema": "https://ucp.dev/{{ ucp_version }}/schemas/shopping/fulfillment.json",
+        "extends": "dev.ucp.shopping.checkout"
+      }]
+    },
+    "payment_handlers": {
+      "com.example.processor_tokenizer": [{
+        "id": "processor_tokenizer",
+        "version": "{{ ucp_version }}",
+        "spec": "https://example.com/specs/payments/processor_tokenizer",
+        "schema": "https://example.com/specs/payments/merchant_tokenizer.json"
+      }]
+    }
+  },
+  "keys": [{ "kid": "key_2026", "kty": "EC", "crv": "P-256", "x": "WbbXwVYGdJoP4Xm3qCkGvBRcRvKtEfXDbWvPzpPS8LA", "y": "sP4jHHxYqC89HBo8TjrtVOAGHfJDflYxw7MFMxuFMPY", "alg": "ES256" }]
+}
+```
+
+## Namespace Governance { #namespace-governance }
+
+UCP uses reverse-domain naming to embed governance authority directly into its
+reverse-domain identifiers. This eliminates the need for a central registry —
+domain owners control their own namespace.
+
+```text
+{reverse-domain}.{service}.{capability}
+```
+
+| Name | Authority | Who governs |
+| :--- | :--- | :--- |
+| `dev.ucp.shopping.checkout` | ucp.dev | UCP governing body |
+| `dev.shopify.catalog` | shopify.dev | Shopify |
+| `com.example.payments.installments` | example.com | example.com |
+
+Reverse-domain names are used both as collision-safe **identifiers** (keys and
+references) and by **entities** — capabilities, services, and payment
+handlers — that declare a `schema` URL. An entity's `schema` URL must
+originate from its namespace authority domain. This guarantees
+**provenance** — that the reverse-domain name is controlled by the domain
+owner — not that the entity is trustworthy; whether to trust or support it
+remains the client's decision.
+
+Platforms **MUST** validate this binding for declared `schema` URLs and **MUST**
+reject entities that fail it. Identifiers carry no fetched URL, and the `spec`
+(documentation) URL is not authority-bound (any `https` origin). See
+[Authority Binding](../specification/overview/index.md#authority-binding) for the
+normative algorithm.
+
+The `dev.ucp.*` namespace is reserved exclusively for capabilities governed by
+the UCP Tech Council responsible for the capability's domain. Any vendor can
+define and publish capabilities under their own domain — `org.acme.*` — without
+UCP maintainer approval. Vendor capabilities follow the same extension model,
+meaning they can extend UCP base capabilities (e.g., `org.acme.loyalty`
+extending `dev.ucp.shopping.checkout`) or define entirely new ones. Because
+negotiation is always opt-in, vendor capabilities only activate when both parties
+declare them, keeping the protocol decentralized by design.
+
+## Payment Architecture { #payment-architecture }
+
+UCP decouples payment instrument acceptance from payment processing to solve
+the N-to-N complexity problem between platforms, businesses, and payment
+processors.
+
+### The Trust Triangle { #the-trust-triangle }
+
+In this section, "Payment Credential Provider" refers to the CP and/or PSP
+roles defined above; depending on the payment handler, they may be the same
+entity or distinct.
+
+The payment model is built on three bilateral trust relationships:
+
+1. **Business ↔ Payment Credential Provider** — A pre-existing legal and
+   technical relationship; the business holds API keys and a contract with
+   the payment credential provider.
+2. **Platform ↔ Payment Credential Provider** — The platform interacts with
+   the payment credential provider's interface (e.g., an iframe or API) to
+   tokenize data, but is not the "owner" of the funds.
+3. **Platform ↔ Business** — The platform passes the result (a token or
+   mandate) to the business to finalize the order.
+
+Credentials flow **platform → business** only; businesses **MUST NOT** echo
+credentials back in responses.
+
+### Payment Handlers { #payment-handlers }
+
+Payment Handlers are **specifications**, not entities. They define how a
+particular payment instrument is acquired and processed. The distinction:
+
+* **Credential Provider (CP) / PSP** — The participant(s) that issue tokens
+  and process payments. Depending on the handler, these may be the same
+  entity or separate ones (e.g., Google Pay tokenizes; the business's PSP
+  processes).
+* **Payment Handler** — The specification that defines the protocol
+  (e.g., `com.google.pay`, `dev.shopify.shop_pay`)
+
+The 3-step payment lifecycle:
+
+1. **Negotiation** — The business advertises available payment handlers in its
+   profile and checkout response based on contents and negotiated
+   properties of the checkout.
+2. **Acquisition** — The platform executes the handler's logic to acquire a
+   payment instrument (token or encrypted payload) directly from the CP.
+3. **Completion** — The platform submits the instrument to the business, which
+   charges funds via its PSP integration.
+
+## Security & Authentication { #security-authentication }
+
+### Identity & Key Discovery { #identity-key-discovery }
+
+UCP profiles serve a dual purpose: declaring capabilities **and** publishing
+signing keys. Both parties resolve keys from the same profile document used for
+capability negotiation, eliminating a separate key management step.
+
+Key lookup:
+
+1. Obtain the signer's profile URL (from `UCP-Agent` header or
+   `/.well-known/ucp`).
+2. Fetch and cache the profile.
+3. Match the `keyid` from `Signature-Input` to a `kid` in `keys[]`.
+4. Verify the signature using the corresponding public key.
+
+### Authentication Mechanisms { #authentication-mechanisms }
+
+UCP supports multiple authentication models:
+
+| Mechanism | Onboarding | Notes |
+| :--- | :--- | :--- |
+| **HTTP Message Signatures** ([RFC 9421](https://www.rfc-editor.org/rfc/rfc9421)) | Permissionless | Keys discovered from profile; no prior exchange needed |
+| **OAuth 2.0** | Pre-established | Client credentials or authorization code |
+| **API Keys** | Pre-established | Pre-shared secrets exchanged out-of-band |
+| **mTLS** | Pre-established | Mutual TLS with client certificates |
+
+HTTP Message Signatures are the only mechanism that enables permissionless
+interaction — public keys are discovered from each party's profile, with no
+prior credential exchange.
+
+When a business emits updates via webhook, its identity is asserted the same
+way: the request carries a `UCP-Agent` header pointing to the business's
+profile, and the platform verifies the signature against the signing keys
+published there.
+
+### Identity Linking { #identity-linking }
+
+The `dev.ucp.common.identity_linking` capability enables a platform to obtain
+OAuth 2.0 authorization to act on behalf of a user at a business — unlocking
+loyalty benefits, personalized offers, wishlists, and authenticated checkouts.
+Businesses publish their OAuth 2.0 server metadata at
+`/.well-known/oauth-authorization-server`.
+
+## Versioning { #versioning }
+
+UCP uses date-based version identifiers (`YYYY-MM-DD`). A UCP release `D` is a
+snapshot of the core protocol — its services and transport bindings,
+capabilities, extensions, and shared schemas — published together as one
+internally compatible set. A profile's `ucp.version` selects that snapshot, and
+the match is exact: an older date is available only when the Business
+advertises it in `supported_versions`. A published snapshot can gain approved
+backwards-compatible additions over time; copies fetched earlier remain valid.
+
+Every UCP-defined service, capability, and extension in release `D` declares
+version `D`. Third-party extensions and payment handlers are versioned by their
+authors, independently of UCP releases.
+
+See [Protocol Version](../specification/overview/index.md#protocol-version) for version
+discovery, [Component Versioning and Release Snapshots](../specification/overview/index.md#component-versioning-and-release-snapshots)
+for the normative release contract, and [Versioning](../versioning.md) for the
+release-branch and backport process.

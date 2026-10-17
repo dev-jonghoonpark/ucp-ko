@@ -1,0 +1,73 @@
+<!--
+   Copyright 2026 UCP Authors
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+
+# Roadmap { #roadmap }
+
+This roadmap is meant to provide transparency into our strategic priorities and
+to align our partners on the critical path toward a fully agentic, global
+commerce standard. Our goal is to move beyond isolated transactions and build a
+cohesive, intelligent commerce layer that works across borders and verticals.
+
+**Note:** This roadmap reflects our current direction and intends to guide
+planning, but it does not constitute a commitment to deliver specific features.
+Our approach to these challenges may evolve, and initiatives are subject to
+change, removal, or addition as business priorities shift and we receive
+community feedback.
+
+## Upcoming roadmap priorities { #upcoming-roadmap-priorities }
+
+### Deeper support for the full consumer journey { #deeper-support-for-the-full-consumer-journey }
+
+To move beyond isolated transactions, we are expanding the protocol's scope to
+tackle key user journeys such as multi-item checkout, loyalty, and lifecycle
+management, while ensuring the business's brand and logic remain central to all
+shopping experiences. With product discovery, cart building, and post-order
+management now part of the specification, key upcoming initiatives include:
+
+* **Loyalty & Member benefits:** Capabilities to enable loyalty and member
+    benefits to help users find the best value and businesses achieve a deeper
+    connection with their consumers through account linking.
+* **Native cross-sell and upsell modules:** Capabilities for businesses to
+    provide personalized recommendations and upsells based on user context.
+* **Local & Omni-Channel Journeys:** Protocol support for BOPIS and store locators,
+    enabling deep local experiences such as grocery shopping, local buying, and
+    seamless omni-channel purchasing experiences.
+
+### Support for global markets { #support-for-global-markets }
+
+We are building a scalable ecosystem that is inclusive of all business sizes and
+geographies, ensuring that "simple and open" means accessible to everyone. We
+plan to do this through a phased rollout across markets, including India,
+Asia Pacific, Latin America, and others. We are adapting the protocol to support
+broader regional use cases and localized payment interoperability.
+
+### Expanding across industries { #expanding-across-industries }
+
+We are scaling UCP across a broader range of industries, focusing on industries with foundational actions that can be standardized into functional primitives. This architecture allows us to shape how businesses engage on AI platforms across entire user journeys, backing their presence with real-time data and secure checkout experiences.
+
+New specifications are being developed with industry leaders across key industries including:
+
+* **Food:** New UCP capabilities and schema to enable restaurant and menu discovery across the wide array of modification options, dish selection to checkout with tipping and delivery notes.
+* **Lodging:** New UCP capabilities and schema beyond Booking, supporting hotel discovery, room selection with various rate options, loyalty, and discounts.
+
+## Build with us { #build-with-us }
+
+The future of commerce cannot be built in a vacuum. We invite businesses,
+developers, and payment providers to join us in refining these specifications.
+Your feedback on our early builds helps us shape the standards that will power
+the next generation of global commerce.
+
+[Become a UCP contributor](contributing.md)

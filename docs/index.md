@@ -1,0 +1,1583 @@
+---
+hide:
+  - toc
+title: Universal Commerce Protocol
+description: The common language for platforms, agents, and businesses.
+image: assets/banner.png
+---
+
+<!--
+   Copyright 2026 UCP Authors
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+
+<div class="landing-page">
+  <div class="custom-announce-banner" id="announce-banner">
+    <div class="custom-banner-container">
+      <img src="assets/UCP-small.svg" alt="UCP Logo" class="custom-banner-icon">
+      <div class="custom-banner-text">
+        <div class="banner-title">UCP is expanding beyond retail: Lodging draft specification now available. <strong>Food coming soon.</strong></div>
+      </div>
+    </div>
+    <button class="custom-banner-close" onclick="document.getElementById('announce-banner').style.display='none'; localStorage.setItem('ucp_banner_closed', 'true');" aria-label="Close banner">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M13 1L1 13M1 1L13 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  </div>
+  <script>
+    if (localStorage.getItem('ucp_banner_closed') === 'true') {
+      document.getElementById('announce-banner').style.display = 'none';
+    }
+  </script>
+
+  <div class="hero-wrapper">
+    <div class="hero-content">
+      <h1>Universal Commerce<br>Protocol</h1>
+      <p class="hero-subheading">
+        The common language for platforms, agents, and businesses.
+      </p>
+      <p class="hero-description">
+        UCP provides building blocks for agentic commerce across industries—from discovery to checkout and beyond—allowing the ecosystem to operate through one standard, without custom builds.
+      </p>
+    </div>
+    <div class="hero-image">
+      <img src="assets/updated-icon.svg" alt="Hero image for Universal Commerce Protocol" class="hero-logo-crisp">
+    </div>
+  </div>
+
+  <div class="promo-card-wrapper">
+
+    <div class="promo-card">
+      <h3>Learn</h3>
+      <p>Protocol overview, core concepts, and design principles</p>
+      <a href="latest/specification/overview/" class="promo-button">
+        Get Started
+      </a>
+    </div>
+
+    <div class="promo-card">
+      <h3>Implement</h3>
+      <p>GitHub repo, technical spec, SDKs, and reference implementations</p>
+      <a href="https://github.com/Universal-Commerce-Protocol/ucp"
+         class="promo-button" target="_blank">
+        View on GitHub
+      </a>
+    </div>
+
+  </div>
+
+  <section class="action-carousel-section">
+    <h2>Co-developed by industry leaders</h2>
+
+    <p>
+      UCP is built by the industry, to enable seamless agentic experiences. It solves fragmented user journeys that lead to frustrated users and conversion drop off.
+    </p>
+
+    <div class="carousel-tabs" id="industry-tabs">
+      <button class="tab-btn active" onclick="openTab(event, 'tab-shopping')">Shopping</button>
+      <button class="tab-btn" onclick="openTab(event, 'tab-lodging')">Lodging</button>
+      <button class="tab-btn" onclick="openTab(event, 'tab-food')">Food</button>
+    </div>
+
+    <div>
+      <div id="tab-shopping" class="tab-pane active">
+        <div class="tab-pane-inner">
+          <div class="partner-logo-container">
+            <div class="partner-logo">
+              <img src="assets/partner/codeveloped/Google.svg" alt="Google" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+              <span>Google</span>
+            </div>
+            <div class="partner-logo">
+              <img src="assets/partner/codeveloped/Shopify.svg" alt="Shopify" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+              <span>Shopify</span>
+            </div>
+            <div class="partner-logo">
+              <img src="assets/partner/codeveloped/Etsy.svg" alt="Etsy" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+              <span>Etsy</span>
+            </div>
+            <div class="partner-logo">
+              <img src="assets/partner/codeveloped/Wayfair.svg" alt="Wayfair" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+              <span>Wayfair</span>
+            </div>
+            <div class="partner-logo">
+              <img src="assets/partner/codeveloped/Target.svg" alt="Target" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+              <span>Target</span>
+            </div>
+            <div class="partner-logo">
+              <img src="assets/partner/codeveloped/Walmart.svg" alt="Walmart" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+              <span>Walmart</span>
+            </div>
+            <div class="flex-break"></div>
+            <div class="partner-logo">
+              <img src="assets/partner/codeveloped/Amazon.svg" alt="Amazon" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+              <span>Amazon</span>
+            </div>
+            <div class="partner-logo">
+              <img src="assets/partner/codeveloped/Microsoft.svg" alt="Microsoft" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+              <span>Microsoft</span>
+            </div>
+            <div class="partner-logo">
+              <img src="assets/partner/codeveloped/Meta.svg" alt="Meta" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+              <span>Meta</span>
+            </div>
+            <div class="partner-logo">
+              <img src="assets/partner/codeveloped/Salesforce.svg" alt="Salesforce" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+              <span>Salesforce</span>
+            </div>
+            <div class="partner-logo">
+              <img src="assets/partner/codeveloped/Stripe-Slate.svg" alt="Stripe" class="partner-logo-stripe" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+              <span>Stripe</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div id="tab-lodging" class="tab-pane">
+        <div class="tab-pane-inner">
+          <div class="partner-logo-container lodging-logos">
+            <div class="partner-logo">
+              <img src="assets/partner/codeveloped/lodging/Amadeus.svg" alt="Amadeus" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+              <span>Amadeus</span>
+            </div>
+            <div class="partner-logo">
+              <img src="assets/partner/codeveloped/lodging/Booking.com.svg" alt="Booking.com" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+              <span>Booking.com</span>
+            </div>
+            <div class="partner-logo">
+              <img src="assets/partner/codeveloped/lodging/expedia-group.svg" alt="Expedia Group" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+              <span>Expedia Group</span>
+            </div>
+            <div class="partner-logo">
+              <img src="assets/partner/codeveloped/Google.svg" alt="Google" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+              <span>Google</span>
+            </div>
+            <div class="flex-break"></div>
+            <div class="partner-logo">
+              <img src="assets/partner/codeveloped/lodging/Hilton.svg" alt="Hilton" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+              <span>Hilton</span>
+            </div>
+            <div class="partner-logo">
+              <img src="assets/partner/codeveloped/lodging/marriott.svg" alt="Marriott" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+              <span>Marriott</span>
+            </div>
+            <div class="partner-logo">
+              <img src="assets/partner/codeveloped/lodging/Trip-com.svg" alt="Trip.com" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+              <span>Trip.com</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div id="tab-food" class="tab-pane">
+        <div class="tab-pane-inner">
+          <div class="partner-logo-container food-logos">
+            <div class="partner-logo">
+              <img src="assets/partner/codeveloped/food/DoorDash.svg" alt="DoorDash" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+              <span>DoorDash</span>
+            </div>
+            <div class="partner-logo">
+              <img src="assets/partner/codeveloped/Google.svg" alt="Google" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+              <span>Google</span>
+            </div>
+            <div class="partner-logo">
+              <img src="assets/partner/codeveloped/food/Square_Logo_2025_Black.svg" alt="Square" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+              <span>Square</span>
+            </div>
+            <div class="flex-break"></div>
+            <div class="partner-logo">
+              <img src="assets/partner/codeveloped/food/Toast.svg" alt="Toast" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+              <span>Toast</span>
+            </div>
+            <div class="partner-logo">
+              <img src="assets/partner/codeveloped/food/uber-eats.svg" alt="Uber Eats" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+              <span>Uber Eats</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="flexibility-section">
+    <h2>Built for flexibility, security, and scale</h2>
+    <p>
+      Agentic commerce requires interoperability. UCP is built on industry standards — REST and JSON-RPC transports;
+      <a href="https://ap2-protocol.org/" target="_blank">Agent Payments Protocol (AP2)</a>,
+      <a href="https://a2a-protocol.org/latest/" target="_blank">Agent2Agent (A2A)</a>, and
+      <a href="https://modelcontextprotocol.io/docs/getting-started/intro" target="_blank">Model Context Protocol (MCP)</a>
+      support built-in — so different systems can work together without custom integration.
+    </p>
+  </div>
+
+  <div class="features-list">
+
+    <div class="feature-item">
+      <div class="feature-item-icon">
+        <img src="assets/Icon=Extensible.svg" alt="Scalable" width="72">
+      </div>
+      <div>
+        <h3>Scalable and universal</h3>
+        <p>
+          Surface-agnostic design that scales to support any business (from small to enterprise), in every industry, across all modalities, including chat, visual commerce, and voice.
+        </p>
+      </div>
+    </div>
+
+    <div class="feature-item">
+      <div class="feature-item-icon">
+        <img src="assets/Icon=Merchant_at_the_Center.svg" alt="Merchants" width="72">
+      </div>
+      <div>
+        <h3>Businesses at the center</h3>
+        <p>
+          Built to facilitate commerce, ensuring businesses retain control and remain the Merchant of Record, with full ownership of customer relationships.
+        </p>
+      </div>
+    </div>
+
+    <div class="feature-item">
+      <div class="feature-item-icon">
+        <img src="assets/Icon=Open_Source.svg" alt="Simple" width="72">
+      </div>
+      <div>
+        <h3>Open and extensible</h3>
+        <p>
+          Open and extensible by design, enabling development of community-driven capabilities and extensions across industries.
+        </p>
+      </div>
+    </div>
+
+    <div class="feature-item">
+      <div class="feature-item-icon">
+        <img src="assets/Icon=Secure_and_Private.svg" alt="Secure" width="72">
+      </div>
+      <div>
+        <h3>Secure and private</h3>
+        <p>
+          Built on proven security standards for account linking (OAuth 2.0) and secure payment (AP2) via payment mandates and verifiable credentials.
+        </p>
+      </div>
+    </div>
+
+    <div class="feature-item">
+      <div class="feature-item-icon">
+        <img src="assets/Icon=Frictionless_Payments.svg" alt="Frictionless" width="72">
+      </div>
+      <div>
+        <h3>Frictionless payments</h3>
+        <p>
+          Open wallet ecosystem with interoperability between providers, ensuring buyers can use their preferred payment methods.
+        </p>
+      </div>
+    </div>
+
+  </div>
+
+  <section class="action-carousel-section">
+    <h2>See it in action</h2>
+    <p>
+      UCP is designed to facilitate the entire commerce lifecycle, from discovery and search to final sale and post-purchase support. The protocol supports a range of core capabilities, including: Catalog Search and Lookup, Cart Building, Identity Linking, Checkout, and Order Management.
+    </p>
+    <div class="carousel-tabs main-action-tabs">
+      <button class="tab-btn active" onclick="openTab(event, 'action-tab-shopping')">Shopping</button>
+      <button class="tab-btn" onclick="openTab(event, 'action-tab-lodging')">Lodging</button>
+      <button class="tab-btn" onclick="openTab(event, 'action-tab-food')">Food</button>
+    </div>
+
+    <div class="carousel-content">
+      <div id="action-tab-shopping" class="tab-pane shopping-tab-pane active">
+        <div class="sub-action-tabs">
+          <button class="sub-tab-btn active" onclick="openSubTab(event, 'sub-tab-catalog')">Catalog</button>
+          <button class="sub-tab-btn" onclick="openSubTab(event, 'sub-tab-cart')">Cart</button>
+          <button class="sub-tab-btn" onclick="openSubTab(event, 'sub-tab-checkout')">Checkout</button>
+          <button class="sub-tab-btn" onclick="openSubTab(event, 'sub-tab-identity')">Identity Linking</button>
+          <button class="sub-tab-btn" onclick="openSubTab(event, 'sub-tab-order')">Order</button>
+        </div>
+        <div class="sub-tab-content">
+          <div id="sub-tab-catalog" class="sub-tab-pane active">
+            <div class="pane-text">
+              <h3>Catalog</h3>
+              <p>Enables platforms to search and browse business product catalogs through free-text search, category filtering, and batch retrieval to drive user journeys like price comparisons, sale price and back-in-stock/low-stock alerts.</p>
+              <a href="latest/specification/shopping/catalog/" class="learn-more-btn">Get Started</a>
+            </div>
+            <div class="pane-visuals">
+              <div class="image-container">
+                <img src="assets/catalog.png" alt="Example user interface for catalog search" class="phone-mockup" onerror="this.src='https://placehold.co/260x500/EEE/31343C?text=Catalog+UI'">
+              </div>
+              <div class="code-block-placeholder">
+
+  ```json {.yaml .no-copy}
+  {
+    "ucp": { ... },
+    "products": [
+      {
+        "id": "prod_abc123",
+        "handle": "blue-runner-pro",
+        "title": "Blue Runner Pro",
+        "description": {
+          "plain": "Lightweight running shoes with responsive cushioning."
+        },
+        "url": "https://business.example.com/products/blue-runner-pro",
+        "categories": [
+          { "value": "187", "taxonomy": "google_product_category" },
+          { "value": "aa-8-1", "taxonomy": "shopify" },
+          { "value": "Footwear > Running", "taxonomy": "merchant" }
+        ],
+        "price_range": {
+          "min": { "amount": 12000, "currency": "USD" },
+          "max": { "amount": 12000, "currency": "USD" }
+        },
+        "media": [
+          {
+            "type": "image",
+            "url": "https://cdn.example.com/products/blue-runner-pro.jpg",
+            "alt_text": "Blue Runner Pro running shoes"
+          }
+        ],
+        "options": [
+          {
+            "name": "Size",
+            "values": [
+              {"label": "8"},
+              {"label": "9"},
+              {"label": "10"},
+              {"label": "11"},
+              {"label": "12"}
+            ]
+          }
+        ],
+        "variants": [
+          {
+            "id": "prod_abc123_size10",
+            "sku": "BRP-BLU-10",
+            "title": "Size 10",
+            "description": { "plain": "Size 10 variant" },
+            "price": { "amount": 12000, "currency": "USD" },
+            "availability": { "available": true },
+            "options": [
+              { "name": "Size", "label": "10" }
+            ],
+            "tags": ["running", "road", "neutral"],
+            "seller": {
+              "name": "Example Store",
+              "links": [
+                {
+                  "type": "refund_policy",
+                  "url": "https://business.example.com/refunds"
+                }
+              ]
+            }
+          }
+        ],
+        "rating": {
+          "value": 4.5,
+          "scale_max": 5,
+          "count": 128
+        },
+        "metadata": {
+          "collection": "Winter 2026",
+          "technology": {
+            "midsole": "React foam",
+            "outsole": "Continental rubber"
+          }
+        }
+      }
+    ],
+    "pagination": {
+      "cursor": "eyJwYWdlIjoxfQ==",
+      "has_next_page": true,
+      "total_count": 47
+    }
+  }
+  ```
+
+              </div>
+            </div>
+          </div>
+          <div id="sub-tab-cart" class="sub-tab-pane">
+            <div class="pane-text">
+              <h3>Cart</h3>
+              <p>Enables multi-item cart building and management across AI surfaces, allowing shoppers to seamlessly transfer carts directly to the merchant's site or complete purchases in-place through unified, multi-item checkout.</p>
+              <a href="latest/specification/shopping/cart/" class="learn-more-btn">Get Started</a>
+            </div>
+            <div class="pane-visuals">
+              <div class="image-container">
+                <img src="assets/cart.png" alt="Example user interface showing cart details" class="phone-mockup" onerror="this.src='https://placehold.co/260x500/EEE/31343C?text=Cart+UI'">
+              </div>
+              <div class="code-block-placeholder">
+
+  ```json {.yaml .no-copy}
+  {
+    "ucp": { ... },
+    "id": "cart_88392A",
+    "line_items": [
+      {
+        "id": "li_1",
+        "item": {
+          "id": "item_luggage_01",
+          "title": "Monos Carry-On Pro Suitcase",
+          "price": 26500,
+          "image_url": "https://example.com/images/carry-on-pro.jpg"
+        },
+        "quantity": 1,
+        "totals": [ ... ]
+      },
+      {
+        "id": "li_2",
+        "item": {
+          "id": "item_backpack_02",
+          "title": "Monos Metro Backpack",
+          "price": 18000,
+          "image_url": "https://example.com/images/metro-backpack.jpg"
+        },
+        "quantity": 1,
+        "totals": [ ... ]
+      }
+    ],
+    "context": {
+      "address_country": "US",
+      "address_region": "CA",
+      "postal_code": "94105",
+      "intent": "travel gear",
+      "language": "en-US",
+      "currency": "USD"
+    },
+    "signals": {
+      "dev.ucp.buyer_ip": "198.51.100.42",
+      "dev.ucp.user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
+    },
+    "attribution": {
+      "source": "google_search",
+      "medium": "ai_mode",
+      "campaign": "spring_travel_2026",
+      "click_id": "gclid_987654321_abc",
+      "referrer_url": "https://www.google.com/search"
+    },
+    "buyer": {
+      "first_name": "Elisa",
+      "last_name": "Beckett",
+      "email": "e.beckett@example.com",
+      "phone_number": "+16505550199"
+    },
+    "currency": "USD",
+    "totals": [ ... ],
+    "messages": [
+      {
+        "type": "info",
+        "content": "You qualify for free standard delivery on orders over $100."
+      }
+    ],
+    "links": [
+      {
+        "type": "privacy_policy",
+        "url": "https://example.com/policies/privacy",
+        "title": "Privacy Policy"
+      },
+      {
+        "type": "terms_of_service",
+        "url": "https://example.com/terms",
+        "title": "Terms of Service"
+      },
+      {
+        "type": "faq",
+        "url": "https://example.com/help/faq",
+        "title": "Frequently Asked Questions"
+      }
+    ],
+    "policies": [
+      {
+        "type": "dev.ucp.shopping.policy.return",
+        "description": {
+          "plain": "Free returns and exchanges within 30 days of delivery on unused items in original packaging."
+        },
+        "url": "https://example.com/policies/refunds",
+        "applies_to": [
+          "$.line_items[0]",
+          "$.line_items[1]"
+        ]
+      }
+    ],
+    "continue_url": "https://example.com/cart?cart_id=cart_88392A",
+    "expires_at": "2026-08-31T12:00:00Z"
+  }
+  ```
+
+              </div>
+            </div>
+          </div>
+          <div id="sub-tab-checkout" class="sub-tab-pane">
+            <div class="pane-text">
+              <h3>Checkout</h3>
+              <p>Support complex cart logic, dynamic pricing, tax calculations, and more across millions of businesses through unified checkout sessions.</p>
+              <a href="latest/specification/shopping/checkout/" class="learn-more-btn">Get Started</a>
+            </div>
+            <div class="pane-visuals">
+              <div class="image-container">
+                <img src="assets/checkout.png" alt="Example checkout screen with address details" class="phone-mockup" onerror="this.src='https://placehold.co/260x500/EEE/31343C?text=Checkout+UI'">
+              </div>
+              <div class="code-block-placeholder">
+
+  ```json {.yaml .no-copy}
+  {
+    "ucp": { ... },
+    "id": "chk_123456789",
+    "status": "ready_for_complete",
+    "currency": "USD",
+    "buyer": {
+      "email": "e.beckett@example.com",
+      "first_name": "Elisa",
+      "last_name": "Beckett"
+    },
+    "line_items": [
+      {
+        "id": "li_1",
+        "item": {
+          "id": "item_123",
+          "title": "Monos Carry-On Pro suitcase",
+          "price": 26550
+        },
+        "quantity": 1,
+        ...
+      }
+    ],
+    "totals": [ ... ],
+    "links": [ ... ],
+    "payment": { ... },
+    "fulfillment": {
+      "methods": [
+        {
+          "id": "method_1",
+          "type": "shipping",
+          "line_item_ids": ["li_1"],
+          "selected_destination_id": "dest_1",
+          "destinations": [
+            {
+              "type": "shipping_address",
+              "id": "dest_1",
+              "first_name": "Elisa",
+              "last_name": "Beckett",
+              "street_address": "1600 Amphitheatre Pkwy",
+              "address_locality": "Mountain View",
+              "address_region": "CA",
+              "postal_code": "94043",
+              "address_country": "US"
+            }
+          ],
+          "groups": [
+            {
+              "id": "group_1",
+              "line_item_ids": ["li_1"],
+              "selected_option_id": "free-shipping",
+              "options": [
+                {
+                  "id": "free-shipping",
+                  "title": "Free Shipping",
+                  "totals": [ {"type": "total", "amount": 0} ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+  ```
+
+              </div>
+            </div>
+          </div>
+          <div id="sub-tab-checkout" class="sub-tab-pane">
+            <div class="pane-text">
+              <h3>Checkout</h3>
+              <p>Support complex cart logic, dynamic pricing, tax calculations, and more across millions of businesses through unified checkout sessions.</p>
+              <a href="latest/specification/shopping/checkout/" class="learn-more-btn">Get Started</a>
+            </div>
+            <div class="pane-visuals">
+              <div class="image-container">
+                <img src="assets/checkout.png" alt="Example checkout screen with address details" class="phone-mockup" onerror="this.src='https://placehold.co/260x500/EEE/31343C?text=Checkout+UI'">
+              </div>
+              <div class="code-block-placeholder">
+
+  ```json {.yaml .no-copy}
+  {
+    "ucp": { ... },
+    "id": "chk_123456789",
+    "status": "ready_for_complete",
+    "currency": "USD",
+    "buyer": {
+      "email": "e.beckett@example.com",
+      "first_name": "Elisa",
+      "last_name": "Beckett"
+    },
+    "line_items": [
+      {
+        "id": "li_1",
+        "item": {
+          "id": "item_123",
+          "title": "Monos Carry-On Pro suitcase",
+          "price": 26550
+        },
+        "quantity": 1,
+        ...
+      }
+    ],
+    "totals": [ ... ],
+    "links": [ ... ],
+    "payment": { ... },
+    "fulfillment": {
+      "methods": [
+        {
+          "id": "method_1",
+          "type": "shipping",
+          "line_item_ids": ["li_1"],
+          "selected_destination_id": "dest_1",
+          "destinations": [
+            {
+              "type": "shipping_address",
+              "id": "dest_1",
+              "first_name": "Elisa",
+              "last_name": "Beckett",
+              "street_address": "1600 Amphitheatre Pkwy",
+              "address_locality": "Mountain View",
+              "address_region": "CA",
+              "postal_code": "94043",
+              "address_country": "US"
+            }
+          ],
+          "groups": [
+            {
+              "id": "group_1",
+              "line_item_ids": ["li_1"],
+              "selected_option_id": "free-shipping",
+              "options": [
+                {
+                  "id": "free-shipping",
+                  "title": "Free Shipping",
+                  "totals": [ {"type": "total", "amount": 0} ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+  ```
+
+              </div>
+            </div>
+          </div>
+          <div id="sub-tab-identity" class="sub-tab-pane">
+            <div class="pane-text">
+              <h3>Identity Linking</h3>
+              <p>OAuth 2.0 standard enables agents to maintain secure, authorized relationships without sharing credentials.</p>
+              <a href="latest/specification/common/identity-linking/" class="learn-more-btn">Get Started</a>
+            </div>
+            <div class="pane-visuals">
+              <div class="image-container">
+                <img src="assets/identity.png" alt="Example user interface for identity linking" class="phone-mockup" onerror="this.src='https://placehold.co/260x500/EEE/31343C?text=Identity+UI'">
+              </div>
+              <div class="code-block-placeholder">
+
+  ```json {.yaml .no-copy}
+  Sample of /.well-known/oauth-authorization-server
+
+  {
+    "issuer": "https://example.com",
+    "authorization_endpoint": "https://example.com/oauth2/authorize",
+    "token_endpoint": "https://example.com/oauth2/token",
+    "revocation_endpoint": "https://example.com/oauth2/revoke",
+    "scopes_supported": [
+      "dev.ucp.shopping.checkout"
+    ],
+    "response_types_supported": [
+      "code"
+    ],
+    "grant_types_supported": [
+      "authorization_code",
+      "refresh_token"
+    ],
+    "token_endpoint_auth_methods_supported": [
+      "client_secret_basic"
+    ],
+    "service_documentation": "https://example.com/docs/oauth2"
+  }
+  ```
+
+              </div>
+            </div>
+          </div>
+          <div id="sub-tab-order" class="sub-tab-pane">
+            <div class="pane-text">
+              <h3>Order</h3>
+              <p>From purchase confirmation to delivery. Real-time webhooks power status updates, shipment tracking, and return processing across every channel.</p>
+              <a href="latest/specification/shopping/order/" class="learn-more-btn">Get Started</a>
+            </div>
+            <div class="pane-visuals">
+              <div class="image-container">
+                <img src="assets/order.png" alt="Example user interface showing order confirmation details" class="phone-mockup" onerror="this.src='https://placehold.co/260x500/EEE/31343C?text=Order+UI'">
+              </div>
+              <div class="code-block-placeholder">
+
+  ```json {.yaml .no-copy}
+  {
+    "ucp": { ... },
+    "id": "order_123456789",
+    "checkout_id": "chk_123456789",
+    "permalink_url": ...,
+    "line_items": [ ... ],
+    "fulfillment": {
+      "expectations": [
+        {
+          "id": "exp_1",
+          "line_items": [{ "id": "li_1", "quantity": 1 }],
+          "method_type": "shipping",
+          "destination": {
+            "first_name": "Elisa",
+            "last_name": "Beckett",
+            "street_address": "1600 Amphitheatre Pkwy",
+            "address_locality": "Mountain View",
+            "address_region": "CA",
+            "postal_code": "94043",
+            "address_country": "US"
+          },
+          "description": "Arrives in 2-3 business days",
+          "fulfillable_on": "now"
+        }
+        ...
+      ],
+      "events": [
+        {
+          "id": "evt_1",
+          "occurred_at": "2026-01-11T10:30:00Z",
+          "type": "delivered",
+          "line_items": [{ "id": "li_1", "quantity": 1 }],
+          "tracking_number": "123456789",
+          "tracking_url": "https://fedex.com/track/123456789",
+          "description": "Delivered to front door"
+        }
+      ]
+    },
+    "adjustments": [
+      {
+        "id": "adj_1",
+        "type": "refund",
+        "occurred_at": "2026-01-12T14:30:00Z",
+        "status": "completed",
+        "line_items": [{ "id": "li_1", "quantity": -1 }],
+        "totals": [{ "type": "total", "amount": -26550 }],
+        "description": "Defective item"
+      }
+    ],
+    "totals": [ ... ]
+  }
+  ```
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="action-tab-lodging" class="tab-pane">
+        <div class="pane-text">
+          <h3>Booking</h3>
+          <p>Enable high-quality booking flows within AI surfaces with real time pricing and availability checks for rooms, easy guest registration and secure checkout with complex payments schedules.</p>
+          <a href="draft/specification/lodging/booking/" class="learn-more-btn">Get Started</a>
+        </div>
+            <div class="pane-visuals">
+              <div class="image-container">
+                <img src="assets/booking.png" alt="Example user interface showing hotel booking details" class="phone-mockup" onerror="this.src='https://placehold.co/260x500/EEE/31343C?text=Booking+UI'">
+              </div>
+              <div class="code-block-placeholder">
+
+  ```json {.yaml .no-copy}
+  {
+    "ucp": { ... },
+    "id": "bk_fb_88392A",
+    "status": "ready_for_complete",
+    "booker": {
+      "first_name": "Jane",
+      "last_name": "Doe",
+      "email": "jane.doe@example.com",
+      "phone_number": "+14085550199"
+    },
+    "property": {
+      "id": "hotel_juniper_cupt",
+      "name": "Juniper Hotel Cupertino",
+      "address": {
+        "street_address": "123 De Anza Blvd",
+        "address_locality": "Cupertino",
+        "address_region": "CA",
+        "address_country": "US",
+        "postal_code": "95014"
+      },
+      "media": [
+        {
+          "type": "image",
+          "url": "https://example.com/juniper-cupertino.jpg"
+        }
+      ]
+    },
+    "stays": [
+      {
+        "id": "rt_luxury_queen__rp_avg_base_rate",
+        "accommodation_type": {
+          "id": "rt_luxury_queen",
+          "title": "Deluxe Room, 2 Queens",
+          "capacity": {
+            "adults": 2,
+            "total": 2
+          }
+        },
+        "rate_plan": {
+          "id": "rp_avg_base_rate",
+          "title": "Best Available Rate"
+        },
+        "occupancy": {
+          "adults": 2,
+          "total": 2
+        },
+        "stay_dates": {
+          "start_date": "2026-05-12",
+          "end_date": "2026-05-17"
+        },
+        "totals": [ ... ]
+      }
+    ],
+    "currency": "USD",
+    "totals": [ ... ],
+    "policies": [
+      {
+        "type": "dev.ucp.lodging.policy.cancellation",
+        "refundability": "non_refundable",
+        "description": {
+          "plain": "Non-refundable rate. If you cancel or modify this reservation, or in the event of a no-show, no refund will be issued and the full booking amount is retained."
+        },
+        "url": "https://hotel.example.com/terms#non-refundable"
+      }
+    ],
+    "messages": [
+      {
+        "type": "warning",
+        "code": "dev.ucp.lodging.policy.cancellation",
+        "path": "$.stays[0]",
+        "presentation": "disclosure",
+        "content": "This reservation is non-refundable. Cancellations or changes will not be refunded."
+      }
+    ],
+    "payment": {
+      "selected_term_id": "pt_deposit_balance",
+      "terms": [
+        {
+          "id": "pt_deposit_balance",
+          "title": "Deposit today, balance at check-in",
+          "description": {
+            "plain": "Pay 2 night deposit ($1200.00) today and the remaining balance upon arrival."
+          },
+          "schedules": [
+            {
+              "id": "sched_deposit",
+              "type": "immediate",
+              "description": {
+                "plain": "Due today upon booking confirmation."
+              },
+              "amount": 120000
+            },
+            {
+              "id": "sched_balance_checkin",
+              "type": "deferred",
+              "description": {
+                "plain": "FlightBulb will charge you the remaining on May 12, 2026."
+              },
+              "due_at": "2026-05-12T15:00:00-07:00",
+              "amount": 8445
+            }
+          ]
+        }
+      ],
+      "instruments": [
+        {
+          "id": "pi_card_88392A",
+          "handler_id": "handler_1",
+          "type": "card",
+          "selected": true,
+          "display": {
+            "brand": "amex",
+            "last_digits": "1234",
+            "description": "Amex ending in 1234"
+          },
+          "billing_address": {
+            "street_address": "123 De Anza Blvd",
+            "address_locality": "Cupertino",
+            "address_region": "CA",
+            "address_country": "US",
+            "postal_code": "95014"
+          }
+        }
+      ]
+    },
+    "links": [
+      {
+        "type": "privacy_policy",
+        "url": "https://hotel.example.com/privacy"
+      },
+      {
+        "type": "terms_of_service",
+        "url": "https://hotel.example.com/terms"
+      },
+      {
+        "type": "refund_policy",
+        "title": "Cancellation Policy",
+        "url": "https://hotel.example.com/cancellation"
+      }
+    ],
+    "continue_url": "https://business.example.com/booking-sessions/bk_fb_88392A",
+    "expires_at": "2026-05-12T06:30:00Z"
+  }
+  ```
+
+              </div>
+            </div>
+      </div>
+      <div id="action-tab-food" class="tab-pane">
+        <div class="pane-text">
+          <h3>Food</h3>
+          <p>Powers conversational food ordering journeys that seamlessly handle nuanced meal customization, real-time availability and deals, tipping, and delivery instructions through a scalable checkout experience on AI surfaces.</p>
+          <a href="https://developers.google.com/actions-center/verticals/ordering/ucp" target="_blank" class="lifecycle-container-item-link">Learn more</a>
+        </div>
+        <div class="pane-visuals">
+          <div class="coming-soon-placeholder">
+            <span>Detailed specifications coming soon</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+  function openTab(evt, tabName) {
+    var i, tabContent, tabButtons, container;
+    container = evt.currentTarget.closest(".action-carousel-section");
+    if (!container) return;
+    tabContent = container.getElementsByClassName("tab-pane");
+    for (i = 0; i < tabContent.length; i++) {
+      tabContent[i].classList.remove("active");
+    }
+    tabButtons = container.getElementsByClassName("tab-btn");
+    for (i = 0; i < tabButtons.length; i++) {
+      tabButtons[i].classList.remove("active");
+    }
+    document.getElementById(tabName).classList.add("active");
+    evt.currentTarget.classList.add("active");
+  }
+
+  function openSubTab(evt, tabName) {
+    var i, tabContent, tabButtons, container;
+    container = evt.currentTarget.closest(".tab-pane");
+    if (!container) return;
+    tabContent = container.getElementsByClassName("sub-tab-pane");
+    for (i = 0; i < tabContent.length; i++) {
+      tabContent[i].classList.remove("active");
+    }
+    tabButtons = container.getElementsByClassName("sub-tab-btn");
+    for (i = 0; i < tabButtons.length; i++) {
+      tabButtons[i].classList.remove("active");
+    }
+    document.getElementById(tabName).classList.add("active");
+    evt.currentTarget.classList.add("active");
+  }
+  // Autoplay for industry tabs
+  let currentTabIdx = 0;
+  const tabs = ['tab-shopping', 'tab-lodging', 'tab-food'];
+  const tabButtons = document.querySelectorAll('#industry-tabs .tab-btn');
+  let autoplayTimeout;
+
+  function autoplay() {
+    currentTabIdx = (currentTabIdx + 1) % tabs.length;
+    const nextBtn = tabButtons[currentTabIdx];
+    if (nextBtn) {
+      openTab({ currentTarget: nextBtn }, tabs[currentTabIdx]);
+    }
+    autoplayTimeout = setTimeout(autoplay, 3000);
+  }
+
+  function startAutoplay() {
+    clearTimeout(autoplayTimeout);
+    autoplayTimeout = setTimeout(autoplay, 3000);
+  }
+
+  function stopAutoplay() {
+    clearTimeout(autoplayTimeout);
+  }
+
+  startAutoplay();
+
+  const industryTabsContainer = document.getElementById('industry-tabs');
+  if (industryTabsContainer) {
+    industryTabsContainer.addEventListener('mouseenter', stopAutoplay);
+    industryTabsContainer.addEventListener('mouseleave', startAutoplay);
+
+    tabButtons.forEach((btn, idx) => {
+      btn.addEventListener('click', () => {
+        currentTabIdx = idx;
+        stopAutoplay();
+      });
+    });
+  }
+  </script>
+
+  <div class="two-column-promo">
+
+    <div class="two-column-promo-item">
+      <div class="two-column-promo-item-icon-wrapper">
+        <img src="assets/native_checkout.svg" alt="Native Checkout feature icon" width="96" class="two-column-promo-item-icon">
+      </div>
+      <h3>Power native checkout</h3>
+      <p>
+        Integrate and negotiate directly with a seller's checkout API to power native UI and workflows for your platform.
+      </p>
+      <a href="latest/specification/shopping/checkout/rest/" class="promo-button">Get Started</a>
+    </div>
+
+    <div class="two-column-promo-item">
+      <div class="two-column-promo-item-icon-wrapper">
+        <img src="assets/embedded_checkout.svg" alt="Embedded Option feature icon" width="96" class="two-column-promo-item-icon">
+      </div>
+      <h3>Embed business checkout</h3>
+      <p>
+        Embed and render business checkout UI to support complex checkout flows, with advanced capabilities like bidirectional communication, and payment and shipping address delegation.
+      </p>
+      <a href="latest/specification/shopping/checkout/embedded/" class="promo-button">See how it works</a>
+    </div>
+
+  </div>
+
+  <div class="lifecycle-container">
+
+    <h2>Designed for the entire commerce ecosystem</h2>
+
+    <div class="lifecycle-container-row">
+      <div class="lifecycle-container-item">
+        <div class="lifecycle-container-item-img-wrapper">
+          <img src="assets/Content=Developers.svg" alt="Content illustration for Developers" class="lifecycle-container-item-img">
+        </div>
+        <h3>For Developers</h3>
+        <p>
+          Build the future of commerce on an open foundation. Join our community in evolving an open-source standard designed for the next generation of digital commerce.
+        </p>
+        <a href="latest/specification/overview/" class="lifecycle-container-item-link">View the technical spec</a>
+      </div>
+      <div class="lifecycle-container-item">
+        <div class="lifecycle-container-item-img-wrapper">
+          <img src="assets/Content=Retailers.svg" alt="Content illustration for Businesses" class="lifecycle-container-item-img">
+        </div>
+        <h3>For Businesses</h3>
+        <p>
+          UCP empowers businesses to meet customers wherever they are—AI assistants, agents, embedded experiences—without rebuilding your checkout for each. You remain the Merchant of Record and your business logic stays intact.
+        </p>
+        <a href="https://developers.google.com/merchant/ucp/" target="_blank" class="lifecycle-container-item-link">Integrate with UCP</a>
+      </div>
+    </div>
+    <div class="lifecycle-container-row">
+      <div class="lifecycle-container-item">
+        <div class="lifecycle-container-item-img-wrapper">
+          <img src="assets/Content=AI_Platforms.svg" alt="Content illustration for AI Platforms" class="lifecycle-container-item-img">
+        </div>
+        <h3>For AI Platforms</h3>
+        <p>
+          Simplify business onboarding with standardized APIs and provide your audience with an integrated agentic commerce experience. Compatible with MCP, A2A, and existing agent frameworks.
+        </p>
+        <a href="documentation/core-concepts/" class="lifecycle-container-item-link">Learn more about UCP core concepts</a>
+      </div>
+      <div class="lifecycle-container-item">
+        <div class="lifecycle-container-item-img-wrapper">
+          <img src="assets/Content=Payment_Providers.svg" alt="Content illustration for Payment Providers" class="lifecycle-container-item-img">
+        </div>
+        <h3>For Payment Providers</h3>
+        <p>
+          Universal payments that are provable—every authorization backed by cryptographic proof of user consent. Open, modular payment handler design enables open interoperability and choice of payment methods.
+        </p>
+        <a href="documentation/ucp-and-ap2/" class="lifecycle-container-item-link">Learn more about UCP and AP2</a>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="partner-carousel">
+    <h2>Endorsed across the ecosystem</h2>
+
+    <div class="partner-track">
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/accor.svg" alt="Accor" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Accor</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Adore_Beauty_logo.svg" alt="Adore Beauty" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Adore Beauty</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Adyen.svg" alt="Adyen" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Adyen</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Affirm.svg" alt="Affirm" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Affirm</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/codeveloped/lodging/Amadeus.svg" alt="Amadeus" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Amadeus</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Amex.svg" alt="Amex" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Amex</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Ant International.svg" alt="Ant International" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Ant International</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Aven.svg" alt="Aven" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Aven</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Best Buy.svg" alt="Best Buy" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Best Buy</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Block.svg" alt="Block" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Block</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/codeveloped/lodging/Booking.com.svg" alt="Booking.com" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Booking.com</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/bunnings.svg" alt="Bunnings" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Bunnings</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Carrefour.svg" alt="Carrefour" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Carrefour</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/CheckoutCom.svg" alt="Checkout.com" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Checkout.com</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Chewy.svg" alt="Chewy" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Chewy</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Choice_Hotels.svg" alt="Choice Hotels" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Choice Hotels</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Commerce.svg" alt="Commerce" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Commerce</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/codeveloped/food/DoorDash.svg" alt="DoorDash" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>DoorDash</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/codeveloped/lodging/expedia-group.svg" alt="Expedia Group" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Expedia Group</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Fiserv.svg" alt="Fiserv" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Fiserv</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Flipkart.svg" alt="Flipkart" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Flipkart</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Gap.svg" alt="Gap" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Gap</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/codeveloped/lodging/Hilton.svg" alt="Hilton" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Hilton</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/iconic.svg" alt="Iconic" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Iconic</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/ihg.svg" alt="IHG" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>IHG</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Klarna.svg" alt="Klarna" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Klarna</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Kogan.svg" alt="Kogan" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Kogan</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Kroger.svg" alt="Kroger" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Kroger</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Lowes.svg" alt="Lowe's" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Lowe's</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Macys.svg" alt="Macy's" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Macy's</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/codeveloped/lodging/marriott.svg" alt="Marriott" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Marriott</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Mastercard.svg" alt="Mastercard" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Mastercard</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Paypal.svg" alt="Paypal" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Paypal</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Petbarn_Hearts.svg" alt="Petbarn" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Petbarn</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Salesforce.svg" alt="Salesforce" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Salesforce</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/SAP.svg" alt="SAP" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>SAP</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Sephora.svg" alt="Sephora" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Sephora</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Shopee.svg" alt="Shopee" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Shopee</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Splitit.svg" alt="Splitit" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Splitit</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/codeveloped/food/Square_Logo_2025_Black.svg" alt="Square" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Square</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Stripe.svg" alt="Stripe" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Stripe</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Home Depot.svg" alt="The Home Depot" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>The Home Depot</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/codeveloped/food/Toast.svg" alt="Toast" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Toast</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/codeveloped/lodging/Trip-com.svg" alt="Trip.com" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Trip.com</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/codeveloped/food/uber-eats.svg" alt="Uber Eats" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Uber Eats</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Ulta.svg" alt="Ulta" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Ulta</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Visa.svg" alt="Visa" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Visa</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/vtex.svg" alt="VTEX" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>VTEX</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Worldpay.svg" alt="Worldpay" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Worldpay</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Wyndham.svg" alt="Wyndham" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Wyndham</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Zalando.svg" alt="Zalando" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Zalando</span>
+      </div>
+      <!-- Duplicated the partner logos to provide a seamless infinite scroll in the carousel-->
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/accor.svg" alt="Accor" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Accor</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Adore_Beauty_logo.svg" alt="Adore Beauty" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Adore Beauty</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Adyen.svg" alt="Adyen" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Adyen</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Affirm.svg" alt="Affirm" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Affirm</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/codeveloped/lodging/Amadeus.svg" alt="Amadeus" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Amadeus</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Amex.svg" alt="Amex" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Amex</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Ant International.svg" alt="Ant International" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Ant International</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Aven.svg" alt="Aven" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Aven</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Best Buy.svg" alt="Best Buy" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Best Buy</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Block.svg" alt="Block" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Block</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/codeveloped/lodging/Booking.com.svg" alt="Booking.com" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Booking.com</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/bunnings.svg" alt="Bunnings" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Bunnings</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Carrefour.svg" alt="Carrefour" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Carrefour</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/CheckoutCom.svg" alt="Checkout.com" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Checkout.com</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Chewy.svg" alt="Chewy" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Chewy</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Choice_Hotels.svg" alt="Choice Hotels" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Choice Hotels</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Commerce.svg" alt="Commerce" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Commerce</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/codeveloped/food/DoorDash.svg" alt="DoorDash" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>DoorDash</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/codeveloped/lodging/expedia-group.svg" alt="Expedia Group" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Expedia Group</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Fiserv.svg" alt="Fiserv" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Fiserv</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Flipkart.svg" alt="Flipkart" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Flipkart</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Gap.svg" alt="Gap" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Gap</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/codeveloped/lodging/Hilton.svg" alt="Hilton" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Hilton</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/iconic.svg" alt="Iconic" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Iconic</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/ihg.svg" alt="IHG" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>IHG</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Klarna.svg" alt="Klarna" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Klarna</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Kogan.svg" alt="Kogan" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Kogan</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Kroger.svg" alt="Kroger" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Kroger</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Lowes.svg" alt="Lowe's" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Lowe's</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Macys.svg" alt="Macy's" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Macy's</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/codeveloped/lodging/marriott.svg" alt="Marriott" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Marriott</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Mastercard.svg" alt="Mastercard" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Mastercard</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Paypal.svg" alt="Paypal" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Paypal</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Petbarn_Hearts.svg" alt="Petbarn" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Petbarn</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Salesforce.svg" alt="Salesforce" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Salesforce</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/SAP.svg" alt="SAP" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>SAP</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Sephora.svg" alt="Sephora" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Sephora</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Shopee.svg" alt="Shopee" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Shopee</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Splitit.svg" alt="Splitit" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Splitit</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/codeveloped/food/Square_Logo_2025_Black.svg" alt="Square" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Square</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Stripe.svg" alt="Stripe" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Stripe</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Home Depot.svg" alt="The Home Depot" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>The Home Depot</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/codeveloped/food/Toast.svg" alt="Toast" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Toast</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/codeveloped/lodging/Trip-com.svg" alt="Trip.com" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Trip.com</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/codeveloped/food/uber-eats.svg" alt="Uber Eats" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Uber Eats</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Ulta.svg" alt="Ulta" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Ulta</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Visa.svg" alt="Visa" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Visa</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/vtex.svg" alt="VTEX" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>VTEX</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Worldpay.svg" alt="Worldpay" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Worldpay</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Wyndham.svg" alt="Wyndham" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Wyndham</span>
+      </div>
+      <div class="partner-logo">
+        <img src="assets/partner/endorsed/Zalando.svg" alt="Zalando" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span>Zalando</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="get-started-container">
+
+    <div class="get-started-container-intro">
+      <h2>Get started today</h2>
+
+      <p>
+        UCP is an open standard designed to let AI agents, apps, businesses, and payment providers interact seamlessly without needing custom, one-off integrations for every connection. We actively seek your feedback and contributions to help build the future of commerce.
+      </p>
+      <p>
+        The complete technical specification, documentation, and reference implementations are hosted in our public GitHub repository.
+      </p>
+    </div>
+
+    <div class="get-started-container-steps">
+      <div class="get-started-container-step">
+        <div class="get-started-container-step-icon-wrapper">
+          <img src="assets/Icon=Download.svg" alt="Download icon for code samples" class="get-started-container-step-icon">
+        </div>
+        <h3><a href="https://github.com/Universal-Commerce-Protocol/samples" target="_blank">Download</a></h3>
+        <p>Download and run our code samples</p>
+      </div>
+      <div class="get-started-container-step">
+        <div class="get-started-container-step-icon-wrapper">
+          <img src="assets/Icon=Experiment.svg" alt="Experiment" class="get-started-container-step-icon">
+        </div>
+        <h3><a href="latest/specification/shopping/playground/" target="_blank">Experiment</a></h3>
+        <p>Experiment with the protocol and its different agent roles</p>
+      </div>
+      <div class="get-started-container-step">
+        <div class="get-started-container-step-icon-wrapper">
+          <img src="assets/Icon=Contribute.svg" alt="Contribute" class="get-started-container-step-icon">
+        </div>
+        <h3><a href="https://github.com/Universal-Commerce-Protocol/.github/blob/main/CONTRIBUTING.md" target="_blank">Contribute</a></h3>
+        <p>Contribute your feedback and code to the public repository</p>
+      </div>
+    </div>
+    <div class="get-started-container-repo-link">
+      <a href="https://github.com/Universal-Commerce-Protocol/ucp" target="_blank" class="promo-button">
+        <svg height="24" width="24" viewBox="0 0 16 16" version="1.1" fill="currentColor">
+          <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
+        </svg>
+        Visit the GitHub repository
+      </a>
+    </div>
+
+  </div>
+</div>

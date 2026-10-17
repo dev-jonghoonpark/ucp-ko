@@ -1,0 +1,59 @@
+name: Deploy GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: astral-sh/setup-uv@v6
+
+      - name: Cache ucp-schema binary
+        id: cache-ucp-schema
+        uses: actions/cache@v4
+        with:
+          path: ~/.cargo/bin/ucp-schema
+          key: ${{ runner.os }}-ucp-schema-1.4.1
+
+      - name: Install ucp-schema
+        if: steps.cache-ucp-schema.outputs.cache-hit != 'true'
+        run: cargo install ucp-schema --version 1.4.1 --locked
+
+      - name: Build site
+        env:
+          DOCS_MODE: all
+          SITE_URL: https://dev-jonghoonpark.github.io/ucp-ko/
+        run: |
+          echo "$HOME/.cargo/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.cargo/bin:$PATH"
+          uv sync
+          uv run mkdocs build
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

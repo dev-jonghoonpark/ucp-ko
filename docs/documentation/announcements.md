@@ -1,0 +1,88 @@
+# Announcements { #announcements }
+
+Welcome to the Universal Commerce Protocol (UCP) announcements page. Here we post updates about the protocol, new releases, and governance updates.
+
+______________________________________________________________________
+
+## September 25, 2026: UCP Lodging: Booking Capability Draft Spec Release { #september-25-2026-ucp-lodging-booking-capability-draft-spec-release }
+
+We are excited to announce that the initial draft version of the Lodging Booking capability (`dev.ucp.lodging.booking`) has been merged into the Universal Commerce Protocol repository, marking the formal expansion of UCP into the Lodging domain. Developed by the Lodging Technical Council (Amadeus, Booking.com, Expedia, Google, Hilton, Marriott, and Trip.com) and open-source contributors, this capability unlocks foundational hotel reservation flows including real-time pricing and availability checks, guest registration, complex payment schedules, and cross-vertical primitive interoperability.
+
+Explore the [UCP Lodging Documentation](https://ucp.dev/draft/specification/lodging/booking/), and read the full announcement in [GitHub Discussion #864](https://github.com/Universal-Commerce-Protocol/ucp/discussions/864).
+______________________________________________________________________
+
+## September 2, 2026: Payments Technical Council (Payments TC) Formed { #september-2-2026-payments-technical-council-payments-tc-formed }
+
+The nomination process for the Payments Technical Council (Payments TC) has officially closed. We are excited to welcome inaugural members Adyen NV, Ant International, Coinbase, Global Payments, Google, PayPal, Shopify, and Stripe to the Payments TC.
+
+For more details, read the full announcement in the [GitHub Discussion #798](https://github.com/Universal-Commerce-Protocol/ucp/discussions/798).
+
+______________________________________________________________________
+
+## August 25, 2026: Protocol Release v2026-08-25 { #august-25-2026-protocol-release-v2026-08-25 }
+
+We have released version v2026-08-25 of the protocol. This release introduces major protocol enhancements, key structural refactorings to support multi-vertical expansion, payments security improvements (3DS2), structured request constraints, independent capability versioning, grocery shopping readiness and many more.
+
+See the [v2026-08-25 Release Notes](https://github.com/Universal-Commerce-Protocol/ucp/releases/tag/v2026-08-25) for details on the changes.
+
+______________________________________________________________________
+
+## August 11, 2026: Lodging Technical Council (Lodging TC) Formed { #august-11-2026-lodging-technical-council-lodging-tc-formed }
+
+The nomination process for the Lodging Technical Council (Lodging TC) has officially closed. We are excited to welcome inaugural members Amadeus, Booking.com, Expedia, Google, Hilton, Marriott, and Trip.com to the Lodging TC.
+
+For more details, read the full announcement in the [GitHub Discussion #714](https://github.com/Universal-Commerce-Protocol/ucp/discussions/714).
+
+______________________________________________________________________
+
+## July 16, 2026: Food Technical Council (Food TC) Formed { #july-16-2026-food-technical-council-food-tc-formed }
+
+The UCP Governing Council finalized the foundational members of the newly formed Food Technical Council (Food TC). Initial members include Block (Square), DoorDash, Google, Toast, and Uber Eats.
+
+For more details, read the full announcement in the [GitHub Discussion #593](https://github.com/Universal-Commerce-Protocol/ucp/discussions/593).
+
+______________________________________________________________________
+
+## April 28, 2026: Stripe Joins the Governing Council { #april-28-2026-stripe-joins-the-governing-council }
+
+Stripe has joined the UCP Governing Council as a new member, joining existing permanent members Google and Shopify. Additionally, the Governing Council structure is being updated to add two more elected open seats for future nominations.
+
+For more details, read the full announcement in the [GitHub Discussion #396](https://github.com/Universal-Commerce-Protocol/ucp/discussions/396).
+
+______________________________________________________________________
+
+## April 24, 2026: Technical Committee Expansion { #april-24-2026-technical-committee-expansion }
+
+The Tech Council has expanded its seats to 16, welcoming five new members:
+
+- Greg Smith (Amazon)
+- James Andersen (Meta)
+- Patrick Jordan (Microsoft)
+- Prasad Wangikar (Stripe)
+- Scot DeDeo (Salesforce)
+
+Read the details in the [GitHub Discussion #379](https://github.com/Universal-Commerce-Protocol/ucp/discussions/379).
+
+______________________________________________________________________
+
+## April 8, 2026: Protocol Release v2026-04-08 { #april-8-2026-protocol-release-v2026-04-08 }
+
+We have released version v2026-04-08 of the protocol.
+
+See the [v2026-04-08 Release Notes](https://github.com/Universal-Commerce-Protocol/ucp/releases/tag/v2026-04-08) for details on the changes.
+
+______________________________________________________________________
+
+## January 23, 2026: Protocol Release v2026-01-23 { #january-23-2026-protocol-release-v2026-01-23 }
+
+We have released version v2026-01-23 of the protocol.
+
+See the [v2026-01-23 Release Notes](https://github.com/Universal-Commerce-Protocol/ucp/releases/tag/v2026-01-23) for details on the changes.
+
+______________________________________________________________________
+
+## January 11, 2026: Protocol Release v2026-01-11 { #january-11-2026-protocol-release-v2026-01-11 }
+
+We have released version v2026-01-11 of the protocol.
+
+See the [v2026-01-11 Release Notes](https://github.com/Universal-Commerce-Protocol/ucp/releases/tag/v2026-01-11) for details on the changes.
