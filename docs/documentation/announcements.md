@@ -1,59 +1,59 @@
-# Announcements { #announcements }
+# 공지사항 { #announcements }
 
-Welcome to the Universal Commerce Protocol (UCP) announcements page. Here we post updates about the protocol, new releases, and governance updates.
-
-______________________________________________________________________
-
-## September 25, 2026: UCP Lodging: Booking Capability Draft Spec Release { #september-25-2026-ucp-lodging-booking-capability-draft-spec-release }
-
-We are excited to announce that the initial draft version of the Lodging Booking capability (`dev.ucp.lodging.booking`) has been merged into the Universal Commerce Protocol repository, marking the formal expansion of UCP into the Lodging domain. Developed by the Lodging Technical Council (Amadeus, Booking.com, Expedia, Google, Hilton, Marriott, and Trip.com) and open-source contributors, this capability unlocks foundational hotel reservation flows including real-time pricing and availability checks, guest registration, complex payment schedules, and cross-vertical primitive interoperability.
-
-Explore the [UCP Lodging Documentation](https://ucp.dev/draft/specification/lodging/booking/), and read the full announcement in [GitHub Discussion #864](https://github.com/Universal-Commerce-Protocol/ucp/discussions/864).
-______________________________________________________________________
-
-## September 2, 2026: Payments Technical Council (Payments TC) Formed { #september-2-2026-payments-technical-council-payments-tc-formed }
-
-The nomination process for the Payments Technical Council (Payments TC) has officially closed. We are excited to welcome inaugural members Adyen NV, Ant International, Coinbase, Global Payments, Google, PayPal, Shopify, and Stripe to the Payments TC.
-
-For more details, read the full announcement in the [GitHub Discussion #798](https://github.com/Universal-Commerce-Protocol/ucp/discussions/798).
+Universal Commerce Protocol(UCP) 공지사항 페이지다. 이곳에서 프로토콜 업데이트, 새 릴리스, 거버넌스 관련 소식을 전한다.
 
 ______________________________________________________________________
 
-## August 25, 2026: Protocol Release v2026-08-25 { #august-25-2026-protocol-release-v2026-08-25 }
+## 2026년 9월 25일: UCP 숙박: 예약 기능 초안 명세 공개 { #september-25-2026-ucp-lodging-booking-capability-draft-spec-release }
 
-We have released version v2026-08-25 of the protocol. This release introduces major protocol enhancements, key structural refactorings to support multi-vertical expansion, payments security improvements (3DS2), structured request constraints, independent capability versioning, grocery shopping readiness and many more.
+숙박 예약 기능(`dev.ucp.lodging.booking`)의 첫 초안(draft)이 Universal Commerce Protocol 저장소에 병합되었다. 이로써 UCP는 공식적으로 숙박 도메인까지 확장된다. 이 기능은 숙박 기술 위원회(Lodging Technical Council: Amadeus, Booking.com, Expedia, Google, Hilton, Marriott, Trip.com)와 오픈소스 기여자들이 개발했으며, 실시간 가격·재고 확인, 투숙객 등록, 복잡한 결제 일정, 버티컬 간 기본 요소(primitive) 상호 운용성 등 호텔 예약의 기초 흐름을 지원한다.
 
-See the [v2026-08-25 Release Notes](https://github.com/Universal-Commerce-Protocol/ucp/releases/tag/v2026-08-25) for details on the changes.
+[UCP 숙박 문서](https://ucp.dev/draft/specification/lodging/booking/)를 살펴보고, 전체 공지는 [GitHub Discussion #864](https://github.com/Universal-Commerce-Protocol/ucp/discussions/864)에서 확인할 수 있다.
+______________________________________________________________________
+
+## 2026년 9월 2일: 결제 기술 위원회(Payments TC) 출범 { #september-2-2026-payments-technical-council-payments-tc-formed }
+
+결제 기술 위원회(Payments Technical Council, Payments TC) 후보 지명 절차가 공식 마감되었다. Adyen NV, Ant International, Coinbase, Global Payments, Google, PayPal, Shopify, Stripe가 Payments TC의 초대 위원으로 합류했다.
+
+자세한 내용은 [GitHub Discussion #798](https://github.com/Universal-Commerce-Protocol/ucp/discussions/798)의 전체 공지를 참고한다.
 
 ______________________________________________________________________
 
-## August 11, 2026: Lodging Technical Council (Lodging TC) Formed { #august-11-2026-lodging-technical-council-lodging-tc-formed }
+## 2026년 8월 25일: 프로토콜 릴리스 v2026-08-25 { #august-25-2026-protocol-release-v2026-08-25 }
 
-The nomination process for the Lodging Technical Council (Lodging TC) has officially closed. We are excited to welcome inaugural members Amadeus, Booking.com, Expedia, Google, Hilton, Marriott, and Trip.com to the Lodging TC.
+프로토콜 v2026-08-25 버전을 릴리스했다. 이번 릴리스에는 주요 프로토콜 개선, 멀티 버티컬 확장을 위한 핵심 구조 리팩터링, 결제 보안 강화(3DS2), 구조화된 요청 제약 조건, 기능별 독립 버전 관리, 식료품 쇼핑 지원 준비 등 많은 변경이 포함되었다.
 
-For more details, read the full announcement in the [GitHub Discussion #714](https://github.com/Universal-Commerce-Protocol/ucp/discussions/714).
-
-______________________________________________________________________
-
-## July 16, 2026: Food Technical Council (Food TC) Formed { #july-16-2026-food-technical-council-food-tc-formed }
-
-The UCP Governing Council finalized the foundational members of the newly formed Food Technical Council (Food TC). Initial members include Block (Square), DoorDash, Google, Toast, and Uber Eats.
-
-For more details, read the full announcement in the [GitHub Discussion #593](https://github.com/Universal-Commerce-Protocol/ucp/discussions/593).
+변경 사항은 [v2026-08-25 릴리스 노트](https://github.com/Universal-Commerce-Protocol/ucp/releases/tag/v2026-08-25)에서 확인할 수 있다.
 
 ______________________________________________________________________
 
-## April 28, 2026: Stripe Joins the Governing Council { #april-28-2026-stripe-joins-the-governing-council }
+## 2026년 8월 11일: 숙박 기술 위원회(Lodging TC) 출범 { #august-11-2026-lodging-technical-council-lodging-tc-formed }
 
-Stripe has joined the UCP Governing Council as a new member, joining existing permanent members Google and Shopify. Additionally, the Governing Council structure is being updated to add two more elected open seats for future nominations.
+숙박 기술 위원회(Lodging Technical Council, Lodging TC) 후보 지명 절차가 공식 마감되었다. Amadeus, Booking.com, Expedia, Google, Hilton, Marriott, Trip.com이 Lodging TC의 초대 위원으로 합류했다.
 
-For more details, read the full announcement in the [GitHub Discussion #396](https://github.com/Universal-Commerce-Protocol/ucp/discussions/396).
+자세한 내용은 [GitHub Discussion #714](https://github.com/Universal-Commerce-Protocol/ucp/discussions/714)의 전체 공지를 참고한다.
 
 ______________________________________________________________________
 
-## April 24, 2026: Technical Committee Expansion { #april-24-2026-technical-committee-expansion }
+## 2026년 7월 16일: 식품 기술 위원회(Food TC) 출범 { #july-16-2026-food-technical-council-food-tc-formed }
 
-The Tech Council has expanded its seats to 16, welcoming five new members:
+UCP 운영 위원회(Governing Council)가 새로 구성된 식품 기술 위원회(Food Technical Council, Food TC)의 창립 위원을 확정했다. 초기 위원은 Block(Square), DoorDash, Google, Toast, Uber Eats다.
+
+자세한 내용은 [GitHub Discussion #593](https://github.com/Universal-Commerce-Protocol/ucp/discussions/593)의 전체 공지를 참고한다.
+
+______________________________________________________________________
+
+## 2026년 4월 28일: Stripe, 운영 위원회 합류 { #april-28-2026-stripe-joins-the-governing-council }
+
+Stripe가 UCP 운영 위원회의 새 위원으로 합류하여 기존 상임 위원인 Google, Shopify와 함께하게 되었다. 아울러 향후 후보 지명을 위해 선출직 공개 의석 두 자리를 추가하도록 운영 위원회 구조를 개편하고 있다.
+
+자세한 내용은 [GitHub Discussion #396](https://github.com/Universal-Commerce-Protocol/ucp/discussions/396)의 전체 공지를 참고한다.
+
+______________________________________________________________________
+
+## 2026년 4월 24일: 기술 위원회 확대 { #april-24-2026-technical-committee-expansion }
+
+기술 위원회(Tech Council)가 의석을 16석으로 늘리고 다섯 명의 새 위원을 맞이했다.
 
 - Greg Smith (Amazon)
 - James Andersen (Meta)
@@ -61,28 +61,28 @@ The Tech Council has expanded its seats to 16, welcoming five new members:
 - Prasad Wangikar (Stripe)
 - Scot DeDeo (Salesforce)
 
-Read the details in the [GitHub Discussion #379](https://github.com/Universal-Commerce-Protocol/ucp/discussions/379).
+자세한 내용은 [GitHub Discussion #379](https://github.com/Universal-Commerce-Protocol/ucp/discussions/379)에서 확인할 수 있다.
 
 ______________________________________________________________________
 
-## April 8, 2026: Protocol Release v2026-04-08 { #april-8-2026-protocol-release-v2026-04-08 }
+## 2026년 4월 8일: 프로토콜 릴리스 v2026-04-08 { #april-8-2026-protocol-release-v2026-04-08 }
 
-We have released version v2026-04-08 of the protocol.
+프로토콜 v2026-04-08 버전을 릴리스했다.
 
-See the [v2026-04-08 Release Notes](https://github.com/Universal-Commerce-Protocol/ucp/releases/tag/v2026-04-08) for details on the changes.
-
-______________________________________________________________________
-
-## January 23, 2026: Protocol Release v2026-01-23 { #january-23-2026-protocol-release-v2026-01-23 }
-
-We have released version v2026-01-23 of the protocol.
-
-See the [v2026-01-23 Release Notes](https://github.com/Universal-Commerce-Protocol/ucp/releases/tag/v2026-01-23) for details on the changes.
+변경 사항은 [v2026-04-08 릴리스 노트](https://github.com/Universal-Commerce-Protocol/ucp/releases/tag/v2026-04-08)에서 확인할 수 있다.
 
 ______________________________________________________________________
 
-## January 11, 2026: Protocol Release v2026-01-11 { #january-11-2026-protocol-release-v2026-01-11 }
+## 2026년 1월 23일: 프로토콜 릴리스 v2026-01-23 { #january-23-2026-protocol-release-v2026-01-23 }
 
-We have released version v2026-01-11 of the protocol.
+프로토콜 v2026-01-23 버전을 릴리스했다.
 
-See the [v2026-01-11 Release Notes](https://github.com/Universal-Commerce-Protocol/ucp/releases/tag/v2026-01-11) for details on the changes.
+변경 사항은 [v2026-01-23 릴리스 노트](https://github.com/Universal-Commerce-Protocol/ucp/releases/tag/v2026-01-23)에서 확인할 수 있다.
+
+______________________________________________________________________
+
+## 2026년 1월 11일: 프로토콜 릴리스 v2026-01-11 { #january-11-2026-protocol-release-v2026-01-11 }
+
+프로토콜 v2026-01-11 버전을 릴리스했다.
+
+변경 사항은 [v2026-01-11 릴리스 노트](https://github.com/Universal-Commerce-Protocol/ucp/releases/tag/v2026-01-11)에서 확인할 수 있다.

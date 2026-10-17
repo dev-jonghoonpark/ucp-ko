@@ -14,16 +14,16 @@
    limitations under the License.
 -->
 
-# Cart Capability - REST Binding { #cart-capability-rest-binding }
+# 장바구니 기능 - REST 바인딩 { #cart-capability-rest-binding }
 
-This document specifies the REST binding for the [Cart Capability](index.md).
+이 문서는 [장바구니 기능](index.md)의 REST 바인딩을 명세한다.
 
-## Protocol Fundamentals { #protocol-fundamentals }
+## 프로토콜 기본 사항 { #protocol-fundamentals }
 
-### Discovery { #discovery }
+### 디스커버리 { #discovery }
 
-Businesses advertise REST transport availability through their UCP profile at
-`/.well-known/ucp`.
+비즈니스는 `/.well-known/ucp`에 있는 UCP 프로필을 통해 REST 전송 방식 지원 여부를
+공지한다.
 
 <!-- ucp:example schema=profile def=business_schema -->
 ```json
@@ -62,46 +62,46 @@ Businesses advertise REST transport availability through their UCP profile at
 }
 ```
 
-### Base URL { #base-url }
+### 기본 URL { #base-url }
 
-All UCP REST endpoints are relative to the business's base URL, which is
-discovered through the UCP profile at `/.well-known/ucp`. The endpoint for the
-cart capability is defined in the `rest.endpoint` field of the business profile.
+모든 UCP REST 엔드포인트는 비즈니스의 기본 URL을 기준으로 하며, 기본 URL은
+`/.well-known/ucp`의 UCP 프로필을 통해 디스커버리된다. 장바구니 기능의 엔드포인트는
+비즈니스 프로필의 `rest.endpoint` 필드에 정의된다.
 
-### Content Types { #content-types }
+### 콘텐츠 타입 { #content-types }
 
-* **Request**: `application/json`
-* **Response**: `application/json`
+* **요청**: `application/json`
+* **응답**: `application/json`
 
-All request and response bodies **MUST** be valid JSON as specified in
-[RFC 8259](https://tools.ietf.org/html/rfc8259){ target="_blank" }.
+모든 요청 및 응답 본문은 반드시
+[RFC 8259](https://tools.ietf.org/html/rfc8259){ target="_blank" }에 명시된 유효한 JSON이어야 한다(**MUST**).
 
-### Transport Security { #transport-security }
+### 전송 보안 { #transport-security }
 
-All REST endpoints **MUST** be served over HTTPS with minimum TLS version 1.3.
+모든 REST 엔드포인트는 반드시 최소 TLS 1.3 버전의 HTTPS로 제공되어야 한다(**MUST**).
 
-## Operations { #operations }
+## 작업 { #operations }
 
-| Operation | Method | Endpoint | Description |
+| 작업 | 메서드 | 엔드포인트 | 설명 |
 | :---- | :---- | :---- | :---- |
-| [Create Cart](#create-cart) | `POST` | `/carts` | Create a cart session. |
-| [Get Cart](#get-cart) | `GET` | `/carts/{id}` | Get a cart session. |
-| [Update Cart](#update-cart) | `PUT` | `/carts/{id}` | Update a cart session. |
-| [Cancel Cart](#cancel-cart) | `POST` | `/carts/{id}/cancel` | Cancel a cart session. |
+| [장바구니 생성](#create-cart) | `POST` | `/carts` | 장바구니 세션을 생성한다. |
+| [장바구니 조회](#get-cart) | `GET` | `/carts/{id}` | 장바구니 세션을 조회한다. |
+| [장바구니 수정](#update-cart) | `PUT` | `/carts/{id}` | 장바구니 세션을 수정한다. |
+| [장바구니 취소](#cancel-cart) | `POST` | `/carts/{id}/cancel` | 장바구니 세션을 취소한다. |
 
-### Create Cart { #create-cart }
+### 장바구니 생성 { #create-cart }
 
-#### Input Schema { #input-schema }
+#### 입력 스키마 { #input-schema }
 
 {{ schema_fields('cart_create_req', 'shopping/cart') }}
 
-#### Output Schema { #output-schema }
+#### 출력 스키마 { #output-schema }
 
 {{ schema_fields('cart_resp', 'shopping/cart') }}
 
-#### Example { #example }
+#### 예시 { #example }
 
-=== "Request"
+=== "요청"
 
     <!-- ucp:example schema=shopping/cart op=create direction=request -->
     ```json
@@ -126,7 +126,7 @@ All REST endpoints **MUST** be served over HTTPS with minimum TLS version 1.3.
     }
     ```
 
-=== "Response"
+=== "응답"
 
     <!-- ucp:example schema=shopping/cart op=read -->
     ```json
@@ -174,9 +174,9 @@ All REST endpoints **MUST** be served over HTTPS with minimum TLS version 1.3.
     }
     ```
 
-=== "Error Response"
+=== "에러 응답"
 
-    All items out of stock — no cart resource is created:
+    모든 상품이 품절된 경우 — 장바구니 리소스가 생성되지 않는다:
 
     <!-- ucp:example schema=common/types/error_response op=read -->
     ```json
@@ -197,26 +197,26 @@ All REST endpoints **MUST** be served over HTTPS with minimum TLS version 1.3.
     }
     ```
 
-### Get Cart { #get-cart }
+### 장바구니 조회 { #get-cart }
 
-#### Input Schema { #input-schema_1 }
+#### 입력 스키마 { #input-schema_1 }
 
-* `id` (String, required): The cart session ID (path parameter).
+* `id` (String, 필수): 장바구니 세션 ID(경로 매개변수).
 
-#### Output Schema { #output-schema_1 }
+#### 출력 스키마 { #output-schema_1 }
 
 {{ schema_fields('cart_resp', 'shopping/cart') }}
 
-#### Example { #example_1 }
+#### 예시 { #example_1 }
 
-=== "Request"
+=== "요청"
 
     ```http
     GET /carts/{id} HTTP/1.1
     UCP-Agent: profile="https://platform.example/profile"
     ```
 
-=== "Response"
+=== "응답"
 
     <!-- ucp:example schema=shopping/cart op=read -->
     ```json
@@ -263,7 +263,7 @@ All REST endpoints **MUST** be served over HTTPS with minimum TLS version 1.3.
     }
     ```
 
-=== "Not Found"
+=== "찾을 수 없음"
 
     <!-- ucp:example schema=common/types/error_response op=read -->
     ```json
@@ -290,21 +290,21 @@ All REST endpoints **MUST** be served over HTTPS with minimum TLS version 1.3.
     }
     ```
 
-### Update Cart { #update-cart }
+### 장바구니 수정 { #update-cart }
 
-#### Input Schema { #input-schema_2 }
+#### 입력 스키마 { #input-schema_2 }
 
-* `id` (String, required): The cart session ID (path parameter).
+* `id` (String, 필수): 장바구니 세션 ID(경로 매개변수).
 
 {{ schema_fields('cart_update_req', 'shopping/cart') }}
 
-#### Output Schema { #output-schema_2 }
+#### 출력 스키마 { #output-schema_2 }
 
 {{ schema_fields('cart_resp', 'shopping/cart') }}
 
-#### Example { #example_2 }
+#### 예시 { #example_2 }
 
-=== "Request"
+=== "요청"
 
     <!-- ucp:example schema=shopping/cart op=update direction=request -->
     ```json
@@ -337,7 +337,7 @@ All REST endpoints **MUST** be served over HTTPS with minimum TLS version 1.3.
     }
     ```
 
-=== "Response"
+=== "응답"
 
     <!-- ucp:example schema=shopping/cart op=read -->
     ```json
@@ -397,19 +397,19 @@ All REST endpoints **MUST** be served over HTTPS with minimum TLS version 1.3.
     }
     ```
 
-### Cancel Cart { #cancel-cart }
+### 장바구니 취소 { #cancel-cart }
 
-#### Input Schema { #input-schema_3 }
+#### 입력 스키마 { #input-schema_3 }
 
-* `id` (String, required): The cart session ID (path parameter).
+* `id` (String, 필수): 장바구니 세션 ID(경로 매개변수).
 
-#### Output Schema { #output-schema_3 }
+#### 출력 스키마 { #output-schema_3 }
 
 {{ schema_fields('cart_resp', 'shopping/cart') }}
 
-#### Example { #example_3 }
+#### 예시 { #example_3 }
 
-=== "Request"
+=== "요청"
 
     <!-- ucp:example schema=shopping/cart op=cancel direction=request -->
     ```json
@@ -420,7 +420,7 @@ All REST endpoints **MUST** be served over HTTPS with minimum TLS version 1.3.
     {}
     ```
 
-=== "Response"
+=== "응답"
 
     <!-- ucp:example schema=shopping/cart op=read -->
     ```json
@@ -466,48 +466,48 @@ All REST endpoints **MUST** be served over HTTPS with minimum TLS version 1.3.
     }
     ```
 
-## HTTP Headers { #http-headers }
+## HTTP 헤더 { #http-headers }
 
-The following headers are defined for the HTTP binding and apply to all
-operations unless otherwise noted.
+다음 헤더는 HTTP 바인딩용으로 정의되며, 별도로 명시하지 않는 한 모든 작업에
+적용된다.
 
 {{ header_fields('create_cart', 'shopping/rest.openapi.json') }}
 
-### Specific Header Requirements { #specific-header-requirements }
+### 개별 헤더 요구 사항 { #specific-header-requirements }
 
 {{ header_requirements('ucp_agent', 'idempotency_key') }}
 
-## Protocol Mechanics { #protocol-mechanics }
+## 프로토콜 동작 방식 { #protocol-mechanics }
 
-### Status Codes { #status-codes }
+### 상태 코드 { #status-codes }
 
-| Status Code | Description |
+| 상태 코드 | 설명 |
 | :--- | :--- |
-| `200 OK` | The request was successful. |
-| `201 Created` | The cart was successfully created. |
-| `400 Bad Request` | The request was invalid or cannot be served. |
-| `401 Unauthorized` | Authentication is required and has failed or has not been provided. |
-| `403 Forbidden` | The request is authenticated but the user does not have the necessary permissions. |
-| `409 Conflict` | The request could not be completed due to a conflict (e.g., idempotent key reuse). |
-| `422 Unprocessable Entity` | The profile content is malformed (discovery failure). |
-| `424 Failed Dependency` | The profile URL is valid but fetch failed (discovery failure). |
-| `429 Too Many Requests` | Rate limit exceeded. |
-| `500 Internal Server Error` | An unexpected condition was encountered on the server. |
-| `503 Service Unavailable` | Temporary unavailability. |
+| `200 OK` | 요청이 성공했다. |
+| `201 Created` | 장바구니가 성공적으로 생성되었다. |
+| `400 Bad Request` | 요청이 유효하지 않거나 처리할 수 없다. |
+| `401 Unauthorized` | 인증이 필요하지만 실패했거나 제공되지 않았다. |
+| `403 Forbidden` | 요청은 인증되었지만 사용자에게 필요한 권한이 없다. |
+| `409 Conflict` | 충돌로 인해 요청을 완료할 수 없다(예: 멱등성 키 재사용). |
+| `422 Unprocessable Entity` | 프로필 내용의 형식이 잘못되었다(디스커버리 실패). |
+| `424 Failed Dependency` | 프로필 URL은 유효하지만 가져오기에 실패했다(디스커버리 실패). |
+| `429 Too Many Requests` | 요청 한도를 초과했다. |
+| `500 Internal Server Error` | 서버에서 예기치 않은 상황이 발생했다. |
+| `503 Service Unavailable` | 일시적으로 사용할 수 없다. |
 
-### Error Responses { #error-responses }
+### 에러 응답 { #error-responses }
 
-See the [Core Specification](../../overview/index.md#error-handling) for the complete error
-code registry and transport binding examples.
+전체 에러 코드 레지스트리와 전송 방식 바인딩 예시는
+[핵심 명세](../../overview/index.md#error-handling)를 참고한다.
 
-* **Protocol errors**: Return appropriate HTTP status code (401, 403, 409, 429,
-    503) with JSON body containing `code` and `content`.
-* **Business outcomes**: Return HTTP 200 with UCP envelope and `messages` array.
+* **프로토콜 에러**: 적절한 HTTP 상태 코드(401, 403, 409, 429,
+    503)와 함께 `code`와 `content`를 담은 JSON 본문을 반환한다.
+* **비즈니스 결과**: UCP 엔벨로프와 `messages` 배열을 담아 HTTP 200을 반환한다.
 
-#### Business Outcomes { #business-outcomes }
+#### 비즈니스 결과 { #business-outcomes }
 
-Business outcomes (including not found and validation errors) are returned with
-HTTP 200 and the UCP envelope containing `messages`:
+비즈니스 결과(찾을 수 없음 및 유효성 검사 에러 포함)는 HTTP 200과 함께
+`messages`를 담은 UCP 엔벨로프로 반환된다:
 
 <!-- ucp:example schema=common/types/error_response op=read -->
 ```json
@@ -531,19 +531,19 @@ HTTP 200 and the UCP envelope containing `messages`:
 }
 ```
 
-## Security Considerations { #security-considerations }
+## 보안 고려 사항 { #security-considerations }
 
-### Authentication { #authentication }
+### 인증 { #authentication }
 
-Authentication is optional and depends on business requirements. When
-authentication is required, the REST transport **MAY** use:
+인증은 선택 사항이며 비즈니스 요구 사항에 따라 달라진다. 인증이 필요한 경우
+REST 전송 방식은 다음을 사용할 수 있다(**MAY**):
 
-1. **Open API**: No authentication required for public operations.
-2. **API Keys**: Via `X-API-Key` header.
-3. **OAuth 2.0**: Via `Authorization: Bearer {token}` header. Identifies the
-   platform for agent-authenticated access, or both platform and user for
-   user-authenticated access (see [Identity Linking](../../common/identity-linking/index.md)).
-4. **Mutual TLS**: For high-security environments.
+1. **Open API**: 공개 작업에는 인증이 필요하지 않다.
+2. **API 키**: `X-API-Key` 헤더를 통해 전달한다.
+3. **OAuth 2.0**: `Authorization: Bearer {token}` 헤더를 통해 전달한다. 에이전트 인증
+   접근에서는 플랫폼을 식별하고, 사용자 인증 접근에서는 플랫폼과 사용자를 모두
+   식별한다([신원 연결](../../common/identity-linking/index.md) 참고).
+4. **Mutual TLS**: 높은 보안이 요구되는 환경에 사용한다.
 
-Businesses **MAY** require authentication for some operations while leaving
-others open (e.g., public cart without authentication).
+비즈니스는 일부 작업에는 인증을 요구하고 나머지 작업은 공개로 둘 수 있다(**MAY**)
+(예: 인증 없는 공개 장바구니).

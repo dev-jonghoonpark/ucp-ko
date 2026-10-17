@@ -14,45 +14,43 @@
    limitations under the License.
 -->
 
-# Payment Handler Specification Guide { #payment-handler-specification-guide }
+# 결제 핸들러 명세 작성 가이드 { #payment-handler-specification-guide }
 
-## Introduction { #introduction }
+## 소개 { #introduction }
 
-This guide defines the standard structure and vocabulary for specifying UCP
-payment handlers. All payment handler specifications **SHOULD** follow this
-structure to ensure consistency, completeness, and clarity for implementers.
+이 가이드는 UCP 결제 핸들러를 명세할 때 사용하는 표준 구조와 용어를 정의한다. 구현자에게
+일관성, 완전성, 명확성을 보장하기 위해 모든 결제 핸들러 명세는 이 구조를 따라야
+한다(**SHOULD**).
 
-### Purpose { #purpose }
+### 목적 { #purpose }
 
-Payment handlers enable "N-to-N" interoperability between platforms, businesses,
-and payment providers. A well-specified handler must answer these questions for
-each participant:
+결제 핸들러는 플랫폼, 비즈니스, 결제 제공자 사이의 "N 대 N" 상호 운용성을 가능하게 한다.
+잘 명세된 핸들러는 각 참여자에 대해 다음 질문에 답해야 한다.
 
-- **Who participates?** What participants are involved and what are their roles?
-- **What are the prerequisites?** What onboarding or setup is required?
-- **How is it configured?** What configuration is advertised or consumed?
-- **How is it executed?** What protocol is followed to acquire or process instruments?
+- **누가 참여하는가?** 어떤 참여자가 관여하며 각자의 역할은 무엇인가?
+- **사전 요건은 무엇인가?** 어떤 온보딩이나 설정이 필요한가?
+- **어떻게 구성되는가?** 어떤 구성이 광고되거나 사용되는가?
+- **어떻게 실행되는가?** 결제 수단을 획득하거나 처리하기 위해 어떤 프로토콜을 따르는가?
 
-This guide provides a framework that ensures every handler specification answers
-these questions systematically.
+이 가이드는 모든 핸들러 명세가 이 질문들에 체계적으로 답하도록 보장하는 프레임워크를
+제공한다.
 
-### Scope { #scope }
+### 적용 범위 { #scope }
 
-This guide applies to:
+이 가이드는 다음에 적용된다.
 
-- **Handlers** (e.g., `com.google.pay`, `dev.shopify.shop_pay`) — Specific
-  payment method implementations
+- **핸들러**(예: `com.google.pay`, `dev.shopify.shop_pay`) — 특정 결제 방법의
+  구현
 
 ---
 
-## Core Concepts { #core-concepts }
+## 핵심 개념 { #core-concepts }
 
-Every payment handler specification **MUST** define the core elements below.
+모든 결제 핸들러 명세는 아래의 핵심 요소를 반드시 정의해야 한다(**MUST**).
 
-**Note on Protocol Signatures:**: The function signatures provided in this
-section (e.g., `PROCESSING(...)`) represent **logical data flows**, not literal
-function calls. Spec authors must map these logical flows to the actual
-transport protocol used by their implementation.
+**프로토콜 시그니처에 관한 참고:**: 이 섹션에 나오는 함수 시그니처(예:
+`PROCESSING(...)`)는 실제 함수 호출이 아니라 **논리적 데이터 흐름**을 나타낸다. 명세
+작성자는 이 논리적 흐름을 자신의 구현이 사용하는 실제 전송 프로토콜에 대응시켜야 한다.
 
 ```text
 +------------------------------------------------------------------------------+
@@ -80,93 +78,89 @@ transport protocol used by their implementation.
 +------------------------------------------------------------------------------+
 ```
 
-### Participants { #participants }
+### 참여자 { #participants }
 
-**Definition:** The distinct actors that participate in the payment handler's
-lifecycle. Every handler has at minimum two participants (business and
-platform), but **MAY** define additional participants with specific roles.
+**정의:** 결제 핸들러의 수명 주기에 참여하는 개별 행위자. 모든 핸들러에는 최소 두
+참여자(비즈니스와 플랫폼)가 있으며, 특정 역할을 맡는 추가 참여자를 정의할 수
+있다(**MAY**).
 
-**Note on Terminology:**: While this guide refers to the participant as the
-**"Business"**, technical schema fields may retain the standard industry
-nomenclature **`merchant_*`** (e.g., `merchant_id`, `merchant_name`).
-Specifications **MUST** explicitly document these field mappings.
+**용어에 관한 참고:**: 이 가이드는 해당 참여자를 "**비즈니스(Business)**"라고 부르지만,
+기술적인 스키마 필드에는 업계 표준 명칭인 **`merchant_*`**(예: `merchant_id`,
+`merchant_name`)가 그대로 남아 있을 수 있다. 명세는 이러한 필드 대응 관계를 반드시
+명시적으로 문서화해야 한다(**MUST**).
 
-**Standard Participants:**
+**표준 참여자:**
 
-| Participant  | Role                                                               |
+| 참여자  | 역할                                                               |
 | :----------- | :----------------------------------------------------------------- |
-| **Business** | Advertises handler configuration, processes payment instruments    |
-| **Platform** | Discovers handlers, acquires payment instruments, submits checkout |
+| **비즈니스** | 핸들러 구성을 광고하고, 결제 수단을 처리한다    |
+| **플랫폼** | 핸들러를 찾고, 결제 수단을 획득하고, 체크아웃을 제출한다 |
 
-**Extended Participants** (example handler-specific participants):
+**확장 참여자**(핸들러별 참여자 예시):
 
-| Participant   | Example Role                                                           |
+| 참여자   | 역할 예시                                                           |
 | :------------ | :--------------------------------------------------------------------- |
-| **Tokenizer** | Stores raw credentials and issues token credentials                    |
-| **PSP**       | Processes payments on behalf of business using the checkout instrument |
+| **토크나이저(Tokenizer)** | 원본 자격 증명을 저장하고 토큰 자격 증명을 발급한다                    |
+| **PSP**       | 체크아웃 결제 수단을 사용해 비즈니스를 대신해 결제를 처리한다 |
 
-### Prerequisites { #prerequisites }
+### 사전 요건 { #prerequisites }
 
-**Definition:** The onboarding, setup, or configuration a participant must
-complete before participating in the handler's flows.
+**정의:** 참여자가 핸들러 흐름에 참여하기 전에 완료해야 하는 온보딩, 설정 또는 구성.
 
-**Signature:**
+**시그니처:**
 
 ```text
 PREREQUISITES(participant, onboarding_input) → prerequisites_output
 ```
 
-| Field                  | Description                                                |
+| 필드                  | 설명                                                |
 | :--------------------- | :--------------------------------------------------------- |
-| `participant`          | The participant being onboarded (business, platform, etc.) |
-| `onboarding_input`     | What the participant provides during setup                 |
-| `prerequisites_output` | The identity and any additional configuration received     |
+| `participant`          | 온보딩 대상 참여자(비즈니스, 플랫폼 등) |
+| `onboarding_input`     | 참여자가 설정 과정에서 제공하는 정보                 |
+| `prerequisites_output` | 받은 신원 정보와 추가 구성     |
 
-**Prerequisites Output:**
+**사전 요건 출력:**
 
-The `prerequisites_output` contains what a participant receives from onboarding.
-At minimum, this includes an **identity** (see [Payment Identity](site:schemas/common/types/payment_identity.json)).
-It **MAY** also include additional configuration, credentials, or settings
-specific to the handler.
+`prerequisites_output`에는 참여자가 온보딩에서 받는 내용이 담긴다. 최소한
+**신원**(identity)이 포함된다([결제 신원](site:schemas/common/types/payment_identity.json) 참고).
+핸들러별 추가 구성, 자격 증명, 설정도 포함할 수 있다(**MAY**).
 
-Payment handler specifications **are not required** to define a formal schema
-for `prerequisites_output`. Instead, the specification **SHOULD** clearly
-document:
+결제 핸들러 명세가 `prerequisites_output`의 정식 스키마를 정의할 **필요는 없다**. 대신
+명세는 다음을 명확히 문서화해야 한다(**SHOULD**).
 
-- What identity is assigned (and how it maps to `PaymentIdentity`)
-- What additional configuration is provided
-- How the prerequisites output is used in Handler Declaration, Instrument Acquisition, or Processing
+- 어떤 신원이 할당되는지(그리고 `PaymentIdentity`에 어떻게 대응하는지)
+- 어떤 추가 구성이 제공되는지
+- 사전 요건 출력이 핸들러 선언, 결제 수단 획득, 처리 단계에서 어떻게 쓰이는지
 
-**Notes:**
+**참고:**
 
-- Prerequisites typically occur out-of-band (portals, contracts, API calls)
-- Multiple participants **MAY** have independent prerequisites
-- The identity from prerequisites typically appears within the handler's
-  `config` object (e.g., as `merchant_id` or similar handler-specific field)
-- Participants receiving raw credentials (e.g., businesses, PSPs) typically must complete security acknowledgements during onboarding, accepting responsibility for credential handling and compliance
+- 사전 요건은 보통 대역 외(out-of-band)에서 처리된다(포털, 계약, API 호출)
+- 여러 참여자가 각자 독립적인 사전 요건을 가질 수 있다(**MAY**)
+- 사전 요건에서 받은 신원은 보통 핸들러의 `config` 객체 안에 나타난다(예:
+  `merchant_id` 또는 이와 유사한 핸들러별 필드)
+- 원본 자격 증명을 받는 참여자(예: 비즈니스, PSP)는 보통 온보딩 중에 보안 확인 절차를 완료해, 자격 증명 처리와 규정 준수에 대한 책임을 수락해야 한다
 
-### Handler Declaration { #handler-declaration }
+### 핸들러 선언 { #handler-declaration }
 
-**Definition:** The configuration a business advertises to indicate support for
-this handler and enable platforms to invoke it.
+**정의:** 비즈니스가 이 핸들러를 지원함을 나타내고 플랫폼이 핸들러를 호출할 수 있도록
+광고하는 구성.
 
-**Signature:**
+**시그니처:**
 
 ```text
 HANDLER_DECLARATION(prerequisites_output) → handler_declaration
 ```
 
-| Field                  | Description                                                    |
+| 필드                  | 설명                                                    |
 | :--------------------- | :------------------------------------------------------------- |
-| `prerequisites_output` | The identity and configuration from business prerequisites     |
-| `handler_declaration`  | The handler object advertised in `ucp.payment_handlers`        |
+| `prerequisites_output` | 비즈니스 사전 요건에서 얻은 신원과 구성     |
+| `handler_declaration`  | `ucp.payment_handlers`에 광고되는 핸들러 객체        |
 
-**Output Structure:**
+**출력 구조:**
 
-The handler declaration conforms to the [`PaymentHandler`](site:schemas/payment_handler.json)
-schema. The specification **SHOULD** define the available config and instrument
-schemas, and how to construct each based on the business's prerequisites output
-and desired configuration.
+핸들러 선언은 [`PaymentHandler`](site:schemas/payment_handler.json) 스키마를 따른다.
+명세는 사용 가능한 구성 스키마와 결제 수단 스키마를 정의하고, 비즈니스의 사전 요건 출력과
+원하는 구성을 바탕으로 각각을 구성하는 방법을 정의해야 한다(**SHOULD**).
 
 <!-- ucp:example schema=profile def=business_schema target=$.ucp.payment_handlers -->
 ```json
@@ -186,17 +180,15 @@ and desired configuration.
 }
 ```
 
-**`available_instruments`** is optional. When absent, the handler places no
-restrictions on instrument types or constraints — it supports the full set of
-instrument types defined by its handler schema. When present, it narrows the
-advertised types and/or applies additional constraints (e.g., limiting card
-brands to `visa` and `mastercard`). In a Business profile and authoritative
-response, array order communicates preferred instrument presentation, earliest
-first.
+**`available_instruments`** 필드는 선택 사항이다. 없으면 핸들러는 결제 수단 유형이나 제약
+조건에 아무런 제한을 두지 않으며, 핸들러 스키마가 정의하는 모든 결제 수단 유형을
+지원한다. 있으면 광고되는 유형을 좁히거나 추가 제약 조건을 적용한다(예: 카드 브랜드를
+`visa`와 `mastercard`로 제한). 비즈니스 프로필과 권위 있는 응답에서 배열 순서는 선호하는
+결제 수단 표시 순서를 나타내며, 앞에 있을수록 우선한다.
 
-Each entry narrows along two axes. Both are
-[Constraint Expressions](../overview/index.md#constraint-expression), so one
-evaluator runs both; they differ only in the object they describe:
+각 항목은 두 축을 따라 범위를 좁힌다. 둘 다
+[제약 표현식(Constraint Expression)](../overview/index.md#constraint-expression)이므로
+하나의 평가기가 둘을 모두 처리하며, 차이는 설명하는 객체뿐이다.
 
 ```text
 available_instruments[]
@@ -205,32 +197,28 @@ available_instruments[]
 └── ucp.request_constraints    describes the request that submits it, via `path`
 ```
 
-`constraints` admits no `path`. Its object is standing, not selected: the
-instrument schema for the entry's `type` declares it as `$defs/constraint_target`,
-and keys in `properties` name that object's members. The target holds what the
-Business derives rather than receives — for cards, `brand`, read from the account
-number and surviving tokenization — which is why those values cannot be expressed
-as requirements on request data.
+`constraints`에는 `path`를 지정할 수 없다. 그 대상 객체는 선택되는 것이 아니라 고정되어
+있다. 항목의 `type`에 해당하는 결제 수단 스키마가 이를 `$defs/constraint_target`으로
+선언하며, `properties`의 키는 그 객체의 멤버를 가리킨다. 대상에는 비즈니스가 받는 값이
+아니라 도출하는 값이 담긴다. 카드의 경우 계좌 번호에서 읽어 내고 토큰화 후에도 유지되는
+`brand`가 그렇다. 이 때문에 이런 값은 요청 데이터에 대한 요구 사항으로 표현할 수 없다.
 
-`ucp.request_constraints` carries everything that *is* on the wire: which
-instrument fields are required, which credential types are accepted, and which
-fields each of those credential types must carry. Use field requirements rather
-than handler-specific booleans for modeled data.
+`ucp.request_constraints`는 실제로 전송되는 *모든 것*을 다룬다. 어떤 결제 수단 필드가
+필수인지, 어떤 자격 증명 유형을 받는지, 각 자격 증명 유형이 어떤 필드를 담아야 하는지를
+기술한다. 모델링된 데이터에는 핸들러별 불리언 대신 필드 요구 사항을 사용한다.
 
-When an authoritative response includes `ucp.request_constraints` on an
-available instrument, the Business **MUST** include an explicit `path` because
-the available instrument's response Normalized Path does not identify submitted
-instruments. The path matches the containing handler's `id`
-to submitted `handler_id` and the available instrument's `type` to submitted
-`type`, and applies when the next request contains matching instruments.
-Payment-handler and instrument specifications define any stronger association
-the query needs. See [Request Constraints](../overview/index.md#request-constraints).
+권위 있는 응답이 사용 가능한 결제 수단에 `ucp.request_constraints`를 포함하는 경우,
+사용 가능한 결제 수단의 응답 정규화 경로(Normalized Path)로는 제출된 결제 수단을 식별할 수
+없으므로 비즈니스는 반드시 명시적인 `path`를 포함해야 한다(**MUST**). 이 경로는 해당
+항목을 담은 핸들러의 `id`를 제출된 `handler_id`에, 사용 가능한 결제 수단의 `type`을
+제출된 `type`에 매칭하며, 다음 요청에 일치하는 결제 수단이 포함될 때 적용된다. 쿼리에
+더 강한 연관이 필요하다면 결제 핸들러 명세와 결제 수단 명세가 이를 정의한다.
+[요청 제약 조건](../overview/index.md#request-constraints)을 참고한다.
 
-One path selects the submitted instrument, and one Constraint Expression
-describes it. Requirements shared by every instrument of the type are sibling
-members; requirements that differ per credential family are `anyOf` branches on
-the nested `credential` object. Splitting the credential families into distinct
-schemas is what gives each branch a stable discriminator.
+하나의 경로가 제출된 결제 수단을 선택하고, 하나의 제약 표현식이 그것을 설명한다. 해당
+유형의 모든 결제 수단에 공통인 요구 사항은 형제 멤버로 두고, 자격 증명 계열마다 다른 요구
+사항은 중첩된 `credential` 객체의 `anyOf` 분기로 둔다. 자격 증명 계열을 별도 스키마로
+나누기 때문에 각 분기가 안정적인 판별자를 갖게 된다.
 
 <!-- ucp:example schema=payment_handler def=business_schema -->
 ```json
@@ -261,28 +249,28 @@ schemas is what gives each branch a stable discriminator.
 }
 ```
 
-The sibling members apply to every card instrument from this handler. The
-branches accept either a PAN credential carrying a `cvc` or a network token,
-which `network_token_credential.json` already requires to carry a `cryptogram`;
-a credential of any other type satisfies neither branch. Declared constraints
-are the upfront minimum; dynamic requirements still use recoverable errors and
-[`message_error.path`](site:schemas/common/types/message_error.json).
+형제 멤버는 이 핸들러의 모든 카드 결제 수단에 적용된다. 분기는 `cvc`를 담은 PAN 자격
+증명이나 네트워크 토큰 중 하나를 받는다. 네트워크 토큰은 `network_token_credential.json`이
+이미 `cryptogram`을 담도록 요구한다. 그 밖의 유형의 자격 증명은 어느 분기도 충족하지
+못한다. 선언된 제약 조건은 사전에 제시하는 최소 요건이며, 동적 요구 사항은 여전히 복구
+가능한 오류와 [`message_error.path`](site:schemas/common/types/message_error.json)를
+사용한다.
 
 ---
 
-#### Handler Declaration Variants { #handler-declaration-variants }
+#### 핸들러 선언 변형 { #handler-declaration-variants }
 
-The `PaymentHandler` schema defines three variants for different contexts. While only
-`id` and `version` are technically required, each variant serves a distinct purpose
-and typically includes different configuration:
+`PaymentHandler` 스키마는 맥락에 따라 세 가지 변형을 정의한다. 기술적으로 필수인 것은
+`id`와 `version`뿐이지만, 각 변형은 서로 다른 목적을 가지며 보통 서로 다른 구성을
+포함한다.
 
-| Variant | Context | Purpose |
+| 변형 | 맥락 | 목적 |
 | :------ | :------ | :------ |
-| **business_schema** | Business discovery (`/.well-known/ucp`) | Declares the business identity and how they're configured for this handler. Contains merchant-specific settings. |
-| **platform_schema** | Platform profile (advertised URI) | Declares the platform identity and how it supports this handler. Includes `spec` and `schema` URLs for implementers. |
-| **response_schema** | Checkout/Order API responses | **Runtime configuration** with resolved context: merchant identity, resolved `available_instruments` for this checkout, tokenization specs, and other state needed to process the transaction. Platforms **MUST** treat this as authoritative. |
+| **business_schema** | 비즈니스 디스커버리(`/.well-known/ucp`) | 비즈니스 신원과 이 핸들러에 대한 비즈니스의 구성 방식을 선언한다. 판매자별 설정을 담는다. |
+| **platform_schema** | 플랫폼 프로필(광고된 URI) | 플랫폼 신원과 플랫폼이 이 핸들러를 지원하는 방식을 선언한다. 구현자를 위한 `spec`, `schema` URL을 포함한다. |
+| **response_schema** | 체크아웃/주문 API 응답 | 확정된 맥락을 담은 **런타임 구성**: 판매자 신원, 이 체크아웃에 대해 확정된 `available_instruments`, 토큰화 명세, 거래 처리에 필요한 기타 상태. 플랫폼은 반드시 이를 권위 있는 정보로 취급해야 한다(**MUST**). |
 
-**Business Schema Example** (business declares handler configuration):
+**비즈니스 스키마 예시**(비즈니스가 핸들러 구성을 선언):
 
 <!-- ucp:example schema=payment_handler def=business_schema -->
 ```json
@@ -306,7 +294,7 @@ and typically includes different configuration:
 }
 ```
 
-**Platform Schema Example** (platform declares handler support):
+**플랫폼 스키마 예시**(플랫폼이 핸들러 지원을 선언):
 
 <!-- ucp:example schema=payment_handler def=platform_schema -->
 ```json
@@ -330,7 +318,7 @@ and typically includes different configuration:
 }
 ```
 
-**Response Schema Example** (runtime context for checkout):
+**응답 스키마 예시**(체크아웃의 런타임 맥락):
 
 <!-- ucp:example schema=payment_handler def=response_schema -->
 ```json
@@ -353,53 +341,52 @@ and typically includes different configuration:
 }
 ```
 
-#### Resolving `available_instruments` { #resolving-available_instruments }
+#### `available_instruments` 확정 { #resolving-available_instruments }
 
-Both the platform and the business independently advertise `available_instruments`
-in their profiles. The business is responsible for resolving these into the
-authoritative value returned in the `response_schema`.
+플랫폼과 비즈니스는 각자의 프로필에서 독립적으로 `available_instruments`를 광고한다.
+이를 `response_schema`로 반환되는 권위 있는 값으로 확정하는 책임은 비즈니스에 있다.
 
-**Resolution flow:**
+**확정 흐름:**
 
-1. **Platform declares capabilities** — the platform's profile includes
-   `available_instruments` on each handler declaration. This tells the business
-   what the platform can handle (e.g., it only supports
-   `["visa", "mastercard", "amex", "discover"]`).
+1. **플랫폼이 지원 범위를 선언한다** — 플랫폼 프로필은 각 핸들러 선언에
+   `available_instruments`를 포함한다. 이를 통해 비즈니스는 플랫폼이 무엇을 처리할 수
+   있는지 알게 된다(예: `["visa", "mastercard", "amex", "discover"]`만
+   지원).
 
-2. **Business resolves** — upon receiving a request, the business computes the
-   resolved `available_instruments` for the checkout by intersecting:
-   - The platform's advertised `available_instruments` (its capabilities)
-   - Its own `business_schema` declaration (what the merchant is actually set up to accept)
-   - Cart/checkout context (e.g., certain item types may restrict eligible methods)
+2. **비즈니스가 확정한다** — 요청을 받으면 비즈니스는 다음의 교집합을 구해 해당
+   체크아웃에 대해 확정된 `available_instruments`를 계산한다.
+   - 플랫폼이 광고한 `available_instruments`(플랫폼의 지원 범위)
+   - 자신의 `business_schema` 선언(판매자가 실제로 받도록 설정된 결제 수단)
+   - 장바구니/체크아웃 맥락(예: 특정 상품 유형은 사용할 수 있는 결제 방법을 제한할 수 있음)
 
-3. **Response is authoritative** — the `available_instruments` in the
-   `response_schema` reflects the business's resolved selection for this specific
-   checkout. Platforms **MUST** treat it as authoritative and **MUST NOT** attempt
-   to use instrument types or apply constraints that contradict it.
+3. **응답이 권위를 갖는다** — `response_schema`의 `available_instruments`는 이 특정
+   체크아웃에 대한 비즈니스의 확정된 선택을 반영한다. 플랫폼은 반드시 이를 권위 있는
+   정보로 취급해야 하며(**MUST**), 이와 모순되는 결제 수단 유형을 사용하거나 제약
+   조건을 적용하려 해서는 안 된다(**MUST NOT**).
 
-**Example:**
+**예시:**
 
-| Source | `available_instruments` |
+| 출처 | `available_instruments` |
 | :----- | :---------------------- |
-| Platform profile | `[{type: "card", constraints: {properties: {brand: {enum: ["visa", "mastercard", "amex", "discover"]}}}}]` |
-| Business profile | `[{type: "card", constraints: {properties: {brand: {enum: ["visa", "mastercard", "amex"]}}}}]` |
-| **Response (resolved)** | `[{type: "card", constraints: {properties: {brand: {enum: ["visa", "mastercard", "amex"]}}}}]` |
+| 플랫폼 프로필 | `[{type: "card", constraints: {properties: {brand: {enum: ["visa", "mastercard", "amex", "discover"]}}}}]` |
+| 비즈니스 프로필 | `[{type: "card", constraints: {properties: {brand: {enum: ["visa", "mastercard", "amex"]}}}}]` |
+| **응답(확정)** | `[{type: "card", constraints: {properties: {brand: {enum: ["visa", "mastercard", "amex"]}}}}]` |
 
-In this example, the business's PSP is not configured for Discover, so Discover
-is excluded from the response even though the platform supports it.
+이 예시에서는 비즈니스의 PSP가 Discover를 지원하도록 설정되어 있지 않으므로, 플랫폼이
+Discover를 지원하더라도 응답에서 제외된다.
 
 ---
 
-#### Defining the Schema { #defining-the-schema }
+#### 스키마 정의 { #defining-the-schema }
 
-The `schema` field points to a JSON schema that defines handler-specific shapes.
-Authors typically define each shape in its own file and reference them:
+`schema` 필드는 핸들러별 형태를 정의하는 JSON 스키마를 가리킨다. 작성자는 보통 각 형태를
+별도 파일로 정의하고 참조한다.
 
-- **Config** — Configuration for platform/business declarations and runtime responses
-- **Instrument** — The payment instrument structure returned to platforms
-- **Credential** — The credential structure within instruments
+- **구성(Config)** — 플랫폼/비즈니스 선언과 런타임 응답을 위한 구성
+- **결제 수단(Instrument)** — 플랫폼에 반환되는 결제 수단 구조
+- **자격 증명(Credential)** — 결제 수단 안의 자격 증명 구조
 
-**Example Handler Schema:**
+**핸들러 스키마 예시:**
 
 <!-- ucp:example skip reason="handler schema definition" -->
 ```json
@@ -479,17 +466,17 @@ Authors typically define each shape in its own file and reference them:
 
 ---
 
-#### Config Shapes { #config-shapes }
+#### 구성 형태 { #config-shapes }
 
-Each variant has its own config schema tailored to its context:
+각 변형에는 맥락에 맞춘 고유한 구성 스키마가 있다.
 
-| Variant | Config File | Purpose |
+| 변형 | 구성 파일 | 목적 |
 | :------ | :---------- | :------ |
-| **business_schema** | `types/business_config.json` | Business identity and merchant-specific settings |
-| **platform_schema** | `types/platform_config.json` | Platform identity and platform-level settings |
-| **response_schema** | `types/response_config.json` | Full runtime state: identities, tokenization specs |
+| **business_schema** | `types/business_config.json` | 비즈니스 신원과 판매자별 설정 |
+| **platform_schema** | `types/platform_config.json` | 플랫폼 신원과 플랫폼 수준 설정 |
+| **response_schema** | `types/response_config.json` | 전체 런타임 상태: 신원, 토큰화 명세 |
 
-**Example `types/business_config.json`:**
+**`types/business_config.json` 예시:**
 
 <!-- ucp:example skip reason="handler schema definition" -->
 ```json
@@ -512,7 +499,7 @@ Each variant has its own config schema tailored to its context:
 }
 ```
 
-**Example `types/platform_config.json`:**
+**`types/platform_config.json` 예시:**
 
 <!-- ucp:example skip reason="handler schema definition" -->
 ```json
@@ -535,7 +522,7 @@ Each variant has its own config schema tailored to its context:
 }
 ```
 
-**Example `types/response_config.json`:**
+**`types/response_config.json` 예시:**
 
 <!-- ucp:example skip reason="handler schema definition" -->
 ```json
@@ -568,36 +555,36 @@ Each variant has its own config schema tailored to its context:
 
 ---
 
-#### Instrument Shapes { #instrument-shapes }
+#### 결제 수단 형태 { #instrument-shapes }
 
-**Base Instrument Schemas:**
+**기본 결제 수단 스키마:**
 
-| Schema                                                                                     | Description                                                      |
+| 스키마                                                                                     | 설명                                                      |
 | :----------------------------------------------------------------------------------------- | :--------------------------------------------------------------- |
-| [`payment_instrument.json`](site:schemas/common/types/payment_instrument.json)             | Base: id, handler_id, type, billing_address, credential, display |
-| [`card_payment_instrument.json`](site:schemas/common/types/card_payment_instrument.json)   | Extends base with display: brand, last_digits, expiry, card art  |
+| [`payment_instrument.json`](site:schemas/common/types/payment_instrument.json)             | 기본: id, handler_id, type, billing_address, credential, display |
+| [`card_payment_instrument.json`](site:schemas/common/types/card_payment_instrument.json)   | 기본 스키마에 표시 정보 추가: brand, last_digits, expiry, 카드 이미지  |
 
-UCP provides base schemas for universal payment instruments like `card`. Spec
-authors **MAY** extend any of the base instruments to add handler-specific
-display data or customize the credential reference. Handlers **MAY** define
-multiple instrument types for different payment flows.
+UCP는 `card` 같은 범용 결제 수단을 위한 기본 스키마를 제공한다. 명세 작성자는 기본 결제
+수단을 확장해 핸들러별 표시 데이터를 추가하거나 자격 증명 참조를 사용자 정의할 수
+있다(**MAY**). 핸들러는 서로 다른 결제 흐름을 위해 여러 결제 수단 유형을 정의할 수
+있다(**MAY**).
 
-**Constraint Targets:**
+**제약 대상(Constraint Target):**
 
-An instrument schema declares what its availability constraints may name in
-`$defs/constraint_target`: a plain object of members and their types, never
-carried in a payload. The handler's `payment_instrument` set binds each `type`
-to the schema that owns its target.
-[`card_payment_instrument.json`](site:schemas/common/types/card_payment_instrument.json)
-declares `brand` as a string, so
-`{ "properties": { "brand": { "enum": ["visa", "mastercard"] } } }` names a
-declared member and pins it to string values. The base Payment Handler validates
-the grammar, so a malformed `constraints` fails everywhere; the target supplies
-the meaning, so naming an undeclared member or pinning the wrong type is
-reportable without the base dispatching on `type`. A handler extending an
-instrument **SHOULD** extend that instrument's target rather than restate it.
+결제 수단 스키마는 가용성 제약 조건이 가리킬 수 있는 대상을 `$defs/constraint_target`에
+선언한다. 이는 멤버와 그 타입으로 이루어진 일반 객체이며, 페이로드에 실려 전송되지
+않는다. 핸들러의 `payment_instrument` 집합은 각 `type`을 그 대상을 소유한 스키마에
+연결한다.
+[`card_payment_instrument.json`](site:schemas/common/types/card_payment_instrument.json)은
+`brand`를 문자열로 선언하므로,
+`{ "properties": { "brand": { "enum": ["visa", "mastercard"] } } }`는 선언된 멤버를
+가리키고 그 값을 문자열 값으로 고정한다. 문법은 기본 결제 핸들러가 검증하므로 형식이
+잘못된 `constraints`는 어디서나 실패한다. 의미는 대상이 제공하므로, 선언되지 않은 멤버를
+가리키거나 잘못된 타입으로 고정한 경우 기본 스키마가 `type`에 따라 분기하지 않아도 이를
+보고할 수 있다. 결제 수단을 확장하는 핸들러는 해당 결제 수단의 대상을 다시 기술하지 말고
+확장해야 한다(**SHOULD**).
 
-**Example `types/tokenizer_instrument.json`**:
+**`types/tokenizer_instrument.json` 예시**:
 
 <!-- ucp:example skip reason="handler schema definition" -->
 ```json
@@ -647,7 +634,7 @@ instrument **SHOULD** extend that instrument's target rather than restate it.
 }
 ```
 
-**Example `types/tokenizer_alt_instrument.json`:**
+**`types/tokenizer_alt_instrument.json` 예시:**
 
 <!-- ucp:example skip reason="handler schema definition" -->
 ```json
@@ -679,29 +666,28 @@ instrument **SHOULD** extend that instrument's target rather than restate it.
 
 ---
 
-#### Credential Shapes { #credential-shapes }
+#### 자격 증명 형태 { #credential-shapes }
 
-**Base Credential Schemas:**
+**기본 자격 증명 스키마:**
 
-| Schema                                                                                         | Description                                 |
+| 스키마                                                                                         | 설명                                 |
 | :--------------------------------------------------------------------------------------------- | :------------------------------------------ |
-| [`payment_credential.json`](site:schemas/common/types/payment_credential.json)                 | Base: type discriminator only               |
-| [`token_credential.json`](site:schemas/common/types/token_credential.json)                     | Token: type + token string                  |
-| [`pan_credential.json`](site:schemas/common/types/pan_credential.json)                         | Raw FPAN, verified with `cvc`. Source only. |
-| [`network_token_credential.json`](site:schemas/common/types/network_token_credential.json)     | Network token, verified with `cryptogram`   |
+| [`payment_credential.json`](site:schemas/common/types/payment_credential.json)                 | 기본: 유형 판별자만 포함               |
+| [`token_credential.json`](site:schemas/common/types/token_credential.json)                     | 토큰: 유형 + 토큰 문자열                  |
+| [`pan_credential.json`](site:schemas/common/types/pan_credential.json)                         | 원본 FPAN, `cvc`로 검증. 원천(source) 전용. |
+| [`network_token_credential.json`](site:schemas/common/types/network_token_credential.json)     | 네트워크 토큰, `cryptogram`으로 검증   |
 
-UCP provides base schemas for universal payment credentials. Authors **MAY**
-extend these schemas to include handler-specific credential context. Handlers
-**MAY** define multiple credential types for different instrument flows.
+UCP는 범용 결제 자격 증명을 위한 기본 스키마를 제공한다. 작성자는 이 스키마를 확장해
+핸들러별 자격 증명 맥락을 포함할 수 있다(**MAY**). 핸들러는 서로 다른 결제 수단 흐름을
+위해 여러 자격 증명 유형을 정의할 수 있다(**MAY**).
 
-The specification **MUST** define which credential types are accepted by the
-handler.
+명세는 핸들러가 받는 자격 증명 유형을 반드시 정의해야 한다(**MUST**).
 
-**Important:** If using token credentials, the schema **MUST** include an
-expiration field (`expiry`, `ttl`, or similar) to ensure platforms know when to
-refresh credentials.
+**중요:** 토큰 자격 증명을 사용하는 경우, 플랫폼이 자격 증명을 언제 갱신해야 하는지 알 수
+있도록 스키마에 만료 필드(`expiry`, `ttl` 또는 유사한 필드)를 반드시 포함해야
+한다(**MUST**).
 
-**Example `types/tokenizer_token.json`** (expiring token):
+**`types/tokenizer_token.json` 예시**(만료되는 토큰):
 
 <!-- ucp:example skip reason="handler schema definition" -->
 ```json
@@ -729,7 +715,7 @@ refresh credentials.
 }
 ```
 
-**Example `types/tokenizer_alt_token.json`** (alt token):
+**`types/tokenizer_alt_token.json` 예시**(대체 토큰):
 
 <!-- ucp:example skip reason="handler schema definition" -->
 ```json
@@ -761,12 +747,12 @@ refresh credentials.
 }
 ```
 
-### Instrument Acquisition { #instrument-acquisition }
+### 결제 수단 획득 { #instrument-acquisition }
 
-**Definition:** The protocol a platform follows to acquire a payment instrument
-that can be submitted to the business's checkout.
+**정의:** 플랫폼이 비즈니스의 체크아웃에 제출할 수 있는 결제 수단을 획득하기 위해 따르는
+프로토콜.
 
-**Signature:**
+**시그니처:**
 
 ```text
 INSTRUMENT_ACQUISITION(
@@ -777,57 +763,52 @@ INSTRUMENT_ACQUISITION(
 ) → checkout_instrument
 ```
 
-| Field                           | Description                                                                    |
+| 필드                           | 설명                                                                    |
 | :------------------------------ | :----------------------------------------------------------------------------- |
-| `platform_prerequisites_output` | platform's prerequisites output (config), if prerequisites were required       |
-| `handler_declaration.config`    | Handler-specific configuration from the business                               |
-| `binding`                       | **(See 2.6)** Context binding the credential to a specific capability resource |
-| `buyer_input`                   | Buyer's payment selection or credentials                                       |
-| `checkout_instrument`           | The payment instrument to submit at checkout                                   |
+| `platform_prerequisites_output` | 사전 요건이 필요했던 경우 플랫폼의 사전 요건 출력(구성)       |
+| `handler_declaration.config`    | 비즈니스가 제공한 핸들러별 구성                               |
+| `binding`                       | **(2.6 참고)** 자격 증명을 특정 기능 리소스에 결속하는 맥락 |
+| `buyer_input`                   | 구매자의 결제 선택 또는 자격 증명                                       |
+| `checkout_instrument`           | 체크아웃에 제출할 결제 수단                                   |
 
-Payment handler specifications do NOT need to define a formal process for
-instrument acquisition. Instead, the specification **SHOULD** clearly document:
+결제 핸들러 명세가 결제 수단 획득에 대한 정식 절차를 정의할 필요는 없다. 대신 명세는
+다음을 명확히 문서화해야 한다(**SHOULD**).
 
-- How to apply the handler's `config` to construct a valid `checkout_instrument`.
-- How to create an effective credential binding to the specific capability
-  resource, which is critical for security, based on the available `config`
-  and `binding`.
+- 핸들러의 `config`를 적용해 유효한 `checkout_instrument`를 구성하는 방법.
+- 사용 가능한 `config`와 `binding`을 바탕으로, 보안에 매우 중요한 특정 기능 리소스에 대한
+  효과적인 자격 증명 바인딩을 만드는 방법.
 
-### Payment Actions { #payment-actions }
+### 결제 액션 { #payment-actions }
 
-A payment handler may require the Platform to perform additional work while the
-Business processes an instrument. The Business returns that work in the
-Checkout's `actions` map.
+비즈니스가 결제 수단을 처리하는 동안 결제 핸들러가 플랫폼에 추가 작업을 요구할 수 있다.
+비즈니스는 그 작업을 체크아웃의 `actions` 맵으로 반환한다.
 
-Handler authors have two options:
+핸들러 작성자에게는 두 가지 선택지가 있다.
 
-- **Use the standard Payment Authentication extension.** Handlers that need
-  device data collection or a 3DS challenge use
-  [`dev.ucp.common.payment.authentication`](extensions/authentication.md), which
-  defines the `dev.ucp.common.payment.device_data_collection` and
-  `dev.ucp.common.payment.three_ds_challenge` Action types. The handler specification
-  states which types it can cause and any provider-specific trust or fallback
-  requirements, such as allowed origins.
-- **Define handler-specific Actions.** When the standard types do not fit, the
-  handler author publishes a Checkout extension that declares its Action type
-  keys and `config` shapes. Both the Business and Platform advertise that
-  extension before those Actions are emitted.
+- **표준 결제 인증 확장을 사용한다.** 기기 데이터 수집이나 3DS 챌린지가 필요한 핸들러는
+  [`dev.ucp.common.payment.authentication`](extensions/authentication.md)을 사용한다.
+  이 확장은 `dev.ucp.common.payment.device_data_collection`과
+  `dev.ucp.common.payment.three_ds_challenge` 액션 유형을 정의한다. 핸들러 명세에는
+  핸들러가 일으킬 수 있는 유형과, 허용된 출처(origin) 같은 제공자별 신뢰 또는 폴백 요구
+  사항을 명시한다.
+- **핸들러별 액션을 정의한다.** 표준 유형이 맞지 않으면 핸들러 작성자는 액션 유형 키와
+  `config` 형태를 선언하는 체크아웃 확장을 게시한다. 해당 액션이 발생하기 전에 비즈니스와
+  플랫폼 모두 그 확장을 광고해야 한다.
 
-For each handler-specific Action, document when it is emitted, the exact effect
-its type gates, how the Platform processes its config, how the Business observes
-its completion, whether processing the same occurrence is ever safe to retry,
-and its trust, failure, abandonment, and fallback behavior.
+핸들러별 액션마다 언제 발생하는지, 그 유형이 통제하는 정확한 효과, 플랫폼이 구성을 처리하는
+방법, 비즈니스가 완료를 확인하는 방법, 같은 발생 건을 재시도해도 안전한 경우가 있는지,
+그리고 신뢰·실패·중단·폴백 동작을 문서화한다.
 
-See [Overview — Actions](../overview/index.md#actions) for the common envelope and
-[Schema Authoring — Extension-Declared Action Types](/documentation/schema-authoring/#extension-declared-action-types)
-for the extension schema pattern.
+공통 엔벨로프는 [개요 — 액션](../overview/index.md#actions)을, 확장 스키마 패턴은
+[스키마 작성 — 확장 선언 액션 유형](/documentation/schema-authoring/#extension-declared-action-types)을
+참고한다.
 
-### Processing { #processing }
+### 처리 { #processing }
 
-**Definition:** The steps a participant (typically business or PSP) takes to
-process a received payment instrument and complete the transaction.
+**정의:** 참여자(보통 비즈니스 또는 PSP)가 받은 결제 수단을 처리하고 거래를 완료하기 위해
+수행하는 단계.
 
-**Signature:**
+**시그니처:**
 
 ```text
 PROCESSING(
@@ -838,151 +819,150 @@ PROCESSING(
 ) → processing_result
 ```
 
-| Field                 | Description                                    |
+| 필드                 | 설명                                    |
 | :-------------------- | :--------------------------------------------- |
-| `identity`            | The processing participant's `PaymentIdentity` |
-| `checkout_instrument` | The instrument received from the platform      |
-| `binding`             | The binding context for verification           |
-| `transaction_context` | Checkout totals, line items, etc.              |
-| `processing_result`   | Success/failure with payment details           |
+| `identity`            | 처리를 수행하는 참여자의 `PaymentIdentity` |
+| `checkout_instrument` | 플랫폼에서 받은 결제 수단      |
+| `binding`             | 검증을 위한 바인딩 맥락           |
+| `transaction_context` | 체크아웃 합계, 라인 아이템 등              |
+| `processing_result`   | 결제 세부 정보를 포함한 성공/실패 결과           |
 
-#### Error Handling { #error-handling }
+#### 오류 처리 { #error-handling }
 
-The specification **MUST** define a mapping for common failures (e.g.,
-'Declined', 'Insufficient Funds', 'Network Error') to standard UCP Error
-definitions. This ensures the platform can render localized, consistent
-error messages to the buyer regardless of the underlying processor.
+명세는 일반적인 실패(예: '거절(Declined)', '잔액 부족(Insufficient Funds)', '네트워크
+오류(Network Error)')를 표준 UCP 오류 정의에 대응시키는 매핑을 반드시 정의해야
+한다(**MUST**). 이렇게 하면 플랫폼은 기반 결제 처리사와 무관하게 구매자에게 현지화되고
+일관된 오류 메시지를 표시할 수 있다.
 
-### Key Definitions { #key-definitions }
+### 주요 정의 { #key-definitions }
 
-| Term        | Definition                                                                                                                                                                                                                                                                             |
+| 용어        | 정의                                                                                                                                                                                                                                                                             |
 | :---------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Binding** | A logical association of a payment instrument to a specific capability resource, identified by `type` and `id`. This prevents replay attacks where a credential intended for one resource is intercepted and used against another. Distinct from the participant a token is issued to. |
+| **바인딩(Binding)** | `type`과 `id`로 식별되는 특정 기능 리소스에 결제 수단을 논리적으로 연관시키는 것. 한 리소스용 자격 증명을 가로채 다른 리소스에 사용하는 재전송(replay) 공격을 방지한다. 토큰이 발급되는 대상 참여자와는 구별된다. |
 
 ---
 
-## Specification Template { #specification-template }
+## 명세 템플릿 { #specification-template }
 
-Handler specifications **SHOULD** use the standard template structure. Sections
-marked **[REQUIRED]** **MUST** be present; sections marked **[CONDITIONAL]**
-are required only when applicable.
+핸들러 명세는 표준 템플릿 구조를 사용해야 한다(**SHOULD**). **[REQUIRED]** 표시가 있는
+섹션은 반드시 있어야 하며(**MUST**), **[CONDITIONAL]** 표시가 있는 섹션은 해당하는 경우에만
+필요하다.
 
-**→ [Payment Handler Template](template.md)**
+**→ [결제 핸들러 템플릿](template.md)**
 
-## Conformance Checklist for Spec Authors { #conformance-checklist-for-spec-authors }
+## 명세 작성자를 위한 준수 체크리스트 { #conformance-checklist-for-spec-authors }
 
-Before publishing a payment handler specification, verify:
+결제 핸들러 명세를 게시하기 전에 다음을 확인한다.
 
-### Structure { #structure }
+### 구조 { #structure }
 
-- [ ] Uses the standard template structure
-- [ ] All [REQUIRED] sections are present
-- [ ] [CONDITIONAL] sections are present when applicable
+- [ ] 표준 템플릿 구조를 사용한다
+- [ ] 모든 [REQUIRED] 섹션이 있다
+- [ ] 해당하는 경우 [CONDITIONAL] 섹션이 있다
 
-### Participants { #participants_1 }
+### 참여자 { #participants_1 }
 
-- [ ] All participants are listed
-- [ ] Each participant's role is clearly described
-- [ ] Note on "Business" vs "Merchant" terminology added if applicable
+- [ ] 모든 참여자가 나열되어 있다
+- [ ] 각 참여자의 역할이 명확히 설명되어 있다
+- [ ] 해당하는 경우 "Business"와 "Merchant" 용어에 관한 참고가 추가되어 있다
 
-### Prerequisites { #prerequisites_1 }
+### 사전 요건 { #prerequisites_1 }
 
-- [ ] Prerequisites process is documented for each participant that requires it
-- [ ] Onboarding inputs are specified
-- [ ] Prerequisites output is described (identity + any additional config)
-- [ ] Identity maps to `PaymentIdentity` structure (`access_token`)
+- [ ] 사전 요건이 필요한 각 참여자에 대해 사전 요건 절차가 문서화되어 있다
+- [ ] 온보딩 입력이 명시되어 있다
+- [ ] 사전 요건 출력(신원 + 추가 구성)이 설명되어 있다
+- [ ] 신원이 `PaymentIdentity` 구조(`access_token`)에 대응된다
 
-### Handler Declaration { #handler-declaration_1 }
+### 핸들러 선언 { #handler-declaration_1 }
 
-- [ ] Identity schema is documented (base or extended)
-- [ ] Configuration schema is documented (if applicable) and includes environment
-- [ ] Instrument schema is documented (base or extended)
+- [ ] 신원 스키마(기본 또는 확장)가 문서화되어 있다
+- [ ] 구성 스키마가 (해당하는 경우) 문서화되어 있고 환경(environment)을 포함한다
+- [ ] 결제 수단 스키마(기본 또는 확장)가 문서화되어 있다
 
-### Instrument Acquisition { #instrument-acquisition_1 }
+### 결제 수단 획득 { #instrument-acquisition_1 }
 
-- [ ] Protocol steps are enumerated and clear
-- [ ] Logical flow is mapped to actual protocol
-- [ ] API calls or SDK usage is shown with examples
-- [ ] Binding requirements are specified
-- [ ] Checkout Payment Instrument creation and shape is well-defined
+- [ ] 프로토콜 단계가 빠짐없이 명확하게 나열되어 있다
+- [ ] 논리적 흐름이 실제 프로토콜에 대응되어 있다
+- [ ] API 호출이나 SDK 사용법이 예시와 함께 제시되어 있다
+- [ ] 바인딩 요구 사항이 명시되어 있다
+- [ ] 체크아웃 결제 수단의 생성 방식과 형태가 잘 정의되어 있다
 
-### Payment Authentication Actions (if applicable) { #payment-authentication-actions-if-applicable }
+### 결제 인증 액션(해당하는 경우) { #payment-authentication-actions-if-applicable }
 
-- [ ] Every Action type is declared by a negotiated extension
-- [ ] The gated effect, emission conditions, and sequencing are documented
-- [ ] Instrument and handler association is unambiguous
-- [ ] The allowed origins of any handler-operated Action surfaces are documented
-- [ ] Unsupported, abandoned, expired, and failed fallbacks are documented
-- [ ] Safe-retry conditions are defined, or retrying the same occurrence is forbidden
-- [ ] Server-side outcome observation and pending-attempt cleanup are defined
+- [ ] 모든 액션 유형이 협상된 확장에 의해 선언되어 있다
+- [ ] 통제되는 효과, 발생 조건, 순서가 문서화되어 있다
+- [ ] 결제 수단과 핸들러의 연관 관계가 모호하지 않다
+- [ ] 핸들러가 운영하는 액션 화면의 허용된 출처(origin)가 문서화되어 있다
+- [ ] 미지원, 중단, 만료, 실패 시의 폴백이 문서화되어 있다
+- [ ] 안전한 재시도 조건이 정의되어 있거나, 같은 발생 건의 재시도가 금지되어 있다
+- [ ] 서버 측 결과 확인과 대기 중인 시도의 정리가 정의되어 있다
 
-### Processing { #processing_1 }
+### 처리 { #processing_1 }
 
-- [ ] Processing steps are enumerated and clear
-- [ ] Verification requirements are specified
-- [ ] Error handling and mapping is addressed
+- [ ] 처리 단계가 빠짐없이 명확하게 나열되어 있다
+- [ ] 검증 요구 사항이 명시되어 있다
+- [ ] 오류 처리와 매핑이 다뤄져 있다
 
-### Security { #security }
+### 보안 { #security }
 
-- [ ] Security requirements are listed
-- [ ] Binding verification is required
-- [ ] Credential handling guidance is provided
-- [ ] Token expiry is defined (if applicable)
+- [ ] 보안 요구 사항이 나열되어 있다
+- [ ] 바인딩 검증이 필수로 지정되어 있다
+- [ ] 자격 증명 처리 지침이 제공되어 있다
+- [ ] (해당하는 경우) 토큰 만료가 정의되어 있다
 
-### General { #general }
+### 일반 { #general }
 
-- [ ] Handler name follows reverse-DNS convention
-- [ ] Version follows YYYY-MM-DD format
-- [ ] All schema URLs match namespace authority
-- [ ] References section includes all schemas
+- [ ] 핸들러 이름이 역 DNS(reverse-DNS) 규칙을 따른다
+- [ ] 버전이 YYYY-MM-DD 형식을 따른다
+- [ ] 모든 스키마 URL이 네임스페이스 권한과 일치한다
+- [ ] 참고 자료 섹션에 모든 스키마가 포함되어 있다
 
 ---
 
-## Best Practices { #best-practices }
+## 모범 사례 { #best-practices }
 
-Follow these guidelines to create high-quality, maintainable handler
-specifications:
+품질 높고 유지 관리하기 쉬운 핸들러 명세를 만들려면 다음 지침을 따른다.
 
-### Schema Design { #schema-design }
+### 스키마 설계 { #schema-design }
 
-| Practice                         | Description                                                                             |
+| 사례                         | 설명                                                                             |
 | :------------------------------- | :-------------------------------------------------------------------------------------- |
-| **Extend, don't reinvent**       | Use `allOf` to compose base schemas. Don't redefine `brand`, `last_digits`, etc.        |
-| **Use const for discriminators** | Define `credential.type` as a `const` to identify credential types unambiguously.       |
-| **Validate early**               | Publish schemas at stable URLs before finalizing the spec so implementers can validate. |
-| **Include Expiry**               | When designing token credentials, always include `expiry` or `ttl`.                     |
+| **새로 만들지 말고 확장한다**       | `allOf`로 기본 스키마를 조합한다. `brand`, `last_digits` 등을 재정의하지 않는다.        |
+| **판별자에는 const를 사용한다** | 자격 증명 유형을 모호함 없이 식별할 수 있도록 `credential.type`을 `const`로 정의한다.       |
+| **일찍 검증한다**               | 구현자가 검증할 수 있도록 명세를 확정하기 전에 안정적인 URL에 스키마를 게시한다. |
+| **만료를 포함한다**               | 토큰 자격 증명을 설계할 때는 항상 `expiry` 또는 `ttl`을 포함한다.                     |
 
-### Documentation { #documentation }
+### 문서화 { #documentation }
 
-| Practice                  | Description                                                            |
+| 사례                  | 설명                                                            |
 | :------------------------ | :--------------------------------------------------------------------- |
-| **Show, don't just tell** | Include complete JSON examples for every schema and protocol step.     |
-| **Document error cases**  | Specify what errors can occur and how participants should handle them. |
-| **Version independently** | The handler version evolves independently of UCP core versions.        |
+| **말로만 설명하지 말고 보여 준다** | 모든 스키마와 프로토콜 단계에 대해 완전한 JSON 예시를 포함한다.     |
+| **오류 사례를 문서화한다**  | 어떤 오류가 발생할 수 있고 참여자가 이를 어떻게 처리해야 하는지 명시한다. |
+| **독립적으로 버전을 관리한다** | 핸들러 버전은 UCP 코어 버전과 독립적으로 발전한다.        |
 
-### Security { #security_1 }
+### 보안 { #security_1 }
 
-| Practice                         | Description                                                                    |
+| 사례                         | 설명                                                                    |
 | :------------------------------- | :----------------------------------------------------------------------------- |
-| **Require binding**              | Always tie credentials to a specific capability resource via `binding`.        |
-| **Minimize credential exposure** | Design flows so raw credentials (PANs, etc.) touch as few systems as possible. |
-| **Specify token lifetimes**      | Document whether tokens are single-use, time-limited, or session-scoped.       |
+| **바인딩을 필수로 한다**              | 항상 `binding`을 통해 자격 증명을 특정 기능 리소스에 결속한다.        |
+| **자격 증명 노출을 최소화한다** | 원본 자격 증명(PAN 등)이 가능한 한 적은 시스템만 거치도록 흐름을 설계한다. |
+| **토큰 수명을 명시한다**      | 토큰이 일회용인지, 시간 제한이 있는지, 세션 범위인지 문서화한다.       |
 
-### Maintainability { #maintainability }
+### 유지 관리성 { #maintainability }
 
-| Practice                        | Description                                                                                            |
+| 사례                        | 설명                                                                                            |
 | :------------------------------ | :----------------------------------------------------------------------------------------------------- |
-| **Host schemas at stable URLs** | Schema URLs should not change; use versioned paths if needed.                                          |
-| **Fail gracefully**             | Define clear error responses for common failure scenarios.                                             |
-| **Link to examples**            | Reference existing handler specs and the [Tokenization Guide](tokenization.md) for common flows.       |
+| **안정적인 URL에 스키마를 호스팅한다** | 스키마 URL은 바뀌지 않아야 한다. 필요하면 버전이 포함된 경로를 사용한다.                                          |
+| **우아하게 실패한다**             | 일반적인 실패 시나리오에 대해 명확한 오류 응답을 정의한다.                                             |
+| **예시에 링크한다**            | 일반적인 흐름은 기존 핸들러 명세와 [토큰화 가이드](tokenization.md)를 참고한다.       |
 
 ---
 
-## See Also { #see-also }
+## 함께 보기 { #see-also }
 
-- **[Tokenization Guide](tokenization.md)** — Guide for building
-  tokenization payment handlers
-- **[Google Pay Handler](https://developers.google.com/merchant/ucp/guides/google-pay-payment-handler){ target="_blank" }**
-  — Handler for Google Pay integration
-- **[Shop Pay Handler](https://shopify.dev/docs/agents/checkout/shop-pay-handler){ target="_blank" }**
-  — Handler for Shop Pay integration
+- **[토큰화 가이드](tokenization.md)** — 토큰화 결제 핸들러 구축
+  가이드
+- **[Google Pay 핸들러](https://developers.google.com/merchant/ucp/guides/google-pay-payment-handler){ target="_blank" }**
+  — Google Pay 통합용 핸들러
+- **[Shop Pay 핸들러](https://shopify.dev/docs/agents/checkout/shop-pay-handler){ target="_blank" }**
+  — Shop Pay 통합용 핸들러

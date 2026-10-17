@@ -2,7 +2,7 @@
 hide:
   - toc
 title: Universal Commerce Protocol
-description: The common language for platforms, agents, and businesses.
+description: 플랫폼, 에이전트, 비즈니스를 위한 공통 언어.
 image: assets/banner.png
 ---
 
@@ -25,12 +25,12 @@ image: assets/banner.png
 <div class="landing-page">
   <div class="custom-announce-banner" id="announce-banner">
     <div class="custom-banner-container">
-      <img src="assets/UCP-small.svg" alt="UCP Logo" class="custom-banner-icon">
+      <img src="assets/UCP-small.svg" alt="UCP 로고" class="custom-banner-icon">
       <div class="custom-banner-text">
-        <div class="banner-title">UCP is expanding beyond retail: Lodging draft specification now available. <strong>Food coming soon.</strong></div>
+        <div class="banner-title">UCP가 리테일을 넘어 확장한다. 숙박 명세 초안을 지금 확인할 수 있다. <strong>푸드도 곧 공개된다.</strong></div>
       </div>
     </div>
-    <button class="custom-banner-close" onclick="document.getElementById('announce-banner').style.display='none'; localStorage.setItem('ucp_banner_closed', 'true');" aria-label="Close banner">
+    <button class="custom-banner-close" onclick="document.getElementById('announce-banner').style.display='none'; localStorage.setItem('ucp_banner_closed', 'true');" aria-label="배너 닫기">
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M13 1L1 13M1 1L13 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
@@ -46,49 +46,49 @@ image: assets/banner.png
     <div class="hero-content">
       <h1>Universal Commerce<br>Protocol</h1>
       <p class="hero-subheading">
-        The common language for platforms, agents, and businesses.
+        플랫폼, 에이전트, 비즈니스를 위한 공통 언어.
       </p>
       <p class="hero-description">
-        UCP provides building blocks for agentic commerce across industries—from discovery to checkout and beyond—allowing the ecosystem to operate through one standard, without custom builds.
+        UCP는 디스커버리부터 체크아웃과 그 이후까지, 산업 전반의 에이전틱 커머스를 위한 구성 요소를 제공한다. 이를 통해 생태계는 맞춤 개발 없이 하나의 표준으로 운영될 수 있다.
       </p>
     </div>
     <div class="hero-image">
-      <img src="assets/updated-icon.svg" alt="Hero image for Universal Commerce Protocol" class="hero-logo-crisp">
+      <img src="assets/updated-icon.svg" alt="Universal Commerce Protocol 히어로 이미지" class="hero-logo-crisp">
     </div>
   </div>
 
   <div class="promo-card-wrapper">
 
     <div class="promo-card">
-      <h3>Learn</h3>
-      <p>Protocol overview, core concepts, and design principles</p>
+      <h3>알아보기</h3>
+      <p>프로토콜 개요, 핵심 개념, 설계 원칙</p>
       <a href="latest/specification/overview/" class="promo-button">
-        Get Started
+        시작하기
       </a>
     </div>
 
     <div class="promo-card">
-      <h3>Implement</h3>
-      <p>GitHub repo, technical spec, SDKs, and reference implementations</p>
+      <h3>구현하기</h3>
+      <p>GitHub 저장소, 기술 명세, SDK, 레퍼런스 구현</p>
       <a href="https://github.com/Universal-Commerce-Protocol/ucp"
          class="promo-button" target="_blank">
-        View on GitHub
+        GitHub에서 보기
       </a>
     </div>
 
   </div>
 
   <section class="action-carousel-section">
-    <h2>Co-developed by industry leaders</h2>
+    <h2>업계 선도 기업들이 공동 개발</h2>
 
     <p>
-      UCP is built by the industry, to enable seamless agentic experiences. It solves fragmented user journeys that lead to frustrated users and conversion drop off.
+      UCP는 매끄러운 에이전틱 경험을 위해 업계가 함께 만든다. 사용자를 불편하게 하고 전환율을 떨어뜨리는 단절된 사용자 여정 문제를 해결한다.
     </p>
 
     <div class="carousel-tabs" id="industry-tabs">
-      <button class="tab-btn active" onclick="openTab(event, 'tab-shopping')">Shopping</button>
-      <button class="tab-btn" onclick="openTab(event, 'tab-lodging')">Lodging</button>
-      <button class="tab-btn" onclick="openTab(event, 'tab-food')">Food</button>
+      <button class="tab-btn active" onclick="openTab(event, 'tab-shopping')">쇼핑</button>
+      <button class="tab-btn" onclick="openTab(event, 'tab-lodging')">숙박</button>
+      <button class="tab-btn" onclick="openTab(event, 'tab-food')">푸드</button>
     </div>
 
     <div>
@@ -214,13 +214,13 @@ image: assets/banner.png
   </section>
 
   <div class="flexibility-section">
-    <h2>Built for flexibility, security, and scale</h2>
+    <h2>유연성, 보안, 확장성을 고려한 설계</h2>
     <p>
-      Agentic commerce requires interoperability. UCP is built on industry standards — REST and JSON-RPC transports;
+      에이전틱 커머스에는 상호 운용성이 필요하다. UCP는 업계 표준 위에 만들어졌다. REST와 JSON-RPC 전송 방식을 사용하고,
       <a href="https://ap2-protocol.org/" target="_blank">Agent Payments Protocol (AP2)</a>,
-      <a href="https://a2a-protocol.org/latest/" target="_blank">Agent2Agent (A2A)</a>, and
+      <a href="https://a2a-protocol.org/latest/" target="_blank">Agent2Agent (A2A)</a>,
       <a href="https://modelcontextprotocol.io/docs/getting-started/intro" target="_blank">Model Context Protocol (MCP)</a>
-      support built-in — so different systems can work together without custom integration.
+      지원을 기본으로 내장해, 서로 다른 시스템이 맞춤 통합 없이 함께 동작할 수 있다.
     </p>
   </div>
 
@@ -228,60 +228,60 @@ image: assets/banner.png
 
     <div class="feature-item">
       <div class="feature-item-icon">
-        <img src="assets/Icon=Extensible.svg" alt="Scalable" width="72">
+        <img src="assets/Icon=Extensible.svg" alt="확장성" width="72">
       </div>
       <div>
-        <h3>Scalable and universal</h3>
+        <h3>확장 가능하고 보편적</h3>
         <p>
-          Surface-agnostic design that scales to support any business (from small to enterprise), in every industry, across all modalities, including chat, visual commerce, and voice.
+          특정 화면에 얽매이지 않는 설계로, 소규모부터 엔터프라이즈까지 모든 산업의 모든 비즈니스를 채팅, 비주얼 커머스, 음성을 비롯한 모든 모달리티에서 지원하도록 확장된다.
         </p>
       </div>
     </div>
 
     <div class="feature-item">
       <div class="feature-item-icon">
-        <img src="assets/Icon=Merchant_at_the_Center.svg" alt="Merchants" width="72">
+        <img src="assets/Icon=Merchant_at_the_Center.svg" alt="판매자" width="72">
       </div>
       <div>
-        <h3>Businesses at the center</h3>
+        <h3>비즈니스 중심</h3>
         <p>
-          Built to facilitate commerce, ensuring businesses retain control and remain the Merchant of Record, with full ownership of customer relationships.
+          커머스를 원활하게 하도록 설계되었으며, 비즈니스가 통제권을 유지하고 기록상 판매자(Merchant of Record)로 남아 고객 관계를 온전히 소유하도록 보장한다.
         </p>
       </div>
     </div>
 
     <div class="feature-item">
       <div class="feature-item-icon">
-        <img src="assets/Icon=Open_Source.svg" alt="Simple" width="72">
+        <img src="assets/Icon=Open_Source.svg" alt="단순함" width="72">
       </div>
       <div>
-        <h3>Open and extensible</h3>
+        <h3>개방적이고 확장 가능</h3>
         <p>
-          Open and extensible by design, enabling development of community-driven capabilities and extensions across industries.
+          설계 단계부터 개방적이고 확장 가능하도록 만들어, 산업 전반에서 커뮤니티 주도의 기능과 확장을 개발할 수 있다.
         </p>
       </div>
     </div>
 
     <div class="feature-item">
       <div class="feature-item-icon">
-        <img src="assets/Icon=Secure_and_Private.svg" alt="Secure" width="72">
+        <img src="assets/Icon=Secure_and_Private.svg" alt="보안" width="72">
       </div>
       <div>
-        <h3>Secure and private</h3>
+        <h3>안전하고 프라이빗</h3>
         <p>
-          Built on proven security standards for account linking (OAuth 2.0) and secure payment (AP2) via payment mandates and verifiable credentials.
+          계정 연결(OAuth 2.0)과, 결제 위임(Mandate) 및 검증 가능한 자격 증명을 통한 안전한 결제(AP2)에 검증된 보안 표준을 기반으로 한다.
         </p>
       </div>
     </div>
 
     <div class="feature-item">
       <div class="feature-item-icon">
-        <img src="assets/Icon=Frictionless_Payments.svg" alt="Frictionless" width="72">
+        <img src="assets/Icon=Frictionless_Payments.svg" alt="마찰 없는 결제" width="72">
       </div>
       <div>
-        <h3>Frictionless payments</h3>
+        <h3>마찰 없는 결제</h3>
         <p>
-          Open wallet ecosystem with interoperability between providers, ensuring buyers can use their preferred payment methods.
+          제공업체 간 상호 운용성을 갖춘 개방형 월렛 생태계로, 구매자가 선호하는 결제 수단을 사용할 수 있도록 보장한다.
         </p>
       </div>
     </div>
@@ -289,35 +289,35 @@ image: assets/banner.png
   </div>
 
   <section class="action-carousel-section">
-    <h2>See it in action</h2>
+    <h2>실제 동작 살펴보기</h2>
     <p>
-      UCP is designed to facilitate the entire commerce lifecycle, from discovery and search to final sale and post-purchase support. The protocol supports a range of core capabilities, including: Catalog Search and Lookup, Cart Building, Identity Linking, Checkout, and Order Management.
+      UCP는 디스커버리와 검색부터 최종 판매, 구매 후 지원까지 커머스 수명 주기 전체를 원활하게 하도록 설계되었다. 이 프로토콜은 카탈로그 검색 및 조회, 장바구니 구성, 신원 연결, 체크아웃, 주문 관리 등 다양한 핵심 기능을 지원한다.
     </p>
     <div class="carousel-tabs main-action-tabs">
-      <button class="tab-btn active" onclick="openTab(event, 'action-tab-shopping')">Shopping</button>
-      <button class="tab-btn" onclick="openTab(event, 'action-tab-lodging')">Lodging</button>
-      <button class="tab-btn" onclick="openTab(event, 'action-tab-food')">Food</button>
+      <button class="tab-btn active" onclick="openTab(event, 'action-tab-shopping')">쇼핑</button>
+      <button class="tab-btn" onclick="openTab(event, 'action-tab-lodging')">숙박</button>
+      <button class="tab-btn" onclick="openTab(event, 'action-tab-food')">푸드</button>
     </div>
 
     <div class="carousel-content">
       <div id="action-tab-shopping" class="tab-pane shopping-tab-pane active">
         <div class="sub-action-tabs">
-          <button class="sub-tab-btn active" onclick="openSubTab(event, 'sub-tab-catalog')">Catalog</button>
-          <button class="sub-tab-btn" onclick="openSubTab(event, 'sub-tab-cart')">Cart</button>
-          <button class="sub-tab-btn" onclick="openSubTab(event, 'sub-tab-checkout')">Checkout</button>
-          <button class="sub-tab-btn" onclick="openSubTab(event, 'sub-tab-identity')">Identity Linking</button>
-          <button class="sub-tab-btn" onclick="openSubTab(event, 'sub-tab-order')">Order</button>
+          <button class="sub-tab-btn active" onclick="openSubTab(event, 'sub-tab-catalog')">카탈로그</button>
+          <button class="sub-tab-btn" onclick="openSubTab(event, 'sub-tab-cart')">장바구니</button>
+          <button class="sub-tab-btn" onclick="openSubTab(event, 'sub-tab-checkout')">체크아웃</button>
+          <button class="sub-tab-btn" onclick="openSubTab(event, 'sub-tab-identity')">신원 연결</button>
+          <button class="sub-tab-btn" onclick="openSubTab(event, 'sub-tab-order')">주문</button>
         </div>
         <div class="sub-tab-content">
           <div id="sub-tab-catalog" class="sub-tab-pane active">
             <div class="pane-text">
-              <h3>Catalog</h3>
-              <p>Enables platforms to search and browse business product catalogs through free-text search, category filtering, and batch retrieval to drive user journeys like price comparisons, sale price and back-in-stock/low-stock alerts.</p>
-              <a href="latest/specification/shopping/catalog/" class="learn-more-btn">Get Started</a>
+              <h3>카탈로그</h3>
+              <p>플랫폼이 자유 텍스트 검색, 카테고리 필터링, 일괄 조회로 비즈니스의 상품 카탈로그를 검색하고 탐색할 수 있게 해, 가격 비교, 할인가 알림, 재입고·재고 부족 알림 같은 사용자 여정을 이끈다.</p>
+              <a href="latest/specification/shopping/catalog/" class="learn-more-btn">시작하기</a>
             </div>
             <div class="pane-visuals">
               <div class="image-container">
-                <img src="assets/catalog.png" alt="Example user interface for catalog search" class="phone-mockup" onerror="this.src='https://placehold.co/260x500/EEE/31343C?text=Catalog+UI'">
+                <img src="assets/catalog.png" alt="카탈로그 검색 사용자 인터페이스 예시" class="phone-mockup" onerror="this.src='https://placehold.co/260x500/EEE/31343C?text=Catalog+UI'">
               </div>
               <div class="code-block-placeholder">
 
@@ -411,13 +411,13 @@ image: assets/banner.png
           </div>
           <div id="sub-tab-cart" class="sub-tab-pane">
             <div class="pane-text">
-              <h3>Cart</h3>
-              <p>Enables multi-item cart building and management across AI surfaces, allowing shoppers to seamlessly transfer carts directly to the merchant's site or complete purchases in-place through unified, multi-item checkout.</p>
-              <a href="latest/specification/shopping/cart/" class="learn-more-btn">Get Started</a>
+              <h3>장바구니</h3>
+              <p>AI 화면 전반에서 여러 상품을 담는 장바구니를 구성하고 관리할 수 있게 한다. 쇼핑객은 장바구니를 판매자 사이트로 바로 옮기거나, 통합된 다중 상품 체크아웃으로 그 자리에서 구매를 완료할 수 있다.</p>
+              <a href="latest/specification/shopping/cart/" class="learn-more-btn">시작하기</a>
             </div>
             <div class="pane-visuals">
               <div class="image-container">
-                <img src="assets/cart.png" alt="Example user interface showing cart details" class="phone-mockup" onerror="this.src='https://placehold.co/260x500/EEE/31343C?text=Cart+UI'">
+                <img src="assets/cart.png" alt="장바구니 상세 정보를 보여 주는 사용자 인터페이스 예시" class="phone-mockup" onerror="this.src='https://placehold.co/260x500/EEE/31343C?text=Cart+UI'">
               </div>
               <div class="code-block-placeholder">
 
@@ -522,13 +522,13 @@ image: assets/banner.png
           </div>
           <div id="sub-tab-checkout" class="sub-tab-pane">
             <div class="pane-text">
-              <h3>Checkout</h3>
-              <p>Support complex cart logic, dynamic pricing, tax calculations, and more across millions of businesses through unified checkout sessions.</p>
-              <a href="latest/specification/shopping/checkout/" class="learn-more-btn">Get Started</a>
+              <h3>체크아웃</h3>
+              <p>통합된 체크아웃 세션으로 수백만 비즈니스에 걸쳐 복잡한 장바구니 로직, 동적 가격 책정, 세금 계산 등을 지원한다.</p>
+              <a href="latest/specification/shopping/checkout/" class="learn-more-btn">시작하기</a>
             </div>
             <div class="pane-visuals">
               <div class="image-container">
-                <img src="assets/checkout.png" alt="Example checkout screen with address details" class="phone-mockup" onerror="this.src='https://placehold.co/260x500/EEE/31343C?text=Checkout+UI'">
+                <img src="assets/checkout.png" alt="주소 정보가 표시된 체크아웃 화면 예시" class="phone-mockup" onerror="this.src='https://placehold.co/260x500/EEE/31343C?text=Checkout+UI'">
               </div>
               <div class="code-block-placeholder">
 
@@ -603,13 +603,13 @@ image: assets/banner.png
           </div>
           <div id="sub-tab-checkout" class="sub-tab-pane">
             <div class="pane-text">
-              <h3>Checkout</h3>
-              <p>Support complex cart logic, dynamic pricing, tax calculations, and more across millions of businesses through unified checkout sessions.</p>
-              <a href="latest/specification/shopping/checkout/" class="learn-more-btn">Get Started</a>
+              <h3>체크아웃</h3>
+              <p>통합된 체크아웃 세션으로 수백만 비즈니스에 걸쳐 복잡한 장바구니 로직, 동적 가격 책정, 세금 계산 등을 지원한다.</p>
+              <a href="latest/specification/shopping/checkout/" class="learn-more-btn">시작하기</a>
             </div>
             <div class="pane-visuals">
               <div class="image-container">
-                <img src="assets/checkout.png" alt="Example checkout screen with address details" class="phone-mockup" onerror="this.src='https://placehold.co/260x500/EEE/31343C?text=Checkout+UI'">
+                <img src="assets/checkout.png" alt="주소 정보가 표시된 체크아웃 화면 예시" class="phone-mockup" onerror="this.src='https://placehold.co/260x500/EEE/31343C?text=Checkout+UI'">
               </div>
               <div class="code-block-placeholder">
 
@@ -684,13 +684,13 @@ image: assets/banner.png
           </div>
           <div id="sub-tab-identity" class="sub-tab-pane">
             <div class="pane-text">
-              <h3>Identity Linking</h3>
-              <p>OAuth 2.0 standard enables agents to maintain secure, authorized relationships without sharing credentials.</p>
-              <a href="latest/specification/common/identity-linking/" class="learn-more-btn">Get Started</a>
+              <h3>신원 연결</h3>
+              <p>OAuth 2.0 표준을 통해 에이전트는 자격 증명을 공유하지 않고도 안전하게 인가된 관계를 유지할 수 있다.</p>
+              <a href="latest/specification/common/identity-linking/" class="learn-more-btn">시작하기</a>
             </div>
             <div class="pane-visuals">
               <div class="image-container">
-                <img src="assets/identity.png" alt="Example user interface for identity linking" class="phone-mockup" onerror="this.src='https://placehold.co/260x500/EEE/31343C?text=Identity+UI'">
+                <img src="assets/identity.png" alt="신원 연결 사용자 인터페이스 예시" class="phone-mockup" onerror="this.src='https://placehold.co/260x500/EEE/31343C?text=Identity+UI'">
               </div>
               <div class="code-block-placeholder">
 
@@ -724,13 +724,13 @@ image: assets/banner.png
           </div>
           <div id="sub-tab-order" class="sub-tab-pane">
             <div class="pane-text">
-              <h3>Order</h3>
-              <p>From purchase confirmation to delivery. Real-time webhooks power status updates, shipment tracking, and return processing across every channel.</p>
-              <a href="latest/specification/shopping/order/" class="learn-more-btn">Get Started</a>
+              <h3>주문</h3>
+              <p>구매 확인부터 배송까지. 실시간 웹훅이 모든 채널에서 상태 업데이트, 배송 추적, 반품 처리를 지원한다.</p>
+              <a href="latest/specification/shopping/order/" class="learn-more-btn">시작하기</a>
             </div>
             <div class="pane-visuals">
               <div class="image-container">
-                <img src="assets/order.png" alt="Example user interface showing order confirmation details" class="phone-mockup" onerror="this.src='https://placehold.co/260x500/EEE/31343C?text=Order+UI'">
+                <img src="assets/order.png" alt="주문 확인 상세 정보를 보여 주는 사용자 인터페이스 예시" class="phone-mockup" onerror="this.src='https://placehold.co/260x500/EEE/31343C?text=Order+UI'">
               </div>
               <div class="code-block-placeholder">
 
@@ -795,13 +795,13 @@ image: assets/banner.png
       </div>
       <div id="action-tab-lodging" class="tab-pane">
         <div class="pane-text">
-          <h3>Booking</h3>
-          <p>Enable high-quality booking flows within AI surfaces with real time pricing and availability checks for rooms, easy guest registration and secure checkout with complex payments schedules.</p>
-          <a href="draft/specification/lodging/booking/" class="learn-more-btn">Get Started</a>
+          <h3>예약</h3>
+          <p>AI 화면 안에서 고품질 예약 흐름을 구현한다. 객실의 실시간 가격과 예약 가능 여부 확인, 간편한 투숙객 등록, 복잡한 결제 일정을 지원하는 안전한 체크아웃을 제공한다.</p>
+          <a href="draft/specification/lodging/booking/" class="learn-more-btn">시작하기</a>
         </div>
             <div class="pane-visuals">
               <div class="image-container">
-                <img src="assets/booking.png" alt="Example user interface showing hotel booking details" class="phone-mockup" onerror="this.src='https://placehold.co/260x500/EEE/31343C?text=Booking+UI'">
+                <img src="assets/booking.png" alt="호텔 예약 상세 정보를 보여 주는 사용자 인터페이스 예시" class="phone-mockup" onerror="this.src='https://placehold.co/260x500/EEE/31343C?text=Booking+UI'">
               </div>
               <div class="code-block-placeholder">
 
@@ -956,9 +956,9 @@ image: assets/banner.png
       </div>
       <div id="action-tab-food" class="tab-pane">
         <div class="pane-text">
-          <h3>Food</h3>
-          <p>Powers conversational food ordering journeys that seamlessly handle nuanced meal customization, real-time availability and deals, tipping, and delivery instructions through a scalable checkout experience on AI surfaces.</p>
-          <a href="https://developers.google.com/actions-center/verticals/ordering/ucp" target="_blank" class="lifecycle-container-item-link">Learn more</a>
+          <h3>푸드</h3>
+          <p>AI 화면에서 확장 가능한 체크아웃 경험을 통해, 세밀한 메뉴 맞춤 설정, 실시간 주문 가능 여부와 할인, 팁, 배달 요청 사항을 매끄럽게 처리하는 대화형 음식 주문 여정을 지원한다.</p>
+          <a href="https://developers.google.com/actions-center/verticals/ordering/ucp" target="_blank" class="lifecycle-container-item-link">자세히 알아보기</a>
         </div>
         <div class="pane-visuals">
           <div class="coming-soon-placeholder">
@@ -1045,81 +1045,81 @@ image: assets/banner.png
 
     <div class="two-column-promo-item">
       <div class="two-column-promo-item-icon-wrapper">
-        <img src="assets/native_checkout.svg" alt="Native Checkout feature icon" width="96" class="two-column-promo-item-icon">
+        <img src="assets/native_checkout.svg" alt="네이티브 체크아웃 기능 아이콘" width="96" class="two-column-promo-item-icon">
       </div>
-      <h3>Power native checkout</h3>
+      <h3>네이티브 체크아웃 구현</h3>
       <p>
-        Integrate and negotiate directly with a seller's checkout API to power native UI and workflows for your platform.
+        판매자의 체크아웃 API와 직접 통합하고 협상해, 플랫폼에 맞는 네이티브 UI와 워크플로를 구현한다.
       </p>
-      <a href="latest/specification/shopping/checkout/rest/" class="promo-button">Get Started</a>
+      <a href="latest/specification/shopping/checkout/rest/" class="promo-button">시작하기</a>
     </div>
 
     <div class="two-column-promo-item">
       <div class="two-column-promo-item-icon-wrapper">
-        <img src="assets/embedded_checkout.svg" alt="Embedded Option feature icon" width="96" class="two-column-promo-item-icon">
+        <img src="assets/embedded_checkout.svg" alt="임베디드 옵션 기능 아이콘" width="96" class="two-column-promo-item-icon">
       </div>
-      <h3>Embed business checkout</h3>
+      <h3>비즈니스 체크아웃 임베드</h3>
       <p>
-        Embed and render business checkout UI to support complex checkout flows, with advanced capabilities like bidirectional communication, and payment and shipping address delegation.
+        비즈니스의 체크아웃 UI를 임베드하고 렌더링해 복잡한 체크아웃 흐름을 지원한다. 양방향 통신, 결제 및 배송지 위임 같은 고급 기능을 제공한다.
       </p>
-      <a href="latest/specification/shopping/checkout/embedded/" class="promo-button">See how it works</a>
+      <a href="latest/specification/shopping/checkout/embedded/" class="promo-button">작동 방식 보기</a>
     </div>
 
   </div>
 
   <div class="lifecycle-container">
 
-    <h2>Designed for the entire commerce ecosystem</h2>
+    <h2>커머스 생태계 전체를 위한 설계</h2>
 
     <div class="lifecycle-container-row">
       <div class="lifecycle-container-item">
         <div class="lifecycle-container-item-img-wrapper">
-          <img src="assets/Content=Developers.svg" alt="Content illustration for Developers" class="lifecycle-container-item-img">
+          <img src="assets/Content=Developers.svg" alt="개발자를 위한 콘텐츠 일러스트" class="lifecycle-container-item-img">
         </div>
-        <h3>For Developers</h3>
+        <h3>개발자</h3>
         <p>
-          Build the future of commerce on an open foundation. Join our community in evolving an open-source standard designed for the next generation of digital commerce.
+          개방된 기반 위에서 커머스의 미래를 만든다. 차세대 디지털 커머스를 위해 설계된 오픈소스 표준을 함께 발전시켜 나갈 커뮤니티에 참여한다.
         </p>
-        <a href="latest/specification/overview/" class="lifecycle-container-item-link">View the technical spec</a>
+        <a href="latest/specification/overview/" class="lifecycle-container-item-link">기술 명세 보기</a>
       </div>
       <div class="lifecycle-container-item">
         <div class="lifecycle-container-item-img-wrapper">
-          <img src="assets/Content=Retailers.svg" alt="Content illustration for Businesses" class="lifecycle-container-item-img">
+          <img src="assets/Content=Retailers.svg" alt="비즈니스를 위한 콘텐츠 일러스트" class="lifecycle-container-item-img">
         </div>
-        <h3>For Businesses</h3>
+        <h3>비즈니스</h3>
         <p>
-          UCP empowers businesses to meet customers wherever they are—AI assistants, agents, embedded experiences—without rebuilding your checkout for each. You remain the Merchant of Record and your business logic stays intact.
+          UCP를 사용하면 비즈니스는 AI 어시스턴트, 에이전트, 임베디드 경험 등 고객이 있는 곳 어디서든, 채널마다 체크아웃을 새로 만들지 않고도 고객을 만날 수 있다. 비즈니스는 계속 기록상 판매자로 남고, 비즈니스 로직도 그대로 유지된다.
         </p>
-        <a href="https://developers.google.com/merchant/ucp/" target="_blank" class="lifecycle-container-item-link">Integrate with UCP</a>
+        <a href="https://developers.google.com/merchant/ucp/" target="_blank" class="lifecycle-container-item-link">UCP와 통합하기</a>
       </div>
     </div>
     <div class="lifecycle-container-row">
       <div class="lifecycle-container-item">
         <div class="lifecycle-container-item-img-wrapper">
-          <img src="assets/Content=AI_Platforms.svg" alt="Content illustration for AI Platforms" class="lifecycle-container-item-img">
+          <img src="assets/Content=AI_Platforms.svg" alt="AI 플랫폼을 위한 콘텐츠 일러스트" class="lifecycle-container-item-img">
         </div>
-        <h3>For AI Platforms</h3>
+        <h3>AI 플랫폼</h3>
         <p>
-          Simplify business onboarding with standardized APIs and provide your audience with an integrated agentic commerce experience. Compatible with MCP, A2A, and existing agent frameworks.
+          표준화된 API로 비즈니스 온보딩을 간소화하고, 사용자에게 통합된 에이전틱 커머스 경험을 제공한다. MCP, A2A, 기존 에이전트 프레임워크와 호환된다.
         </p>
-        <a href="documentation/core-concepts/" class="lifecycle-container-item-link">Learn more about UCP core concepts</a>
+        <a href="documentation/core-concepts/" class="lifecycle-container-item-link">UCP 핵심 개념 자세히 알아보기</a>
       </div>
       <div class="lifecycle-container-item">
         <div class="lifecycle-container-item-img-wrapper">
-          <img src="assets/Content=Payment_Providers.svg" alt="Content illustration for Payment Providers" class="lifecycle-container-item-img">
+          <img src="assets/Content=Payment_Providers.svg" alt="결제 제공업체를 위한 콘텐츠 일러스트" class="lifecycle-container-item-img">
         </div>
-        <h3>For Payment Providers</h3>
+        <h3>결제 제공업체</h3>
         <p>
-          Universal payments that are provable—every authorization backed by cryptographic proof of user consent. Open, modular payment handler design enables open interoperability and choice of payment methods.
+          증명 가능한 범용 결제. 모든 승인은 사용자 동의에 대한 암호학적 증명으로 뒷받침된다. 개방적이고 모듈화된 결제 핸들러 설계로 열린 상호 운용성과 결제 수단 선택권을 제공한다.
         </p>
-        <a href="documentation/ucp-and-ap2/" class="lifecycle-container-item-link">Learn more about UCP and AP2</a>
+        <a href="documentation/ucp-and-ap2/" class="lifecycle-container-item-link">UCP와 AP2 자세히 알아보기</a>
       </div>
 
     </div>
   </div>
 
   <div class="partner-carousel">
-    <h2>Endorsed across the ecosystem</h2>
+    <h2>생태계 전반의 지지</h2>
 
     <div class="partner-track">
       <div class="partner-logo">
@@ -1537,37 +1537,37 @@ image: assets/banner.png
   <div class="get-started-container">
 
     <div class="get-started-container-intro">
-      <h2>Get started today</h2>
+      <h2>지금 시작하기</h2>
 
       <p>
-        UCP is an open standard designed to let AI agents, apps, businesses, and payment providers interact seamlessly without needing custom, one-off integrations for every connection. We actively seek your feedback and contributions to help build the future of commerce.
+        UCP는 AI 에이전트, 앱, 비즈니스, 결제 제공업체가 연결마다 일회성 맞춤 통합을 만들 필요 없이 매끄럽게 상호작용할 수 있도록 설계된 개방형 표준이다. 커머스의 미래를 함께 만들어 갈 여러분의 피드백과 기여를 적극적으로 기다린다.
       </p>
       <p>
-        The complete technical specification, documentation, and reference implementations are hosted in our public GitHub repository.
+        전체 기술 명세, 문서, 레퍼런스 구현은 공개 GitHub 저장소에 있다.
       </p>
     </div>
 
     <div class="get-started-container-steps">
       <div class="get-started-container-step">
         <div class="get-started-container-step-icon-wrapper">
-          <img src="assets/Icon=Download.svg" alt="Download icon for code samples" class="get-started-container-step-icon">
+          <img src="assets/Icon=Download.svg" alt="코드 샘플 다운로드 아이콘" class="get-started-container-step-icon">
         </div>
-        <h3><a href="https://github.com/Universal-Commerce-Protocol/samples" target="_blank">Download</a></h3>
-        <p>Download and run our code samples</p>
+        <h3><a href="https://github.com/Universal-Commerce-Protocol/samples" target="_blank">다운로드</a></h3>
+        <p>코드 샘플을 다운로드해 실행한다</p>
       </div>
       <div class="get-started-container-step">
         <div class="get-started-container-step-icon-wrapper">
-          <img src="assets/Icon=Experiment.svg" alt="Experiment" class="get-started-container-step-icon">
+          <img src="assets/Icon=Experiment.svg" alt="실험" class="get-started-container-step-icon">
         </div>
-        <h3><a href="latest/specification/shopping/playground/" target="_blank">Experiment</a></h3>
-        <p>Experiment with the protocol and its different agent roles</p>
+        <h3><a href="latest/specification/shopping/playground/" target="_blank">실험</a></h3>
+        <p>프로토콜과 다양한 에이전트 역할을 직접 실험한다</p>
       </div>
       <div class="get-started-container-step">
         <div class="get-started-container-step-icon-wrapper">
-          <img src="assets/Icon=Contribute.svg" alt="Contribute" class="get-started-container-step-icon">
+          <img src="assets/Icon=Contribute.svg" alt="기여" class="get-started-container-step-icon">
         </div>
-        <h3><a href="https://github.com/Universal-Commerce-Protocol/.github/blob/main/CONTRIBUTING.md" target="_blank">Contribute</a></h3>
-        <p>Contribute your feedback and code to the public repository</p>
+        <h3><a href="https://github.com/Universal-Commerce-Protocol/.github/blob/main/CONTRIBUTING.md" target="_blank">기여</a></h3>
+        <p>공개 저장소에 피드백과 코드를 기여한다</p>
       </div>
     </div>
     <div class="get-started-container-repo-link">
@@ -1575,7 +1575,7 @@ image: assets/banner.png
         <svg height="24" width="24" viewBox="0 0 16 16" version="1.1" fill="currentColor">
           <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
         </svg>
-        Visit the GitHub repository
+        GitHub 저장소 방문하기
       </a>
     </div>
 

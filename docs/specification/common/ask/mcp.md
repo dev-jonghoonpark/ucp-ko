@@ -14,17 +14,17 @@
    limitations under the License.
 -->
 
-# Ask - MCP Binding { #ask-mcp-binding }
+# Ask - MCP 바인딩 { #ask-mcp-binding }
 
-This document specifies the Model Context Protocol (MCP) binding for the
-[Ask Capability](index.md).
+이 문서는 [Ask 기능(Capability)](index.md)의 Model Context Protocol(MCP) 바인딩을
+명세한다.
 
-## Protocol Fundamentals { #protocol-fundamentals }
+## 프로토콜 기본 사항 { #protocol-fundamentals }
 
-### Discovery { #discovery }
+### 디스커버리 { #discovery }
 
-Businesses advertise MCP transport availability for the Common service and
-the Ask capability through their UCP profile at `/.well-known/ucp`.
+비즈니스는 `/.well-known/ucp`의 UCP 프로필을 통해 Common 서비스와 Ask 기능에 대한
+MCP 전송 방식 지원 여부를 알린다.
 
 <!-- ucp:example schema=profile def=business_schema -->
 ```json
@@ -54,13 +54,12 @@ the Ask capability through their UCP profile at `/.well-known/ucp`.
 }
 ```
 
-### Request Metadata { #request-metadata }
+### 요청 메타데이터 { #request-metadata }
 
-A Platform using MCP **MUST** include a `meta` object with
-`meta["ucp-agent"].profile` in every request. The field identifies the
-Platform's UCP profile for version compatibility checks and capability
-negotiation. Protocol metadata stays in `meta`, separate from the domain
-request in `ask`:
+MCP를 사용하는 플랫폼은 모든 요청에 반드시
+`meta["ucp-agent"].profile`이 포함된 `meta` 객체를 넣어야 한다(**MUST**). 이 필드는
+버전 호환성 확인과 기능 협상에 쓰이는 플랫폼의 UCP 프로필을 식별한다.
+프로토콜 메타데이터는 `ask`의 도메인 요청과 분리되어 `meta`에 남는다.
 
 <!-- ucp:example schema=common/ask def=ask_request op=create direction=request extract=$.params.arguments.ask -->
 ```json
@@ -84,43 +83,41 @@ request in `ask`:
 }
 ```
 
-The Common service's `meta` also defines an optional `idempotency-key`, the MCP
-counterpart of the HTTP `Idempotency-Key` header. A Platform **SHOULD** include
-`meta["idempotency-key"]` on any request that carries a `conversation`, and
-**MAY** include it on any other; see [Conversation](index.md#conversation) for
-the retry contract.
+Common 서비스의 `meta`는 HTTP `Idempotency-Key` 헤더에 대응하는 MCP 필드인 선택적
+`idempotency-key`도 정의한다. 플랫폼은 `conversation`을 담은 모든 요청에
+`meta["idempotency-key"]`를 포함해야 하며(**SHOULD**), 그 밖의 요청에도 포함할 수
+있다(**MAY**). 재시도 규약은 [대화](index.md#conversation)를 참고한다.
 
-## Tools { #tools }
+## 도구 { #tools }
 
-| Tool | Capability | Description |
+| 도구 | 기능 | 설명 |
 | :--- | :--- | :--- |
-| `ask_business` | [Ask](index.md) | Ask the Business about its resources, policies, and services, including questions other capabilities cannot answer. |
+| `ask_business` | [Ask](index.md) | 다른 기능으로는 답할 수 없는 질문을 포함해, 비즈니스의 리소스·정책·서비스에 대해 비즈니스에 질문한다. |
 
 ### `ask_business` { #ask_business }
 
-Maps to the [Ask](index.md) capability.
+[Ask](index.md) 기능에 대응한다.
 
-#### Ask Request { #ask-request }
+#### Ask 요청 { #ask-request }
 
 {{ extension_schema_fields(
   'ask.json#/$defs/ask_request', 'common/ask/mcp'
 ) }}
 
-#### Ask Response { #ask-response }
+#### Ask 응답 { #ask-response }
 
 {{ extension_schema_fields(
   'ask.json#/$defs/ask_response', 'common/ask/mcp'
 ) }}
 
-#### Ask Example { #ask-example }
+#### Ask 예시 { #ask-example }
 
-The Buyer asks a policy question about a specific product, identified here by
-its page URL. `ids` grounds the question in any Business resource, by a
-Business-issued Global ID (GID) or by a secondary identifier the Business
-recognizes — a SKU, handle, or URL — so the Platform can pass whichever it
-already has (see [Scoping a Question](index.md#scoping-a-question)).
+구매자가 특정 상품에 대한 정책 질문을 한다. 여기서 상품은 페이지 URL로 식별한다.
+`ids`는 비즈니스가 발급한 Global ID(GID)나 비즈니스가 인식하는 보조 식별자(SKU,
+핸들, URL)로 질문을 비즈니스 리소스에 연결한다. 따라서 플랫폼은 이미 가지고 있는
+식별자 중 무엇이든 전달할 수 있다([질문 범위 지정](index.md#scoping-a-question) 참고).
 
-=== "Request"
+=== "요청"
 
     <!-- ucp:example schema=common/ask def=ask_request op=create direction=request extract=$.params.arguments.ask -->
     ```json
@@ -150,7 +147,7 @@ already has (see [Scoping a Question](index.md#scoping-a-question)).
     }
     ```
 
-=== "Response"
+=== "응답"
 
     <!-- ucp:example schema=common/ask def=ask_response op=read direction=response extract=$.result.structuredContent -->
     ```json
@@ -183,14 +180,13 @@ already has (see [Scoping a Question](index.md#scoping-a-question)).
     }
     ```
 
-#### Multi-turn Example { #multi-turn-example }
+#### 멀티턴 예시 { #multi-turn-example }
 
-A Business that supports multi-turn conversations returns a `conversation`
-whose opaque `id` the Platform replays on the next turn. Turn 1 omits
-`conversation` (a new conversation); turn 2 replays the identifier to build
-on it.
+멀티턴 대화를 지원하는 비즈니스는 `conversation`을 반환하며, 플랫폼은 그 불투명한
+`id`를 다음 턴에 다시 보낸다. 턴 1은 `conversation`을 생략하고(새 대화), 턴 2는 그
+식별자를 다시 보내 대화를 이어간다.
 
-Turn 1, request — a new conversation (no `conversation`):
+턴 1, 요청 — 새 대화(`conversation` 없음):
 
 <!-- ucp:example schema=common/ask def=ask_request op=create direction=request extract=$.params.arguments.ask -->
 ```json
@@ -215,7 +211,7 @@ Turn 1, request — a new conversation (no `conversation`):
 }
 ```
 
-Turn 1, response — the Business issues a conversation identifier:
+턴 1, 응답 — 비즈니스가 대화 식별자를 발급한다:
 
 <!-- ucp:example schema=common/ask def=ask_response op=read direction=response extract=$.result.structuredContent -->
 ```json
@@ -241,7 +237,7 @@ Turn 1, response — the Business issues a conversation identifier:
 }
 ```
 
-Turn 2, request — replay the identifier to continue:
+턴 2, 요청 — 식별자를 다시 보내 대화를 이어간다:
 
 <!-- ucp:example schema=common/ask def=ask_request op=create direction=request extract=$.params.arguments.ask -->
 ```json
@@ -267,7 +263,7 @@ Turn 2, request — replay the identifier to continue:
 }
 ```
 
-Turn 2, response:
+턴 2, 응답:
 
 <!-- ucp:example schema=common/ask def=ask_response op=read direction=response extract=$.result.structuredContent -->
 ```json
@@ -293,10 +289,10 @@ Turn 2, response:
 }
 ```
 
-#### "Can't Answer" Example { #cant-answer-example }
+#### "답변 불가" 예시 { #cant-answer-example }
 
-When the Business cannot address the question, the response is still a
-successful result with a populated `answer` stating the limitation.
+비즈니스가 질문에 답할 수 없을 때도 응답은 성공 결과이며, 한계를 밝히는 `answer`가
+채워져 있다.
 
 <!-- ucp:example schema=common/ask def=ask_response op=read direction=response extract=$.result.structuredContent -->
 ```json
@@ -321,30 +317,27 @@ successful result with a populated `answer` stating the limitation.
 }
 ```
 
-## Error Handling { #error-handling }
+## 오류 처리 { #error-handling }
 
-UCP uses a two-layer error model separating transport errors from business outcomes.
+UCP는 전송 오류와 비즈니스 결과를 구분하는 2계층 오류 모델을 사용한다.
 
-### Transport Errors { #transport-errors }
+### 전송 오류 { #transport-errors }
 
-Transport-level failures (authentication, rate limiting, unavailability) that
-prevent request processing are returned as JSON-RPC `error`. See the
-[Core Specification](../../overview/index.md#error-codes) for the complete error code
-registry and JSON-RPC error code mappings.
+요청 처리를 막는 전송 수준 실패(인증, 요청 한도 제한, 서비스 불가)는 JSON-RPC
+`error`로 반환한다. 전체 오류 코드 레지스트리와 JSON-RPC 오류 코드 매핑은
+[핵심 명세](../../overview/index.md#error-codes)를 참고한다.
 
-### Business Outcomes { #business-outcomes }
+### 비즈니스 결과 { #business-outcomes }
 
-All application-level outcomes return a successful JSON-RPC result with the UCP
-envelope and a populated `answer`. Per-answer warnings or info notes ride in
-the optional `messages` array. See
-[Ask Overview](index.md#messages-and-error-handling) for message semantics.
+모든 애플리케이션 수준 결과는 UCP 엔벌로프와 채워진 `answer`를 담은 성공 JSON-RPC
+result로 반환한다. 답변별 경고나 정보성 메모는 선택적 `messages` 배열에 담긴다.
+메시지의 의미는 [Ask 개요](index.md#messages-and-error-handling)를 참고한다.
 
-#### Example: Answer with a Disclosure Warning { #example-answer-with-a-disclosure-warning }
+#### 예시: 고지 경고가 포함된 답변 { #example-answer-with-a-disclosure-warning }
 
-When an answer touches on a regulated disclosure (allergens, safety, legal),
-the binding disclosure is referenced as a warning with
-`presentation: "disclosure"`. The answer itself states the limitation and
-defers to the binding source.
+답변이 규제 대상 고지(알레르기 유발 성분, 안전, 법률)와 관련될 때는 구속력 있는
+고지를 `presentation: "disclosure"` 경고로 참조한다. 답변 자체는 한계를 밝히고
+구속력 있는 출처를 따르도록 안내한다.
 
 <!-- ucp:example schema=common/ask def=ask_response op=read direction=response extract=$.result.structuredContent -->
 ```json
@@ -386,28 +379,27 @@ defers to the binding source.
 }
 ```
 
-## Entities { #entities }
+## 엔티티 { #entities }
 
 ### UCP Response Ask {: #ucp-response-ask-schema }
 
 {{ extension_schema_fields('ucp.json#/$defs/response_ask_schema', 'common/ask/mcp') }}
 
-### Error Response {: #error-response }
+### 에러 응답 {: #error-response }
 
 {{ schema_fields('types/error_response', 'common/ask/mcp') }}
 
-## Conformance { #conformance }
+## 준수 { #conformance }
 
-A conforming MCP transport implementation **MUST**:
+준수하는 MCP 전송 방식 구현은 반드시 다음을 지켜야 한다(**MUST**).
 
-1. Implement JSON-RPC 2.0.
-2. When `dev.ucp.common.ask` is advertised in the Business's UCP profile, expose
-   the `ask_business` tool at the `dev.ucp.common` service's MCP `endpoint`.
-3. Validate tool inputs against the [Ask schema](index.md).
-4. Return a successful JSON-RPC result for every well-formed, authorized,
-   in-limits request; convey business outcomes through the `answer` and
-   `messages` array, and use JSON-RPC errors only for transport-level issues
-   (authentication, rate limiting, unavailability, malformed input).
-5. Return a populated `answer` on every successful response. A "can't answer"
-   outcome is a populated `answer` that states the limitation plainly, **not**
-   an omitted field, error code, or JSON-RPC error.
+1. JSON-RPC 2.0을 구현한다.
+2. 비즈니스의 UCP 프로필에 `dev.ucp.common.ask`가 공시되어 있으면,
+   `dev.ucp.common` 서비스의 MCP `endpoint`에서 `ask_business` 도구를 제공한다.
+3. [Ask 스키마](index.md)에 따라 도구 입력을 검증한다.
+4. 형식이 올바르고, 권한이 있으며, 한도 내에 있는 모든 요청에 성공 JSON-RPC
+   result를 반환한다. 비즈니스 결과는 `answer`와 `messages` 배열로 전달하고,
+   JSON-RPC 오류는 전송 수준 문제(인증, 요청 한도 제한, 서비스 불가, 잘못된 입력)에만
+   사용한다.
+5. 모든 성공 응답에 채워진 `answer`를 반환한다. "답변 불가" 결과는 한계를 분명히
+   밝히는 채워진 `answer`이며, 필드 생략·오류 코드·JSON-RPC 오류가 **아니다**.

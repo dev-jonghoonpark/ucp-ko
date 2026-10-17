@@ -14,51 +14,48 @@
    limitations under the License.
 -->
 
-# Location Search Capability { #location-search-capability }
+# 위치 검색 기능 { #location-search-capability }
 
-* **Capability Name:** `dev.ucp.common.location.search`
+* **기능 이름:** `dev.ucp.common.location.search`
 
-Performs a search for physical locations (e.g., retail stores, restaurants,
-warehouses). Supports free-text queries, explicit `distance` and `serves`
-relations, and structured filtering by operating hours, amenities, and
-current item availability.
+물리적 위치(예: 소매 매장, 음식점, 창고)를 검색한다. 자유 텍스트 질의, 명시적
+`distance` 및 `serves` 관계, 그리고 영업시간·편의시설·현재 상품 재고에 따른 구조화된
+필터링을 지원한다.
 
-## Operation { #operation }
+## 작업 { #operation }
 
-| Operation | Description |
+| 작업 | 설명 |
 | :--- | :--- |
-| **Search Locations** | Search for Locations using query text, explicit spatial relations, context, and filters. |
+| **위치 검색** | 질의 텍스트, 명시적 공간 관계, 컨텍스트, 필터를 사용해 위치를 검색한다. |
 
-### Request { #request }
+### 요청 { #request }
 
 {{ extension_schema_fields('location_search.json#/$defs/search_request', 'common/location') }}
 
-### Response { #response }
+### 응답 { #response }
 
 {{ extension_schema_fields('location_search.json#/$defs/search_response', 'common/location') }}
 
-## Request Grammar { #request-grammar }
+## 요청 문법 { #request-grammar }
 
-Each request input has a distinct role:
+각 요청 입력은 서로 다른 역할을 한다.
 
-| Input | Meaning |
+| 입력 | 의미 |
 | :--- | :--- |
-| `query` | Free-text retrieval (e.g., "restaurants near me that deliver"). |
-| `distance` | A relation between a candidate Location and an explicit Platform-supplied center point and inclusive radius. |
-| `serves` | A relation between a candidate Location and one explicit Platform-supplied service target. |
-| `filters` | Predicates over inherent or current Location facts: `hours`, `amenities`, and `items`, plus extension-defined filters. |
-| `context` / `signals` | Provisional hints for relevance, localization, and bounded default selection; never spatial proof. |
-| `pagination` | A request for the shape of a bounded result page. |
+| `query` | 자유 텍스트 검색(예: "배달되는 근처 음식점"). |
+| `distance` | 후보 위치와, 플랫폼이 명시적으로 제공한 중심점 및 경계를 포함하는 반경 사이의 관계. |
+| `serves` | 후보 위치와, 플랫폼이 명시적으로 제공한 하나의 서비스 대상 사이의 관계. |
+| `filters` | 위치의 고유한 사실이나 현재 사실에 대한 조건: `hours`, `amenities`, `items`, 그리고 확장이 정의한 필터. |
+| `context` / `signals` | 관련성, 현지화, 범위가 제한된 기본 선택을 위한 잠정적 힌트. 공간적 증거가 되지는 않는다. |
+| `pagination` | 범위가 제한된 결과 페이지의 형태에 대한 요청. |
 
-`distance` and `serves` sit at the request root because they compare a
-candidate Location against external facts the Platform supplies, while
-`filters` predicates ask whether the Location itself has or currently
-satisfies a fact. The two relations are independent: either can anchor a
-request by itself, they can use different points, and neither inherits an
-operand from the other.
+`distance`와 `serves`는 후보 위치를 플랫폼이 제공한 외부 사실과 비교하므로 요청
+루트에 위치한다. 반면 `filters` 조건은 위치 자체가 어떤 사실을 갖고 있는지, 혹은
+현재 충족하는지를 묻는다. 두 관계는 서로 독립적이다. 어느 쪽이든 단독으로 요청의
+기준이 될 수 있고, 서로 다른 지점을 사용할 수 있으며, 어느 쪽도 상대의 피연산자를
+물려받지 않는다.
 
-For any candidate Location, every explicit structured constraint is
-conjunctive:
+어떤 후보 위치에 대해서든 모든 명시적 구조화 제약은 논리곱(AND)으로 결합된다.
 
 ```text
 matches = distance (when present)
@@ -66,278 +63,248 @@ matches = distance (when present)
       AND every supplied filters.* predicate
 ```
 
-This rule defines observable results, not backend evaluation order.
+이 규칙은 관찰 가능한 결과를 정의할 뿐, 백엔드의 평가 순서를 정의하지 않는다.
 
-A Business **MAY** use the `query` text to narrow and rank results as
-ordinary free-text retrieval, including letting spatial phrases in it (for
-example, "near me") influence text relevance and ranking. The `query` never
-carries structured authority in either direction. A Business **MUST NOT**
-treat `query` text as creating a `distance` or `serves` relation or a
-`filters` predicate. Only explicit constraints establish structured
-matching; spatial proof comes only from the operands in
-[Spatial Relations](#spatial-relations). A Business **MUST NOT** relax an
-explicit structured constraint because of the `query` text: a Location
-that fails `distance`, `serves`, or a `filters` predicate is excluded no
-matter how well it matches the query.
+비즈니스는 일반적인 자유 텍스트 검색처럼 `query` 텍스트를 사용해 결과를 좁히고
+순위를 매길 수 있으며(**MAY**), 그 안의 공간 표현(예: "근처")이 텍스트 관련성과 순위에
+영향을 주도록 할 수도 있다. `query`는 어느 방향으로든 구조적 권한을 갖지 않는다.
+비즈니스는 `query` 텍스트를 `distance`나 `serves` 관계, 또는 `filters` 조건을 만드는
+것으로 취급해서는 안 된다(**MUST NOT**). 구조화된 매칭은 명시적 제약만으로 성립하며,
+공간적 증거는 [공간 관계](#spatial-relations)의 피연산자에서만 나온다. 비즈니스는
+`query` 텍스트 때문에 명시적 구조화 제약을 완화해서는 안 된다(**MUST NOT**).
+`distance`, `serves`, 또는 `filters` 조건을 충족하지 못한 위치는 질의와 아무리 잘
+맞더라도 제외된다.
 
-### Bounded Browse { #bounded-browse }
+### 범위가 제한된 탐색 { #bounded-browse }
 
-A request without a spatial relation is valid. An empty body `{}`, a request
-carrying only `context` or `signals`, a request carrying only `pagination`, and
-a filters-only request are each a bounded browse over the Business's default,
-policy-controlled selection — never a spatial assertion and never an export.
-A request carrying only `filters.items` remains non-spatial: it
-constrains the candidate set through its explicit item identifiers without
-asserting any spatial relation. Page size follows the shared
-[Pagination](#pagination) contract.
+공간 관계가 없는 요청도 유효하다. 빈 본문 `{}`, `context`나 `signals`만 담은 요청,
+`pagination`만 담은 요청, 필터만 담은 요청은 모두 비즈니스의 정책으로 관리되는 기본
+선택 범위에 대한 제한된 탐색이다. 공간적 주장도 아니고 전체 내보내기도 아니다.
+`filters.items`만 담은 요청도 공간과 무관하다. 명시적 상품 식별자로 후보 집합을
+제한할 뿐 어떤 공간 관계도 주장하지 않는다. 페이지 크기는 공통
+[페이지네이션](#pagination) 규약을 따른다.
 
-A Business **MAY** use `context`, `signals`, and IP-derived locality to
-influence ranking, localization, or selection of a bounded default browse
-page. A Business using those hints **MUST NOT** treat that choice as proof
-that a Location serves a target or falls within an unstated radius; only
-explicit `distance` and `serves` operands establish spatial matching.
+비즈니스는 `context`, `signals`, IP에서 추정한 지역 정보를 사용해 범위가 제한된 기본
+탐색 페이지의 순위, 현지화, 선택에 영향을 줄 수 있다(**MAY**). 이런 힌트를 사용하는
+비즈니스는 그 선택을 위치가 어떤 대상에 서비스한다거나 명시되지 않은 반경 안에
+있다는 증거로 취급해서는 안 된다(**MUST NOT**). 공간적 매칭은 명시적 `distance`와
+`serves` 피연산자로만 성립한다.
 
-### Rejection and Empty Results { #rejection-and-empty-results }
+### 거부와 빈 결과 { #rejection-and-empty-results }
 
-Requests that fail the Search request schema use the binding's
-invalid-request mechanism. The same mechanism carries the defined semantic
-errors for `distance`, `serves`, and unsupported filters; see
-[Spatial Relations](#spatial-relations) and [Search Filters](#search-filters).
-A well-formed relation or supported predicate that simply matches no Locations
-remains a successful empty business outcome (see
-[Empty Search](index.md#common-scenarios)).
+검색 요청 스키마를 통과하지 못한 요청은 바인딩의 잘못된 요청(invalid-request)
+메커니즘을 사용한다. `distance`, `serves`, 지원하지 않는 필터에 대해 정의된 의미 오류도
+같은 메커니즘으로 전달된다. [공간 관계](#spatial-relations)와
+[검색 필터](#search-filters)를 참고한다. 형식이 올바른 관계나 지원되는 조건이 단지
+어떤 위치와도 일치하지 않는 경우는 성공적인 빈 비즈니스 결과로 남는다
+([빈 검색 결과](index.md#common-scenarios) 참고).
 
-## Spatial Relations { #spatial-relations }
+## 공간 관계 { #spatial-relations }
 
-### Distance { #distance }
+### 거리 { #distance }
 
-The `distance` relation matches Locations within an inclusive radius of an
-explicit center point. Both members are required: `distance.center` is a
-`geo.json` point in World Geodetic System 1984 (WGS 84) decimal degrees, and
-`distance.max` is the inclusive maximum distance in meters.
+`distance` 관계는 명시적 중심점으로부터 경계를 포함하는 반경 안에 있는 위치와
+일치한다. 두 멤버 모두 필수다. `distance.center`는 World Geodetic System 1984(WGS 84)
+십진 도 단위의 `geo.json` 지점이고, `distance.max`는 경계를 포함하는 최대 거리(미터)다.
 
 {{ schema_fields('types/location_distance', 'common/location') }}
 
-The Platform **MUST** supply `distance.center` whenever it supplies
-`distance`. The Business **MUST NOT** derive a missing center from `context`,
-`signals`, an Internet Protocol (IP) address, or `serves`; a request missing
-a required operand is invalid rather than broader than intended.
+플랫폼은 `distance`를 제공할 때마다 반드시 `distance.center`를 제공해야
+한다(**MUST**). 비즈니스는 누락된 중심점을 `context`, `signals`, 인터넷 프로토콜(IP)
+주소, 또는 `serves`에서 도출해서는 안 된다(**MUST NOT**). 필수 피연산자가 빠진 요청은
+의도보다 넓은 요청이 아니라 잘못된 요청이다.
 
-Matching semantics are closed:
+매칭 의미는 다음으로 한정된다.
 
-* The computed distance is the shortest geodesic distance over the WGS 84
-    ellipsoid between `distance.center` and the Location's authoritative
-    `geo`, in meters. When the two points lie on opposite sides of the
-    180-degree meridian the same rule applies — the shortest geodesic — with
-    no special casing.
-* The Business **MUST** compare the unrounded computed value to
-    `distance.max`; a Location matches when that value is less than or equal
-    to `distance.max`, and exact equality matches.
-* The Business **MUST NOT** apply a tolerance band, substitute an operand,
-    clamp the radius, or evaluate route, travel, or planar distance in place
-    of the geodesic comparison.
-* The Business **MAY** compute the value with any algorithm that produces
-    the WGS 84 inverse-geodesic result at sufficient precision that the
-    match outcome agrees with the unrounded comparison defined above.
-* A Business that cannot honor a supplied `distance.max` (for example, a
-    radius cap below the requested value) **MUST** reject the request with an
-    actionable error; it **MUST NOT** silently clamp the radius or substitute
-    its own. The permission to return fewer results under
-    [Pagination](#pagination) never permits reducing `distance.max`.
-* A Location without a usable authoritative `geo` does not match; exclusion
-    is a non-match, not an error.
+* 계산된 거리는 `distance.center`와 위치의 권한 있는 `geo` 사이의 WGS 84 타원체 위
+    최단 측지 거리(미터)다. 두 지점이 180도 자오선의 반대편에 있을 때도 별도 처리 없이
+    같은 규칙(최단 측지선)을 적용한다.
+* 비즈니스는 반올림하지 않은 계산값을 반드시 `distance.max`와 비교해야
+    한다(**MUST**). 그 값이 `distance.max` 이하이면 위치가 일치하며, 정확히 같은 경우도
+    일치한다.
+* 비즈니스는 측지 거리 비교 대신 허용 오차 범위를 적용하거나, 피연산자를 대체하거나,
+    반경을 제한하거나, 경로·이동·평면 거리를 평가해서는 안 된다(**MUST NOT**).
+* 비즈니스는 매칭 결과가 위에서 정의한 반올림 없는 비교와 일치할 만큼 충분한 정밀도로
+    WGS 84 역측지 결과를 내는 알고리즘이라면 어떤 것으로든 값을 계산할 수
+    있다(**MAY**).
+* 제공된 `distance.max`를 지킬 수 없는 비즈니스(예: 반경 상한이 요청 값보다 작은
+    경우)는 조치 가능한 오류로 요청을 반드시 거부해야 한다(**MUST**). 반경을 조용히
+    제한하거나 자체 반경으로 대체해서는 안 된다(**MUST NOT**).
+    [페이지네이션](#pagination)에서 더 적은 결과를 반환하도록 허용한 것이
+    `distance.max`를 줄여도 된다는 뜻은 결코 아니다.
+* 사용 가능한 권한 있는 `geo`가 없는 위치는 일치하지 않는다. 이러한 제외는 불일치일
+    뿐 오류가 아니다.
 
-The relation is a hard restriction; it neither requests nor implies distance
-ordering. Ranking remains separate Business behavior unless another
-negotiated input specifies it.
+이 관계는 엄격한 제한이며, 거리순 정렬을 요청하거나 암시하지 않는다. 다른 협상된
+입력이 지정하지 않는 한, 순위는 별도의 비즈니스 동작으로 남는다.
 
-### Serves { #serves }
+### 서비스 대상 { #serves }
 
-The `serves` relation matches Locations that can provisionally serve one
-explicit target. It is a one-entry map: the Platform **MUST** supply exactly
-one target representation — `point`, `address`, or a negotiated
-reverse-domain extension target.
+`serves` 관계는 하나의 명시적 대상에 잠정적으로 서비스할 수 있는 위치와 일치한다.
+이 관계는 항목이 하나인 맵이다. 플랫폼은 `point`, `address`, 또는 협상된 역방향 도메인
+확장 대상 중 정확히 하나의 대상 표현을 반드시 제공해야 한다(**MUST**).
 
 {{ schema_fields('types/location_serves', 'common/location') }}
 
-* `point` is a WGS 84 latitude and longitude coordinate pair and uses the
-    same coordinate representation as `distance.center`.
-* `address` is a coarse locality. When supplying it, the Platform **MUST**
-    include at least one non-empty `address_country`, `address_region`, or
-    `postal_code`. An `address` is invalid if it is empty, contains only
-    unrecognized fields, or all of its recognized fields are empty. A `serves`
-    map is invalid if it is empty or contains more than one target.
+* `point`는 WGS 84 위도·경도 좌표 쌍이며 `distance.center`와 같은 좌표 표현을
+    사용한다.
+* `address`는 대략적인 지역이다. 이를 제공할 때 플랫폼은 비어 있지 않은
+    `address_country`, `address_region`, `postal_code` 중 하나 이상을 반드시 포함해야
+    한다(**MUST**). `address`가 비어 있거나, 인식되지 않는 필드만 담고 있거나, 인식되는
+    필드가 모두 비어 있으면 잘못된 값이다. `serves` 맵이 비어 있거나 대상을 둘 이상
+    담고 있으면 잘못된 값이다.
 
-The explicit target is authoritative. Omitting `serves` never creates an
-implicit serviceability check, and the Business **MUST NOT** derive a target
-from `context`, `signals`, or an IP address.
+명시적 대상이 권한을 갖는다. `serves`를 생략해도 암묵적인 서비스 가능 여부 확인이
+생기지 않으며, 비즈니스는 `context`, `signals`, IP 주소에서 대상을 도출해서는 안
+된다(**MUST NOT**).
 
-A Location matches when at least one currently available service or
-fulfillment method at that Location can provisionally serve the target. The
-match does not disclose the Business's coverage geometry, identify the
-qualifying method, reserve capacity, or guarantee that checkout or
-fulfillment will succeed; the Business revalidates serviceability against
-binding transaction data later in the commerce flow.
+위치에서 현재 이용 가능한 서비스 또는 풀필먼트 방식 중 하나 이상이 대상에 잠정적으로
+서비스할 수 있으면 그 위치는 일치한다. 이 일치는 비즈니스의 서비스 범위 기하 정보를
+공개하지 않고, 해당하는 방식을 특정하지 않으며, 수용량을 예약하지 않고, 체크아웃이나
+풀필먼트의 성공을 보장하지도 않는다. 비즈니스는 커머스 흐름의 이후 단계에서 구속력
+있는 거래 데이터를 기준으로 서비스 가능 여부를 다시 검증한다.
 
-A Business unable to evaluate an otherwise well-formed target — for example,
-a postal code system it does not model — **MUST** return an actionable
-request error; it **MUST NOT** fall back to a coarser interpretation or
-return broadened results. If a namespaced target's extension was not
-negotiated, the Business **MUST** return an actionable request error rather
-than silently omit the target.
+다른 면에서는 형식이 올바른 대상을 평가할 수 없는 비즈니스(예: 모델링하지 않는 우편번호
+체계)는 반드시 조치 가능한 요청 오류를 반환해야 한다(**MUST**). 더 대략적인 해석으로
+대체하거나 범위를 넓힌 결과를 반환해서는 안 된다(**MUST NOT**). 네임스페이스가 붙은
+대상의 확장이 협상되지 않았다면, 비즈니스는 대상을 조용히 생략하지 말고 반드시 조치
+가능한 요청 오류를 반환해야 한다(**MUST**).
 
-The relation also has a deliberate correlation limit: a Location matching both
-`serves` and [`filters.items`](#item-availability-filter) satisfies each
-constraint independently. The match establishes that at least one method can
-provisionally serve the target and that the Business can currently provide
-every referenced item at that Location — not that the same method can fulfill
-those items to that target.
+이 관계에는 의도적인 상관관계 한계도 있다. `serves`와
+[`filters.items`](#item-availability-filter)를 모두 만족하는 위치는 각 제약을 독립적으로
+충족한 것이다. 이 일치는 하나 이상의 방식이 대상에 잠정적으로 서비스할 수 있고,
+비즈니스가 그 위치에서 참조된 모든 상품을 현재 제공할 수 있다는 것을 확인할 뿐, 같은
+방식으로 그 상품들을 그 대상에게 풀필먼트할 수 있다는 것을 확인하지는 않는다.
 
-## Search Filters { #search-filters }
+## 검색 필터 { #search-filters }
 
-Standard Location filters are `hours`, `amenities`, and `items`. A
-Business **MAY** support additional custom filters through
-`additionalProperties`. All supplied filters combine with AND. A Business
-that receives a filter it does not support **MUST** reject the request with
-an actionable error; it **MUST NOT** ignore the filter and return broadened
-results.
+표준 위치 필터는 `hours`, `amenities`, `items`다. 비즈니스는 `additionalProperties`를
+통해 추가 사용자 정의 필터를 지원할 수 있다(**MAY**). 제공된 모든 필터는 AND로
+결합된다. 지원하지 않는 필터를 받은 비즈니스는 조치 가능한 오류로 요청을 반드시
+거부해야 한다(**MUST**). 필터를 무시하고 범위를 넓힌 결과를 반환해서는 안
+된다(**MUST NOT**).
 
 {{ schema_fields('types/location_filter', 'common/location') }}
 
-### Hours-Based Filter { #hours-based-filter }
+### 영업시간 기반 필터 { #hours-based-filter }
 
-The standard `filters.hours` object requires `open_at`, an RFC 3339 instant
-expressed with `Z` or a numeric offset.
+표준 `filters.hours` 객체에는 `Z` 또는 숫자 오프셋으로 표현된 RFC 3339 시각인
+`open_at`이 필요하다.
 
-A Platform selects `open_at` to represent the time relevant to the Buyer's
-intent. It can use its current time or choose another time, such as an expected
-arrival, pickup, or order-acceptance time. A Platform **MAY** round or adjust
-its selected time to the granularity appropriate to the interaction, but the
-value it sends identifies one specific instant.
+플랫폼은 구매자의 의도와 관련된 시각을 나타내도록 `open_at`을 선택한다. 현재 시각을
+사용할 수도 있고, 예상 도착·픽업·주문 접수 시각 같은 다른 시각을 고를 수도 있다.
+플랫폼은 선택한 시각을 상호작용에 맞는 단위로 반올림하거나 조정할 수 있지만(**MAY**),
+보내는 값은 하나의 특정 시각을 나타낸다.
 
-For each candidate Location, a Business **MUST** evaluate `open_at` exactly as
-supplied. It converts the instant to the local date, day of week, and time using
-the Location's authoritative `timezone`, then evaluates the effective schedule
-under [Operating Hours](index.md#operating-hours). The `Z` or numeric offset in
-`open_at` identifies the instant; it does not identify the Location's timezone.
+각 후보 위치에 대해 비즈니스는 반드시 `open_at`을 제공된 그대로 평가해야
+한다(**MUST**). 위치의 권한 있는 `timezone`을 사용해 그 시각을 현지 날짜, 요일, 시간으로
+변환한 다음, [영업시간](index.md#operating-hours)에 따라 유효한 일정을 평가한다.
+`open_at`의 `Z` 또는 숫자 오프셋은 시각을 식별할 뿐, 위치의 시간대를 식별하지 않는다.
 
-A Business **MUST** return a Location only when it can establish that the
-Location is open at `open_at`. If its schedule data is absent, invalid, outside
-the range for which it can evaluate authoritatively, or otherwise unusable, the
-Location does not match the filter. A Business **MUST NOT** round, shift, or
-otherwise reinterpret the supplied instant.
+비즈니스는 위치가 `open_at`에 영업 중임을 확인할 수 있을 때만 그 위치를 반환해야
+한다(**MUST**). 일정 데이터가 없거나, 잘못되었거나, 권한 있게 평가할 수 있는 범위를
+벗어나거나, 그 밖의 이유로 사용할 수 없으면 그 위치는 필터와 일치하지 않는다.
+비즈니스는 제공된 시각을 반올림하거나, 옮기거나, 다른 방식으로 재해석해서는 안
+된다(**MUST NOT**).
 
-### Amenity Filter { #amenity-filter }
+### 편의시설 필터 { #amenity-filter }
 
-The `amenities` filter identifies static features, services, or capabilities.
-A Location matches only when its response `amenities` map contains every
-supplied identifier as an exact key. See
-[Amenity Vocabulary](#amenity-vocabulary) for well-known values.
+`amenities` 필터는 고정적인 특징, 서비스, 역량을 식별한다. 위치는 응답의 `amenities`
+맵이 제공된 모든 식별자를 정확한 키로 포함할 때만 일치한다. 잘 알려진 값은
+[편의시설 어휘](#amenity-vocabulary)를 참고한다.
 
-#### Amenity Vocabulary { #amenity-vocabulary }
+#### 편의시설 어휘 { #amenity-vocabulary }
 
-UCP defines an open reverse-DNS vocabulary for amenity identifiers. A Business
-**SHOULD** use a well-known UCP identifier when its definition accurately
-describes the amenity and **MAY** define additional identifiers under a
-namespace it controls. The following table is a non-exhaustive list of
-well-known values:
+UCP는 편의시설 식별자에 대해 개방형 역방향 DNS 어휘를 정의한다. 비즈니스는 잘 알려진
+UCP 식별자의 정의가 해당 편의시설을 정확히 설명한다면 그 식별자를 사용해야
+하며(**SHOULD**), 자신이 관리하는 네임스페이스 아래에 추가 식별자를 정의할 수
+있다(**MAY**). 다음 표는 잘 알려진 값의 일부 목록이다.
 
-| Amenity Name                               | Domain             | Semantic Definition                                                    |
+| 편의시설 이름 | 도메인 | 의미 정의 |
 | :----------------------------------------- | :----------------  | :--------------------------------------------------------------------- |
-| `dev.ucp.amenity.wi_fi`                    | Common / Universal | Complimentary or Buyer-accessible wireless internet on premises.       |
-| `dev.ucp.amenity.parking`                  | Common / Universal | Dedicated parking lot or garage available on site.                     |
-| `dev.ucp.amenity.shopping.curbside_pickup` | Retail Shopping    | Dedicated vehicle bays for order pickup without entering the building. |
-| `dev.ucp.amenity.shopping.in_store_pickup` | Retail Shopping    | Dedicated counter or area inside store for order pickup.               |
+| `dev.ucp.amenity.wi_fi`                    | 공통 / 범용 | 매장 내 무료 또는 구매자가 이용할 수 있는 무선 인터넷. |
+| `dev.ucp.amenity.parking`                  | 공통 / 범용 | 현장에서 이용할 수 있는 전용 주차장 또는 차고. |
+| `dev.ucp.amenity.shopping.curbside_pickup` | 소매 쇼핑 | 건물에 들어가지 않고 주문을 픽업할 수 있는 전용 차량 공간. |
+| `dev.ucp.amenity.shopping.in_store_pickup` | 소매 쇼핑 | 주문 픽업을 위한 매장 내 전용 카운터 또는 공간. |
 
-Location responses use the shared
-[Amenity representation](index.md#amenity), which keeps custom identifiers
-presentable without assigning them standardized semantics.
+위치 응답은 공통 [편의시설 표현](index.md#amenity)을 사용한다. 이 표현 덕분에 사용자
+정의 식별자에 표준화된 의미를 부여하지 않고도 화면에 표시할 수 있다.
 
-A Platform supplies amenity filters as an array of identifiers. Matching uses
-exact whole-key equality; namespace prefixes carry no wildcard or inheritance
-semantics. A Business **MUST NOT** ignore a supplied identifier: a Location
-whose authoritative amenity set lacks any supplied key does not match. This
-includes identifiers the Business does not use; no diagnostic is required for
-an ordinary non-match. When `filters.amenities` is present, the Business
-**MUST** include every supplied identifier in each returned Location's
-`amenities` map. A Platform **MUST** reject a returned Location as
-non-conforming if it omits the map or any requested key, rather than accept a
-broadened or unverifiable result.
+플랫폼은 편의시설 필터를 식별자 배열로 제공한다. 매칭은 키 전체의 정확한 일치를
+사용하며, 네임스페이스 접두사에는 와일드카드나 상속 의미가 없다. 비즈니스는 제공된
+식별자를 무시해서는 안 된다(**MUST NOT**). 권한 있는 편의시설 집합에 제공된 키 중
+하나라도 없는 위치는 일치하지 않는다. 비즈니스가 사용하지 않는 식별자도 마찬가지이며,
+일반적인 불일치에는 진단 정보가 필요하지 않다. `filters.amenities`가 있으면 비즈니스는
+반환하는 각 위치의 `amenities` 맵에 제공된 모든 식별자를 반드시 포함해야
+한다(**MUST**). 반환된 위치가 이 맵이나 요청된 키 중 하나라도 빠뜨렸다면, 플랫폼은 범위가
+넓어졌거나 검증할 수 없는 결과를 받아들이지 말고 해당 위치를 비준수로 반드시 거부해야
+한다(**MUST**).
 
-### Item Availability Filter { #item-availability-filter }
+### 상품 재고 필터 { #item-availability-filter }
 
-The standard `filters.items` value is a nonempty array of distinct item
-identifiers. Each identifier is a stable, opaque, Business-scoped reference to
-an orderable item in the applicable domain, such as a shopping variant or a
-food menu item. The filter asks one coarse discovery question: at which
-Locations can the Business currently provide every referenced item?
+표준 `filters.items` 값은 서로 다른 상품 식별자로 이루어진 비어 있지 않은 배열이다. 각
+식별자는 해당 도메인에서 주문 가능한 상품(예: 쇼핑 변형 상품이나 음식 메뉴 항목)을
+가리키는, 안정적이고 불투명하며 비즈니스 범위를 갖는 참조다. 이 필터는 "비즈니스가
+참조된 모든 상품을 현재 어느 위치에서 제공할 수 있는가?"라는 하나의 대략적인 탐색
+질문을 던진다.
 
-A Location matches only when the Business can currently provide every
-referenced item at that Location. The Business evaluates each identifier
-independently against its current data when processing the request, and the
-per-item outcomes combine with AND. Evaluation is independent of the
-Location's operating hours and of any fulfillment method: `filters.hours` is a
-separate conjunctive predicate, and `filters.hours.open_at` does not change
-the availability evaluation instant, even when it represents a future arrival
-or pickup time.
+위치는 비즈니스가 그 위치에서 참조된 모든 상품을 현재 제공할 수 있을 때만 일치한다.
+비즈니스는 요청을 처리할 때 현재 데이터를 기준으로 각 식별자를 독립적으로 평가하며,
+상품별 결과는 AND로 결합된다. 평가는 위치의 영업시간이나 풀필먼트 방식과 무관하다.
+`filters.hours`는 별도의 논리곱 조건이며, `filters.hours.open_at`은 미래의 도착 또는 픽업
+시각을 나타내더라도 재고 평가 시점을 바꾸지 않는다.
 
-An identifier that is unknown, is currently unavailable, or cannot be evaluated
-at a candidate Location fails the filter for that Location. The Business
-**MUST NOT** ignore such an identifier to return broadened results; the
-candidate does not match. This is an ordinary non-match and requires no
-diagnostic (see [Empty Search](index.md#common-scenarios)).
+알 수 없거나, 현재 재고가 없거나, 후보 위치에서 평가할 수 없는 식별자는 그 위치에 대해
+필터를 통과하지 못한다. 비즈니스는 범위를 넓힌 결과를 반환하려고 이런 식별자를
+무시해서는 안 되며(**MUST NOT**), 해당 후보는 일치하지 않는다. 이는 일반적인 불일치이며
+진단 정보가 필요하지 않다([빈 검색 결과](index.md#common-scenarios) 참고).
 
-A match is a coarse, provisional assertion, and the response intentionally
-remains Location-shaped without echoing per-item facts. The result does not
-evaluate Platform-selected quantities, prove that the referenced items can be
-transacted together as one basket, select or identify a fulfillment method,
-reserve any item, or predict availability at a future instant. The Business
-**MUST** revalidate transaction-specific availability, quantities, methods,
-and terms later in the commerce flow. See
-[Relationship to Other Capabilities](index.md#relationship-to-other-capabilities).
+일치는 대략적이고 잠정적인 확인이며, 응답은 상품별 사실을 되돌려 주지 않고 의도적으로
+위치 형태를 유지한다. 이 결과는 플랫폼이 선택한 수량을 평가하지 않고, 참조된 상품을
+하나의 장바구니로 함께 거래할 수 있음을 증명하지 않으며, 풀필먼트 방식을 선택하거나
+특정하지 않고, 어떤 상품도 예약하지 않으며, 미래 시점의 재고를 예측하지도 않는다.
+비즈니스는 커머스 흐름의 이후 단계에서 거래별 재고, 수량, 방식, 조건을 반드시 다시
+검증해야 한다(**MUST**).
+[다른 기능과의 관계](index.md#relationship-to-other-capabilities)를 참고한다.
 
-Combining `filters.items` with a pickup amenity (for example,
-`dev.ucp.amenity.shopping.in_store_pickup`) matches Locations where every
-referenced item is currently available and pickup is generally supported. The
-two predicates remain independent: the combination does not establish that
-the referenced items are available through pickup. Exact one-shot,
-method-qualified store finding is outside the base Location capability and
-requires an applicable domain capability that can correlate item availability
-with a fulfillment method.
+`filters.items`를 픽업 편의시설(예: `dev.ucp.amenity.shopping.in_store_pickup`)과
+결합하면, 참조된 모든 상품의 재고가 현재 있고 일반적으로 픽업을 지원하는 위치와
+일치한다. 두 조건은 독립적으로 남는다. 이 결합은 참조된 상품을 픽업으로 받을 수
+있다는 것을 확인하지 않는다. 방식까지 특정하는 정확한 한 번의 매장 찾기는 기본 위치
+기능의 범위를 벗어나며, 상품 재고와 풀필먼트 방식을 연관 지을 수 있는 해당 도메인
+기능이 필요하다.
 
-## Pagination { #pagination }
+## 페이지네이션 { #pagination }
 
-Cursor-based pagination for list operations. Cursors are opaque strings. A
-Business **MAY** encode them as stateless keyset tokens.
+목록 작업을 위한 커서 기반 페이지네이션이다. 커서는 불투명한 문자열이다. 비즈니스는
+커서를 상태 없는 키셋 토큰으로 인코딩할 수 있다(**MAY**).
 
-### Page Size { #page-size }
+### 페이지 크기 { #page-size }
 
-The `limit` parameter is a requested page size, not a guaranteed result
-count. When `limit` is omitted, the Business **MUST** apply a default page
-size. A default of 10 is **RECOMMENDED**, but the Business **MAY** choose
-another value.
+`limit` 파라미터는 요청하는 페이지 크기일 뿐, 보장되는 결과 수가 아니다. `limit`이
+생략되면 비즈니스는 반드시 기본 페이지 크기를 적용해야 한다(**MUST**). 기본값 10을
+권장하지만(**RECOMMENDED**), 비즈니스는 다른 값을 선택할 수 있다(**MAY**).
 
-The Business **MAY** return fewer results than the requested or default page
-size, including when enforcing its maximum page size. A Platform **MUST NOT**
-assume that the response count equals either value. This permission applies
-only to page size; it does not permit reducing `distance.max` (see
-[Distance](#distance)).
+비즈니스는 최대 페이지 크기를 적용하는 경우를 포함해, 요청된 페이지 크기나 기본 페이지
+크기보다 적은 결과를 반환할 수 있다(**MAY**). 플랫폼은 응답 개수가 두 값 중 어느 것과도
+같다고 가정해서는 안 된다(**MUST NOT**). 이 허용은 페이지 크기에만 적용되며,
+`distance.max`를 줄이는 것은 허용하지 않는다([거리](#distance) 참고).
 
-### Pagination Request { #pagination-request }
+### 페이지네이션 요청 { #pagination-request }
 
 {{ extension_schema_fields('types/pagination.json#/$defs/request', 'common/location') }}
 
-### Pagination Response { #pagination-response }
+### 페이지네이션 응답 { #pagination-response }
 
 {{ extension_schema_fields('types/pagination.json#/$defs/response', 'common/location') }}
 
-## Examples {: #examples }
+## 예시 {: #examples }
 
-The following requests and responses are transport-neutral UCP payloads.
+다음 요청과 응답은 전송 방식에 중립적인 UCP 페이로드다.
 
-### Grocery stores serving a point and open at an instant { #grocery-stores-serving-a-point-and-open-at-an-instant }
+### 특정 지점에 서비스하고 특정 시각에 영업 중인 식료품점 { #grocery-stores-serving-a-point-and-open-at-an-instant }
 
-=== "Request"
+=== "요청"
 
     <!-- ucp:example schema=common/location_search op=search direction=request -->
     ```json
@@ -363,7 +330,7 @@ The following requests and responses are transport-neutral UCP payloads.
     }
     ```
 
-=== "Response"
+=== "응답"
 
     <!-- ucp:example schema=common/location_search op=search direction=response -->
     ```json
@@ -414,16 +381,15 @@ The following requests and responses are transport-neutral UCP payloads.
     }
     ```
 
-The explicit `serves.point` is the authoritative service target; the coarse
-`context` hints only shape ranking and localization. At the supplied instant,
-it is Monday at `10:00` in `America/Los_Angeles`, within the returned
-interval. See [Operating Hours](index.md#operating-hours) for complete
-schedule evaluation rules. The custom amenity remains presentable through its
-description without assigning the identifier any standardized UCP meaning.
+명시적 `serves.point`가 권한 있는 서비스 대상이며, 대략적인 `context` 힌트는 순위와
+현지화에만 영향을 준다. 제공된 시각은 `America/Los_Angeles` 기준 월요일 `10:00`으로,
+반환된 영업 구간 안에 있다. 전체 일정 평가 규칙은 [영업시간](index.md#operating-hours)을
+참고한다. 사용자 정의 편의시설은 식별자에 표준화된 UCP 의미를 부여하지 않고도 설명을
+통해 화면에 표시할 수 있다.
 
-### Locations where every requested item is available within a distance { #locations-where-every-requested-item-is-available-within-a-distance }
+### 일정 거리 안에서 요청한 모든 상품의 재고가 있는 위치 { #locations-where-every-requested-item-is-available-within-a-distance }
 
-=== "Request"
+=== "요청"
 
     <!-- ucp:example schema=common/location_search op=search direction=request -->
     ```json
@@ -444,7 +410,7 @@ description without assigning the identifier any standardized UCP meaning.
     }
     ```
 
-=== "Response"
+=== "응답"
 
     <!-- ucp:example schema=common/location_search op=search direction=response -->
     ```json
@@ -481,12 +447,11 @@ description without assigning the identifier any standardized UCP meaning.
     }
     ```
 
-Each returned Location satisfies the `distance` relation and the `items`
-availability predicate for every supplied identifier. The response does not
-echo per-item facts. The `distance` relation does not require the Business to disclose the
-Location coordinate used in the evaluation.
+반환된 각 위치는 `distance` 관계와, 제공된 모든 식별자에 대한 `items` 재고 조건을
+충족한다. 응답은 상품별 사실을 되돌려 주지 않는다. `distance` 관계는 비즈니스에게 평가에
+사용한 위치 좌표를 공개하도록 요구하지 않는다.
 
-## Transport Bindings { #transport-bindings }
+## 전송 바인딩 { #transport-bindings }
 
-* [REST Binding](rest.md#post-locationssearch): `POST /locations/search`
-* [MCP Binding](mcp.md#search_locations): `search_locations` tool
+* [REST 바인딩](rest.md#post-locationssearch): `POST /locations/search`
+* [MCP 바인딩](mcp.md#search_locations): `search_locations` 도구

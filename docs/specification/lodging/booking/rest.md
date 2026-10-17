@@ -14,17 +14,17 @@
    limitations under the License.
 -->
 
-# Booking Capability - REST Binding { #booking-capability-rest-binding }
+# 예약 기능 - REST 바인딩 { #booking-capability-rest-binding }
 
-This document specifies the REST binding for the
-[Booking Capability](index.md).
+이 문서는 [예약 기능(Booking Capability)](index.md)의
+REST 바인딩을 정의한다.
 
-## Protocol Fundamentals { #protocol-fundamentals }
+## 프로토콜 기본 사항 { #protocol-fundamentals }
 
-### Discovery { #discovery }
+### 디스커버리 { #discovery }
 
-Businesses advertise REST transport availability through their UCP profile at
-`/.well-known/ucp`.
+비즈니스는 `/.well-known/ucp`에 있는 UCP 프로필을 통해 REST 전송 방식 지원 여부를
+알린다.
 
 <!-- ucp:example schema=profile def=business_schema -->
 ```json
@@ -69,43 +69,42 @@ Businesses advertise REST transport availability through their UCP profile at
 }
 ```
 
-### Base URL { #base-url }
+### 기본 URL { #base-url }
 
-All UCP REST endpoints are relative to the business's base URL, which is
-discovered through the UCP profile at `/.well-known/ucp`. The endpoint for the
-booking capability is defined in the `rest.endpoint` field of the
-business profile.
+모든 UCP REST 엔드포인트는 비즈니스의 기본 URL을 기준으로 한 상대 경로이며, 기본 URL은
+`/.well-known/ucp`의 UCP 프로필에서 확인한다. 예약 기능의 엔드포인트는 비즈니스
+프로필의 `rest.endpoint` 필드에 정의된다.
 
-### Content Types { #content-types }
+### 콘텐츠 타입 { #content-types }
 
-* **Request**: `application/json`
-* **Response**: `application/json`
+* **요청**: `application/json`
+* **응답**: `application/json`
 
-All request and response bodies **MUST** be valid JSON as specified in
-[RFC 8259](https://tools.ietf.org/html/rfc8259){ target="_blank" }.
+모든 요청 및 응답 본문은 반드시
+[RFC 8259](https://tools.ietf.org/html/rfc8259){ target="_blank" }에 정의된 유효한 JSON이어야 한다(**MUST**).
 
-### Transport Security { #transport-security }
+### 전송 보안 { #transport-security }
 
-All REST endpoints **MUST** be served over HTTPS with minimum TLS version
-1.3.
+모든 REST 엔드포인트는 반드시 최소 TLS 1.3 이상의 HTTPS로 제공해야
+한다(**MUST**).
 
-## Operations { #operations }
+## 오퍼레이션 { #operations }
 
-| Operation                                                      | Method | Endpoint                           | Description                |
+| 오퍼레이션                                                     | 메서드 | 엔드포인트                         | 설명                       |
 | :------------------------------------------------------------- | :----- | :--------------------------------- | :------------------------- |
-| [Create Booking Session](index.md#create-booking-session)      | `POST` | `/booking-sessions`                | Create a booking session.  |
-| [Get Booking Session](index.md#get-booking-session)            | `GET`  | `/booking-sessions/{id}`           | Get a booking session.     |
-| [Update Booking Session](index.md#update-booking-session)      | `PUT`  | `/booking-sessions/{id}`           | Update a booking session.  |
-| [Complete Booking Session](index.md#complete-booking-session)  | `POST` | `/booking-sessions/{id}/complete`  | Complete booking.          |
-| [Cancel Booking Session](index.md#cancel-booking-session)      | `POST` | `/booking-sessions/{id}/cancel`    | Cancel a booking session.  |
+| [예약 세션 생성](index.md#create-booking-session)              | `POST` | `/booking-sessions`                | 예약 세션을 생성한다.      |
+| [예약 세션 조회](index.md#get-booking-session)                 | `GET`  | `/booking-sessions/{id}`           | 예약 세션을 조회한다.      |
+| [예약 세션 수정](index.md#update-booking-session)              | `PUT`  | `/booking-sessions/{id}`           | 예약 세션을 수정한다.      |
+| [예약 세션 완료](index.md#complete-booking-session)            | `POST` | `/booking-sessions/{id}/complete`  | 예약을 완료한다.           |
+| [예약 세션 취소](index.md#cancel-booking-session)              | `POST` | `/booking-sessions/{id}/cancel`    | 예약 세션을 취소한다.      |
 
-## Examples { #examples }
+## 예시 { #examples }
 
-### Create Booking Session { #create-booking-session }
+### 예약 세션 생성 { #create-booking-session }
 
-#### Single-stay Booking { #single-stay-booking }
+#### 단일 숙박 예약 { #single-stay-booking }
 
-=== "Request"
+=== "요청"
 
     <!-- ucp:example schema=lodging/booking op=create direction=request -->
     ```json
@@ -140,7 +139,7 @@ All REST endpoints **MUST** be served over HTTPS with minimum TLS version
     }
     ```
 
-=== "Response"
+=== "응답"
 
     <!-- ucp:example schema=lodging/booking op=read -->
     ```json
@@ -269,9 +268,9 @@ All REST endpoints **MUST** be served over HTTPS with minimum TLS version
     }
     ```
 
-=== "Error Response"
+=== "에러 응답"
 
-    Selected room is no longer available — no booking session resource is created:
+    선택한 객실을 더 이상 이용할 수 없어 예약 세션 리소스가 생성되지 않은 경우:
 
     <!-- ucp:example schema=common/types/error_response op=read -->
     ```json
@@ -295,9 +294,9 @@ All REST endpoints **MUST** be served over HTTPS with minimum TLS version
     }
     ```
 
-#### Multi-stay Booking { #multi-stay-booking }
+#### 다중 숙박 예약 { #multi-stay-booking }
 
-=== "Request"
+=== "요청"
 
     <!-- ucp:example schema=lodging/booking op=create direction=request -->
     ```json
@@ -349,7 +348,7 @@ All REST endpoints **MUST** be served over HTTPS with minimum TLS version
     }
     ```
 
-=== "Response"
+=== "응답"
 
     <!-- ucp:example schema=lodging/booking op=read -->
     ```json
@@ -515,27 +514,26 @@ All REST endpoints **MUST** be served over HTTPS with minimum TLS version
     }
     ```
 
-### Update Booking Session { #update-booking-session }
+### 예약 세션 수정 { #update-booking-session }
 
-This is a full replacement operation. The Platform **MUST** send the
-entire booking session resource, including any data updates to write-only
-fields; the supplied resource replaces the existing booking session state.
-The Platform **MUST NOT** start a new Update operation while the booking session is
-`complete_in_progress`. Duplicate requests remain subject to
-[Replay Protection](../../signatures.md#replay-protection). If the Business receives a
-new Update request in that state, it **MUST** leave the booking session
-unchanged and return the current booking session with a recoverable error message.
+이 오퍼레이션은 전체 교체 방식이다. 플랫폼은 반드시 쓰기 전용 필드의 데이터 변경까지
+포함해 예약 세션 리소스 전체를 보내야 하며(**MUST**), 전달된 리소스가 기존 예약 세션
+상태를 대체한다. 예약 세션이 `complete_in_progress` 상태인 동안 플랫폼은 새 수정
+오퍼레이션을 시작해서는 안 된다(**MUST NOT**). 중복 요청은 여전히
+[재전송 방지](../../signatures.md#replay-protection) 규칙의 적용을 받는다. 그 상태에서
+새 수정 요청을 받으면 비즈니스는 반드시 예약 세션을 변경하지 않고, 복구 가능한 에러
+메시지와 함께 현재 예약 세션을 반환해야 한다(**MUST**).
 
-All fields in `guests`, `booker`, `travel_purpose`, and `stays[].guest_assignments`
-are optional, allowing the Platform to progressively build the booking session across
-multiple calls. Outside `complete_in_progress`, each Update replaces the entire
-booking session, so the Platform **MUST** include all previously set fields it intends to retain.
+`guests`, `booker`, `travel_purpose`, `stays[].guest_assignments`의 모든 필드는 선택
+사항이므로, 플랫폼은 여러 번의 호출에 걸쳐 예약 세션을 점진적으로 구성할 수 있다.
+`complete_in_progress`가 아닐 때 각 수정은 예약 세션 전체를 교체하므로, 플랫폼은 반드시
+유지하려는 기존 설정 필드를 모두 포함해야 한다(**MUST**).
 
-If businesses have specific logic to enforce field existence in `guests`,
-`booker`, `guest_assignments`, or addresses (i.e. `billing_address`), this is the right
-place to set these expectations via `messages`.
+비즈니스가 `guests`, `booker`, `guest_assignments` 또는 주소(예: `billing_address`)에
+특정 필드가 반드시 있어야 한다는 자체 로직을 갖고 있다면, 이 지점에서 `messages`를 통해
+그 요구 사항을 알리면 된다.
 
-=== "Request"
+=== "요청"
 
     <!-- ucp:example schema=lodging/booking op=update direction=request -->
     ```json
@@ -610,7 +608,7 @@ place to set these expectations via `messages`.
     }
     ```
 
-=== "Response"
+=== "응답"
 
     <!-- ucp:example schema=lodging/booking op=read -->
     ```json
@@ -778,9 +776,9 @@ place to set these expectations via `messages`.
     }
     ```
 
-### Complete Booking Session { #complete-booking-session }
+### 예약 세션 완료 { #complete-booking-session }
 
-=== "Request"
+=== "요청"
 
     <!-- ucp:example schema=lodging/booking op=complete direction=request -->
     ```json
@@ -823,7 +821,7 @@ place to set these expectations via `messages`.
     }
     ```
 
-=== "Response"
+=== "응답"
 
     <!-- ucp:example schema=lodging/booking op=read -->
     ```json
@@ -997,9 +995,9 @@ place to set these expectations via `messages`.
     }
     ```
 
-### Get Booking Session { #get-booking-session }
+### 예약 세션 조회 { #get-booking-session }
 
-=== "Request"
+=== "요청"
 
     <!-- ucp:example schema=lodging/booking op=read direction=request -->
     ```json
@@ -1011,7 +1009,7 @@ place to set these expectations via `messages`.
     {}
     ```
 
-=== "Response"
+=== "응답"
 
     <!-- ucp:example schema=lodging/booking op=read -->
     ```json
@@ -1184,9 +1182,9 @@ place to set these expectations via `messages`.
     }
     ```
 
-### Cancel Booking Session { #cancel-booking-session }
+### 예약 세션 취소 { #cancel-booking-session }
 
-=== "Request"
+=== "요청"
 
     <!-- ucp:example schema=lodging/booking op=cancel direction=request -->
     ```json
@@ -1198,7 +1196,7 @@ place to set these expectations via `messages`.
     {}
     ```
 
-=== "Response"
+=== "응답"
 
     <!-- ucp:example schema=lodging/booking op=read -->
     ```json
@@ -1366,61 +1364,61 @@ place to set these expectations via `messages`.
     }
     ```
 
-## HTTP Headers { #http-headers }
+## HTTP 헤더 { #http-headers }
 
-The following headers are defined for the HTTP binding and apply to all
-operations unless otherwise noted.
+다음 헤더는 HTTP 바인딩용으로 정의되며, 별도 언급이 없으면 모든 오퍼레이션에
+적용된다.
 
 {{ header_fields('create_booking_session', 'lodging/rest.openapi.json') }}
 
-### Specific Header Requirements { #specific-header-requirements }
+### 헤더별 요구 사항 { #specific-header-requirements }
 
-* **UCP-Agent**: All requests **MUST** include the `UCP-Agent` header
-    containing the platform profile URI using Dictionary Structured Field syntax
-    ([RFC 8941](https://datatracker.ietf.org/doc/html/rfc8941){target="_blank"}).
-    Format: `profile="https://platform.example/profile"`.
-* **Idempotency-Key**: Operations that modify state **SHOULD** support
-    idempotency. When provided, the server **MUST**:
-    1. Store the key with the operation result for at least 24 hours.
-    2. Return the cached result for duplicate keys whose request body matches the original.
-    3. Return `409 Conflict` if the key is reused with a mismatched body.
-    See [Message Signatures — Idempotency Key Requirements](../../signatures.md#replay-protection)
-    for the full payload-matching contract.
+* **UCP-Agent**: 모든 요청은 반드시 Dictionary Structured Field 문법
+    ([RFC 8941](https://datatracker.ietf.org/doc/html/rfc8941){target="_blank"})으로 플랫폼
+    프로필 URI를 담은 `UCP-Agent` 헤더를 포함해야 한다(**MUST**).
+    형식: `profile="https://platform.example/profile"`.
+* **Idempotency-Key**: 상태를 변경하는 오퍼레이션은 멱등성을 지원해야
+    한다(**SHOULD**). 이 헤더가 제공되면 서버는 반드시 다음을 지켜야 한다(**MUST**).
+    1. 키를 오퍼레이션 결과와 함께 최소 24시간 동안 저장한다.
+    2. 요청 본문이 원래 요청과 일치하는 중복 키에는 캐시된 결과를 반환한다.
+    3. 본문이 다른데 키가 재사용되면 `409 Conflict`를 반환한다.
+    페이로드 일치 규약 전체는 [메시지 서명 — 멱등성 키 요구 사항](../../signatures.md#replay-protection)을
+    참고한다.
 
-## Protocol Mechanics { #protocol-mechanics }
+## 프로토콜 동작 방식 { #protocol-mechanics }
 
-### Status Codes { #status-codes }
+### 상태 코드 { #status-codes }
 
-UCP uses standard HTTP status codes to indicate the success or failure of an API
-request.
+UCP는 API 요청의 성공 또는 실패를 나타내기 위해 표준 HTTP 상태 코드를
+사용한다.
 
-| Status Code                 | Description                                                                        |
+| 상태 코드                   | 설명                                                                               |
 | :-------------------------- | :--------------------------------------------------------------------------------- |
-| `200 OK`                    | The request was successful.                                                        |
-| `201 Created`               | The resource was successfully created.                                             |
-| `400 Bad Request`           | The request was invalid or cannot be served.                                       |
-| `401 Unauthorized`          | Authentication is required and has failed or has not been provided.                |
-| `403 Forbidden`             | The request is authenticated but the user does not have the necessary permissions. |
-| `409 Conflict`              | The request could not be completed due to a conflict (e.g., idempotent key reuse). |
-| `422 Unprocessable Entity`  | The profile content is malformed (discovery failure).                              |
-| `424 Failed Dependency`     | The profile URL is valid but fetch failed (discovery failure).                     |
-| `429 Too Many Requests`     | Rate limit exceeded.                                                               |
-| `503 Service Unavailable`   | Temporary unavailability.                                                          |
-| `500 Internal Server Error` | An unexpected condition was encountered on the server.                             |
+| `200 OK`                    | 요청이 성공했다.                                                                   |
+| `201 Created`               | 리소스가 성공적으로 생성되었다.                                                    |
+| `400 Bad Request`           | 요청이 유효하지 않거나 처리할 수 없다.                                             |
+| `401 Unauthorized`          | 인증이 필요한데 실패했거나 인증 정보가 제공되지 않았다.                            |
+| `403 Forbidden`             | 요청은 인증되었으나 사용자에게 필요한 권한이 없다.                                 |
+| `409 Conflict`              | 충돌로 인해 요청을 완료할 수 없다(예: 멱등성 키 재사용).                           |
+| `422 Unprocessable Entity`  | 프로필 내용의 형식이 잘못되었다(디스커버리 실패).                                  |
+| `424 Failed Dependency`     | 프로필 URL은 유효하지만 가져오기에 실패했다(디스커버리 실패).                      |
+| `429 Too Many Requests`     | 요청 빈도 제한을 초과했다.                                                         |
+| `503 Service Unavailable`   | 일시적으로 사용할 수 없다.                                                         |
+| `500 Internal Server Error` | 서버에서 예기치 않은 상황이 발생했다.                                              |
 
-### Error Responses { #error-responses }
+### 에러 응답 { #error-responses }
 
-See the [Core Specification](../../overview/index.md#error-handling) for the complete error
-code registry and transport binding examples.
+전체 에러 코드 레지스트리와 전송 바인딩 예시는 [핵심 명세](../../overview/index.md#error-handling)를
+참고한다.
 
-* **Protocol errors**: Return appropriate HTTP status code (401, 403, 409, 429,
-    503) with JSON body containing `code` and `content`.
-* **Business outcomes**: Return HTTP 200 with UCP envelope and `messages` array.
+* **프로토콜 에러**: `code`와 `content`를 담은 JSON 본문과 함께 적절한 HTTP 상태 코드(401,
+    403, 409, 429, 503)를 반환한다.
+* **비즈니스 결과**: UCP 엔벨로프와 `messages` 배열을 담아 HTTP 200을 반환한다.
 
-#### Business Outcomes { #business-outcomes }
+#### 비즈니스 결과 { #business-outcomes }
 
-Business outcomes (including errors like invalid guest info) are returned
-with HTTP 200 and the UCP envelope containing `messages`:
+비즈니스 결과(유효하지 않은 투숙객 정보 같은 에러 포함)는 `messages`를 담은 UCP
+엔벨로프와 함께 HTTP 200으로 반환된다.
 
 <!-- ucp:example schema=lodging/booking op=read -->
 ```json
@@ -1535,8 +1533,8 @@ with HTTP 200 and the UCP envelope containing `messages`:
 }
 ```
 
-For `create_booking_session`, when no booking session can be created,
-business **MUST** return HTTP 200 and the UCP envelope containing `messages`
+`create_booking_session`에서 예약 세션을 생성할 수 없는 경우, 비즈니스는 반드시
+HTTP 200과 `messages`를 담은 UCP 엔벨로프를 반환해야 한다(**MUST**).
 
 <!-- ucp:example schema=common/types/error_response op=read -->
 ```json
@@ -1554,30 +1552,29 @@ business **MUST** return HTTP 200 and the UCP envelope containing `messages`
 }
 ```
 
-## Message Signing { #message-signing }
+## 메시지 서명 { #message-signing }
 
-Platforms **MAY** choose among authentication mechanisms (API keys, OAuth,
-mTLS, HTTP Message Signatures). When using
-HTTP Message Signatures, booking operations follow the
-[Message Signatures](../../signatures.md) specification.
+플랫폼은 인증 메커니즘(API 키, OAuth, mTLS, HTTP Message Signatures) 중에서 선택할 수
+있다(**MAY**). HTTP Message Signatures를 사용하는 경우 예약 오퍼레이션은
+[메시지 서명](../../signatures.md) 명세를 따른다.
 
-### Request Signing { #request-signing }
+### 요청 서명 { #request-signing }
 
-When HTTP Message Signatures are used, requests **MUST** include valid
-`Signature-Input` and `Signature` headers (and `Content-Digest` when a body
-is present) per RFC 9421:
+HTTP Message Signatures를 사용하는 경우, 요청은 반드시 RFC 9421에 따라 유효한
+`Signature-Input`, `Signature` 헤더(본문이 있으면 `Content-Digest`도)를 포함해야
+한다(**MUST**).
 
-| Header                   | Required | Description                              |
+| 헤더                     | 필수     | 설명                                     |
 | :----------------------- | :------- | :--------------------------------------- |
-| `Signature-Input`        | Yes      | Describes signed components              |
-| `Signature`              | Yes      | Contains the signature value             |
-| `Content-Digest`         | Cond.*   | SHA-256 hash of request body             |
-| `UCP-Agent`              | Yes      | Signer identity (profile URL)            |
-| `Idempotency-Key`        | Yes      | Unique key for replay protection         |
+| `Signature-Input`        | 예       | 서명된 구성 요소를 기술한다              |
+| `Signature`              | 예       | 서명 값을 담는다                         |
+| `Content-Digest`         | 조건부*  | 요청 본문의 SHA-256 해시                 |
+| `UCP-Agent`              | 예       | 서명자 신원(프로필 URL)                  |
+| `Idempotency-Key`        | 예       | 재전송 방지를 위한 고유 키               |
 
-\* Required for requests with a body (POST, PUT)
+\* 본문이 있는 요청(POST, PUT)에서 필수
 
-**Example Signed Request:**
+**서명된 요청 예시:**
 
 ```http
 POST /booking-sessions HTTP/1.1
@@ -1592,20 +1589,20 @@ Signature: sig1=:MEUCIQDTxNq8h7LGHpvVZQp1iHkFp9+3N8Mxk2zH1wK4YuVN8w...:
 {"payment":{...}, ...}
 ```
 
-See [Message Signatures - REST Request Signing](../../signatures.md#rest-request-signing)
-for the complete signing algorithm.
+전체 서명 알고리즘은 [메시지 서명 - REST 요청 서명](../../signatures.md#rest-request-signing)을
+참고한다.
 
-### Response Signing { #response-signing }
+### 응답 서명 { #response-signing }
 
-Response signatures are **RECOMMENDED** for:
+다음에는 응답 서명을 권장한다(**RECOMMENDED**).
 
-* `complete_booking_session` responses (booking confirmation)
+* `complete_booking_session` 응답(예약 확정)
 
-Response signatures are **OPTIONAL** for:
+다음에는 응답 서명이 선택 사항이다(**OPTIONAL**).
 
 * `create_booking_session`, `get_booking_session`, `update_booking_session`, `cancel_booking_session`
 
-**Example Signed Response:**
+**서명된 응답 예시:**
 
 ```http
 HTTP/1.1 200 OK
@@ -1617,24 +1614,24 @@ Signature: sig1=:MFQCIH7kL9nM2oP5qR8sT1uV4wX6yZaB3cD...:
 {"id":"booking_123","status":"completed","confirmation":{...}}
 ```
 
-See [Message Signatures - REST Response Signing](../../signatures.md#rest-response-signing)
-for the complete signing algorithm.
+전체 서명 알고리즘은 [메시지 서명 - REST 응답 서명](../../signatures.md#rest-response-signing)을
+참고한다.
 
-## Security Considerations { #security-considerations }
+## 보안 고려 사항 { #security-considerations }
 
-### Authentication { #authentication }
+### 인증 { #authentication }
 
-Authentication is optional and depends on business requirements. When
-authentication is required, the REST transport **MAY** use:
+인증은 선택 사항이며 비즈니스 요구 사항에 따라 달라진다. 인증이 필요한 경우 REST 전송
+방식은 다음을 사용할 수 있다(**MAY**).
 
-1. **Open API**: No authentication required for public operations.
-2. **API Keys**: Via `X-API-Key` header.
-3. **OAuth 2.0**: Via `Authorization: Bearer {token}` header. Identifies the
-   platform for agent-authenticated access, or both platform and user for
-   user-authenticated access (see [Identity Linking](../../common/identity-linking/index.md)).
-4. **Mutual TLS**: For high-security environments.
-5. **HTTP Message Signatures**: Per [RFC 9421](https://www.rfc-editor.org/rfc/rfc9421)
-    (see [Message Signing](#message-signing) above).
+1. **Open API**: 공개 오퍼레이션에는 인증이 필요 없다.
+2. **API 키**: `X-API-Key` 헤더를 사용한다.
+3. **OAuth 2.0**: `Authorization: Bearer {token}` 헤더를 사용한다. 에이전트 인증 접근에서는
+   플랫폼을, 사용자 인증 접근에서는 플랫폼과 사용자를 함께 식별한다
+   ([신원 연결(Identity Linking)](../../common/identity-linking/index.md) 참고).
+4. **상호 TLS(Mutual TLS)**: 높은 보안이 필요한 환경에 사용한다.
+5. **HTTP Message Signatures**: [RFC 9421](https://www.rfc-editor.org/rfc/rfc9421)을 따른다
+    (위의 [메시지 서명](#message-signing) 참고).
 
-Businesses **MAY** require authentication for some operations while leaving
-others open (e.g., public booking without authentication).
+비즈니스는 일부 오퍼레이션에만 인증을 요구하고 나머지는 공개해 둘 수 있다(**MAY**)
+(예: 인증 없는 공개 예약).

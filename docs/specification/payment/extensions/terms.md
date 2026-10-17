@@ -14,253 +14,244 @@
    limitations under the License.
 -->
 
-# Payment Terms Extension { #payment-terms-extension }
+# 결제 조건 확장 { #payment-terms-extension }
 
-* **Capability Name:** `dev.ucp.common.payment.terms`
+* **기능 이름:** `dev.ucp.common.payment.terms`
 
-## Overview { #overview }
+## 개요 { #overview }
 
-The Payment Terms extension lets a Business offer the Buyer a choice of **when**
-payment for a checkout is due. A lodging Business can offer one term that
-charges the full stay at booking and another that charges the first night now
-and the balance at check-in. A Business selling equipment can offer Net-30
-alongside pay-now.
+결제 조건 확장을 사용하면 비즈니스는 체크아웃 대금을 **언제** 결제할지
+구매자가 고를 수 있게 할 수 있다. 숙박 비즈니스라면 예약 시점에 숙박 요금
+전액을 청구하는 조건과, 첫날 숙박 요금만 지금 청구하고 잔액은 체크인 때
+청구하는 조건을 함께 제시할 수 있다. 장비를 판매하는 비즈니스라면 즉시 결제와
+함께 Net-30을 제시할 수 있다.
 
-A **payment term** is an addressable, renderable choice composed of one or more
-**payment schedules**. Each schedule is one payment: an amount, and a complete
-buyer-facing statement of when it is due.
+**결제 조건(payment term)**은 하나 이상의 **결제 일정(payment schedule)**으로
+구성되며, 참조하고 화면에 표시할 수 있는 선택지다. 각 일정은 결제 한 건으로,
+금액과 언제 결제해야 하는지를 구매자에게 완전하게 알려 주는 문구로 이루어진다.
 
-This extension adds two properties to `checkout.payment`:
+이 확장은 `checkout.payment`에 두 가지 속성을 추가한다.
 
-* `terms[]` — the payment terms the Business offers for this checkout.
-  Response-only.
-* `selected_term_id` — the selected term. Present in a response whenever `terms`
-  is; a Platform writes it to change the selection.
+* `terms[]` — 비즈니스가 이 체크아웃에 제시하는 결제 조건. 응답 전용이다.
+* `selected_term_id` — 선택된 조건. `terms`가 있는 응답에는 항상 포함되며,
+  플랫폼은 선택을 바꿀 때 이 값을 기록한다.
 
-A Buyer picks one of the options in `terms[]`, the same way they pick
-one [fulfillment option](../../shopping/extensions/fulfillment.md#platform-responsibilities).
+구매자는 [풀필먼트 옵션](../../shopping/extensions/fulfillment.md#platform-responsibilities)을
+하나 고르는 것과 같은 방식으로 `terms[]`의 선택지 중 하나를 고른다.
 
-## When a Checkout carries terms { #when-a-checkout-carries-terms }
+## 체크아웃이 결제 조건을 포함하는 경우 { #when-a-checkout-carries-terms }
 
-Payment terms are optional. A Business offers them when a Checkout has something
-to say about payment timing — a choice between terms, or a single term whose
-schedules must be disclosed. Where payment is due in full at completion, a
-Business may omit `terms` and `selected_term_id` entirely, and the Checkout
-`total` is the amount due, as core Checkout already states.
+결제 조건은 선택 사항이다. 비즈니스는 체크아웃에 결제 시점에 관해 알릴 내용이
+있을 때 결제 조건을 제시한다. 여러 조건 중 하나를 고르게 하거나, 일정을
+고지해야 하는 단일 조건이 있는 경우다. 완료 시점에 전액을 결제해야 한다면
+비즈니스는 `terms`와 `selected_term_id`를 모두 생략할 수 있으며, 핵심 체크아웃
+명세에 이미 나와 있듯이 체크아웃 `total`이 결제할 금액이 된다.
 
-Where `terms` is present it **MUST** contain at least one term, and
-`selected_term_id` **MUST** name one of them. The Checkout `total` is the
-selected term's total, so a list of terms without a selection would show an
-amount matching no stated term.
+`terms`가 있으면 반드시 하나 이상의 조건을 포함해야 하며(**MUST**),
+`selected_term_id`는 반드시 그중 하나를 가리켜야 한다(**MUST**). 체크아웃
+`total`은 선택된 조건의 합계이므로, 선택 없이 조건 목록만 있으면 어떤 조건과도
+맞지 않는 금액이 표시된다.
 
-## Presenting payment terms { #presenting-payment-terms }
+## 결제 조건 표시 { #presenting-payment-terms }
 
-Presentation is **term-agnostic**: a Platform does not need to model deposits,
-installments, or trade credit to present a term meaningfully.
+표시 방식은 **조건 유형에 무관하다**. 플랫폼은 보증금, 할부, 외상 거래 같은
+개념을 따로 모델링하지 않아도 조건을 의미 있게 표시할 수 있다.
 
-Given the Checkout's `currency`, a Platform that recognizes no `type` value and
-reads no payment-term field other than `title`, `description`,
-`schedules[].description`, and `schedules[].amount` **MUST** be able to present
-what is owed and when, for every term. A Business **MUST** author terms so this
-holds.
+체크아웃의 `currency`만 주어지면, `type` 값을 하나도 인식하지 못하고 결제 조건
+필드 중 `title`, `description`, `schedules[].description`,
+`schedules[].amount`만 읽는 플랫폼도 반드시 모든 조건에 대해 얼마를 언제
+내야 하는지 표시할 수 있어야 한다(**MUST**). 비즈니스는 반드시 이 조건이
+성립하도록 결제 조건을 작성해야 한다(**MUST**).
 
-That floor covers amounts and timing. It does not by itself discharge a
-jurisdictional disclosure duty — a finance charge that must be given a
-prescribed prominence, for instance. Those obligations travel through
-[Disclosures](#disclosures), and a Platform that cannot honor them escalates
-rather than renders.
+이 최소 기준은 금액과 시점을 다룬다. 이것만으로 관할 지역의 고지 의무까지
+이행되는 것은 아니다. 예를 들어 금융 수수료는 정해진 수준으로 눈에 띄게 표시해야
+할 수 있다. 그런 의무는 [고지](#disclosures)를 통해 전달되며, 이를 지킬 수 없는
+플랫폼은 직접 렌더링하지 않고 에스컬레이션한다.
 
-Everything above that floor is supplementary. `type` and `due_at` let a Platform
-that wants to do more — split the checkout into due-now and due-later, sort
-schedules, drive a calendar reminder — without ever being required to.
+이 최소 기준을 넘어서는 것은 모두 보조적이다. `type`과 `due_at`을 활용하면
+더 많은 일을 하고 싶은 플랫폼이 체크아웃을 지금 낼 금액과 나중에 낼 금액으로
+나누거나, 일정을 정렬하거나, 캘린더 알림을 띄울 수 있다. 다만 그렇게 해야 할
+의무는 없다.
 
-A Business offering exactly one term is disclosing rather than asking. A
-Platform **SHOULD** present that term without implying a choice.
+조건을 정확히 하나만 제시하는 비즈니스는 선택을 요청하는 것이 아니라 고지하는
+것이다. 플랫폼은 선택지가 있는 것처럼 보이지 않게 그 조건을 표시해야
+한다(**SHOULD**).
 
-## Payment schedules { #payment-schedules }
+## 결제 일정 { #payment-schedules }
 
-A schedule is **one payment**. A term that charges four times has four
-schedules.
+일정 하나는 **결제 한 건**이다. 네 번 청구하는 조건에는 일정이 네 개 있다.
 
-A Business **MUST** make each schedule's `description` a complete buyer-facing
-statement of when and how that payment is due, so that a Platform can render it
-verbatim. A Platform **MAY** use `type` and `due_at` for a richer presentation
-— a calendar view, a countdown, a reminder — but **MUST NOT** present derived
-timing that contradicts the `description`.
+비즈니스는 반드시 각 일정의 `description`을 그 결제를 언제 어떻게 해야 하는지
+구매자에게 완전하게 알리는 문구로 작성해 플랫폼이 그대로 렌더링할 수 있게 해야
+한다(**MUST**). 플랫폼은 캘린더 보기, 카운트다운, 알림 같은 더 풍부한 표시를
+위해 `type`과 `due_at`을 사용할 수 있지만(**MAY**), `description`과 모순되는
+시점을 도출해 표시해서는 안 된다(**MUST NOT**).
 
-### Timing class { #timing-class }
+### 시점 구분 { #timing-class }
 
-`type` is an open string vocabulary with exactly one well-known value:
+`type`은 개방형 문자열 어휘이며, 잘 알려진 값은 정확히 하나다.
 
-| Type | Meaning |
+| 유형 | 의미 |
 | :--- | :------ |
-| `immediate` | The payment is due when the checkout is completed. |
+| `immediate` | 체크아웃이 완료될 때 결제해야 한다. |
 
-Any other value means the payment is **not** due at completion; the
-`description` states when it is due. A Platform **MUST** treat an unrecognized
-`type` as not due at completion. Businesses **MAY** use additional values
-such as `deferred` or `on_shipment`, but those values carry no protocol meaning
-beyond "not `immediate`".
+다른 값은 모두 완료 시점에 결제하는 것이 **아니라는** 뜻이며, 언제 결제해야
+하는지는 `description`에 나온다. 플랫폼은 반드시 인식하지 못한 `type`을 완료
+시점에 결제하지 않는 것으로 취급해야 한다(**MUST**). 비즈니스는 `deferred`나
+`on_shipment` 같은 추가 값을 사용할 수 있지만(**MAY**), 이런 값은 "`immediate`가
+아님" 이상의 프로토콜상 의미를 갖지 않는다.
 
-### Due dates { #due-dates }
+### 결제 기한 { #due-dates }
 
-`due_at` is an absolute RFC 3339 date-time. A Business **SHOULD** provide it
-when it can determine the due date at checkout, and **MUST** omit it when the
-date depends on a future event — "due on delivery" has no date yet. `due_at`
-never replaces `description`; it restates in machine-readable form what the
-description already says.
+`due_at`은 RFC 3339 형식의 절대 날짜·시각이다. 비즈니스는 체크아웃 시점에
+기한을 정할 수 있으면 이 값을 제공해야 하고(**SHOULD**), 날짜가 미래의
+사건에 달려 있으면 반드시 생략해야 한다(**MUST**). "배송 시 결제"에는 아직
+날짜가 없다. `due_at`은 `description`을 대체하지 않으며, 설명에 이미 있는
+내용을 기계 판독형으로 다시 나타낼 뿐이다.
 
-### Amounts { #amounts }
+### 금액 { #amounts }
 
-Each schedule states a single `amount`: the amount charged when that payment is
-taken, inclusive of tax and every other charge, in the Checkout `currency`.
+각 일정은 하나의 `amount`를 명시한다. 이는 해당 결제가 이루어질 때 청구되는
+금액으로, 세금과 그 밖의 모든 요금을 포함하며 체크아웃 `currency`로 표시한다.
 
-A term's schedule amounts sum to the amount payable under that term. For the
-**selected** term, the Business **MUST** ensure that sum equals the checkout
-`total`.
+한 조건의 일정 금액을 합하면 그 조건에서 결제할 금액이 된다. **선택된**
+조건에 대해서는 비즈니스가 반드시 이 합이 체크아웃 `total`과 같도록 보장해야
+한다(**MUST**).
 
-Unselected terms are **indicative**. A term that discounts the purchase for
-paying today has a different payable amount than one that defers part of it, so
-only the selected term must match the checkout total at any moment.
+선택되지 않은 조건은 **참고용**이다. 오늘 결제하면 할인해 주는 조건과 일부를
+나중에 내게 하는 조건은 결제 금액이 서로 다르므로, 어느 시점에서든 체크아웃
+합계와 일치해야 하는 것은 선택된 조건뿐이다.
 
-Where the selected term changes what the purchase costs — a discount for paying
-today, a finance charge for paying over time — that difference **MUST** appear
-as its own entry in `checkout.totals`, a negative `discount` or a positive
-`fee`. A Business **SHOULD** set `display_text` on that entry so the Buyer can
-understand what choosing the term contributed.
+선택된 조건이 구매 비용을 바꾸는 경우(오늘 결제 시 할인, 분할 결제 시 금융
+수수료 등) 그 차이는 반드시 `checkout.totals`에 별도 항목, 즉 음수 `discount`나
+양수 `fee`로 나타나야 한다(**MUST**). 비즈니스는 구매자가 해당 조건을 선택한
+결과로 무엇이 반영되었는지 이해할 수 있도록 그 항목에 `display_text`를 설정해야
+한다(**SHOULD**).
 
-## Selecting a payment term { #selecting-a-payment-term }
+## 결제 조건 선택 { #selecting-a-payment-term }
 
-Selecting a payment term is a **Checkout update**. A Platform sets
-`selected_term_id`; the Business returns a recomputed Checkout. That response is
-**authoritative for all derived state** — including `totals`, line item prices,
-discount eligibility, `policies[]`, `messages[]`, and the payment handlers
-offered.
+결제 조건 선택은 **체크아웃 업데이트**다. 플랫폼이 `selected_term_id`를
+설정하면 비즈니스는 다시 계산한 체크아웃을 반환한다. 이 응답은 `totals`, 라인
+아이템 가격, 할인 적용 가능 여부, `policies[]`, `messages[]`, 제공되는 결제
+핸들러를 포함한 **모든 파생 상태에 대해 권위를 가진다**.
 
-A Platform **MUST NOT** assume that the amounts shown in `terms[]`
-survive selection unchanged, and **MUST** re-render from the response.
+플랫폼은 `terms[]`에 표시된 금액이 선택 후에도 그대로 유지된다고 가정해서는
+안 되며(**MUST NOT**), 반드시 응답을 바탕으로 다시 렌더링해야 한다(**MUST**).
 
-A Business **MUST** make `terms[].id` unique within a Checkout, so
-that a selection resolves to exactly one term.
+비즈니스는 선택이 정확히 하나의 조건으로 결정되도록 반드시 체크아웃 안에서
+`terms[].id`를 고유하게 만들어야 한다(**MUST**).
 
-In every response that carries `terms`, one of them is selected. Where the Buyer
-has made no choice, the Business selects a default.
+`terms`를 포함하는 모든 응답에서는 그중 하나가 선택되어 있다. 구매자가 아직
+고르지 않았다면 비즈니스가 기본값을 선택한다.
 
-A Platform changes the selection through Update Checkout, setting
-`selected_term_id` to an `id` from the latest `terms[]`. A Platform **MUST**
-omit it on create, because term IDs are scoped to a Checkout and no options
-exist yet — the create response establishes the options, if any, and the default
-among them. A Platform **MUST** omit it on complete, because the term is already
-agreed before a Checkout can reach `ready_for_complete`, and the amount due at
-completion follows from it. A Business receiving a selection that no
-longer resolves — because the options changed — **MUST NOT** silently substitute
-a term, and **MUST** report the change as a `payment_term_changed` warning in
-`messages[]`.
+플랫폼은 Update Checkout으로 `selected_term_id`를 최신 `terms[]`의 `id` 중
+하나로 설정해 선택을 바꾼다. 조건 ID는 체크아웃 범위 안에서만 유효하고 생성
+시점에는 아직 선택지가 없으므로, 플랫폼은 생성 요청에서 반드시 이 값을 생략해야
+한다(**MUST**). 생성 응답에서 선택지가 있다면 선택지와 그중 기본값이 정해진다.
+완료 요청에서도 플랫폼은 반드시 이 값을 생략해야 한다(**MUST**). 체크아웃이
+`ready_for_complete`에 도달하기 전에 이미 조건이 합의되어 있고, 완료 시점에
+결제할 금액도 거기서 정해지기 때문이다. 선택지가 바뀌어 더 이상 유효하지 않은
+선택을 받은 비즈니스는 조용히 다른 조건으로 대체해서는 안 되며(**MUST NOT**),
+반드시 그 변경을 `messages[]`의 `payment_term_changed` 경고로 알려야
+한다(**MUST**).
 
-Selecting a term can invalidate a selection previously accepted elsewhere in the
-Checkout — a deferred term may not be available with a same-day fulfillment
-option. The Business resolves the conflict, returns the authoritative state, and
-**MUST** report the change as a `payment_term_changed` warning in `messages[]`.
-A Business **MUST** also report that warning when changing the selected term
-in place, by altering its schedules, due dates, or amounts, without naming a
-different term.
-A Platform can therefore detect a changed selection from the code alone, rather
-than by comparing responses.
+조건을 선택하면 체크아웃의 다른 곳에서 앞서 수락된 선택이 무효가 될 수 있다.
+예를 들어 결제를 미루는 조건은 당일 풀필먼트 옵션과 함께 쓸 수 없을 수 있다.
+비즈니스는 충돌을 해결해 권위 있는 상태를 반환하고, 반드시 그 변경을
+`messages[]`의 `payment_term_changed` 경고로 알려야 한다(**MUST**). 다른
+조건을 지정하지 않고 선택된 조건의 일정, 기한, 금액을 그 자리에서 바꾸는
+경우에도 비즈니스는 반드시 이 경고를 알려야 한다(**MUST**).
+따라서 플랫폼은 응답을 서로 비교하지 않고도 코드만으로 선택 변경을 감지할 수
+있다.
 
-## Payment instruments and eligibility { #payment-instruments-and-eligibility }
+## 결제 수단과 적용 가능 여부 { #payment-instruments-and-eligibility }
 
-This extension does not change how instruments are supplied. The Buyer's
-instruments fund the checkout under the selected term.
+이 확장은 결제 수단을 제공하는 방식을 바꾸지 않는다. 구매자의 결제 수단은
+선택된 조건에 따라 체크아웃 대금을 지불한다.
 
-Checkout-specific handler and instrument eligibility is a **runtime result**.
-Profiles advertise broad support; the Business resolves that support against the
-Checkout context and any instruments already supplied, then returns the
-authoritative `ucp.payment_handlers` in the response. This covers cases a
-discovery-time predicate cannot express — a gift card whose balance is below the
-deposit, an issuer that will not support a delayed capture for this Business, a
-credential that expires before the balance comes due.
+체크아웃별 핸들러와 결제 수단의 적용 가능 여부는 **런타임 결과**다. 프로필은
+폭넓은 지원 범위를 알리고, 비즈니스는 그 지원 범위를 체크아웃 맥락과 이미
+제공된 결제 수단에 비추어 확정한 다음 권위 있는 `ucp.payment_handlers`를 응답에
+담아 반환한다. 이로써 디스커버리 시점의 조건식으로는 표현할 수 없는 경우를
+다룰 수 있다. 잔액이 보증금보다 적은 기프트 카드, 이 비즈니스에 대해 지연
+매입을 지원하지 않는 발급사, 잔액 결제 기한 전에 만료되는 자격 증명 같은
+경우다.
 
-A Platform therefore cannot pre-compute the effect of a choice, and **MUST**
-treat the set in each response as authoritative for that response alone. A
-handler that must be initialized with the amount and timing it will charge
-cannot be prepared before the term is agreed, and **MAY** cease to be offered
-once it is.
+따라서 플랫폼은 선택의 효과를 미리 계산할 수 없으며, 반드시 각 응답의 집합을
+해당 응답에 한해서만 권위 있는 것으로 취급해야 한다(**MUST**). 청구할 금액과
+시점으로 초기화해야 하는 핸들러는 조건이 합의되기 전에는 준비할 수 없고, 조건이
+합의되면 더 이상 제공되지 않을 수 있다(**MAY**).
 
-The instrument funding a term is charged once for each of that term's
-schedules, and **MUST** be capable of every one of them. A Business **MUST NOT**
-advertise an instrument that cannot fund every schedule of the selected term,
-and **MUST** reject one that is submitted. An instrument that can only be
-charged immediately therefore cannot be offered on a term that defers any part
-of the payment.
+조건의 대금을 지불하는 결제 수단은 그 조건의 일정마다 한 번씩 청구되며, 반드시
+모든 일정을 처리할 수 있어야 한다(**MUST**). 비즈니스는 선택된 조건의 모든
+일정을 처리할 수 없는 결제 수단을 알려서는 안 되며(**MUST NOT**), 그런 결제
+수단이 제출되면 반드시 거부해야 한다(**MUST**). 따라서 즉시 청구만 가능한 결제
+수단은 결제의 일부라도 미루는 조건에서는 제공될 수 없다.
 
-A term with more than one schedule **MUST** be funded by a single instrument.
-[Split Payments](split-payments.md) composes with a term that has exactly one
-schedule, and not otherwise.
+일정이 둘 이상인 조건은 반드시 단일 결제 수단으로 지불해야 한다(**MUST**).
+[분할 결제](split-payments.md)는 일정이 정확히 하나인 조건과만 함께 사용할 수
+있다.
 
-## Disclosures { #disclosures }
+## 고지 { #disclosures }
 
-Some terms carry display obligations. An installment plan with a finance charge
-and a deposit that is forfeited on cancellation are both subject to
-consumer-protection rules about what must be shown, and when.
+일부 조건에는 표시 의무가 따른다. 금융 수수료가 붙는 할부 계획이나 취소 시
+몰수되는 보증금은 모두 무엇을 언제 보여 줘야 하는지에 관한 소비자 보호 규정의
+적용을 받는다.
 
-This extension does not define a private disclosure channel. It uses the two
-that already exist:
+이 확장은 별도의 고지 채널을 정의하지 않고, 이미 있는 두 가지를 사용한다.
 
-1. A [policy](../../overview/index.md#policies) carries the durable terms text, targeted
-   with `applies_to` at the node the terms concern — the payment term when the
-   terms are about payment timing, the line item when they are about the goods.
-2. A `messages[]` warning with `presentation: "disclosure"` and `code` set to
-   that policy's `type` compels display of the notice.
+1. [정책](../../overview/index.md#policies)은 지속적으로 유효한 약관 문구를 담으며,
+   `applies_to`로 약관이 관련된 노드를 대상으로 지정한다. 약관이 결제 시점에
+   관한 것이면 결제 조건을, 상품에 관한 것이면 라인 아이템을 지정한다.
+2. `presentation: "disclosure"`이고 `code`가 해당 정책의 `type`으로 설정된
+   `messages[]` 경고는 그 안내를 반드시 표시하게 한다.
 
-These mechanisms carry durable terms and compel their display. The Business
-remains responsible for the required content, its applicability, its timing, and
-any affirmative Buyer acknowledgment. In particular, presenting a policy is
-optional for a Platform, so any content that **must** reach the Buyer belongs in
-the warning `content`, not only in the policy `description`.
+이 메커니즘은 지속적인 약관을 전달하고 그 표시를 강제한다. 필요한 내용, 적용
+여부, 시점, 구매자의 명시적 확인에 대한 책임은 여전히 비즈니스에 있다. 특히
+정책 표시는 플랫폼에게 선택 사항이므로, 구매자에게 **반드시** 전달되어야 하는
+내용은 정책 `description`에만 두지 말고 경고 `content`에 넣어야 한다.
 
-Disclosure display is unconditional. Under [Warning
-Presentation](../../shopping/checkout/index.md#warning-presentation) a Platform **MUST** display
-every returned disclosure, **MUST** keep it in proximity to the node named by
-`path`, and **MUST NOT** hide, collapse, or auto-dismiss it. A Platform that
-cannot honor that contract — for example one that collapses a list of terms and
-so cannot preserve proximity for each — **MUST** escalate through `continue_url`
-rather than silently dropping the notice.
+고지 표시에는 조건이 없다. [경고
+표시](../../shopping/checkout/index.md#warning-presentation)에 따라 플랫폼은 반환된
+모든 고지를 반드시 표시해야 하고(**MUST**), 반드시 `path`가 가리키는 노드
+가까이에 두어야 하며(**MUST**), 숨기거나 접거나 자동으로 닫아서는 안
+된다(**MUST NOT**). 이 계약을 지킬 수 없는 플랫폼(예: 조건 목록을 접어서 각
+조건 가까이에 고지를 유지할 수 없는 플랫폼)은 안내를 조용히 누락하지 말고 반드시
+`continue_url`로 에스컬레이션해야 한다(**MUST**).
 
-An obligation disclosed at checkout does not end at checkout: it records money
-still owed, not context. Where a disclosure governed the term the Buyer
-accepted, the Business **MUST** return that disclosure on the Order with its
-`path` set to `$.payment.accepted_term`, and **MUST** use the same target in
-the `applies_to` of any policy paired with it. A Business **MUST NOT** return
-disclosures attached to terms the Buyer did not accept.
+체크아웃에서 고지된 의무는 체크아웃으로 끝나지 않는다. 그것은 맥락이 아니라
+아직 지불해야 할 돈을 기록한다. 구매자가 수락한 조건에 적용되는 고지가 있었다면,
+비즈니스는 반드시 그 고지를 `path`를 `$.payment.accepted_term`으로 설정해 주문에
+반환해야 하고(**MUST**), 짝을 이루는 정책의 `applies_to`에도 반드시 같은 대상을
+사용해야 한다(**MUST**). 비즈니스는 구매자가 수락하지 않은 조건에 연결된 고지를
+반환해서는 안 된다(**MUST NOT**).
 
-`applies_to` and `path` resolve against the response they appear in, so a target
-that named the right node on the Checkout does not necessarily name it on the
-Order; an Order's line items, for instance, are current-state data whose
-positions need not match. A Business **MUST** ensure that every target it emits
-resolves to the intended node on the response that carries it.
+`applies_to`와 `path`는 자신이 들어 있는 응답을 기준으로 해석되므로, 체크아웃에서
+올바른 노드를 가리키던 대상이 주문에서도 같은 노드를 가리킨다는 보장은 없다.
+예를 들어 주문의 라인 아이템은 현재 상태 데이터이므로 위치가 일치하지 않을 수
+있다. 비즈니스는 반드시 자신이 내보내는 모든 대상이 그것을 담은 응답에서 의도한
+노드로 해석되도록 보장해야 한다(**MUST**).
 
-## Out of scope { #out-of-scope }
+## 범위 밖 { #out-of-scope }
 
-**Amounts that are not determinable at checkout.** A schedule states a known
-amount due at a stated time. Hotel incidentals, usage overages, and
-post-purchase true-ups are not payment schedules; they are authorizations and
-order adjustments.
+**체크아웃 시점에 확정할 수 없는 금액.** 일정은 명시된 시점에 결제할 알려진
+금액을 나타낸다. 호텔 부대 비용, 사용량 초과 요금, 구매 후 정산은 결제 일정이
+아니라 승인(authorization)과 주문 조정에 해당한다.
 
-**Multiple currencies within one term.** Every schedule amount is denominated in
-the Checkout `currency`, so a term cannot express an obligation payable partly
-in another currency.
+**한 조건 안의 여러 통화.** 모든 일정 금액은 체크아웃 `currency`로 표시되므로,
+조건으로 일부를 다른 통화로 지불하는 의무를 표현할 수 없다.
 
-**Recurring commerce.** Schedules settle the current checkout. They do not
-create future purchases, renewals, or fulfillment obligations.
+**반복 거래.** 일정은 현재 체크아웃을 정산한다. 향후 구매, 갱신, 풀필먼트
+의무를 만들지 않는다.
 
-**Payment execution.** This extension discloses when money is due. It does not
-define credential storage, future-charge authorization, how a Business executes
-capture, or mandate requirements, and a Platform **MUST NOT** infer that a
-deferred payment can be inspected, modified, or cancelled through UCP.
+**결제 실행.** 이 확장은 언제 돈을 내야 하는지를 고지한다. 자격 증명 저장,
+향후 청구 승인, 비즈니스의 매입 실행 방식, 위임(Mandate) 요구 사항은 정의하지
+않으며, 플랫폼은 미뤄진 결제를 UCP로 조회·수정·취소할 수 있다고 추론해서는 안
+된다(**MUST NOT**).
 
-## Discovery { #discovery }
+## 디스커버리 { #discovery }
 
-Businesses advertise payment terms support in their profile:
+비즈니스는 프로필에서 결제 조건 지원 여부를 알린다.
 
 <!-- ucp:example skip reason="capability declaration fragment" -->
 ```json
@@ -284,53 +275,51 @@ Businesses advertise payment terms support in their profile:
 }
 ```
 
-## Schema { #schema }
+## 스키마 { #schema }
 
-### Payment { #payment }
+### 결제 { #payment }
 
-When this capability is active, `checkout.payment` is extended with available
-terms and the selected term.
+이 기능이 활성화되면 `checkout.payment`는 사용 가능한 조건과 선택된 조건으로
+확장된다.
 
 {{ extension_schema_fields('payment_terms.json#/$defs/payment', 'payment/extensions/terms') }}
 
-### Order Payment { #order-payment }
+### 주문 결제 { #order-payment }
 
-On the Order, `payment` carries the accepted term. The terms offered at checkout
-are not projected.
+주문에서 `payment`는 수락된 조건을 담는다. 체크아웃에서 제시된 조건들은 옮겨지지
+않는다.
 
-The accepted term is the agreement, not a running balance. When the Order is
-created, a Business **MUST** ensure its schedule amounts sum to the Order
-`total`. A Business **MUST NOT** modify the accepted term after the Order
-is created; post-purchase changes are recorded in `adjustments[]`. The schedules
-can therefore sum to more than the Order currently owes after a refund, or less
-after an exchange: the term states what was agreed, and the adjustments state
-what happened after.
+수락된 조건은 합의 내용이지 계속 바뀌는 잔액이 아니다. 주문이 생성될 때
+비즈니스는 반드시 일정 금액의 합이 주문 `total`과 같도록 보장해야
+한다(**MUST**). 비즈니스는 주문 생성 후 수락된 조건을 수정해서는 안 되며
+(**MUST NOT**), 구매 후 변경 사항은 `adjustments[]`에 기록한다. 따라서 환불
+후에는 일정의 합이 주문의 현재 미지급액보다 클 수 있고, 교환 후에는 작을 수도
+있다. 조건은 합의된 내용을, 조정은 그 이후에 일어난 일을 나타낸다.
 
 {{ extension_schema_fields('payment_terms.json#/$defs/order_payment', 'payment/extensions/terms') }}
 
-### Entities { #entities }
+### 엔티티 { #entities }
 
-#### Payment Term { #payment-term }
+#### 결제 조건 { #payment-term }
 
 {{ schema_fields('types/payment_term', 'payment/extensions/terms') }}
 
-#### Payment Schedule { #payment-schedule }
+#### 결제 일정 { #payment-schedule }
 
 {{ schema_fields('types/payment_schedule', 'payment/extensions/terms') }}
 
-## Examples { #examples }
+## 예시 { #examples }
 
-### Lodging: pay now, or deposit and balance at check-in { #lodging-pay-now-or-deposit-and-balance-at-check-in }
+### 숙박: 즉시 결제, 또는 보증금 후 체크인 시 잔액 결제 { #lodging-pay-now-or-deposit-and-balance-at-check-in }
 
-> A $1,200 stay. Pay in full today for $1,150, or pay the first night now and
-> the balance at check-in.
+> $1,200짜리 숙박. 오늘 전액을 $1,150에 결제하거나, 첫날 숙박 요금만 지금
+> 결제하고 잔액은 체크인 때 결제한다.
 
-The two terms have **different payable amounts**. Each term's schedules sum to
-what that term is payable at, and only the selected one is bound to the checkout
-total.
+두 조건은 **결제 금액이 서로 다르다**. 각 조건의 일정을 합하면 그 조건의 결제
+금액이 되며, 체크아웃 합계에 묶이는 것은 선택된 조건뿐이다.
 
-**Checkout response fragment — the terms on offer.** The Buyer has not chosen
-yet, so the Business defaults to paying now, and says so:
+**체크아웃 응답 일부 — 제시된 조건.** 구매자가 아직 고르지 않았으므로
+비즈니스는 즉시 결제를 기본값으로 정하고 그 사실을 응답에 나타낸다.
 
 <!-- ucp:example schema=common/payment_terms def=payment op=read direction=response -->
 ```json
@@ -376,8 +365,8 @@ yet, so the Business defaults to paying now, and says so:
 }
 ```
 
-The $50 the pay-now term saves is stated where the purchase is priced, as its
-own entry in `checkout.totals`:
+즉시 결제 조건으로 절약되는 $50은 구매 가격이 매겨지는 곳, 즉
+`checkout.totals`의 별도 항목으로 명시한다.
 
 <!-- ucp:example schema=shopping/checkout target=$.totals -->
 ```json
@@ -388,7 +377,7 @@ own entry in `checkout.totals`:
 ]
 ```
 
-**Update request — the Buyer selects the deposit term:**
+**업데이트 요청 — 구매자가 보증금 조건을 선택한다:**
 
 <!-- ucp:example schema=common/payment_terms def=payment op=update direction=request -->
 ```json
@@ -397,7 +386,7 @@ own entry in `checkout.totals`:
 }
 ```
 
-**Checkout response — recomputed and authoritative:**
+**체크아웃 응답 — 다시 계산된 권위 있는 상태:**
 
 <!-- ucp:example schema=common/payment_terms def=dev.ucp.shopping.checkout op=update direction=response -->
 ```json
@@ -472,15 +461,14 @@ own entry in `checkout.totals`:
 }
 ```
 
-Because the pay-now discount no longer applies, `checkout.totals` reports
-$1,200 — the sum of the selected term's two schedules — and the `discount` entry
-that carried the $50 saving is gone. Had the Buyer selected `pt_pay_now`, the
-checkout total would be $1,150, composed with that entry. The terms are
-unchanged; only the selected term is bound to the checkout total.
-`ucp.payment_handlers` in this response is the set resolved for the selected
-term.
+즉시 결제 할인이 더 이상 적용되지 않으므로 `checkout.totals`는 선택된 조건의
+두 일정을 합한 $1,200을 보고하며, $50 절약분을 담고 있던 `discount` 항목은
+사라진다. 구매자가 `pt_pay_now`를 선택했다면 체크아웃 합계는 그 항목이 반영된
+$1,150이 된다. 조건 자체는 바뀌지 않았으며, 체크아웃 합계에 묶이는 것은 선택된
+조건뿐이다. 이 응답의 `ucp.payment_handlers`는 선택된 조건에 대해 확정된
+집합이다.
 
-The deposit terms live in a policy that targets the term they apply to:
+보증금 약관은 적용 대상 조건을 지정하는 정책에 들어 있다.
 
 <!-- ucp:example schema=shopping/checkout target=$.policies -->
 ```json
@@ -495,9 +483,9 @@ The deposit terms live in a policy that targets the term they apply to:
 ]
 ```
 
-On completion, the accepted term travels to the Order, so the Buyer can still
-see that $900 is due at check-in. The other terms do not travel, and the deposit
-disclosure moves with the term it governs:
+완료되면 수락된 조건이 주문으로 옮겨지므로, 구매자는 체크인 때 $900를 결제해야
+한다는 사실을 계속 확인할 수 있다. 다른 조건은 옮겨지지 않으며, 보증금 고지는
+자신이 적용되는 조건과 함께 이동한다.
 
 <!-- ucp:example schema=common/payment_terms def=dev.ucp.shopping.order op=read direction=response -->
 ```json
@@ -570,17 +558,16 @@ disclosure moves with the term it governs:
 }
 ```
 
-The schedules sum to the Order `total`, and the policy that named
-`$.payment.terms[1]` on the Checkout names `$.payment.accepted_term`
-here. No representation of `pt_pay_now` survives.
+일정의 합은 주문 `total`과 같으며, 체크아웃에서 `$.payment.terms[1]`을
+가리키던 정책은 여기서 `$.payment.accepted_term`을 가리킨다. `pt_pay_now`는
+어떤 형태로도 남지 않는다.
 
-### Installments { #installments }
+### 할부 { #installments }
 
-> Pay 25% today, then 25% every two weeks.
+> 오늘 25%를 결제하고, 이후 2주마다 25%씩 결제한다.
 
-Four payments and four schedules: one due at completion, and three with
-computed due dates. The Business does the calendar arithmetic; the Platform
-reads dates.
+결제 네 건에 일정도 네 개다. 하나는 완료 시점에 결제하고, 나머지 셋은 계산된
+기한이 있다. 날짜 계산은 비즈니스가 하고, 플랫폼은 날짜를 읽기만 한다.
 
 <!-- ucp:example schema=common/payment_terms def=payment_term -->
 ```json
@@ -620,54 +607,51 @@ reads dates.
 }
 ```
 
-## Platform responsibilities { #platform-responsibilities }
+## 플랫폼의 책임 { #platform-responsibilities }
 
-Platforms **MUST**:
+플랫폼은 반드시 다음을 해야 한다(**MUST**).
 
-* Present each term's `title`, and each schedule's `description` and `amount`,
-  formatted in the Checkout `currency`.
-* Re-render from the Business response after selecting a term, rather than
-  reusing amounts read from `terms[]`.
-* Treat an unrecognized schedule `type` as not due at completion, and present
-  the term regardless.
-* Process disclosures attached to terms per
-  [Warning Presentation](../../shopping/checkout/index.md#warning-presentation), escalating through
-  `continue_url` when the rendering contract cannot be honored.
+* 각 조건의 `title`과 각 일정의 `description`, `amount`를 체크아웃
+  `currency` 형식으로 표시한다.
+* 조건을 선택한 후에는 `terms[]`에서 읽은 금액을 재사용하지 말고 비즈니스
+  응답을 바탕으로 다시 렌더링한다.
+* 인식하지 못한 일정 `type`은 완료 시점에 결제하지 않는 것으로 취급하고,
+  그와 상관없이 조건을 표시한다.
+* 조건에 연결된 고지를
+  [경고 표시](../../shopping/checkout/index.md#warning-presentation)에 따라 처리하고,
+  렌더링 계약을 지킬 수 없으면 `continue_url`로 에스컬레이션한다.
 
-Platforms **MAY** use `type` and `due_at` for enhanced presentation — calendar
-views, countdowns, reminders. This is optional; recognizing a `type` never
-changes what a Platform is required to render.
+플랫폼은 캘린더 보기, 카운트다운, 알림 같은 향상된 표시를 위해 `type`과
+`due_at`을 사용할 수 있다(**MAY**). 이는 선택 사항이며, `type`을 인식하더라도
+플랫폼이 반드시 렌더링해야 하는 내용은 달라지지 않는다.
 
-Platforms **SHOULD**:
+플랫폼은 다음을 해야 한다(**SHOULD**).
 
-* Present terms so the Buyer can compare them before selecting, unless only one
-  term is available or the Checkout is being handed off.
+* 조건이 하나뿐이거나 체크아웃이 인계되는 중이 아니라면, 구매자가 선택하기
+  전에 조건을 비교할 수 있도록 표시한다.
 
-## Business responsibilities { #business-responsibilities }
+## 비즈니스의 책임 { #business-responsibilities }
 
-Businesses **MUST**:
+비즈니스는 반드시 다음을 해야 한다(**MUST**).
 
-* Offer terms where a Checkout has a choice to present or schedules to disclose.
-* Name one of the offered terms in `selected_term_id` on every response that
-  carries `terms`.
-* Ensure every term's schedules state, in `description` alone, when each payment
-  is due.
-* Ensure the selected term's schedule amounts sum to the checkout total exactly
-  once.
-* State any difference the selected term makes to what the purchase costs as its
-  own entry in `checkout.totals`.
-* Return the recomputed Checkout after a selection, including any change to
-  totals, policies, messages, or eligible payment handlers.
-* Report a `payment_term_changed` warning whenever a response changes the term
-  in effect, whether by naming a different term or by rewriting the selected one
-  in place.
-* Place any content that must reach the Buyer in the disclosure `content`, not
-  only in the paired policy `description`.
-* Carry the accepted term onto the Order as `payment.accepted_term`, along with
-  any disclosure that governed it.
+* 체크아웃에 제시할 선택지나 고지할 일정이 있으면 조건을 제시한다.
+* `terms`를 포함하는 모든 응답에서 제시한 조건 중 하나를 `selected_term_id`로
+  지정한다.
+* 모든 조건의 일정이 `description`만으로 각 결제의 기한을 나타내도록 한다.
+* 선택된 조건의 일정 금액을 합하면 체크아웃 합계와 정확히 한 번 일치하도록
+  한다.
+* 선택된 조건이 구매 비용에 미치는 차이는 `checkout.totals`의 별도 항목으로
+  명시한다.
+* 선택 후에는 합계, 정책, 메시지, 적용 가능한 결제 핸들러의 변경을 모두 반영해
+  다시 계산한 체크아웃을 반환한다.
+* 응답에서 적용 중인 조건이 바뀌면, 다른 조건을 지정했든 선택된 조건을 그
+  자리에서 고쳐 썼든 `payment_term_changed` 경고를 알린다.
+* 구매자에게 반드시 전달되어야 하는 내용은 짝을 이루는 정책 `description`에만
+  두지 말고 고지 `content`에 넣는다.
+* 수락된 조건을 그 조건에 적용되는 고지와 함께 `payment.accepted_term`으로
+  주문에 옮긴다.
 
-Businesses **SHOULD**:
+비즈니스는 다음을 해야 한다(**SHOULD**).
 
-* Provide `due_at` whenever the due date is determinable at checkout.
-* Keep schedule IDs stable across Checkout responses unless the schedule itself
-  changes.
+* 체크아웃 시점에 기한을 확정할 수 있으면 항상 `due_at`을 제공한다.
+* 일정 자체가 바뀌지 않는 한 체크아웃 응답 간에 일정 ID를 일정하게 유지한다.

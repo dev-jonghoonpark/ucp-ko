@@ -1101,7 +1101,7 @@ def define_env(env):
 
     md = []
     if need_header:
-      md = ["| Name | Type | Requirement | Description |"]
+      md = ["| 이름 | 타입 | 필수 여부 | 설명 |"]
       md.append("| :--- | :--- | :--- | :--- |")
 
     if "allOf" in properties:
@@ -2104,7 +2104,7 @@ def define_env(env):
 
       def render_headers_table(headers_list):
         """Render a list of headers into a Markdown table."""
-        md_table = ["| Header | Required | Description |"]
+        md_table = ["| 헤더 | 필수 | 설명 |"]
         md_table.append("| :--- | :--- | :--- |")
         for h in headers_list:
           name = f"`{h.get('name')}`"

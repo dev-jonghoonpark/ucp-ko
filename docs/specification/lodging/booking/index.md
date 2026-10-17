@@ -14,36 +14,33 @@
    limitations under the License.
 -->
 
-# Booking Capability { #booking-capability }
+# 예약 기능 { #booking-capability }
 
-!!! note "Draft - Work in Progress"
-    This capability is in **draft status**. Implementers are cautioned that data
-    models, protocol bindings, and operational flows are under active iteration
-    and may undergo breaking changes as the specification evolves.
+!!! note "초안 - 작업 중"
+    이 기능은 **초안(draft) 상태**다. 데이터 모델, 프로토콜 바인딩, 운영 흐름이
+    활발히 개선되고 있으며 명세가 발전함에 따라 호환성을 깨는 변경이 있을 수
+    있으므로 구현자는 주의해야 한다.
 
-* **Capability Name:** `dev.ucp.lodging.booking`
+* **기능 이름:** `dev.ucp.lodging.booking`
 
-## Overview { #overview }
+## 개요 { #overview }
 
-The Lodging Booking capability allows Platforms to facilitate and manage end-to-end
-lodging reservation sessions with Businesses.
+숙박 예약 기능을 사용하면 플랫폼은 비즈니스와의 숙박 예약 세션을 처음부터 끝까지
+지원하고 관리할 수 있다.
 
-The Business remains the Merchant of Record (MoR) and does not need to become
-PCI DSS compliant to accept card payments through this capability. Unless the
-AP2 Mandates extension is supported, the booking must be finalized manually
-by the user through a trusted UI.
+비즈니스는 계속 기록상 판매자(MoR, Merchant of Record)로 남으며, 이 기능으로 카드
+결제를 받기 위해 PCI DSS 인증을 받을 필요가 없다. AP2 위임(Mandate) 확장을
+지원하지 않는 한, 예약은 사용자가 신뢰할 수 있는 UI를 통해 직접 확정해야 한다.
 
-### Flow Overview { #flow-overview }
+### 흐름 개요 { #flow-overview }
 
-Booking follows a progressive session lifecycle:
+예약은 단계적으로 진행되는 세션 수명 주기를 따른다.
 
-1. **Session Initiation**: The Platform initiates a booking session using property,
-   stay, rate plan, and stay date details discovered from upper-funnel search.
-2. **Progressive Enrichment**: The Platform updates the session with guest
-   profiles, stay guest assignments, booker information, and payment details across
-   one or more operations.
-3. **Session Completion**: The Platform finalizes the booking to create a
-   confirmed, immutable reservation.
+1. **세션 시작**: 플랫폼은 상위 퍼널 검색에서 찾은 숙소, 숙박, 요금제, 숙박 날짜
+   정보를 사용해 예약 세션을 시작한다.
+2. **단계적 정보 보강**: 플랫폼은 하나 이상의 작업에 걸쳐 투숙객 프로필, 숙박별
+   투숙객 배정, 예약자 정보, 결제 정보로 세션을 업데이트한다.
+3. **세션 완료**: 플랫폼은 예약을 확정해 변경할 수 없는 확정 예약을 만든다.
 
 ```text
         +------------+                         +---------------------+
@@ -78,118 +75,114 @@ Booking follows a progressive session lifecycle:
            (session invalid/expired - can occur from any state)
 ```
 
-## Key Concepts { #key-concepts }
+## 핵심 개념 { #key-concepts }
 
-* **Compound Stay Binding (`stay`)**: A lodging reservation is composed
-  of one or more stay units. A `stay` is a compound binding linking
-  a physical accommodation type (`accommodation_type`), a commercial rate contract
-  (`rate_plan`), stay dates (`stay_dates`), occupancy requirements (`occupancy`), and guest
-  assignments (`guest_assignments`).
-* **Platform-Generated Guest Identifiers (`guest.id`)**: Unlike business-scoped
-  catalog, property, and stay identifiers, guest identifiers are generated, allocated, and
-  managed by the Platform within the Platform's namespace. The Business treats
-  `guest.id` as a stable, opaque reference. Guest identifiers are opaque strings
-  scoped strictly to the individual booking session (e.g., `"gst_01"`, `"gst_02"`).
-  Platforms **MUST NOT** use persistent cross-merchant user tracking identifiers or
-  expose personally identifiable information (PII) within `guest.id`. Businesses
-  **MUST NOT** infer or link identity across distinct booking sessions based on `guest.id`.
-    * **Timing**: Platform **SHOULD NOT** send `guests[]` identity fields beyond `id` before the
-      booking reaches `ready_for_complete`, and **SHOULD** send only the fields the business
-      requests via `messages[]`.
-* **Guest Pool & Stay Assignment Model**: Guest data is structured into a
-  two-level relational model:
-    * **Root Guest Pool (`guests[]`)**: A flat collection of all individual guest
-      profiles associated with the entire reservation.
-    * **Stay Assignments (`stays[].guest_assignments[]`)**: Granular mappings
-      associating specific stay units with guests from the root pool via
-      `guest_id` and designating occupancy roles (such as `primary` or
-      `accompanying`).
-* **Separation of Booker and Guests**: The data model strictly separates the
-  legal purchaser from the physical accommodation occupants:
-    * **`booker`**: The legal contracting party responsible for payment, contact
-      obligations, and reservation ownership.
-    * **`guests`**: The individuals who will physically occupy the accommodations.
-      A booker **MAY** also be listed as a guest in the root pool, but the entities
-      remain decoupled to support corporate, proxy, and multi-stay bookings.
-* **Provisional Discovery vs. Authoritative Booking**:
-    * *Discovery Phase (Provisional)*: Search, quotation, and accommodation lookup
-      responses provide provisional rates, available accommodation types, and policy
-      summaries based on search parameters.
-    * *Booking Session (Authoritative)*: Creating a booking session transitions
-      from provisional discovery to an authoritative state. The Business validates
-      real-time inventory availability (or establishes a temporary soft hold per its
-      policy), resolves binding rate rules, enforces accommodation unit
-      capacity bounds, calculates authoritative totals (`totals[]`), and attaches
-      binding cancellation terms (`policies[]`). A confirmed reservation is not created
-      until the session is finalized via Complete Booking Session.
+* **복합 숙박 바인딩(`stay`)**: 숙박 예약은 하나 이상의 숙박 단위로 구성된다.
+  `stay`는 물리적 객실 유형(`accommodation_type`), 상업적 요금 계약(`rate_plan`),
+  숙박 날짜(`stay_dates`), 투숙 인원 요건(`occupancy`), 투숙객 배정
+  (`guest_assignments`)을 연결하는 복합 바인딩이다.
+* **플랫폼이 생성하는 투숙객 식별자(`guest.id`)**: 비즈니스 범위의 카탈로그·숙소·숙박
+  식별자와 달리, 투숙객 식별자는 플랫폼이 자신의 네임스페이스 안에서 생성·할당·
+  관리한다. 비즈니스는 `guest.id`를 안정적이고 불투명한 참조로 취급한다. 투숙객
+  식별자는 개별 예약 세션 범위로 엄격히 한정된 불투명 문자열이다(예: `"gst_01"`,
+  `"gst_02"`). 플랫폼은 여러 판매자에 걸쳐 사용자를 지속적으로 추적하는 식별자를
+  사용하거나 `guest.id`에 개인 식별 정보(PII)를 노출해서는 안 된다(**MUST NOT**).
+  비즈니스는 `guest.id`를 근거로 서로 다른 예약 세션 간의 신원을 추론하거나 연결해서는
+  안 된다(**MUST NOT**).
+    * **시점**: 플랫폼은 예약이 `ready_for_complete`에 이르기 전에는 `id` 외의
+      `guests[]` 신원 필드를 보내지 않아야 하며(**SHOULD NOT**), 비즈니스가
+      `messages[]`로 요청한 필드만 보내야 한다(**SHOULD**).
+* **투숙객 풀과 숙박 배정 모델**: 투숙객 데이터는 2단계 관계형 모델로 구성된다.
+    * **루트 투숙객 풀(`guests[]`)**: 예약 전체와 관련된 모든 개별 투숙객 프로필을
+      담은 평면 컬렉션이다.
+    * **숙박 배정(`stays[].guest_assignments[]`)**: `guest_id`로 특정 숙박 단위와
+      루트 풀의 투숙객을 연결하고 투숙 역할(`primary`, `accompanying` 등)을 지정하는
+      세부 매핑이다.
+* **예약자와 투숙객의 분리**: 데이터 모델은 법적 구매자와 실제 숙소 투숙객을 엄격히
+  구분한다.
+    * **`booker`**: 결제, 연락 의무, 예약 소유권을 책임지는 법적 계약 당사자다.
+    * **`guests`**: 실제로 숙소에 투숙할 개인들이다. 예약자를 루트 풀의 투숙객으로도
+      등록할 수 있지만(**MAY**), 법인 예약, 대리 예약, 다중 숙박 예약을 지원하기 위해
+      두 엔티티는 분리된 상태로 유지된다.
+* **잠정적 디스커버리와 권위 있는 예약**:
+    * *디스커버리 단계(잠정)*: 검색, 견적, 객실 조회 응답은 검색 파라미터를 기반으로
+      잠정 요금, 이용 가능한 객실 유형, 정책 요약을 제공한다.
+    * *예약 세션(권위)*: 예약 세션을 생성하면 잠정적 디스커버리에서 권위 있는 상태로
+      전환된다. 비즈니스는 실시간 재고 가용성을 검증하고(또는 자체 정책에 따라 임시
+      소프트 홀드를 설정하고), 구속력 있는 요금 규칙을 확정하고, 객실 단위의 수용 인원
+      한도를 적용하고, 권위 있는 합계(`totals[]`)를 계산하고, 구속력 있는 취소
+      조건(`policies[]`)을 첨부한다. 확정 예약은 Complete Booking Session으로 세션이
+      확정되기 전까지 생성되지 않는다.
 
-### Pricing Scope { #pricing-scope }
+### 가격 범위 { #pricing-scope }
 
-Lodging reservations follow strict all-in pricing rules to comply with consumer protection regulations
-(such as FTC and EU price transparency directives). In lodging, the full financial commitment for a stay
-is often divided between charges prepaid at the time of reservation confirmation and charges collected
-directly by the accommodation property upon check-in or check-out (e.g., resort fees, municipal
-occupancy taxes, or a remaining stay balance).
+숙박 예약은 소비자 보호 규정(FTC, EU 가격 투명성 지침 등)을 준수하기 위해 엄격한
+총액 표시(all-in pricing) 규칙을 따른다. 숙박에서는 한 번의 숙박에 대한 전체 금전적
+부담이 예약 확정 시점에 선결제하는 요금과 체크인 또는 체크아웃 때 숙소가 직접 징수하는
+요금(예: 리조트 요금, 지방 숙박세, 남은 숙박 잔액)으로 나뉘는 경우가 많다.
 
-#### Pricing Architecture & Scope Guidelines { #pricing-architecture-scope-guidelines }
+#### 가격 구조와 범위 지침 { #pricing-architecture-scope-guidelines }
 
-* **Authoritative Root Total (`totals`)**: The top-level `totals` array represents the binding,
-  authoritative pricing breakdown and aggregate financial commitment for the entire reservation
-  stay across all requested stay units.
-* **Stay-Level Total (`stays[].totals`)**: Each entry in `stays[].totals`
-  reflects the total charges for that specific stay unit across the entire stay
-  duration (`stay_dates`, i.e., check-in to check-out), **NOT** a per-night figure.
-* **Itemized Subtotals and Nightly Breakdown (`lines`)**: The `lines` array under a total item
-  provides supplementary, itemized clarity:
-    * `subtotal` total items **MAY** carry `lines` representing the per-night stay rate breakdown.
-    * `tax` total items **MAY** carry `lines` delineating separate tax authorities (e.g., state
-      sales tax vs. local occupancy or tourism tax).
-    * `fee` total items **MAY** carry `lines` detailing mandatory charges (e.g., daily resort
-      fees, cleaning fees).
-* **Price Transparency and All-Inclusive Cost**: Platforms and Businesses **MUST** ensure that
-  the guest is presented with the complete stay liability before booking confirmation. Hidden
-  fees or undisclosed property charges violate price transparency standards.
+* **권위 있는 루트 합계(`totals`)**: 최상위 `totals` 배열은 요청된 모든 숙박 단위를
+  포함한 예약 전체에 대해 구속력 있고 권위 있는 가격 내역과 총 금전적 부담을 나타낸다.
+* **숙박 단위 합계(`stays[].totals`)**: `stays[].totals`의 각 항목은 해당 숙박 단위의
+  전체 숙박 기간(`stay_dates`, 즉 체크인부터 체크아웃까지)에 대한 총 요금을 나타내며,
+  1박 기준 금액이 **아니다**.
+* **항목별 소계와 1박별 내역(`lines`)**: 합계 항목 아래의 `lines` 배열은 보조적인
+  항목별 상세 내역을 제공한다.
+    * `subtotal` 합계 항목에는 1박별 숙박 요금 내역을 나타내는 `lines`를 둘 수
+      있다(**MAY**).
+    * `tax` 합계 항목에는 과세 주체별 내역(예: 주 판매세와 지방 숙박세 또는 관광세)을
+      구분하는 `lines`를 둘 수 있다(**MAY**).
+    * `fee` 합계 항목에는 필수 요금(예: 1일 리조트 요금, 청소비)을 자세히 나타내는
+      `lines`를 둘 수 있다(**MAY**).
+* **가격 투명성과 전체 포함 비용**: 플랫폼과 비즈니스는 반드시 예약 확정 전에
+  투숙객에게 숙박에 따른 전체 부담액을 보여 줘야 한다(**MUST**). 숨겨진 요금이나
+  고지되지 않은 숙소 요금은 가격 투명성 기준을 위반한다.
 
-#### Payment Timing & Terms (`dev.ucp.common.payment.terms`) { #payment-timing-terms-devucpcommonpaymentterms }
+#### 결제 시점과 조건(`dev.ucp.common.payment.terms`) { #payment-timing-terms-devucpcommonpaymentterms }
 
-* **Authoritative Stay Liability (`total`)**: In accordance with the core `totals.json`
-  contract, the standard `type: "total"` entry strictly represents the authoritative all-in stay liability
-  for the entire reservation across all requested units. Every booking session **MUST** contain exactly one
-  `total` entry, ensuring that Platforms display the full, transparent cost of the stay upfront in compliance
-  with applicable consumer price-display laws.
-* **Pricing Breakdown vs. Payment Timing**: In lodging reservations, pricing breakdown and payment timing
-  are decoupled:
-    * `totals[]` defines the **pricing breakdown** (`subtotal`, `fee`, `tax`, and optional `discount`).
-      All non-total entries are price addends that sum to `total` (`sum(non-total entries) == total`).
-    * `payment.terms[]` (`dev.ucp.common.payment.terms`) defines the **payment timing** and schedules
-      for moving funds.
-* **Schedules and `totals` Alignment**:
-    * A payment term is composed of one or more `schedules[]`.
-    * The sum of all `schedules[].amount` within the selected term **MUST** equal `totals[].type: "total"`
-      (satisfying the core `common/payment_terms.json` invariant).
-    * Schedules with `type: "immediate"` represent payments due upon booking completion.
-    * Schedules with `type: "deferred"` represent payments due at a specified future date or
-      event (e.g., balance due upon check-in or a scheduled deposit date indicated in `description` or `due_at`).
-    * Schedules with `type: "at_property"` represent payments collected directly by the accommodation property
-      (e.g., local tourist taxes or mandatory resort fees paid upon arrival/departure).
-* **Payment Terms & Rate Plans**: In lodging distribution, pay-now savings or prepayment incentives are
-  typically modeled as separate rate plans (e.g., Non-Refundable Advance Purchase vs. Flexible Best Available Rate)
-  rather than alternative payment terms on the same rate plan. When flexible payment terms are offered for a rate plan
-  (such as deposit & balance), the Business provides the applicable schedule breakdown in `payment.terms[]`.
+* **권위 있는 숙박 부담액(`total`)**: 핵심 `totals.json` 계약에 따라 표준
+  `type: "total"` 항목은 요청된 모든 단위를 포함한 예약 전체에 대한 권위 있는 총액
+  숙박 부담액만을 나타낸다. 모든 예약 세션은 반드시 `total` 항목을 정확히 하나
+  포함해야 하며(**MUST**), 이를 통해 플랫폼은 관련 소비자 가격 표시 법규에 따라
+  숙박의 전체 비용을 처음부터 투명하게 표시하게 된다.
+* **가격 내역과 결제 시점**: 숙박 예약에서 가격 내역과 결제 시점은 분리되어 있다.
+    * `totals[]`는 **가격 내역**(`subtotal`, `fee`, `tax`, 선택적 `discount`)을
+      정의한다. total이 아닌 모든 항목은 더하면 `total`이 되는 가격 구성 요소다
+      (`sum(non-total entries) == total`).
+    * `payment.terms[]`(`dev.ucp.common.payment.terms`)는 **결제 시점**과 자금 이동
+      일정을 정의한다.
+* **일정과 `totals`의 정합성**:
+    * 결제 조건은 하나 이상의 `schedules[]`로 구성된다.
+    * 선택된 조건에 속한 모든 `schedules[].amount`의 합은 반드시
+      `totals[].type: "total"`과 같아야 한다(**MUST**)(핵심
+      `common/payment_terms.json` 불변 조건 충족).
+    * `type: "immediate"`인 일정은 예약 완료 시점에 결제할 금액을 나타낸다.
+    * `type: "deferred"`인 일정은 지정된 미래 날짜나 사건 시점에 결제할 금액을
+      나타낸다(예: 체크인 때 결제하는 잔액, `description` 또는 `due_at`에 명시된
+      보증금 결제 예정일).
+    * `type: "at_property"`인 일정은 숙소가 직접 징수하는 금액을 나타낸다(예: 도착·
+      출발 시 내는 지방 관광세나 필수 리조트 요금).
+* **결제 조건과 요금제**: 숙박 유통에서 즉시 결제 할인이나 선결제 혜택은 보통 같은
+  요금제의 대체 결제 조건이 아니라 별도의 요금제(예: 환불 불가 사전 구매 요금과
+  유연한 최저 가용 요금)로 모델링한다. 한 요금제에 유연한 결제 조건(보증금과 잔액
+  등)을 제공하는 경우, 비즈니스는 해당하는 일정 내역을 `payment.terms[]`에 제공한다.
 
-#### Local Tax & Fee Disclosures { #local-tax-fee-disclosures }
+#### 현지 세금과 요금 고지 { #local-tax-fee-disclosures }
 
-When mandatory taxes or fees are collected locally by the lodging property and cannot be
-remitted at booking, the Business **SHOULD** provide a warning message in `messages[]` with
-`presentation: "disclosure"` and a `path` pointing directly to the relevant payment schedule
-(e.g., `$.payment.terms[0].schedules[1]`). This disclosure notice **MUST** state the applicable local rates,
-exemptions, and payment instructions, complemented by formal policy links in `links[]`.
+필수 세금이나 요금을 숙소가 현지에서 징수하며 예약 시점에 납부할 수 없는 경우,
+비즈니스는 `presentation: "disclosure"`이고 `path`가 해당 결제 일정(예:
+`$.payment.terms[0].schedules[1]`)을 직접 가리키는 경고 메시지를 `messages[]`에
+제공해야 한다(**SHOULD**). 이 고지 안내에는 반드시 적용되는 현지 세율, 면제 조건,
+결제 방법을 명시해야 하며(**MUST**), `links[]`의 공식 정책 링크로 보완한다.
 
-The following snippets illustrate how `totals[]` is structured alongside payment terms across canonical lodging pricing patterns:
+다음 예시는 대표적인 숙박 가격 패턴에서 `totals[]`가 결제 조건과 함께 어떻게
+구성되는지 보여 준다.
 
-=== "Pattern 1: Property-Collected Charges"
+=== "패턴 1: 숙소 징수 요금"
 
-    A 3-night Tokyo hotel stay where base room rates (`64,000`) and prepaid service fees (`6,400`) are charged immediately, while mandatory resort fees (`6,000`) and Tokyo Accommodation Tax (`1,200`) are collected at the property. In `totals[]`, non-total addends sum strictly to the total stay cost (`77,600`):
+    도쿄 호텔 3박 숙박으로, 기본 객실 요금(`64,000`)과 선결제 서비스 요금(`6,400`)은 즉시 청구되고, 필수 리조트 요금(`6,000`)과 도쿄 숙박세(`1,200`)는 숙소에서 징수한다. `totals[]`에서 total이 아닌 구성 요소의 합은 정확히 총 숙박 비용(`77,600`)과 같다.
 
     <!-- ucp:example schema=lodging/booking target=$.totals op=read -->
     ```json
@@ -222,9 +215,9 @@ The following snippets illustrate how `totals[]` is structured alongside payment
     ]
     ```
 
-=== "Pattern 2: Deposit & Check-in Balance"
+=== "패턴 2: 보증금과 체크인 시 잔액"
 
-    A 3-night stay under a deposit & balance term, with an itemized nightly breakdown in `subtotal.lines`. The upfront deposit covers the 1st night (`40,000`) plus service fee (`3,000`) and initial tax (`4,000`), while the remaining balance (`88,000`) is deferred until check-in. In `totals[]`, all room nights, fees, and taxes sum to the full stay liability (`135,000`):
+    보증금·잔액 조건으로 3박을 숙박하며, `subtotal.lines`에 1박별 내역이 들어 있다. 선결제 보증금은 첫날 숙박 요금(`40,000`)과 서비스 요금(`3,000`), 첫 세금(`4,000`)을 포함하고, 남은 잔액(`88,000`)은 체크인 때까지 미뤄진다. `totals[]`에서 모든 숙박 요금, 요금, 세금을 합하면 전체 숙박 부담액(`135,000`)이 된다.
 
     <!-- ucp:example schema=lodging/booking target=$.totals op=read -->
     ```json
@@ -267,298 +260,291 @@ The following snippets illustrate how `totals[]` is structured alongside payment
     ```
 
 > [!TIP]
-> For complete, end-to-end booking session payloads with stay bindings, lead guest assignments,
-> messages, and payment terms, see [Pricing & Payment Terms Examples](#pricing-examples).
+> 숙박 바인딩, 대표 투숙객 배정, 메시지, 결제 조건을 모두 포함한 처음부터 끝까지의
+> 예약 세션 페이로드는 [가격 및 결제 조건 예시](#pricing-examples)를 참고한다.
 
-### Payments { #payments }
+### 결제 { #payments }
 
-Payment handlers are discovered from the business's UCP profile at
-`/.well-known/ucp`. The handlers define the processing specifications for
-collecting payment instruments (e.g., Google Pay, Shop Pay). When the user
-submits payment, the platform populates the `payment.instruments` array with the
-collected instrument data.
+결제 핸들러는 `/.well-known/ucp`에 있는 비즈니스의 UCP 프로필에서 찾는다. 핸들러는
+결제 수단(예: Google Pay, Shop Pay)을 수집하기 위한 처리 명세를 정의한다. 사용자가
+결제 정보를 제출하면 플랫폼은 수집한 결제 수단 데이터로 `payment.instruments` 배열을
+채운다.
 
-The `payment` object is optional on booking session creation and update operations.
-At completion (`complete_booking_session`), `payment` is **REQUIRED** to establish the binding
-payment agreement:
+`payment` 객체는 예약 세션 생성과 수정 작업에서는 선택 사항이다. 완료
+(`complete_booking_session`) 시에는 구속력 있는 결제 합의를 확정하기 위해 `payment`가
+**필수(REQUIRED)**다.
 
-* **Immediate Card Payments**: For immediate charges or upfront card guarantees,
-  `payment.instruments` is populated with the collected instrument data.
-* **Payment Terms Confirmation**: Complete confirms the already-selected payment term;
-  it does **not** transmit finalized terms. `selected_term_id` is intentionally omitted on
-  Complete because term selection occurs through Update (`update_booking_session`)
-  which can change pricing and derived state before the session reaches `ready_for_complete`.
-* **No Instrument Required**: When no instrument is needed (e.g., deferred or pay-at-property reservations
-  requiring no upfront card guarantee), an empty payment object (`payment: {}`) validates
-  the completion requirement.
+* **즉시 카드 결제**: 즉시 청구나 선결제 카드 보증의 경우, 수집한 결제 수단 데이터로
+  `payment.instruments`를 채운다.
+* **결제 조건 확인**: Complete는 이미 선택된 결제 조건을 확인할 뿐, 최종 조건을
+  전송하지 **않는다**. 조건 선택은 세션이 `ready_for_complete`에 이르기 전에 가격과
+  파생 상태를 바꿀 수 있는 Update(`update_booking_session`)로 이루어지므로,
+  Complete에서는 `selected_term_id`를 의도적으로 생략한다.
+* **결제 수단 불필요**: 결제 수단이 필요 없는 경우(예: 선결제 카드 보증이 필요 없는
+  후불 또는 현장 결제 예약), 빈 결제 객체(`payment: {}`)로 완료 요건을 충족한다.
 
-### Booking Status Lifecycle { #booking-status-lifecycle }
+### 예약 상태 수명 주기 { #booking-status-lifecycle }
 
-The booking `status` field indicates the current phase of the session and
-determines what action is required next. The business sets the status; the
-platform receives messages indicating what's needed to progress.
+예약 `status` 필드는 세션의 현재 단계를 나타내며 다음에 어떤 조치가 필요한지 결정한다.
+상태는 비즈니스가 설정하고, 플랫폼은 진행에 무엇이 필요한지 알려 주는 메시지를 받는다.
 
-#### Status Values { #status-values }
+#### 상태 값 { #status-values }
 
-* **`incomplete`**: Booking session is missing required information or has
-    issues that need resolution. Platform should inspect `messages` array for
-    context and should attempt to resolve via Update Booking Session.
-* **`requires_escalation`**: Booking session requires information that
-    cannot be provided via API, or user input is required. Platform should
-    inspect `messages` to understand what's needed. If any `recoverable` errors
-    exist, resolve those first. Then hand off to user via `continue_url`.
-* **`ready_for_complete`**: Booking session has all necessary information
-    (confirmed pricing totals, valid stay dates, payment instrument
-    collected if required, lead guest identification via `booker` or
-    primary guest assignment (`role: "primary"`), and all outstanding gating
-    actions resolved) and platform
-    can finalize programmatically. Platform can call Complete Booking Session.
-* **`complete_in_progress`**: Business is processing the Complete Booking
-    request. The response **MUST NOT** contain a `confirmation` field.
-    See [Accepted Completion](../../shopping/checkout/index.md#accepted-completion)
-    for permitted operations.
-* **`completed`**: Booking confirmed successfully.
-* **`canceled`**: Booking session is invalid or expired. Platform should
-    start a new booking session if needed.
+* **`incomplete`**: 예약 세션에 필수 정보가 없거나 해결이 필요한 문제가 있다.
+    플랫폼은 `messages` 배열에서 맥락을 확인하고 Update Booking Session으로 해결을
+    시도해야 한다.
+* **`requires_escalation`**: 예약 세션에 API로 제공할 수 없는 정보가 필요하거나
+    사용자 입력이 필요하다. 플랫폼은 `messages`를 확인해 무엇이 필요한지 파악해야
+    한다. `recoverable` 오류가 있으면 먼저 해결한 다음 `continue_url`로 사용자에게
+    넘긴다.
+* **`ready_for_complete`**: 예약 세션에 필요한 정보(확정된 가격 합계, 유효한 숙박
+    날짜, 필요한 경우 수집된 결제 수단, `booker` 또는 대표 투숙객 배정
+    (`role: "primary"`)을 통한 대표 투숙객 식별, 차단 중인 모든 미처리 액션의 해결)가
+    모두 있으며 플랫폼이 프로그래밍 방식으로 확정할 수 있다. 플랫폼은 Complete Booking
+    Session을 호출할 수 있다.
+* **`complete_in_progress`**: 비즈니스가 Complete Booking 요청을 처리하고 있다.
+    응답에는 `confirmation` 필드가 있어서는 안 된다(**MUST NOT**). 허용되는 작업은
+    [수락된 완료](../../shopping/checkout/index.md#accepted-completion)를 참고한다.
+* **`completed`**: 예약이 성공적으로 확정되었다.
+* **`canceled`**: 예약 세션이 유효하지 않거나 만료되었다. 플랫폼은 필요하면 새 예약
+    세션을 시작해야 한다.
 
-#### Session Expiry & Inventory Management { #session-expiry-inventory-management }
+#### 세션 만료와 재고 관리 { #session-expiry-inventory-management }
 
-* **Ephemeral Session Lifetime (`expires_at`)**: A booking session is an in-flight,
-  pre-confirmation resource. The Business **MAY** provide an `expires_at` timestamp
-  indicating how long the session state, quoted pricing, and any temporary inventory
-  holds remain valid.
-* **Inventory Hold Strategies**: Businesses **MAY** place a temporary soft hold on inventory
-  for the duration of `expires_at`, or **MAY** employ optimistic concurrency by
-  verifying inventory availability in real-time on session updates and performing final allocation
-  upon Complete Booking Session.
-* **Release Mechanisms**: If the booking flow is abandoned, the Platform **MAY**
-  call Cancel Booking Session to explicitly release any held inventory and session state.
-  Otherwise any held resources are automatically released when `expires_at` elapses.
+* **일시적인 세션 수명(`expires_at`)**: 예약 세션은 확정 전 단계에서 진행 중인
+  리소스다. 비즈니스는 세션 상태, 제시된 가격, 임시 재고 홀드가 얼마나 오래 유효한지를
+  나타내는 `expires_at` 타임스탬프를 제공할 수 있다(**MAY**).
+* **재고 홀드 전략**: 비즈니스는 `expires_at` 기간 동안 재고에 임시 소프트 홀드를 걸
+  수도 있고(**MAY**), 세션이 업데이트될 때마다 재고 가용성을 실시간으로 확인하고
+  Complete Booking Session 시점에 최종 배정을 수행하는 낙관적 동시성 방식을 사용할
+  수도 있다(**MAY**).
+* **해제 방식**: 예약 흐름이 중단되면 플랫폼은 Cancel Booking Session을 호출해 홀드된
+  재고와 세션 상태를 명시적으로 해제할 수 있다(**MAY**). 그렇지 않으면 홀드된 리소스는
+  `expires_at`이 지나면 자동으로 해제된다.
 
-### Actions { #actions }
+### 액션 { #actions }
 
-When an active capability or extension has outstanding step-up work for the
-booking session (such as PSD2 / 3D Secure strong customer authentication,
-biometric step-up, or identity verification), the Business surfaces instances in
-the response-only `actions` map. The common rules are defined in
-[Overview — Actions](../../overview/index.md#actions); this section states how
-the booking status lifecycle interprets them.
+활성화된 기능이나 확장에 예약 세션에 대한 미처리 추가 인증(step-up) 작업(PSD2 /
+3D Secure 강력한 고객 인증, 생체 인증 추가 확인, 신원 확인 등)이 있으면, 비즈니스는
+응답 전용 `actions` 맵에 그 인스턴스를 노출한다. 공통 규칙은
+[개요 — 액션](../../overview/index.md#actions)에 정의되어 있으며, 이 섹션에서는 예약
+상태 수명 주기가 액션을 어떻게 해석하는지 설명한다.
 
-Every Action gates the effect specified for its Action type. While `incomplete`,
-an Action may identify work the Business needs completed before it can return
-`ready_for_complete`. After processing the Action according to its Action type
-contract (e.g., redirecting buyer via `url_redirect`), the Platform **SHOULD** use
-Get Booking Session or a subsequent Update Booking Session to obtain the latest
-booking state.
+모든 액션은 해당 액션 유형에 지정된 효과를 차단한다. `incomplete` 상태에서 액션은
+비즈니스가 `ready_for_complete`를 반환하기 전에 완료되어야 하는 작업을 나타낼 수
+있다. 액션 유형 계약에 따라 액션을 처리한 후(예: `url_redirect`로 구매자를
+리디렉션), 플랫폼은 Get Booking Session이나 이후의 Update Booking Session으로 최신
+예약 상태를 가져와야 한다(**SHOULD**).
 
-If an Action prevents Complete Booking Session from being accepted, the Business
-**MUST** return the current booking session with `status: incomplete` (or
-`status: requires_escalation` if user handoff is required) and an error Message
-with `severity: "recoverable"` whose `path` selects that exact Action occurrence.
+액션 때문에 Complete Booking Session을 수락할 수 없다면, 비즈니스는 반드시 현재 예약
+세션을 `status: incomplete`(사용자 인계가 필요하면 `status: requires_escalation`)로
+반환하고, `path`가 해당 액션 인스턴스를 정확히 가리키는 `severity: "recoverable"`
+오류 메시지를 함께 반환해야 한다(**MUST**).
 
-### Error Handling { #error-handling }
+### 오류 처리 { #error-handling }
 
-The `messages` array contains errors, warnings, and informational messages
-about the booking state. `ucp.status` is the shape discriminator —
-`"success"` means the response carries the expected payload, `"error"`
-means it carries error information instead. The `severity` field on each
-error message prescribes the recommended action:
+`messages` 배열에는 예약 상태에 관한 오류, 경고, 안내 메시지가 들어 있다.
+`ucp.status`는 응답 형태를 구분하는 값으로, `"success"`는 응답에 기대한 페이로드가
+있다는 뜻이고 `"error"`는 그 대신 오류 정보가 있다는 뜻이다. 각 오류 메시지의
+`severity` 필드는 권장 조치를 지정한다.
 
-| Severity                | Meaning                                          | Platform Action                                                   |
+| 심각도                | 의미                                          | 플랫폼 조치                                                   |
 | :---------------------- | :----------------------------------------------- | :---------------------------------------------------------------- |
-| `recoverable`           | Platform can resolve by modifying inputs via API | Update resource and retry                                         |
-| `requires_buyer_input`  | Business requires input not available via API    | Hand off via `continue_url`                                       |
-| `requires_buyer_review` | User review and authorization is required        | Hand off via `continue_url`                                       |
-| `unrecoverable`         | No resource exists to act on                     | Retry with new resource or inputs, or hand off via `continue_url` |
+| `recoverable`           | 플랫폼이 API로 입력을 수정해 해결할 수 있다 | 리소스를 업데이트하고 재시도                                         |
+| `requires_buyer_input`  | 비즈니스가 API로 받을 수 없는 입력을 요구한다    | `continue_url`로 인계                                       |
+| `requires_buyer_review` | 사용자의 검토와 승인이 필요하다        | `continue_url`로 인계                                       |
+| `unrecoverable`         | 조치할 리소스가 없다                     | 새 리소스나 입력으로 재시도하거나 `continue_url`로 인계 |
 
-Errors with `requires_*` severity contribute to `status: requires_escalation`.
-Both result in user handoff, but represent different booking session states:
+`requires_*` 심각도의 오류는 `status: requires_escalation`으로 이어진다. 둘 다 사용자
+인계로 끝나지만 서로 다른 예약 세션 상태를 나타낸다.
 
-* `requires_buyer_input` means the booking session is **incomplete** — the business
-  requires information their API doesn't support collecting programmatically.
-* `requires_buyer_review` means the booking session is **complete** — but policy,
-  regulatory, or entitlement rules require user authorization before completion.
+* `requires_buyer_input`은 예약 세션이 **미완성**이라는 뜻이다. 비즈니스가 필요로
+  하는 정보를 그 API로는 프로그래밍 방식으로 수집할 수 없다.
+* `requires_buyer_review`는 예약 세션이 **완성**되었지만, 정책·규제·자격 규칙상
+  완료 전에 사용자 승인이 필요하다는 뜻이다.
 
-#### Standard Errors { #standard-errors }
+#### 표준 오류 { #standard-errors }
 
-| Code                          | Description                                                              |
+| 코드                          | 설명                                                              |
 | :---------------------------- | :----------------------------------------------------------------------- |
-| `inventory_exhausted`         | The selected accommodation unit or inventory hold is no longer available |
-| `occupancy_exceeded_capacity` | Number of assigned guests exceeds physical capacity bounds               |
-| `payment_failed`              | Payment processing failed                                                |
-| `eligibility_invalid`         | Eligibility claim could not be verified at completion                    |
+| `inventory_exhausted`         | 선택한 객실 단위나 재고 홀드를 더 이상 이용할 수 없다 |
+| `occupancy_exceeded_capacity` | 배정된 투숙객 수가 물리적 수용 한도를 초과한다               |
+| `payment_failed`              | 결제 처리에 실패했다                                                |
+| `eligibility_invalid`         | 완료 시점에 자격 주장을 검증할 수 없었다                    |
 
-### Warning Presentation { #warning-presentation }
+### 경고 표시 { #warning-presentation }
 
-The `presentation` field on warning messages controls the rendering contract the
-platform **MUST** follow (e.g., `notice` vs. `disclosure`). For the authoritative
-rendering rules, see [Checkout — Warning Presentation](../../shopping/checkout/index.md#warning-presentation).
+경고 메시지의 `presentation` 필드는 플랫폼이 반드시 따라야 하는(**MUST**) 렌더링
+계약(예: `notice`와 `disclosure`)을 결정한다. 권위 있는 렌더링 규칙은
+[체크아웃 — 경고 표시](../../shopping/checkout/index.md#warning-presentation)를
+참고한다.
 
-#### Totals Changes { #totals-changes }
+#### 합계 변경 { #totals-changes }
 
-When stay rates, taxes, or mandatory fees fluctuate during an active booking
-session, the Business returns the updated session with recomputed `totals[]` and
-**MUST** report the modification using a warning message in `messages[]` with
-`code: "totals_changed"` and `path: "$.totals"`.
+진행 중인 예약 세션에서 숙박 요금, 세금, 필수 요금이 변동되면 비즈니스는 `totals[]`를
+다시 계산한 세션을 반환하고, 반드시 `code: "totals_changed"`와 `path: "$.totals"`를
+가진 `messages[]` 경고 메시지로 그 변경을 알려야 한다(**MUST**).
 
-The Business **MUST** set `presentation: "disclosure"` when the revised amount
-requires prominent Buyer awareness. The Platform **MUST** present the updated
-totals and the warning content to the buyer, and **MUST NOT** auto-dismiss or hide
-the disclosure.
+변경된 금액을 구매자가 눈에 띄게 인지해야 하는 경우, 비즈니스는 반드시
+`presentation: "disclosure"`를 설정해야 한다(**MUST**). 플랫폼은 반드시 업데이트된
+합계와 경고 내용을 구매자에게 보여 줘야 하며(**MUST**), 고지를 자동으로 닫거나 숨겨서는
+안 된다(**MUST NOT**).
 
 ## Continue URL { #continue-url }
 
-The `continue_url` field enables booking handoff from platform to business UI,
-allowing the user to continue and finalize the booking session.
+`continue_url` 필드를 사용하면 예약을 플랫폼에서 비즈니스 UI로 넘겨, 사용자가 예약
+세션을 이어서 진행하고 확정할 수 있다.
 
-### Availability { #availability }
+### 제공 여부 { #availability }
 
-Businesses **MUST** provide `continue_url` when returning `status` =
-`requires_escalation`. For all other non-terminal statuses (`incomplete`,
-`ready_for_complete`, `complete_in_progress`), businesses **SHOULD** provide
-`continue_url`. For terminal states (`completed`, `canceled`), `continue_url`
-**SHOULD** be omitted.
+비즈니스는 `status` = `requires_escalation`을 반환할 때 반드시 `continue_url`을
+제공해야 한다(**MUST**). 그 밖의 모든 비종료 상태(`incomplete`,
+`ready_for_complete`, `complete_in_progress`)에서는 `continue_url`을 제공해야
+한다(**SHOULD**). 종료 상태(`completed`, `canceled`)에서는 `continue_url`을 생략해야
+한다(**SHOULD**).
 
-## Guidelines { #guidelines }
+## 가이드라인 { #guidelines }
 
-### Platform { #platform }
+### 플랫폼 { #platform }
 
-* **MUST** supply valid `property.id`, and either a pre-composed `stay.id`
-  OR both `accommodation_type.id` and `rate_plan.id` identifiers sourced from upper-funnel
-  discovery mechanisms when creating a booking session.
-* **MUST** present each `stays[]` entry as a unit — `accommodation_type.title`,
-  `rate_plan.title`, `rate_plan.description` (when present), `occupancy`, and the
-  entry's `totals` under the totals rendering contract — and **MUST NOT** merge or
-  de-duplicate entries that share a `accommodation_type` or `rate_plan`.
-* **MUST** identify a lead guest by providing `booker` details or designating at
-  least one guest with `role: "primary"` (including full legal name and contact
-  details) prior to invoking Complete Booking Session. A Platform that receives
-  `ready_for_complete` without an identified lead **MUST NOT** call Complete
-  Booking Session, and **SHOULD** correct the session via Update Booking Session
-  or escalate via `continue_url` if available.
-* **MUST** generate unique, stable, session-scoped string identifiers in the Platform
-  namespace for each entry in the root `guests[]` array (e.g., `"gst_01"`, `"gst_02"`).
-* **MUST** ensure every `guest_assignments[].guest_id` references a valid `id`
-  present in the root `guests[]` pool.
-* **SHOULD NOT** send `guests[]` personal identity fields beyond `id` before the
-  booking reaches `ready_for_complete`, and **SHOULD** send only the fields the
-  business requests via `messages[]`.
-* **MAY** engage an agent to facilitate the booking session (e.g. select stay,
-  dates, collect guest information). However, the agent must hand over
-  the booking session to a trusted and deterministic UI for the user to review
-  the booking details and complete the booking.
-* **MAY** send the user from the trusted, deterministic UI back to the agent
-  at any time.
-* **MAY** provide agent context when the platform indicates that the request
-  was done by an agent.
-* **MUST** use `continue_url` when booking status is `requires_escalation`.
-* **MAY** use `continue_url` to hand off to business UI in other situations.
-* When performing handoff, **SHOULD** prefer business-provided `continue_url`.
+* 예약 세션을 생성할 때는 반드시 유효한 `property.id`와 함께, 상위 퍼널 디스커버리
+  메커니즘에서 얻은 미리 구성된 `stay.id` 또는 `accommodation_type.id`와
+  `rate_plan.id` 식별자 둘 다를 제공해야 한다(**MUST**).
+* 반드시 각 `stays[]` 항목을 하나의 단위로 표시해야 하며(**MUST**)
+  (`accommodation_type.title`, `rate_plan.title`, `rate_plan.description`(있는 경우),
+  `occupancy`, 그리고 합계 렌더링 계약에 따른 해당 항목의 `totals`),
+  `accommodation_type`이나 `rate_plan`이 같은 항목을 병합하거나 중복 제거해서는 안
+  된다(**MUST NOT**).
+* Complete Booking Session을 호출하기 전에 반드시 `booker` 정보를 제공하거나 적어도
+  한 명의 투숙객을 `role: "primary"`(법적 성명 전체와 연락처 포함)로 지정해 대표
+  투숙객을 식별해야 한다(**MUST**). 대표 투숙객이 식별되지 않은 상태로
+  `ready_for_complete`를 받은 플랫폼은 Complete Booking Session을 호출해서는 안 되며
+  (**MUST NOT**), Update Booking Session으로 세션을 바로잡거나 가능하면
+  `continue_url`로 에스컬레이션해야 한다(**SHOULD**).
+* 반드시 루트 `guests[]` 배열의 각 항목에 대해 플랫폼 네임스페이스 안에서 고유하고
+  안정적이며 세션 범위로 한정된 문자열 식별자(예: `"gst_01"`, `"gst_02"`)를 생성해야
+  한다(**MUST**).
+* 반드시 모든 `guest_assignments[].guest_id`가 루트 `guests[]` 풀에 있는 유효한
+  `id`를 참조하도록 보장해야 한다(**MUST**).
+* 예약이 `ready_for_complete`에 이르기 전에는 `id` 외의 `guests[]` 개인 신원 필드를
+  보내지 않아야 하며(**SHOULD NOT**), 비즈니스가 `messages[]`로 요청한 필드만 보내야
+  한다(**SHOULD**).
+* 예약 세션 진행을 돕기 위해 에이전트를 활용할 수 있다(**MAY**)(예: 숙박과 날짜
+  선택, 투숙객 정보 수집). 다만 에이전트는 사용자가 예약 정보를 검토하고 예약을
+  완료할 수 있도록 신뢰할 수 있고 결정적인 UI에 예약 세션을 넘겨야 한다.
+* 신뢰할 수 있고 결정적인 UI에서 언제든 사용자를 에이전트로 되돌려 보낼 수
+  있다(**MAY**).
+* 요청이 에이전트에 의해 이루어졌음을 플랫폼이 표시하는 경우 에이전트 맥락을 제공할
+  수 있다(**MAY**).
+* 예약 상태가 `requires_escalation`이면 반드시 `continue_url`을 사용해야
+  한다(**MUST**).
+* 그 밖의 상황에서도 `continue_url`을 사용해 비즈니스 UI로 인계할 수 있다(**MAY**).
+* 인계할 때는 비즈니스가 제공한 `continue_url`을 우선해야 한다(**SHOULD**).
 
-### Business { #business }
+### 비즈니스 { #business }
 
-* **MUST** evaluate requested `stay.id`, or the compound `accommodation_type.id` and
-  `rate_plan.id` bindings against real-time availability and inventory constraints,
-  echoing authoritative metadata, pricing totals, and policy terms.
-* **MUST** make `rate_plan.title` distinguish the rate plan and, together with
-  `rate_plan.description` when present,is sufficient for a Buyer to understand its
-  material commercial terms without having to read into `policies[]`; both
-  fields **MUST NOT** contradict `policies[]`.
-* **MUST** preserve platform-supplied `guest.id` identifiers across session
-  updates and responses without remapping, renaming, or mutating them.
-* **MUST** validate that all `stays[].guest_assignments[].guest_id`
-  references match an existing entry in the root `guests[]` array.
-* **MUST NOT** return a booking session with statuses `ready_for_complete`,
-  `complete_in_progress`, or `completed` without an identified lead - a `booker`
-  with full legal name and a contact channel, a guest in `guests[]` with full
-  legal name and a contact channel who is assigned as `primary` in some
-  `stays[].guest_assignments[]`, or in corporate or proxy bookings, a named primary guest
-  alongside a `booker` providing the contact channel. Additional identity fields
-  a Business needs (such as passport number, nationality, or date of birth)
-  **MUST** be negotiated per Business through `messages[]`.
-* **MUST** enforce physical `capacity` limits against the total assigned occupants and guest ages:
-    * Guest age is evaluated in completed years as of the stay check-in date.
-    * A guest whose age falls within a defined `child_age_ranges[].ages` bracket is classified as a child; any guest whose age falls in no child bracket is classified as an adult.
-    * The requested occupancy **MUST** satisfy: `occupancy.adults <= capacity.adults`, `occupancy.children <= capacity.children`, and `occupancy.total <= capacity.total`.
-    * For each entry in `child_age_ranges[]` with a `limit`, the number of children whose ages fall in that bracket **MUST NOT** exceed `limit`.
-* **MUST** send a confirmation email after the booking has been completed when a
-  valid email address is available in `booker` or primary guest details.
-* **SHOULD** provide accurate error and warning messages.
-* Logic handling the booking sessions **MUST** be deterministic.
-* **MUST** provide `continue_url` when returning `status` = `requires_escalation`.
-* **MUST** include at least one message with `severity` of `requires_buyer_input`
-  or `requires_buyer_review` when returning `status` = `requires_escalation`.
-* **SHOULD** provide `continue_url` in all non-terminal booking responses.
-* After a booking session reaches the state "completed", it is considered
-  immutable.
+* 반드시 요청된 `stay.id` 또는 복합 `accommodation_type.id`·`rate_plan.id` 바인딩을
+  실시간 가용성과 재고 제약에 비추어 평가하고, 권위 있는 메타데이터, 가격 합계, 정책
+  조건을 반환해야 한다(**MUST**).
+* 반드시 `rate_plan.title`로 요금제를 구별할 수 있게 하고, `rate_plan.description`이
+  있다면 그것과 함께 구매자가 `policies[]`까지 읽지 않아도 주요 상업 조건을 이해할 수
+  있을 만큼 충분하게 작성해야 한다(**MUST**). 두 필드는 `policies[]`와 모순되어서는
+  안 된다(**MUST NOT**).
+* 반드시 플랫폼이 제공한 `guest.id` 식별자를 세션 업데이트와 응답 전반에서 재매핑,
+  이름 변경, 수정 없이 그대로 유지해야 한다(**MUST**).
+* 반드시 모든 `stays[].guest_assignments[].guest_id` 참조가 루트 `guests[]` 배열의
+  기존 항목과 일치하는지 검증해야 한다(**MUST**).
+* 식별된 대표자 없이 `ready_for_complete`, `complete_in_progress`, `completed`
+  상태의 예약 세션을 반환해서는 안 된다(**MUST NOT**). 대표자란 법적 성명 전체와
+  연락 수단을 갖춘 `booker`, 법적 성명 전체와 연락 수단을 갖추고 어떤
+  `stays[].guest_assignments[]`에서 `primary`로 배정된 `guests[]`의 투숙객, 또는
+  법인·대리 예약의 경우 연락 수단을 제공하는 `booker`와 함께 이름이 지정된 대표
+  투숙객을 말한다. 비즈니스에 필요한 추가 신원 필드(여권 번호, 국적, 생년월일 등)는
+  반드시 비즈니스별로 `messages[]`를 통해 협상해야 한다(**MUST**).
+* 반드시 배정된 전체 투숙 인원과 투숙객 나이를 기준으로 물리적 `capacity` 한도를
+  적용해야 한다(**MUST**).
+    * 투숙객 나이는 숙박 체크인 날짜 기준 만 나이로 평가한다.
+    * 나이가 정의된 `child_age_ranges[].ages` 구간에 속하는 투숙객은 어린이로 분류하고, 어떤 어린이 구간에도 속하지 않는 투숙객은 성인으로 분류한다.
+    * 요청된 투숙 인원은 반드시 `occupancy.adults <= capacity.adults`, `occupancy.children <= capacity.children`, `occupancy.total <= capacity.total`을 충족해야 한다(**MUST**).
+    * `limit`이 있는 `child_age_ranges[]`의 각 항목에 대해, 나이가 그 구간에 속하는 어린이 수는 `limit`을 초과해서는 안 된다(**MUST NOT**).
+* `booker`나 대표 투숙객 정보에 유효한 이메일 주소가 있으면, 반드시 예약 완료 후
+  확인 이메일을 보내야 한다(**MUST**).
+* 정확한 오류 및 경고 메시지를 제공해야 한다(**SHOULD**).
+* 예약 세션을 처리하는 로직은 반드시 결정적이어야 한다(**MUST**).
+* `status` = `requires_escalation`을 반환할 때는 반드시 `continue_url`을 제공해야
+  한다(**MUST**).
+* `status` = `requires_escalation`을 반환할 때는 반드시 `severity`가
+  `requires_buyer_input` 또는 `requires_buyer_review`인 메시지를 하나 이상 포함해야
+  한다(**MUST**).
+* 모든 비종료 예약 응답에 `continue_url`을 제공해야 한다(**SHOULD**).
+* 예약 세션이 "completed" 상태에 이르면 변경할 수 없는 것으로 간주한다.
 
-## Capability Schema Definition <span id="booking"></span> { #capability-schema-definition }
+## 기능 스키마 정의 <span id="booking"></span> { #capability-schema-definition }
 
 {{ schema_fields('booking_resp', 'lodging/booking') }}
 
-## Operations { #operations }
+## 작업 { #operations }
 
-The Booking capability defines the following logical operations:
+예약 기능은 다음과 같은 논리적 작업을 정의한다.
 
-| Operation                    | Description                                                                         |
+| 작업                    | 설명                                                                         |
 | :--------------------------- | :---------------------------------------------------------------------------------- |
-| **Create Booking Session**   | Initiates a new booking session. Called as soon as a user expresses booking intent. |
-| **Get Booking Session**      | Retrieves the current state of a booking session.                                   |
-| **Update Booking Session**   | Updates a booking session via full resource replacement.                            |
-| **Complete Booking Session** | Finalizes the booking and confirms the reservation.                                 |
-| **Cancel Booking Session**   | Cancels a booking session.                                                          |
+| **Create Booking Session**   | 새 예약 세션을 시작한다. 사용자가 예약 의사를 표시하는 즉시 호출한다. |
+| **Get Booking Session**      | 예약 세션의 현재 상태를 조회한다.                                   |
+| **Update Booking Session**   | 리소스 전체를 교체하는 방식으로 예약 세션을 수정한다.                            |
+| **Complete Booking Session** | 예약을 확정하고 예약 내역을 확인한다.                                 |
+| **Cancel Booking Session**   | 예약 세션을 취소한다.                                                          |
 
-### Create Booking Session { #create-booking-session }
+### 예약 세션 생성 { #create-booking-session }
 
-Invoked by the platform when the user expresses booking intent to initiate a
-session with upper-funnel property, stay, and stay date parameters.
+사용자가 예약 의사를 표시하면 플랫폼이 상위 퍼널의 숙소, 숙박, 숙박 날짜 파라미터로
+세션을 시작하기 위해 호출한다.
 
 {{ method_fields('create_booking_session', 'lodging/rest.openapi.json', 'lodging/booking') }}
 
-### Get Booking Session { #get-booking-session }
+### 예약 세션 조회 { #get-booking-session }
 
-Retrieves the latest state of the booking session resource.
+예약 세션 리소스의 최신 상태를 조회한다.
 
 {{ method_fields('get_booking_session', 'lodging/rest.openapi.json', 'lodging/booking') }}
 
-### Update Booking Session { #update-booking-session }
+### 예약 세션 수정 { #update-booking-session }
 
-Performs a full replacement of the booking session resource. The platform is
-**REQUIRED** to send the complete booking state containing any data updates
-(e.g., guest profiles, guest assignments, booker details).
+예약 세션 리소스 전체를 교체한다. 플랫폼은 반드시 변경된 데이터(예: 투숙객 프로필,
+투숙객 배정, 예약자 정보)를 포함한 전체 예약 상태를 보내야 한다(**REQUIRED**).
 
 {{ method_fields('update_booking_session', 'lodging/rest.openapi.json', 'lodging/booking') }}
 
-### Complete Booking Session { #complete-booking-session }
+### 예약 세션 완료 { #complete-booking-session }
 
-Final booking placement call. Invoked when payment has been collected and the
-user commits to finalize the reservation.
+예약을 최종 접수하는 호출이다. 결제 정보가 수집되고 사용자가 예약 확정을 결정했을 때
+호출한다.
 
 {{ method_fields('complete_booking_session', 'lodging/rest.openapi.json', 'lodging/booking') }}
 
-### Cancel Booking Session { #cancel-booking-session }
+### 예약 세션 취소 { #cancel-booking-session }
 
-Cancels an active booking session prior to completion.
+완료 전에 진행 중인 예약 세션을 취소한다.
 
 {{ method_fields('cancel_booking_session', 'lodging/rest.openapi.json', 'lodging/booking') }}
 
-## Transport Bindings { #transport-bindings }
+## 전송 바인딩 { #transport-bindings }
 
-The abstract operations above are bound to specific transport protocols:
+위의 추상 작업은 다음과 같은 구체적인 전송 프로토콜에 바인딩된다.
 
-* [REST Binding](rest.md): RESTful API mapping using standard HTTP verbs and JSON payloads.
-* [MCP Binding](mcp.md): Model Context Protocol mapping for agentic interaction.
+* [REST 바인딩](rest.md): 표준 HTTP 메서드와 JSON 페이로드를 사용하는 RESTful API 매핑
+* [MCP 바인딩](mcp.md): 에이전트 상호작용을 위한 Model Context Protocol 매핑
 
-## Examples {: #examples }
+## 예시 {: #examples }
 
-### Pricing Examples { #pricing-examples }
+### 가격 예시 { #pricing-examples }
 
-The following examples provide complete, authoritative booking sessions demonstrating
-property-collected charges and flexible payment terms integration.
+다음 예시는 숙소 징수 요금과 유연한 결제 조건 통합을 보여 주는 완전하고 권위 있는
+예약 세션이다.
 
-=== "Property-Collected Taxes & Fees"
+=== "숙소 징수 세금 및 요금"
 
-    A complete 3-night Tokyo hotel reservation where base room rates and service fees are prepaid immediately, while local Tokyo Accommodation Tax and resort fees are collected directly at check-in. Payment timing is explicitly modeled via `payment.terms[]` under capability `dev.ucp.common.payment.terms`, and the tax disclosure warning in `messages[]` references the property-collected schedule:
+    도쿄 호텔 3박 예약의 전체 예시로, 기본 객실 요금과 서비스 요금은 즉시 선결제하고 도쿄 숙박세와 리조트 요금은 체크인 때 숙소가 직접 징수한다. 결제 시점은 `dev.ucp.common.payment.terms` 기능의 `payment.terms[]`로 명시적으로 모델링하며, `messages[]`의 세금 고지 경고는 숙소 징수 일정을 참조한다.
 
     <!-- ucp:example schema=lodging/booking op=read -->
     ```json
@@ -717,9 +703,9 @@ property-collected charges and flexible payment terms integration.
     }
     ```
 
-=== "Flexible Payment Terms — Deposit & Balance"
+=== "유연한 결제 조건 — 보증금과 잔액"
 
-    A complete 3-night hotel reservation offering a deposit and balance payment term (`pt_deposit_balance`). The first night's room rate along with prepaid fees and initial tax are charged immediately, while the remaining 2 nights' room rate and balance tax are deferred until check-in:
+    보증금·잔액 결제 조건(`pt_deposit_balance`)을 제공하는 호텔 3박 예약의 전체 예시다. 첫날 숙박 요금과 선결제 요금, 첫 세금은 즉시 청구하고, 나머지 2박의 숙박 요금과 남은 세금은 체크인 때까지 미룬다.
 
     <!-- ucp:example schema=lodging/booking op=read -->
     ```json
@@ -867,130 +853,131 @@ property-collected charges and flexible payment terms integration.
     }
     ```
 
-## Entities { #entities }
+## 엔티티 { #entities }
 
-### Actions { #actions_1 }
+### 액션 { #actions_1 }
 
-Step-up action directives required to progress the booking session (e.g., 3D Secure / PSD2 buyer redirection or identity verification).
+예약 세션을 진행하는 데 필요한 추가 인증(step-up) 액션 지시(예: 3D Secure / PSD2 구매자 리디렉션이나 신원 확인).
 
 {{ schema_fields('types/actions', 'lodging/booking') }}
 
-### Property { #property }
+### 숙소 { #property }
 
-The physical establishment or geographic location where the lodging is situated (e.g., hotel, resort, villa estate, cabin park).
+숙박 시설이 있는 물리적 시설이나 지리적 위치(예: 호텔, 리조트, 빌라 단지, 캐빈 파크).
 
 {{ schema_fields('types/property_resp', 'lodging/booking') }}
 
-### Booking Confirmation { #booking-confirmation }
+### 예약 확인 { #booking-confirmation }
 
-Confirmation and locator details returned upon successful booking completion.
+예약이 성공적으로 완료되면 반환되는 확인 및 예약 조회 정보.
 
 {{ schema_fields('types/booking_confirmation', 'lodging/booking') }}
 
-### Booker { #booker }
+### 예약자 { #booker }
 
-The legal contracting party and primary point of contact making the reservation.
+예약을 하는 법적 계약 당사자이자 주 연락 창구.
 
 {{ schema_fields('types/booker', 'lodging/booking') }}
 
-### Capacity { #capacity }
+### 수용 인원 { #capacity }
 
-Occupancy limits and child age thresholds supported by a physical accommodation type.
+물리적 객실 유형이 지원하는 투숙 인원 한도와 어린이 나이 기준.
 
 {{ schema_fields('types/capacity', 'lodging/booking') }}
 
-### Context { #context }
+### 컨텍스트 { #context }
 
-Buyer location and market context hints.
+구매자 위치와 시장 맥락에 관한 힌트.
 
 {{ schema_fields('types/context', 'lodging/booking') }}
 
-### Date Interval { #date-interval }
+### 날짜 구간 { #date-interval }
 
-Check-in (`start_date`) and check-out (`end_date`) date range for the stay.
+숙박의 체크인(`start_date`)과 체크아웃(`end_date`) 날짜 범위.
 
 {{ schema_fields('types/date_interval', 'lodging/booking') }}
 
-### Guest { #guest }
+### 투숙객 { #guest }
 
-Individual guest profile. The `id` is generated and supplied by the Platform to
-uniquely identify the occupant within the booking session.
+개별 투숙객 프로필. `id`는 예약 세션 안에서 투숙객을 고유하게 식별하기 위해 플랫폼이
+생성해 제공한다.
 
 {{ schema_fields('types/guest', 'lodging/booking') }}
 
-### Guest Assignment { #guest-assignment }
+### 투숙객 배정 { #guest-assignment }
 
-Relational link mapping a stay unit to an occupant from the root `guests[]` pool
-via `guest_id` with a designated role.
+`guest_id`로 숙박 단위와 루트 `guests[]` 풀의 투숙객을 연결하고 역할을 지정하는 관계
+링크.
 
 {{ schema_fields('types/guest_assignment', 'lodging/booking') }}
 
-### Link { #link }
+### 링크 { #link }
 
-Compliance and legal links (e.g., Privacy Policy, Terms of Service).
+규정 준수 및 법적 링크(예: 개인정보 처리방침, 서비스 약관).
 
 {{ schema_fields('types/link', 'lodging/booking') }}
 
-### Message Error { #message-error }
+### 오류 메시지 { #message-error }
 
 {{ schema_fields('types/message_error', 'lodging/booking') }}
 
-### Message Info { #message-info }
+### 안내 메시지 { #message-info }
 
 {{ schema_fields('types/message_info', 'lodging/booking') }}
 
-### Message Warning { #message-warning }
+### 경고 메시지 { #message-warning }
 
 {{ schema_fields('types/message_warning', 'lodging/booking') }}
 
-### Occupancy { #occupancy }
+### 투숙 인원 { #occupancy }
 
-Requested adult and child guest count breakdown for a stay.
+숙박에 요청된 성인과 어린이 투숙객 수 내역.
 
 {{ schema_fields('types/occupancy', 'lodging/booking') }}
 
-### Payment { #payment }
+### 결제 { #payment }
 
-Payment details and collected payment instruments.
+결제 정보와 수집된 결제 수단.
 
 {{ schema_fields('payment', 'lodging/booking') }}
 
-### Policy { #policy }
+### 정책 { #policy }
 
-Policies (cancellation terms, house rules, and the like) that apply to the booking session or stays.
-JSONPath targets in `applies_to` are relative to this response root (e.g., `$.stays[0]`).
-See [Policies](../../overview/index.md#policies) for the full model.
+예약 세션이나 숙박에 적용되는 정책(취소 조건, 숙소 이용 규칙 등).
+`applies_to`의 JSONPath 대상은 이 응답의 루트를 기준으로 한다(예: `$.stays[0]`).
+전체 모델은 [정책](../../overview/index.md#policies)을 참고한다.
 
 {{ schema_fields('types/policy', 'lodging/booking') }}
 
-### Rate Plan { #rate-plan }
+### 요금제 { #rate-plan }
 
-Commercial rate plan contract, cancellation policy rules, and rate inclusions.
-The `id` is discovered from upper-funnel search.
+상업적 요금제 계약, 취소 정책 규칙, 요금 포함 사항.
+`id`는 상위 퍼널 검색에서 얻는다.
 
 {{ schema_fields('types/rate_plan', 'lodging/booking') }}
 
-### Stay { #stay }
+### 숙박 { #stay }
 
-Compound binding uniting physical accommodation real estate (`accommodation_type.id`),
-commercial rate terms (`rate_plan.id`), stay dates (`stay_dates`), occupancy, and guest assignments.
+물리적 객실(`accommodation_type.id`), 상업적 요금 조건(`rate_plan.id`), 숙박
+날짜(`stay_dates`), 투숙 인원, 투숙객 배정을 하나로 묶는 복합 바인딩.
 
 {{ schema_fields('types/stay', 'lodging/booking') }}
 
-### Accommodation Type { #accommodation-type }
+### 객실 유형 { #accommodation-type }
 
-Category or specification of the rentable physical space (e.g., room, apartment, villa, campsite pitch) and capacity limits.
+임대 가능한 물리적 공간의 종류나 사양(예: 객실, 아파트, 빌라, 캠핑 사이트)과 수용
+인원 한도.
 
 {{ schema_fields('types/accommodation_type', 'lodging/booking') }}
 
-### Signals { #signals }
+### 신호 { #signals }
 
-Platform-supplied fraud and security context.
+플랫폼이 제공하는 사기 방지 및 보안 맥락.
 
 {{ schema_fields('types/signals', 'lodging/booking') }}
 
-### Total { #total }
+### 합계 { #total }
 
-Authoritative itemized price components and aggregate booking total.
+권위 있는 항목별 가격 구성 요소와 예약 총액.
 
 {{ schema_fields('types/total_resp', 'lodging/booking') }}

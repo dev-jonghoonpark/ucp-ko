@@ -14,17 +14,16 @@
    limitations under the License.
 -->
 
-# Checkout Capability - REST Binding { #checkout-capability-rest-binding }
+# 체크아웃 기능 - REST 바인딩 { #checkout-capability-rest-binding }
 
-This document specifies the REST binding for the
-[Checkout Capability](index.md).
+이 문서는 [체크아웃 기능(Checkout Capability)](index.md)의 REST 바인딩을 정의한다.
 
-## Protocol Fundamentals { #protocol-fundamentals }
+## 프로토콜 기본 사항 { #protocol-fundamentals }
 
-### Discovery { #discovery }
+### 디스커버리 { #discovery }
 
-Businesses advertise REST transport availability through their UCP profile at
-`/.well-known/ucp`.
+비즈니스는 `/.well-known/ucp`에 있는 UCP 프로필을 통해 REST 전송 방식 지원 여부를
+알린다.
 
 <!-- ucp:example schema=profile def=business_schema -->
 ```json
@@ -56,41 +55,40 @@ Businesses advertise REST transport availability through their UCP profile at
 }
 ```
 
-### Base URL { #base-url }
+### 기본 URL { #base-url }
 
-All UCP REST endpoints are relative to the business's base URL, which is
-discovered through the UCP profile at `/.well-known/ucp`. The endpoint for the
-checkout capability is defined in the `rest.endpoint` field of the
-business profile.
+모든 UCP REST 엔드포인트는 비즈니스의 기본 URL을 기준으로 한 상대 경로이며, 기본 URL은
+`/.well-known/ucp`의 UCP 프로필을 통해 찾는다. 체크아웃 기능의 엔드포인트는 비즈니스
+프로필의 `rest.endpoint` 필드에 정의된다.
 
-### Content Types { #content-types }
+### 콘텐츠 유형 { #content-types }
 
-* **Request**: `application/json`
-* **Response**: `application/json`
+* **요청**: `application/json`
+* **응답**: `application/json`
 
-All request and response bodies **MUST** be valid JSON as specified in
-[RFC 8259](https://tools.ietf.org/html/rfc8259){ target="_blank" }.
+모든 요청 및 응답 본문은 반드시
+[RFC 8259](https://tools.ietf.org/html/rfc8259){ target="_blank" }에 정의된 유효한
+JSON이어야 한다(**MUST**).
 
-### Transport Security { #transport-security }
+### 전송 보안 { #transport-security }
 
-All REST endpoints **MUST** be served over HTTPS with minimum TLS version
-1.3.
+모든 REST 엔드포인트는 반드시 최소 TLS 1.3 버전의 HTTPS로 제공되어야 한다(**MUST**).
 
-## Operations { #operations }
+## 작업 { #operations }
 
-| Operation                                          | Method | Endpoint                           | Description                |
+| 작업                                          | 메서드 | 엔드포인트                           | 설명                |
 | :------------------------------------------------- | :----- | :--------------------------------- | :------------------------- |
-| [Create Checkout](index.md#create-checkout)        | `POST` | `/checkout-sessions`               | Create a checkout session. |
-| [Get Checkout](index.md#get-checkout)              | `GET`  | `/checkout-sessions/{id}`          | Get a checkout session.    |
-| [Update Checkout](index.md#update-checkout)        | `PUT`  | `/checkout-sessions/{id}`          | Update a checkout session. |
-| [Complete Checkout](index.md#complete-checkout)    | `POST` | `/checkout-sessions/{id}/complete` | Place the order.           |
-| [Cancel Checkout](index.md#cancel-checkout)        | `POST` | `/checkout-sessions/{id}/cancel`   | Cancel a checkout session. |
+| [체크아웃 생성](index.md#create-checkout)        | `POST` | `/checkout-sessions`               | 체크아웃 세션을 생성한다. |
+| [체크아웃 조회](index.md#get-checkout)              | `GET`  | `/checkout-sessions/{id}`          | 체크아웃 세션을 조회한다.    |
+| [체크아웃 갱신](index.md#update-checkout)        | `PUT`  | `/checkout-sessions/{id}`          | 체크아웃 세션을 갱신한다. |
+| [체크아웃 완료](index.md#complete-checkout)    | `POST` | `/checkout-sessions/{id}/complete` | 주문을 확정한다.           |
+| [체크아웃 취소](index.md#cancel-checkout)        | `POST` | `/checkout-sessions/{id}/cancel`   | 체크아웃 세션을 취소한다. |
 
-## Examples { #examples }
+## 예시 { #examples }
 
-### Create Checkout { #create-checkout }
+### 체크아웃 생성 { #create-checkout }
 
-=== "Request"
+=== "요청"
 
     <!-- ucp:example schema=shopping/checkout op=create direction=request -->
     ```json
@@ -110,7 +108,7 @@ All REST endpoints **MUST** be served over HTTPS with minimum TLS version
     }
     ```
 
-=== "Response"
+=== "응답"
 
     <!-- ucp:example schema=shopping/checkout op=read -->
     ```json
@@ -203,9 +201,9 @@ All REST endpoints **MUST** be served over HTTPS with minimum TLS version
     }
     ```
 
-=== "Error Response"
+=== "에러 응답"
 
-    All items out of stock — no checkout resource is created:
+    모든 상품이 품절인 경우 — 체크아웃 리소스가 생성되지 않는다.
 
     <!-- ucp:example schema=common/types/error_response op=read -->
     ```json
@@ -226,25 +224,24 @@ All REST endpoints **MUST** be served over HTTPS with minimum TLS version
     }
     ```
 
-### Update Checkout { #update-checkout }
+### 체크아웃 갱신 { #update-checkout }
 
-Update Checkout is a full replacement operation. The Platform **MUST** send the
-entire Checkout resource, including any data updates to write-only fields; the
-supplied resource replaces the existing Checkout session state. The Platform
-**MUST NOT** start a new Update Checkout operation while the Checkout is
-`complete_in_progress`. Duplicate requests remain subject to
-[Replay Protection](../../signatures.md#replay-protection). If the Business receives a
-new Update Checkout request in that state, it **MUST** leave the Checkout
-unchanged and return the current Checkout with a recoverable error Message.
+체크아웃 갱신은 전체 교체 작업이다. 플랫폼은 쓰기 전용 필드에 대한 데이터 갱신을 포함해
+체크아웃 리소스 전체를 반드시 보내야 하며(**MUST**), 전달된 리소스가 기존 체크아웃 세션
+상태를 대체한다. 체크아웃이 `complete_in_progress` 상태인 동안 플랫폼은 새 체크아웃 갱신
+작업을 시작해서는 안 된다(**MUST NOT**). 중복 요청에는 여전히
+[재전송 방지](../../signatures.md#replay-protection)가 적용된다. 그 상태에서 새 체크아웃
+갱신 요청을 받으면 비즈니스는 반드시 체크아웃을 변경하지 않은 채, 복구 가능한 오류
+메시지와 함께 현재 체크아웃을 반환해야 한다(**MUST**).
 
-#### Update Buyer Info { #update-buyer-info }
+#### 구매자 정보 갱신 { #update-buyer-info }
 
-All fields in `buyer` are optional, allowing the Platform to progressively build
-the Checkout state across multiple calls. Outside `complete_in_progress`, each
-Update Checkout replaces the entire Checkout session, so the Platform **MUST**
-include all previously set fields it intends to retain.
+`buyer`의 모든 필드는 선택 사항이므로, 플랫폼은 여러 번의 호출에 걸쳐 체크아웃 상태를
+점진적으로 구성할 수 있다. `complete_in_progress` 상태가 아닐 때 각 체크아웃 갱신은
+체크아웃 세션 전체를 대체하므로, 플랫폼은 유지하려는 기존 설정 필드를 반드시 모두
+포함해야 한다(**MUST**).
 
-=== "Request"
+=== "요청"
 
     <!-- ucp:example schema=shopping/checkout op=update direction=request -->
     ```json
@@ -270,7 +267,7 @@ include all previously set fields it intends to retain.
     }
     ```
 
-=== "Response"
+=== "응답"
 
     <!-- ucp:example schema=shopping/checkout op=read -->
     ```json
@@ -368,14 +365,13 @@ include all previously set fields it intends to retain.
     }
     ```
 
-#### Update Fulfillment { #update-fulfillment }
+#### 풀필먼트 갱신 { #update-fulfillment }
 
-Fulfillment is an extension to the checkout capability. The Platform submits
-Buyer inputs such as desired fulfillment method types, shipping addresses, and
-Business Location selections; the Business returns the resulting fulfillment
-state.
+풀필먼트는 체크아웃 기능의 확장이다. 플랫폼은 원하는 풀필먼트 방식 유형, 배송지 주소,
+비즈니스 매장 위치 선택 같은 구매자 입력을 제출하고, 비즈니스는 그 결과로 정해진 풀필먼트
+상태를 반환한다.
 
-=== "Request"
+=== "요청"
 
     <!-- ucp:example schema=shopping/checkout op=update direction=request -->
     ```json
@@ -418,7 +414,7 @@ state.
     }
     ```
 
-=== "Response"
+=== "응답"
 
     <!-- ucp:example schema=shopping/checkout op=read -->
     ```json
@@ -574,11 +570,11 @@ state.
     }
     ```
 
-#### Update Fulfillment Selection { #update-fulfillment-selection }
+#### 풀필먼트 선택 갱신 { #update-fulfillment-selection }
 
-Follow-up calls after initial `fulfillment` data to update selection.
+최초 `fulfillment` 데이터를 보낸 뒤 선택을 갱신하기 위한 후속 호출이다.
 
-=== "Request"
+=== "요청"
 
     <!-- ucp:example schema=shopping/checkout op=update direction=request -->
     ```json
@@ -630,7 +626,7 @@ Follow-up calls after initial `fulfillment` data to update selection.
     }
     ```
 
-=== "Response"
+=== "응답"
 
     <!-- ucp:example schema=shopping/checkout op=read -->
     ```json
@@ -771,17 +767,16 @@ Follow-up calls after initial `fulfillment` data to update selection.
     }
     ```
 
-### Complete Checkout { #complete-checkout }
+### 체크아웃 완료 { #complete-checkout }
 
-If businesses have specific logic to enforce field existence in `buyer` and
-addresses (i.e. `fulfillment_address`, `billing_address`), this is the right
-place to set these expectations via `messages`.
+비즈니스에 `buyer`와 주소(예: `fulfillment_address`, `billing_address`)의 필드 존재를
+강제하는 특정 로직이 있다면, 이 단계에서 `messages`를 통해 그 요구 사항을 알리는 것이
+적절하다.
 
-The response is the Checkout object; the example below shows the synchronous
-`completed` case. See core [Complete Checkout](index.md#complete-checkout)
-for status and `order` semantics.
+응답은 체크아웃 객체이며, 아래 예시는 동기식 `completed` 사례를 보여 준다. 상태와 `order`의
+의미는 핵심 명세의 [체크아웃 완료](index.md#complete-checkout)를 참고한다.
 
-=== "Request"
+=== "요청"
 
     <!-- ucp:example schema=shopping/checkout op=complete direction=request -->
     ```json
@@ -824,7 +819,7 @@ for status and `order` semantics.
     }
     ```
 
-=== "Response"
+=== "응답"
 
     <!-- ucp:example schema=shopping/checkout op=read -->
     ```json
@@ -975,9 +970,9 @@ for status and `order` semantics.
     }
     ```
 
-### Get Checkout { #get-checkout }
+### 체크아웃 조회 { #get-checkout }
 
-=== "Request"
+=== "요청"
 
     <!-- ucp:example schema=shopping/checkout op=read direction=request -->
     ```json
@@ -988,7 +983,7 @@ for status and `order` semantics.
     {}
     ```
 
-=== "Response"
+=== "응답"
 
     <!-- ucp:example schema=shopping/checkout op=read -->
     ```json
@@ -1133,9 +1128,9 @@ for status and `order` semantics.
     }
     ```
 
-### Cancel Checkout { #cancel-checkout }
+### 체크아웃 취소 { #cancel-checkout }
 
-=== "Request"
+=== "요청"
 
     <!-- ucp:example schema=shopping/checkout op=cancel direction=request -->
     ```json
@@ -1146,7 +1141,7 @@ for status and `order` semantics.
     {}
     ```
 
-=== "Response"
+=== "응답"
 
     <!-- ucp:example schema=shopping/checkout op=read -->
     ```json
@@ -1293,51 +1288,49 @@ for status and `order` semantics.
     }
     ```
 
-## HTTP Headers { #http-headers }
+## HTTP 헤더 { #http-headers }
 
-The following headers are defined for the HTTP binding and apply to all
-operations unless otherwise noted.
+다음 헤더는 HTTP 바인딩에 정의된 것으로, 별도로 명시하지 않는 한 모든 작업에 적용된다.
 
 {{ header_fields('create_checkout', 'shopping/rest.openapi.json') }}
 
-### Specific Header Requirements { #specific-header-requirements }
+### 헤더별 요구 사항 { #specific-header-requirements }
 
 {{ header_requirements('ucp_agent', 'idempotency_key') }}
 
-## Protocol Mechanics { #protocol-mechanics }
+## 프로토콜 동작 방식 { #protocol-mechanics }
 
-### Status Codes { #status-codes }
+### 상태 코드 { #status-codes }
 
-UCP uses standard HTTP status codes to indicate the success or failure of an API
-request.
+UCP는 API 요청의 성공 또는 실패를 나타내기 위해 표준 HTTP 상태 코드를 사용한다.
 
-| Status Code                 | Description                                                                        |
+| 상태 코드                 | 설명                                                                        |
 | :-------------------------- | :--------------------------------------------------------------------------------- |
-| `200 OK`                    | The request was successful.                                                        |
-| `201 Created`               | The resource was successfully created.                                             |
-| `400 Bad Request`           | The request was invalid or cannot be served.                                       |
-| `401 Unauthorized`          | Authentication is required and has failed or has not been provided.                |
-| `403 Forbidden`             | The request is authenticated but the user does not have the necessary permissions. |
-| `409 Conflict`              | The request could not be completed due to a conflict (e.g., idempotent key reuse). |
-| `422 Unprocessable Entity`  | The profile content is malformed (discovery failure).                              |
-| `424 Failed Dependency`     | The profile URL is valid but fetch failed (discovery failure).                     |
-| `429 Too Many Requests`     | Rate limit exceeded.                                                               |
-| `503 Service Unavailable`   | Temporary unavailability.                                                          |
-| `500 Internal Server Error` | An unexpected condition was encountered on the server.                             |
+| `200 OK`                    | 요청이 성공했다.                                                        |
+| `201 Created`               | 리소스가 성공적으로 생성되었다.                                             |
+| `400 Bad Request`           | 요청이 잘못되었거나 처리할 수 없다.                                       |
+| `401 Unauthorized`          | 인증이 필요하지만 실패했거나 제공되지 않았다.                |
+| `403 Forbidden`             | 요청은 인증되었지만 사용자에게 필요한 권한이 없다. |
+| `409 Conflict`              | 충돌(예: 멱등성 키 재사용)로 인해 요청을 완료할 수 없다. |
+| `422 Unprocessable Entity`  | 프로필 내용의 형식이 잘못되었다(디스커버리 실패).                              |
+| `424 Failed Dependency`     | 프로필 URL은 유효하지만 가져오기에 실패했다(디스커버리 실패).                     |
+| `429 Too Many Requests`     | 요청 한도를 초과했다.                                                               |
+| `503 Service Unavailable`   | 일시적으로 사용할 수 없다.                                                          |
+| `500 Internal Server Error` | 서버에서 예상치 못한 상황이 발생했다.                             |
 
-### Error Responses { #error-responses }
+### 에러 응답 { #error-responses }
 
-See the [Core Specification](../../overview/index.md#error-handling) for the complete error
-code registry and transport binding examples.
+전체 오류 코드 레지스트리와 전송 바인딩 예시는
+[핵심 명세](../../overview/index.md#error-handling)를 참고한다.
 
-* **Protocol errors**: Return appropriate HTTP status code (401, 403, 409, 429,
-    503) with JSON body containing `code` and `content`.
-* **Business outcomes**: Return HTTP 200 with UCP envelope and `messages` array.
+* **프로토콜 오류**: `code`와 `content`를 담은 JSON 본문과 함께 적절한 HTTP 상태 코드(401,
+    403, 409, 429, 503)를 반환한다.
+* **비즈니스 결과**: UCP 엔벨로프와 `messages` 배열과 함께 HTTP 200을 반환한다.
 
-#### Business Outcomes { #business-outcomes }
+#### 비즈니스 결과 { #business-outcomes }
 
-Business outcomes (including errors like unavailable merchandise) are returned
-with HTTP 200 and the UCP envelope containing `messages`:
+비즈니스 결과(구매할 수 없는 상품 같은 오류 포함)는 HTTP 200과 `messages`를 담은 UCP
+엔벨로프로 반환된다.
 
 <!-- ucp:example schema=shopping/checkout op=read -->
 ```json
@@ -1379,8 +1372,8 @@ with HTTP 200 and the UCP envelope containing `messages`:
 }
 ```
 
-For `create_checkout`, when all items unavailable and no checkout can be created, returns
-HTTP 200 and the UCP envelope containing `messages`
+`create_checkout`에서 모든 상품을 구매할 수 없어 체크아웃을 생성할 수 없는 경우, HTTP 200과
+`messages`를 담은 UCP 엔벨로프를 반환한다.
 
 <!-- ucp:example schema=common/types/error_response op=read -->
 ```json
@@ -1398,28 +1391,26 @@ HTTP 200 and the UCP envelope containing `messages`
 }
 ```
 
-## Message Signing { #message-signing }
+## 메시지 서명 { #message-signing }
 
-Platforms **MAY** choose among authentication mechanisms (API keys, OAuth,
-mTLS, HTTP Message Signatures). When using
-HTTP Message Signatures, checkout operations follow the
-[Message Signatures](../../signatures.md) specification.
+플랫폼은 인증 메커니즘(API 키, OAuth, mTLS, HTTP 메시지 서명) 중에서 선택할 수
+있다(**MAY**). HTTP 메시지 서명을 사용하는 경우 체크아웃 작업은
+[메시지 서명](../../signatures.md) 명세를 따른다.
 
-### Request Signing { #request-signing }
+### 요청 서명 { #request-signing }
 
-When HTTP Message Signatures are used, requests **MUST** include valid
-`Signature-Input` and `Signature` headers (and `Content-Digest` when a body
-is present) per RFC 9421:
+HTTP 메시지 서명을 사용하는 경우, 요청은 RFC 9421에 따라 유효한 `Signature-Input`과
+`Signature` 헤더(본문이 있으면 `Content-Digest`도)를 반드시 포함해야 한다(**MUST**).
 
-| Header                   | Required | Description                              |
+| 헤더                   | 필수 | 설명                              |
 | :----------------------- | :------- | :--------------------------------------- |
-| `Signature-Input`        | Yes      | Describes signed components              |
-| `Signature`              | Yes      | Contains the signature value             |
-| `Content-Digest`         | Cond.*   | SHA-256 hash of request body             |
+| `Signature-Input`        | 예      | 서명된 구성 요소를 기술한다              |
+| `Signature`              | 예      | 서명 값을 담는다             |
+| `Content-Digest`         | 조건부*   | 요청 본문의 SHA-256 해시             |
 
-\* Required for requests with a body (POST, PUT)
+\* 본문이 있는 요청(POST, PUT)에서 필수
 
-**Example Signed Request:**
+**서명된 요청 예시:**
 
 ```http
 POST /checkout-sessions HTTP/1.1
@@ -1434,20 +1425,20 @@ Signature: sig1=:6G4i8TS6oUkGrx8KnCFUpsSPwd74...:
 {"line_items":[{"item":{"id":"item_123"},"quantity":2}]}
 ```
 
-See [Message Signatures - REST Request Signing](../../signatures.md#rest-request-signing)
-for the complete signing algorithm.
+전체 서명 알고리즘은 [메시지 서명 - REST 요청 서명](../../signatures.md#rest-request-signing)을
+참고한다.
 
-### Response Signing { #response-signing }
+### 응답 서명 { #response-signing }
 
-Response signatures are **RECOMMENDED** for:
+다음 응답에는 응답 서명을 권장한다(**RECOMMENDED**).
 
-* `complete_checkout` responses (order confirmation)
+* `complete_checkout` 응답(주문 확인)
 
-Response signatures are **OPTIONAL** for:
+다음 응답에서 응답 서명은 선택 사항이다(**OPTIONAL**).
 
 * `create_checkout`, `get_checkout`, `update_checkout`, `cancel_checkout`
 
-**Example Signed Response:**
+**서명된 응답 예시:**
 
 ```http
 HTTP/1.1 200 OK
@@ -1459,24 +1450,24 @@ Signature: sig1=:6G4i8TS6oUkGrx8KnCFUpsSPwd74...:
 {"id":"chk_123","status":"completed","order":{"id":"ord_456"}}
 ```
 
-See [Message Signatures - REST Response Signing](../../signatures.md#rest-response-signing)
-for the complete signing algorithm.
+전체 서명 알고리즘은 [메시지 서명 - REST 응답 서명](../../signatures.md#rest-response-signing)을
+참고한다.
 
-## Security Considerations { #security-considerations }
+## 보안 고려 사항 { #security-considerations }
 
-### Authentication { #authentication }
+### 인증 { #authentication }
 
-Authentication is optional and depends on business requirements. When
-authentication is required, the REST transport **MAY** use:
+인증은 선택 사항이며 비즈니스 요구 사항에 따라 달라진다. 인증이 필요한 경우 REST 전송
+방식은 다음을 사용할 수 있다(**MAY**).
 
-1. **Open API**: No authentication required for public operations.
-2. **API Keys**: Via `X-API-Key` header.
-3. **OAuth 2.0**: Via `Authorization: Bearer {token}` header. Identifies the
-   platform for agent-authenticated access, or both platform and user for
-   user-authenticated access (see [Identity Linking](../../common/identity-linking/index.md)).
-4. **Mutual TLS**: For high-security environments.
-5. **HTTP Message Signatures**: Per [RFC 9421](https://www.rfc-editor.org/rfc/rfc9421)
-    (see [Message Signing](#message-signing) above).
+1. **공개 API**: 공개 작업에는 인증이 필요 없다.
+2. **API 키**: `X-API-Key` 헤더를 사용한다.
+3. **OAuth 2.0**: `Authorization: Bearer {token}` 헤더를 사용한다. 에이전트 인증 접근에서는
+   플랫폼을, 사용자 인증 접근에서는 플랫폼과 사용자를 모두 식별한다
+   ([신원 연결](../../common/identity-linking/index.md) 참고).
+4. **상호 TLS(Mutual TLS)**: 높은 보안이 필요한 환경용.
+5. **HTTP 메시지 서명**: [RFC 9421](https://www.rfc-editor.org/rfc/rfc9421)에 따른다
+    (위의 [메시지 서명](#message-signing) 참고).
 
-Businesses **MAY** require authentication for some operations while leaving
-others open (e.g., public checkout without authentication).
+비즈니스는 일부 작업에는 인증을 요구하고 나머지는 공개로 둘 수 있다(**MAY**)(예: 인증 없는
+공개 체크아웃).

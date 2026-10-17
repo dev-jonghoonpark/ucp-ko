@@ -14,98 +14,96 @@
    limitations under the License.
 -->
 
-# Split Payments Extension { #split-payments-extension }
+# 분할 결제 확장 { #split-payments-extension }
 
-* **Capability Name:** `dev.ucp.common.payment.split_payments`
+* **기능 이름:** `dev.ucp.common.payment.split_payments`
 
-> **Note on examples:** Instrument `type` strings used in this spec
-> (`card`, `gift_card`, `store_credit`, `loyalty`) are illustrative.
-> Only `card` has a normative instrument schema in the base spec
-> (`card_payment_instrument.json`); the others are handler-defined.
-> Credential shapes shown in examples are similarly illustrative —
-> real handlers MUST publish their credential schemas. Each usage
-> example below assumes a business `allowed_combinations` config that
-> admits the instrument set shown; the "Example Configuration" block
-> later in this doc is one such config, not the only one.
+> **예시에 관한 참고:** 이 명세에서 사용하는 결제 수단 `type` 문자열
+> (`card`, `gift_card`, `store_credit`, `loyalty`)은 예시용이다.
+> 기본 명세에서 규범적 결제 수단 스키마가 있는 것은 `card`
+> (`card_payment_instrument.json`)뿐이며, 나머지는 핸들러가 정의한다.
+> 예시에 나오는 자격 증명 형태도 마찬가지로 예시용이며,
+> 실제 핸들러는 반드시 자체 자격 증명 스키마를 공개해야 한다(MUST). 아래의
+> 각 사용 예시는 해당 결제 수단 조합을 허용하는 비즈니스의
+> `allowed_combinations` 구성을 전제로 한다. 이 문서 뒷부분의 "구성 예시"
+> 블록은 그러한 구성 중 하나일 뿐, 유일한 구성은 아니다.
 
-## Overview { #overview }
+## 개요 { #overview }
 
-The Split Payments extension lets buyers pay with more than one payment
-instrument in a single checkout. Businesses declare the instrument
-combinations they support in `allowed_combinations`.
+분할 결제 확장을 사용하면 구매자가 한 번의 체크아웃에서 둘 이상의 결제
+수단으로 결제할 수 있다. 비즈니스는 지원하는 결제 수단 조합을
+`allowed_combinations`에 선언한다.
 
-Each instrument is submitted in one of two modes:
+각 결제 수단은 다음 두 모드 중 하나로 제출된다.
 
-* **Specified-amount** (`amount` present): the platform requests a
-  specific contribution.
-* **Open-amount** (`amount` omitted): the business determines the
-  instrument's contribution at processing time (e.g., by querying a
-  gift card's available balance).
+* **금액 지정**(`amount` 있음): 플랫폼이 특정 분담액을
+  요청한다.
+* **금액 미지정**(`amount` 생략): 비즈니스가 처리 시점에 해당 결제 수단의
+  분담액을 결정한다(예: 기프트 카드의 사용 가능 잔액을
+  조회).
 
-On the response, the business reports the actual amount authorized or
-charged for each successfully-processed instrument in the same `amount`
-field. Response `amount` is informational only; see "Response: Actual
-Charges" below.
+응답에서 비즈니스는 성공적으로 처리된 각 결제 수단에 대해 실제로 승인 또는
+청구된 금액을 같은 `amount` 필드로 보고한다. 응답의 `amount`는 정보 제공용일
+뿐이다. 아래 "응답: 실제 청구액"을
+참고한다.
 
-All `amount` values are expressed in `checkout.currency` minor units
-(ISO 4217). Handlers using foreign-currency-denominated instruments
-(e.g., a CAD gift card in a USD checkout) or non-currency instruments
-like loyalty points MUST convert each instrument's contribution to the
-checkout currency.
+모든 `amount` 값은 `checkout.currency`의 최소 화폐 단위(ISO 4217)로
+표현한다. 외화 표시 결제 수단(예: USD 체크아웃에서 CAD 기프트 카드)이나
+로열티 포인트 같은 비화폐 결제 수단을 사용하는 핸들러는 반드시 각 결제 수단의
+분담액을 체크아웃 통화로 환산해야 한다(MUST).
 
-Instruments are submitted in **allocation priority order** — the first
-instrument gets first claim on the checkout total, the second gets next
-claim, and so on. The business MAY process payment authorizations in
-any order for operational reasons (e.g., gift cards before open-loop
-cards to minimize reversal costs); array order governs amount
-allocation, not processing sequence.
+결제 수단은 **배분 우선순위 순서**로 제출한다. 즉, 첫 번째 결제 수단이
+체크아웃 총액을 가장 먼저 차지하고, 두 번째가 그다음을 차지하는 식이다.
+비즈니스는 운영상의 이유로 결제 승인을 임의의 순서로 처리할 수 있다(MAY)(예:
+취소 비용을 최소화하기 위해 오픈 루프 카드보다 기프트 카드를 먼저 처리). 배열
+순서는 처리 순서가 아니라 금액 배분을 결정한다.
 
-## Schema { #schema }
+## 스키마 { #schema }
 
-### Payment Instrument (Split Payments) { #payment-instrument-split-payments }
+### 결제 수단(분할 결제) { #payment-instrument-split-payments }
 
-When this capability is active, each payment instrument in
-`checkout.payment.instruments` gains an optional `amount` field.
+이 기능이 활성화되면 `checkout.payment.instruments`의 각 결제 수단에
+선택적 `amount` 필드가 추가된다.
 
 {{ extension_schema_fields('payment_split_payments.json#/$defs/payment_instrument', 'payment/extensions/split-payments') }}
 
-## Configuration { #configuration }
+## 구성 { #configuration }
 
-Businesses declare split payments configuration in their profile.
+비즈니스는 프로필에 분할 결제 구성을 선언한다.
 
-### Business Profile { #business-profile }
+### 비즈니스 프로필 { #business-profile }
 
 {{ schema_fields('types/business_split_payments_config', 'payment/extensions/split-payments') }}
 
 #### `allowed_combinations` { #allowed_combinations }
 
-An array of valid instrument combinations. Each combination is an array of
-**instrument groups** -- constraints that together define one valid way to
-split a payment.
+유효한 결제 수단 조합의 배열이다. 각 조합은 **결제 수단 그룹**의 배열이며,
+이 그룹들은 결제를 분할하는 유효한 방식 하나를 함께 정의하는 제약
+조건이다.
 
-A set of instruments is valid if it matches **any** combination in the array.
+결제 수단 집합이 배열의 조합 중 **하나라도** 일치하면 유효하다.
 
-#### Instrument Group { #instrument-group }
+#### 결제 수단 그룹 { #instrument-group }
 
-Each group within a combination defines a "slot" that accepts certain
-instrument types:
+조합 내의 각 그룹은 특정 결제 수단 유형을 받아들이는 "슬롯"을
+정의한다.
 
 {{ schema_fields('types/instrument_group', 'payment/extensions/split-payments') }}
 
-**Matching algorithm:** a submission matches a combination if there exists
-an assignment of each submitted instrument to exactly one group such that
+**일치 알고리즘:** 제출된 각 결제 수단을 정확히 하나의 그룹에 할당하되 다음
+조건을 만족하는 할당이 존재하면, 해당 제출은 그 조합과 일치한다.
 
-* the instrument's `type` is in the assigned group's `types`, and
-* every group's instrument count falls within its `min` and `max`
-  (inclusive).
+* 결제 수단의 `type`이 할당된 그룹의 `types`에 포함되고,
+* 모든 그룹의 결제 수단 개수가 해당 그룹의 `min`과 `max` 범위(경계값 포함)
+  안에 있다.
 
-The business MAY use any algorithm to find such an assignment;
-if any valid assignment exists, the combination matches.
+비즈니스는 이러한 할당을 찾기 위해 어떤 알고리즘이든 사용할 수 있다(MAY).
+유효한 할당이 하나라도 존재하면 그 조합은 일치한다.
 
-#### Example Configuration { #example-configuration }
+#### 구성 예시 { #example-configuration }
 
-A business that supports (a) a card with up to 2 redeemables, (b) up to 5
-gift cards alone, and (c) two credit cards:
+(a) 카드 1장과 최대 2개의 교환형 결제 수단, (b) 최대 5장의 기프트 카드 단독,
+(c) 신용카드 2장을 지원하는 비즈니스의 예는 다음과 같다.
 
 <!-- ucp:example skip reason="illustrative business profile fragment showing allowed_combinations shape" -->
 ```json
@@ -134,58 +132,55 @@ gift cards alone, and (c) two credit cards:
 }
 ```
 
-Reading each combination:
+각 조합의 의미는 다음과 같다.
 
-1. **Card + redeemables**: Exactly 1 card (required), plus up to 2 instruments
-   that are either gift cards or store credit (optional). Valid payments: card
-   alone, card + gift card, card + store credit, card + 2 gift cards, etc.
-2. **Gift cards only**: 1 to 5 gift cards with no other instrument types.
-3. **Two cards**: Exactly 2 credit/debit cards.
+1. **카드 + 교환형 결제 수단**: 정확히 1장의 카드(필수)와, 기프트 카드 또는
+   스토어 크레딧 중 최대 2개(선택). 유효한 결제: 카드 단독, 카드 + 기프트
+   카드, 카드 + 스토어 크레딧, 카드 + 기프트 카드 2장 등.
+2. **기프트 카드만**: 다른 결제 수단 유형 없이 기프트 카드 1~5장.
+3. **카드 2장**: 정확히 2장의 신용/체크 카드.
 
-## Using Split Payments { #using-split-payments }
+## 분할 결제 사용하기 { #using-split-payments }
 
-### Instrument Processing Model { #instrument-processing-model }
+### 결제 수단 처리 모델 { #instrument-processing-model }
 
-1. The platform submits instruments in the `payment.instruments` array
-   in allocation priority order.
-2. The business MUST derive a contribution for each instrument, in
-   array order:
-   * **Specified-amount**: the business MUST authorize for the stated
-     `amount`.
-   * **Open-amount**: the business determines the
-     contribution — typically the instrument's full available balance,
-     up to the remaining checkout total after all prior contributions.
-     A zero available balance is a valid $0 contribution, not a failure.
+1. 플랫폼은 `payment.instruments` 배열에 배분 우선순위 순서로 결제 수단을
+   제출한다.
+2. 비즈니스는 반드시 배열 순서에 따라 각 결제 수단의 분담액을 산출해야
+   한다(MUST).
+   * **금액 지정**: 비즈니스는 반드시 명시된 `amount`만큼 승인해야
+     한다(MUST).
+   * **금액 미지정**: 비즈니스가 분담액을 결정한다. 일반적으로 앞선 모든
+     분담액을 뺀 남은 체크아웃 총액을 한도로, 해당 결제 수단의 사용 가능 잔액
+     전부를 사용한다. 사용 가능 잔액이 0이면 실패가 아니라 유효한 $0 분담이다.
 
-### Error Handling { #error-handling }
+### 오류 처리 { #error-handling }
 
-A split payment either completes fully or has no financial effect. If
-the business cannot process an instrument with a specified amount, or
-cannot achieve the final total, the business MUST return
-`payment_failed` in `messages[]` and MUST void or reverse any
-authorizations it made. Reversal MAY retry transiently (e.g., to work
-around acquirer rate limits or a failing void call), but the buyer
-MUST NOT remain charged for an incomplete split.
+분할 결제는 완전히 완료되거나, 아니면 아무런 금전적 효과도 남기지 않는다.
+비즈니스가 금액이 지정된 결제 수단을 처리할 수 없거나 최종 총액을 채울 수
+없으면, 반드시 `messages[]`에 `payment_failed`를 반환하고(MUST) 자신이 수행한
+모든 승인을 반드시 무효화하거나 취소해야 한다(MUST). 취소는 일시적으로 재시도할
+수 있지만(MAY)(예: 매입사의 요청 한도 제한이나 실패하는 무효화 호출을 우회하기
+위해), 미완료된 분할 결제에 대해 구매자에게 청구된 상태가 남아서는 안
+된다(MUST NOT).
 
-At the protocol layer, each request is processed independently —
-split-payments state does not persist between requests. The business
-MUST process each request as a fresh, full submission, without
-reference to prior requests or responses.
+프로토콜 계층에서 각 요청은 독립적으로 처리되며, 분할 결제 상태는 요청 간에
+유지되지 않는다. 비즈니스는 반드시 이전 요청이나 응답을 참조하지 않고 각
+요청을 새로운 전체 제출로 처리해야 한다(MUST).
 
 > [!NOTE]
-> Each split payments submission is processed as a complete,
-> self-contained request: a modified instrument set is a new submission,
-> requiring a fresh [idempotency key](../../signatures.md#replay-protection).
-> Split-payments state — including authorizations — does not persist
-> between submissions; the unwind-on-failure requirement above
-> enforces this.
+> 각 분할 결제 제출은 완결된 자기 완결적 요청으로 처리된다. 결제 수단 집합을
+> 변경하면 새 제출이 되며, 새로운 [멱등성 키](../../signatures.md#replay-protection)가
+> 필요하다. 승인을 포함한 분할 결제 상태는 제출 간에 유지되지 않으며,
+> 앞에서 설명한 실패 시 원상 복구 요구 사항이 이를
+> 보장한다.
 
-**Per-instrument reporting:** when a split is incomplete or has failed,
-the business MUST emit a `payment_failed` error for each failed
-instrument, with `path` pointing at the instrument. Businesses MAY also
-emit `info` messages for succeeded instruments to convey positive
-context (e.g., "Gift card authorized for $10.00") that the platform can
-surface to the buyer:
+**결제 수단별 보고:** 분할 결제가 미완료이거나 실패하면, 비즈니스는 반드시
+실패한 각 결제 수단마다 해당 결제 수단을 가리키는 `path`와 함께
+`payment_failed` 오류를 내보내야 한다(MUST). 또한 비즈니스는 성공한 결제
+수단에 대해 `info` 메시지를 내보내, 플랫폼이 구매자에게 보여 줄 수 있는
+긍정적인 맥락(예: "Gift card authorized for $10.00")을 전달할 수
+있다(MAY).
 
 <!-- ucp:example schema=shopping/checkout extract=$.messages target=$.messages -->
 ```json
@@ -207,47 +202,45 @@ surface to the buyer:
 }
 ```
 
-Severity is `recoverable` because the platform's API supports collecting
-a replacement instrument and re-submitting. This contrasts with
-`requires_buyer_input`, which is reserved for cases where the API cannot
-programmatically collect what the merchant needs.
+플랫폼의 API가 대체 결제 수단을 수집해 다시 제출하는 것을 지원하므로
+심각도는 `recoverable`이다. 이는 판매자가 필요로 하는 것을 API가
+프로그래밍 방식으로 수집할 수 없는 경우를 위해 예약된 `requires_buyer_input`과
+대비된다.
 
-Error conditions:
+오류 조건:
 
-* If any instrument cannot be processed (invalid credentials, fraud flag,
-  hard decline, expired, insufficient funds), the business MUST return an error. For
-  open-amount instruments, a zero available balance is not a failure.
-* If the checkout total cannot be reached after applying all submitted
-  instruments, the business MUST return an error.
-* If the sum of all specified `amount` values exceeds the
-  checkout total, the business MUST return an error.
-* If the submitted instruments did not match any valid `allowed_combinations`, the business MUST return an error.
+* 처리할 수 없는 결제 수단이 하나라도 있으면(잘못된 자격 증명, 사기 의심 플래그,
+  하드 거절, 만료, 잔액 부족) 비즈니스는 반드시 오류를 반환해야 한다(MUST).
+  금액 미지정 결제 수단의 경우 사용 가능 잔액이 0인 것은 실패가 아니다.
+* 제출된 모든 결제 수단을 적용한 뒤에도 체크아웃 총액에 도달하지 못하면
+  비즈니스는 반드시 오류를 반환해야 한다(MUST).
+* 지정된 모든 `amount` 값의 합이 체크아웃 총액을 초과하면
+  비즈니스는 반드시 오류를 반환해야 한다(MUST).
+* 제출된 결제 수단이 유효한 `allowed_combinations` 중 어느 것과도 일치하지 않으면 비즈니스는 반드시 오류를 반환해야 한다(MUST).
 
-### Response: Actual Charges { #response-actual-charges }
+### 응답: 실제 청구액 { #response-actual-charges }
 
-On the checkout response, the business MUST set `amount` on every
-instrument that was authorized or charged, reflecting the actual
-contribution. For open-amount instruments (submitted without `amount`),
-the business MUST derive and report the actual contribution. The
-business MUST omit `amount` on all other instruments (e.g., a
-provisional authorization that was voided when a later instrument
-failed, or an instrument the business never attempted).
+체크아웃 응답에서 비즈니스는 반드시 승인 또는 청구된 모든 결제 수단에 실제
+분담액을 반영한 `amount`를 설정해야 한다(MUST). 금액 미지정 결제
+수단(`amount` 없이 제출된 결제 수단)의 경우 비즈니스는 반드시 실제 분담액을
+산출해 보고해야 한다(MUST). 그 밖의 모든 결제 수단(예: 이후 결제 수단이
+실패해 무효화된 임시 승인, 또는 비즈니스가 시도조차 하지 않은 결제 수단)에서는
+반드시 `amount`를 생략해야 한다(MUST).
 
-Response `amount` is informational. It conveys what the business
-processed for buyer-facing UX and audit (e.g., "$10.00 charged to your
-gift card"). The platform MUST NOT treat prior response `amount` values
-as preserved state on subsequent requests, and the business MUST NOT
-rely on the platform echoing them. Each request is fresh intent — the
-platform sets `amount` to specify a contribution or omits it for
-open-amount, independent of any prior response.
+응답의 `amount`는 정보 제공용이다. 구매자 대상 UX와 감사를 위해 비즈니스가
+처리한 내용을 전달한다(예: "기프트 카드로 $10.00 청구됨"). 플랫폼은 이전 응답의
+`amount` 값을 이후 요청에서 유지되는 상태로 취급해서는 안 되며(MUST NOT),
+비즈니스는 플랫폼이 이를 그대로 되돌려 보내는 것에 의존해서는 안
+된다(MUST NOT). 각 요청은 새로운 의도다. 플랫폼은 이전 응답과 무관하게, 분담액을
+지정하려면 `amount`를 설정하고 금액 미지정이면 이를 생략한다.
 
-## Examples { #examples }
+## 예시 { #examples }
 
-### Gift Card + Credit Card { #gift-card-credit-card }
+### 기프트 카드 + 신용카드 { #gift-card-credit-card }
 
-> "Pay with my gift card first, credit card for the rest."
+> "기프트 카드로 먼저 결제하고, 나머지는 신용카드로 해 줘."
 
-**Inbound (buyer's selection):**
+**인바운드(구매자의 선택):**
 
 <!-- ucp:example schema=shopping/checkout op=complete direction=request extract=$.payment target=$.payment -->
 ```json
@@ -271,9 +264,9 @@ open-amount, independent of any prior response.
 }
 ```
 
-Neither instrument includes `amount` — the business determines both.
+두 결제 수단 모두 `amount`를 포함하지 않으므로 비즈니스가 두 금액을 모두 결정한다.
 
-**Outbound (completed checkout, $50 order):**
+**아웃바운드(완료된 체크아웃, $50 주문):**
 
 <!-- ucp:example schema=shopping/checkout extract=$.payment target=$.payment -->
 ```json
@@ -299,14 +292,14 @@ Neither instrument includes `amount` — the business determines both.
 }
 ```
 
-The business queried the gift card's balance ($10), charged it in full,
-and charged the credit card for the remaining $40.
+비즈니스는 기프트 카드 잔액($10)을 조회해 전액을 청구하고, 남은 $40을
+신용카드로 청구했다.
 
-### Loyalty Points + Credit Card { #loyalty-points-credit-card }
+### 로열티 포인트 + 신용카드 { #loyalty-points-credit-card }
 
-> "Use 500 of my 2000 loyalty points ($5 equivalent), credit card for the rest."
+> "로열티 포인트 2000점 중 500점($5 상당)을 쓰고, 나머지는 신용카드로 해 줘."
 
-**Inbound (buyer's selection):**
+**인바운드(구매자의 선택):**
 
 <!-- ucp:example schema=shopping/checkout op=complete direction=request extract=$.payment target=$.payment -->
 ```json
@@ -331,11 +324,11 @@ and charged the credit card for the remaining $40.
 }
 ```
 
-The platform specifies `amount: 500` on the loyalty instrument (the
-customer chose to redeem exactly 500 points). The credit card covers
-the rest.
+플랫폼은 로열티 결제 수단에 `amount: 500`을 지정한다(고객이 정확히 500점을
+사용하기로 선택했다). 나머지는 신용카드가
+부담한다.
 
-**Outbound (completed checkout, $50 order):**
+**아웃바운드(완료된 체크아웃, $50 주문):**
 
 <!-- ucp:example schema=shopping/checkout extract=$.payment target=$.payment -->
 ```json
@@ -361,14 +354,14 @@ the rest.
 }
 ```
 
-The business charged the loyalty points for $5 as requested, and the
-credit card covers the remaining $45.
+비즈니스는 요청대로 로열티 포인트로 $5를 청구했고, 남은 $45는 신용카드가
+부담한다.
 
-### Gift Card + Gift Card + Credit Card (mixed amounts) { #gift-card-gift-card-credit-card-mixed-amounts }
+### 기프트 카드 + 기프트 카드 + 신용카드(혼합 금액) { #gift-card-gift-card-credit-card-mixed-amounts }
 
-> "Use both gift cards, credit card for the rest."
+> "기프트 카드 두 장을 모두 쓰고, 나머지는 신용카드로 해 줘."
 
-**Inbound:**
+**인바운드:**
 
 <!-- ucp:example schema=shopping/checkout op=complete direction=request extract=$.payment target=$.payment -->
 ```json
@@ -398,7 +391,7 @@ credit card covers the remaining $45.
 }
 ```
 
-**Outbound (completed checkout, $100 order):**
+**아웃바운드(완료된 체크아웃, $100 주문):**
 
 <!-- ucp:example schema=shopping/checkout extract=$.payment target=$.payment -->
 ```json
@@ -431,19 +424,19 @@ credit card covers the remaining $45.
 }
 ```
 
-The first gift card had a $25 balance (charged in full). The second gift
-card had a $0 balance — this is not an error, it simply contributes
-nothing. The credit card covers the remaining $75.
+첫 번째 기프트 카드는 잔액이 $25였다(전액 청구). 두 번째 기프트 카드는
+잔액이 $0이었는데, 이는 오류가 아니며 단지 아무것도 분담하지 않을 뿐이다.
+남은 $75는 신용카드가 부담한다.
 
-### Partial Failure with Recovery { #partial-failure-with-recovery }
+### 부분 실패와 복구 { #partial-failure-with-recovery }
 
-> "Pay with my gift card first, credit card for the rest." — but the
-> credit card declines. The business voids the gift card authorization
-> and signals the platform that the checkout can be retried with a
-> replacement card.
+> "기프트 카드로 먼저 결제하고, 나머지는 신용카드로 해 줘." 그런데
+> 신용카드가 거절된다. 비즈니스는 기프트 카드 승인을 무효화하고,
+> 대체 카드로 체크아웃을 재시도할 수 있음을 플랫폼에
+> 알린다.
 
-**Outbound (incomplete checkout, $50 order — gift card auth was voided
-per the atomic invariant):**
+**아웃바운드(미완료 체크아웃, $50 주문. 원자성 불변 조건에 따라 기프트 카드
+승인은 무효화됨):**
 
 <!-- ucp:example skip reason="illustrative full response combining status, payment, and messages; per-subtree validation shown elsewhere" -->
 ```json
@@ -482,14 +475,13 @@ per the atomic invariant):**
 }
 ```
 
-Both instruments omit `amount` because neither contributed funds —
-the gift card was provisionally authorized and then voided when the
-card declined, and the card declined outright. The `info` message
-conveys the discovered gift card balance so the platform can render
-accurate buyer UX; the `payment_failed` error identifies the failing
-instrument with `severity: recoverable`.
+두 결제 수단 모두 자금을 분담하지 않았으므로 `amount`를 생략한다. 기프트
+카드는 임시 승인되었다가 카드가 거절되면서 무효화되었고, 카드는 처음부터
+거절되었다. `info` 메시지는 확인된 기프트 카드 잔액을 전달해 플랫폼이 정확한
+구매자 UX를 보여 줄 수 있게 하며, `payment_failed` 오류는
+`severity: recoverable`과 함께 실패한 결제 수단을 식별한다.
 
-**Inbound (platform re-submits with a replacement card, $50 order):**
+**인바운드(플랫폼이 대체 카드로 다시 제출, $50 주문):**
 
 <!-- ucp:example schema=shopping/checkout op=complete direction=request extract=$.payment target=$.payment -->
 ```json
@@ -513,6 +505,6 @@ instrument with `severity: recoverable`.
 }
 ```
 
-The platform submits a new request — the gift card is re-submitted
-as open-amount and the failing card is replaced. The business processes
-this as new intent.
+플랫폼이 새 요청을 제출한다. 기프트 카드는 금액 미지정으로 다시 제출되고,
+실패한 카드는 교체된다. 비즈니스는 이를 새로운 의도로
+처리한다.

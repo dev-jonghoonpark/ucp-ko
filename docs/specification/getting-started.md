@@ -1,35 +1,35 @@
 ---
-description: Getting started guide for building UCP servers in Python and Node.js.
+description: Python과 Node.js로 UCP 서버를 구축하는 시작 가이드.
 ---
 
 <!-- cspell:ignore uuidv4 uuidv autonumber -->
 
-# Getting Started with UCP { #getting-started-with-ucp }
+# UCP 시작하기 { #getting-started-with-ucp }
 
-This guide will walk you through building a basic Universal Commerce Protocol (UCP) server. We provide examples for both **Python (FastAPI)** and **Node.js (Express)** using the official [Python SDK](https://github.com/Universal-Commerce-Protocol/python-sdk) and [TypeScript SDK](https://github.com/Universal-Commerce-Protocol/js-sdk).
+이 가이드에서는 기본적인 Universal Commerce Protocol(UCP) 서버를 만드는 과정을 단계별로 안내한다. 공식 [Python SDK](https://github.com/Universal-Commerce-Protocol/python-sdk)와 [TypeScript SDK](https://github.com/Universal-Commerce-Protocol/js-sdk)를 사용해 **Python(FastAPI)** 및 **Node.js(Express)** 예시를 모두 제공한다.
 
-We will implement a simple checkout server that allows a platform to initiate a checkout session and retrieve it.
+플랫폼이 체크아웃 세션을 시작하고 조회할 수 있는 간단한 체크아웃 서버를 구현한다.
 
-## Prerequisites { #prerequisites }
+## 사전 요구 사항 { #prerequisites }
 
 === "Python"
 
-    * Python 3.10 or higher installed.
-    * Basic familiarity with FastAPI and Pydantic.
-    * We recommend using [`uv`](https://docs.astral.sh/uv/) for package management.
+    * Python 3.10 이상이 설치되어 있어야 한다.
+    * FastAPI와 Pydantic에 대한 기본 지식이 필요하다.
+    * 패키지 관리에는 [`uv`](https://docs.astral.sh/uv/) 사용을 권장한다.
 
 === "Node.js"
 
-    * Node.js 18 or higher installed.
-    * Basic familiarity with Express and Zod.
+    * Node.js 18 이상이 설치되어 있어야 한다.
+    * Express와 Zod에 대한 기본 지식이 필요하다.
 
 ---
 
-## Project Setup { #project-setup }
+## 프로젝트 설정 { #project-setup }
 
 === "Python"
 
-    Create a new directory and initialize the project:
+    새 디렉터리를 만들고 프로젝트를 초기화한다.
 
     ```bash
     mkdir ucp-quickstart-python
@@ -37,10 +37,10 @@ We will implement a simple checkout server that allows a platform to initiate a 
     uv init
     ```
 
-    Add the required dependencies. [`ucp-sdk`](https://github.com/Universal-Commerce-Protocol/python-sdk) contains the Pydantic models generated from UCP schemas:
+    필요한 의존성을 추가한다. [`ucp-sdk`](https://github.com/Universal-Commerce-Protocol/python-sdk)에는 UCP 스키마로부터 생성된 Pydantic 모델이 들어 있다.
 
     !!! note
-        The Python SDK package is registered as `ucp-sdk` on PyPI, but is imported as `ucp_sdk` (with an underscore) in your Python code.
+        Python SDK 패키지는 PyPI에 `ucp-sdk`로 등록되어 있지만, Python 코드에서는 `ucp_sdk`(밑줄 사용)로 임포트한다.
 
     ```bash
     uv add fastapi uvicorn ucp-sdk
@@ -48,7 +48,7 @@ We will implement a simple checkout server that allows a platform to initiate a 
 
 === "Node.js"
 
-    Create a new directory and initialize the project:
+    새 디렉터리를 만들고 프로젝트를 초기화한다.
 
     ```bash
     mkdir ucp-quickstart-nodejs
@@ -56,16 +56,16 @@ We will implement a simple checkout server that allows a platform to initiate a 
     npm init -y
     ```
 
-    Configure your `package.json` to use ES Modules by adding `"type": "module"`.
+    `package.json`에 `"type": "module"`을 추가해 ES 모듈을 사용하도록 설정한다.
 
-    Add the required dependencies. [`@ucp-js/sdk`](https://github.com/Universal-Commerce-Protocol/js-sdk) contains the TypeScript types and Zod schemas:
+    필요한 의존성을 추가한다. [`@ucp-js/sdk`](https://github.com/Universal-Commerce-Protocol/js-sdk)에는 TypeScript 타입과 Zod 스키마가 들어 있다.
 
     ```bash
     npm install express uuid @ucp-js/sdk
     npm install --save-dev typescript @types/express @types/node tsx
     ```
 
-    Initialize TypeScript configuration:
+    TypeScript 설정을 초기화한다.
 
     ```bash
     npx tsc --init
@@ -73,16 +73,16 @@ We will implement a simple checkout server that allows a platform to initiate a 
 
 ---
 
-## Implementing the Server { #implementing-the-server }
+## 서버 구현 { #implementing-the-server }
 
-We will implement the server step-by-step. The server needs to handle:
+서버를 단계별로 구현한다. 서버는 다음을 처리해야 한다.
 
-1. **Create Checkout (`POST /checkout-sessions`)**: Receives desired items and returns a checkout session with totals and available payment handlers.
-2. **Get Checkout (`GET /checkout-sessions/{id}`)**: Allows the platform to poll the session status.
+1. **체크아웃 생성(`POST /checkout-sessions`)**: 원하는 상품을 받아 합계와 사용 가능한 결제 핸들러가 담긴 체크아웃 세션을 반환한다.
+2. **체크아웃 조회(`GET /checkout-sessions/{id}`)**: 플랫폼이 세션 상태를 폴링할 수 있게 한다.
 
-### High-Level Flow { #high-level-flow }
+### 전체 흐름 { #high-level-flow }
 
-Here is how the components interact during the checkout process:
+체크아웃 과정에서 각 구성 요소는 다음과 같이 상호작용한다.
 
 ```mermaid
 %%{init: {'sequence': {'actorMargin': 90, 'messageMargin': 45}}}%%
@@ -104,20 +104,20 @@ sequenceDiagram
     Server-->>-Platform: 200 OK (Checkout Response)
 ```
 
-### How it fits into the E2E Flow { #how-it-fits-into-the-e2e-flow }
+### 엔드투엔드 흐름에서의 위치 { #how-it-fits-into-the-e2e-flow }
 
-In a complete UCP integration, the flow follows these phases:
+완전한 UCP 통합에서 흐름은 다음 단계를 따른다.
 
-1. **Discovery:** The Platform discovers your UCP endpoints (like `/checkout-sessions`) by fetching your UCP Discovery Profile at `/.well-known/ucp`.
-2. **Create Checkout (Implemented in this guide):** The Platform initiates the checkout session with the items the user wants to buy.
-3. **Update Checkout:** The Platform updates the checkout session with buyer details (e.g., shipping address, email) to calculate final taxes and shipping options.
-4. **Complete Checkout:** The Platform submits the payment credentials to finalize the order.
+1. **디스커버리:** 플랫폼은 `/.well-known/ucp`에 있는 UCP 디스커버리 프로필을 가져와 `/checkout-sessions` 같은 UCP 엔드포인트를 찾는다.
+2. **체크아웃 생성(이 가이드에서 구현):** 플랫폼은 사용자가 구매하려는 상품으로 체크아웃 세션을 시작한다.
+3. **체크아웃 갱신:** 플랫폼은 최종 세금과 배송 옵션을 계산하기 위해 구매자 정보(예: 배송지 주소, 이메일)로 체크아웃 세션을 갱신한다.
+4. **체크아웃 완료:** 플랫폼은 결제 자격 증명을 제출해 주문을 확정한다.
 
-This guide focuses on step 2 (Create Checkout) and the subsequent retrieval of the checkout session state.
+이 가이드는 2단계(체크아웃 생성)와 그 이후의 체크아웃 세션 상태 조회에 초점을 맞춘다.
 
-### 1. Imports and Setup { #1-imports-and-setup }
+### 1. 임포트와 설정 { #1-imports-and-setup }
 
-Initialize the application and define an in-memory database to store sessions.
+애플리케이션을 초기화하고 세션을 저장할 인메모리 데이터베이스를 정의한다.
 
 === "Python"
 
@@ -167,9 +167,9 @@ Initialize the application and define an in-memory database to store sessions.
     const checkoutSessions: Record<string, CheckoutResponse> = {};
     ```
 
-### 2. Create Checkout Endpoint (Route & Header Validation) { #2-create-checkout-endpoint-route-header-validation }
+### 2. 체크아웃 생성 엔드포인트(라우트와 헤더 검증) { #2-create-checkout-endpoint-route-header-validation }
 
-Define the endpoint to create a checkout session. UCP requires `Idempotency-Key` and `UCP-Agent` headers.
+체크아웃 세션을 생성하는 엔드포인트를 정의한다. UCP에서는 `Idempotency-Key`와 `UCP-Agent` 헤더가 필수다.
 
 === "Python"
 
@@ -222,11 +222,11 @@ Define the endpoint to create a checkout session. UCP requires `Idempotency-Key`
     ```
 
 !!! note
-    If the required UCP headers are missing, FastAPI (Python) will automatically return an **HTTP 422 Unprocessable Entity** error due to its built-in validation. In our Express (Node.js) implementation, we manually return an **HTTP 400 Bad Request** error. For simplicity, this quickstart returns plain JSON errors (such as `{"error": "..."}` or FastAPI's `{"detail": "..."}`) for missing headers, validation failures, and `404` responses; production servers must return the specification's standard error format (see [Error Responses](shopping/checkout/rest.md#error-responses) and [Core Specification — Error Handling](overview/index.md#error-handling)).
+    필수 UCP 헤더가 없으면 FastAPI(Python)는 내장 검증 기능에 따라 자동으로 **HTTP 422 Unprocessable Entity** 오류를 반환한다. Express(Node.js) 구현에서는 **HTTP 400 Bad Request** 오류를 직접 반환한다. 이 퀵스타트는 단순화를 위해 헤더 누락, 검증 실패, `404` 응답에 일반 JSON 오류(`{"error": "..."}` 또는 FastAPI의 `{"detail": "..."}` 등)를 반환한다. 프로덕션 서버는 반드시 명세의 표준 오류 형식을 반환해야 한다([오류 응답](shopping/checkout/rest.md#error-responses)과 [핵심 명세 — 오류 처리](overview/index.md#error-handling) 참고).
 
-### 3. Business Logic (Process Items & Calculate Totals) { #3-business-logic-process-items-calculate-totals }
+### 3. 비즈니스 로직(상품 처리와 합계 계산) { #3-business-logic-process-items-calculate-totals }
 
-Process the incoming line items, resolve their prices, and calculate the subtotal, tax, and total. Prices are always in **minor units** (e.g., cents for USD).
+들어온 라인 아이템을 처리하고 가격을 확정한 뒤 소계, 세금, 합계를 계산한다. 가격은 항상 **최소 화폐 단위**(예: USD는 센트)로 표기한다.
 
 === "Python"
 
@@ -305,12 +305,12 @@ Process the incoming line items, resolve their prices, and calculate the subtota
       const total = subtotal + tax;
     ```
 
-### 4. UCP Response Construction { #4-ucp-response-construction }
+### 4. UCP 응답 구성 { #4-ucp-response-construction }
 
-Construct the UCP metadata block, advertising supported payment handlers, and assemble the final checkout response.
+지원하는 결제 핸들러를 광고하는 UCP 메타데이터 블록을 구성하고, 최종 체크아웃 응답을 조립한다.
 
-!!! note "Capability Negotiation"
-    In production, a business uses the `UCP-Agent` header to resolve the platform's profile, calculates the intersection of supported capabilities, and returns the active negotiated set in `capabilities`. For simplicity in this quickstart, full capability negotiation is omitted. See [Discovery & Capability Negotiation](/documentation/core-concepts/#discovery-capability-negotiation) for details.
+!!! note "기능 협상"
+    프로덕션에서 비즈니스는 `UCP-Agent` 헤더로 플랫폼의 프로필을 확인하고, 양쪽이 지원하는 기능의 교집합을 계산해 협상된 활성 기능 집합을 `capabilities`에 담아 반환한다. 이 퀵스타트에서는 단순화를 위해 전체 기능 협상을 생략한다. 자세한 내용은 [디스커버리와 기능 협상](/documentation/core-concepts/#discovery-capability-negotiation)을 참고한다.
 
 === "Python"
 
@@ -415,9 +415,9 @@ Construct the UCP metadata block, advertising supported payment handlers, and as
     });
     ```
 
-### 5. Get Checkout Endpoint { #5-get-checkout-endpoint }
+### 5. 체크아웃 조회 엔드포인트 { #5-get-checkout-endpoint }
 
-Implement the retrieval route so the platform can fetch the checkout state. Per [UCP Header Requirements](shopping/checkout/rest.md#specific-header-requirements), UCP requires the `UCP-Agent` header on all requests (not just mutating operations like create, update, or complete).
+플랫폼이 체크아웃 상태를 가져올 수 있도록 조회 라우트를 구현한다. [UCP 헤더 요구 사항](shopping/checkout/rest.md#specific-header-requirements)에 따라, UCP는 생성·갱신·완료 같은 변경 작업뿐 아니라 모든 요청에 `UCP-Agent` 헤더를 요구한다.
 
 === "Python"
 
@@ -466,11 +466,11 @@ Implement the retrieval route so the platform can fetch the checkout state. Per 
 
 ---
 
-## Running the Server { #running-the-server }
+## 서버 실행 { #running-the-server }
 
 === "Python"
 
-    Start the server using Uvicorn:
+    Uvicorn으로 서버를 시작한다.
 
     ```bash
     uv run uvicorn main:app --port 8080 --reload
@@ -478,7 +478,7 @@ Implement the retrieval route so the platform can fetch the checkout state. Per 
 
 === "Node.js"
 
-    Add a start script to your `package.json`:
+    `package.json`에 start 스크립트를 추가한다.
 
     <!-- ucp:example skip reason="package.json snippet" -->
     ```json
@@ -487,23 +487,23 @@ Implement the retrieval route so the platform can fetch the checkout state. Per 
     }
     ```
 
-    Start the server:
+    서버를 시작한다.
 
     ```bash
     npm start
     ```
 
-Your server is now running at `http://127.0.0.1:8080` (Python) or `http://127.0.0.1:3000` (Node.js).
+이제 서버가 `http://127.0.0.1:8080`(Python) 또는 `http://127.0.0.1:3000`(Node.js)에서 실행된다.
 
 ---
 
-## Testing the Server { #testing-the-server }
+## 서버 테스트 { #testing-the-server }
 
-You can test your server using `curl`.
+`curl`로 서버를 테스트할 수 있다.
 
-### 1. Create a Checkout Session { #1-create-a-checkout-session }
+### 1. 체크아웃 세션 생성 { #1-create-a-checkout-session }
 
-Send a `POST` request to create a checkout session with one item:
+`POST` 요청을 보내 상품 하나로 체크아웃 세션을 생성한다.
 
 === "Python"
 
@@ -543,7 +543,7 @@ Send a `POST` request to create a checkout session with one item:
       }'
     ```
 
-You should receive a response containing the UCP metadata, calculated totals, and the configured payment handler:
+UCP 메타데이터, 계산된 합계, 설정한 결제 핸들러가 담긴 응답을 받게 된다.
 
 <!-- ucp:example skip reason="FastAPI/Express response mock" -->
 ```json
@@ -620,9 +620,9 @@ You should receive a response containing the UCP metadata, calculated totals, an
 }
 ```
 
-### 2. Retrieve the Checkout Session { #2-retrieve-the-checkout-session }
+### 2. 체크아웃 세션 조회 { #2-retrieve-the-checkout-session }
 
-Retrieve the session using the `id` returned from the previous step:
+이전 단계에서 반환된 `id`로 세션을 조회한다.
 
 === "Python"
 
@@ -640,11 +640,11 @@ Retrieve the session using the `id` returned from the previous step:
 
 ---
 
-## Full File Reference { #full-file-reference }
+## 전체 파일 참고 { #full-file-reference }
 
-If you want to verify your code, expand the section below to see the complete files.
+코드를 확인하려면 아래 섹션을 펼쳐 전체 파일을 볼 수 있다.
 
-??? "Complete Code Reference"
+??? "전체 코드 참고"
 
     === "Python"
 
@@ -933,13 +933,13 @@ If you want to verify your code, expand the section below to see the complete fi
 
 ---
 
-## Next Steps { #next-steps }
+## 다음 단계 { #next-steps }
 
-To build a fully compliant UCP server, you will also need to:
+UCP를 완전히 준수하는 서버를 만들려면 다음 작업도 필요하다.
 
-* Implement the checkout update endpoint (`PUT /checkout-sessions/{id}`) to handle buyer information updates (like shipping address).
-* Implement the checkout completion endpoint (`POST /checkout-sessions/{id}/complete`) to process the payment instrument provided by the platform.
-* Advertise your service using a [UCP Discovery Profile](/documentation/core-concepts/#discovery-capability-negotiation) at `/.well-known/ucp`.
-* Run the conformance suite from the [UCP Conformance repository](https://github.com/Universal-Commerce-Protocol/conformance) against your server to verify protocol compliance.
+* 구매자 정보(배송지 주소 등) 갱신을 처리하는 체크아웃 갱신 엔드포인트(`PUT /checkout-sessions/{id}`)를 구현한다.
+* 플랫폼이 제공한 결제 수단을 처리하는 체크아웃 완료 엔드포인트(`POST /checkout-sessions/{id}/complete`)를 구현한다.
+* `/.well-known/ucp`에 [UCP 디스커버리 프로필](/documentation/core-concepts/#discovery-capability-negotiation)을 게시해 서비스를 광고한다.
+* [UCP Conformance 저장소](https://github.com/Universal-Commerce-Protocol/conformance)의 적합성 테스트 스위트를 서버에 실행해 프로토콜 준수 여부를 검증한다.
 
-For a complete reference implementation, check out the [UCP Samples repository](https://github.com/Universal-Commerce-Protocol/samples).
+전체 참조 구현은 [UCP Samples 저장소](https://github.com/Universal-Commerce-Protocol/samples)를 참고한다.

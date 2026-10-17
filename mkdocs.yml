@@ -29,7 +29,6 @@ nav:
   - 개요:
       - 홈: index.md
       - 핵심 개념: documentation/core-concepts.md
-      - 명세: specification/overview/index.md
       - UCP와 AP2: documentation/ucp-and-ap2.md
       - 로드맵: documentation/roadmap.md
       - 스키마 작성: documentation/schema-authoring.md

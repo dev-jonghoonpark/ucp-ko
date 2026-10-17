@@ -14,37 +14,37 @@
    limitations under the License.
 -->
 
-# Cancellation Policy Extension { #cancellation-policy-extension }
+# 취소 정책 확장 { #cancellation-policy-extension }
 
-## Overview { #overview }
+## 개요 { #overview }
 
-The Cancellation Policy Extension defines the
-`dev.ucp.lodging.policy.cancellation` policy type on the core
-[`policies[]`](../../overview/index.md#policies) primitive for the lodging service. It
-adds pre-purchase, machine-readable cancellation terms to policies that
-carry this type, so platforms can answer questions like "Can I cancel this booking?",
-"Is it free cancellation or is there a fee?", and "Is this rate completely
-non-refundable?" without leaving to parse external policy pages.
+취소 정책 확장은 숙박 서비스의 핵심
+[`policies[]`](../../overview/index.md#policies) 프리미티브 위에
+`dev.ucp.lodging.policy.cancellation` 정책 유형을 정의한다. 이 유형을 가진
+정책에 구매 전에 확인할 수 있는 기계 판독형 취소 조건을 추가하므로, 플랫폼은
+외부 정책 페이지를 따로 파싱하지 않고도 "이 예약을 취소할 수 있나요?",
+"무료 취소인가요, 수수료가 있나요?", "이 요금은 전액 환불 불가인가요?" 같은
+질문에 답할 수 있다.
 
-**Key features:**
+**주요 특징:**
 
-- Tri-state refundability classification (`refundability`) to signal whether
-  cancellation is currently free (`refundable`), incurs a penalty
-  (`partially_refundable`), or is disallowed (`non_refundable`)
-- Human-readable summary in `description` carrying detailed property cutoff
-  times, timezone deadlines, and penalty schedules
-- Optional direct link to the property's complete legal terms (`url`)
+- 취소가 현재 무료인지(`refundable`), 위약금이 발생하는지
+  (`partially_refundable`), 허용되지 않는지(`non_refundable`)를 알려 주는
+  3단계 환불 가능 여부 분류(`refundability`)
+- 숙소별 마감 시각, 시간대 기준 기한, 위약금 일정을 상세히 담는
+  `description`의 사람이 읽을 수 있는 요약
+- 숙소의 전체 법적 약관으로 연결되는 선택적 직접 링크(`url`)
 
-**Dependencies:**
+**의존성:**
 
-- The core `policies[]` primitive (see [Policies](../../overview/index.md#policies)).
-- Any parent capabilities this type extends: Booking
-  (`dev.ucp.lodging.booking`).
+- 핵심 `policies[]` 프리미티브([정책](../../overview/index.md#policies) 참고)
+- 이 유형이 확장하는 상위 기능: 예약
+  (`dev.ucp.lodging.booking`)
 
-## Discovery { #discovery }
+## 디스커버리 { #discovery }
 
-Businesses advertise cancellation policy support in their profile. The type
-extends any surface that carries `policies[]`:
+비즈니스는 프로필에서 취소 정책 지원 여부를 알린다. 이 유형은
+`policies[]`를 가진 모든 영역을 확장한다.
 
 <!-- ucp:example schema=profile def=business_schema extract=$.ucp.capabilities target=$.ucp.capabilities -->
 ```json
@@ -67,75 +67,70 @@ extends any surface that carries `policies[]`:
 }
 ```
 
-## Schema { #schema }
+## 스키마 { #schema }
 
-When this type is active, a `policies[]` entry whose `type` is
-`dev.ucp.lodging.policy.cancellation` carries additional attributes
-(e.g., `refundability`) in addition to the base `type`,
-`description`, `applies_to`, and `url`.
+이 유형이 활성화되면 `type`이 `dev.ucp.lodging.policy.cancellation`인
+`policies[]` 항목은 기본 `type`, `description`, `applies_to`, `url` 외에
+추가 속성(예: `refundability`)을 가진다.
 
 {{ extension_schema_fields('policy_cancellation.json#/$defs/cancellation_item', 'lodging/extensions/cancellation-policy') }}
 
-## Cancellation terms { #cancellation-terms }
+## 취소 조건 { #cancellation-terms }
 
-### Refundability classifications { #refundability-classifications }
+### 환불 가능 여부 분류 { #refundability-classifications }
 
-The `refundability` field provides a standardized high-level classification:
+`refundability` 필드는 표준화된 상위 수준 분류를 제공한다.
 
-- **`refundable`**: Free cancellation is currently available. The booker can
-  cancel without penalty before the deadline stated in `description`.
-- **`partially_refundable`**: The booking can be cancelled, but a cancellation
-  fee applies (e.g., a one-night room charge or fixed administrative fee), or
-  the booking is currently inside a partial penalty window. Specific cancellation
-  fees, penalty schedules, and refund effects are outlined in the policy's
-  `description` field.
-- **`non_refundable`**: The reservation cannot be refunded upon cancellation
-  (the full booking price is retained by the business, subject to local regulation).
+- **`refundable`**: 현재 무료 취소가 가능하다. 예약자는 `description`에
+  명시된 기한 전까지 위약금 없이 취소할 수 있다.
+- **`partially_refundable`**: 예약을 취소할 수는 있지만 취소 수수료(예: 1박
+  객실 요금이나 고정 관리 수수료)가 부과되거나, 예약이 현재 부분 위약금 적용
+  기간에 들어와 있다. 구체적인 취소 수수료, 위약금 일정, 환불 영향은 정책의
+  `description` 필드에 설명한다.
+- **`non_refundable`**: 취소해도 예약 금액을 환불받을 수 없다(현지 규정에
+  따라 비즈니스가 예약 금액 전액을 보유한다).
 
-### Non-refundable bookings { #non-refundable-bookings }
+### 환불 불가 예약 { #non-refundable-bookings }
 
-To signal that a booking or rate is non-refundable, a business **MUST** set
-`refundability` to `"non_refundable"`.
+예약이나 요금이 환불 불가임을 알리려면 비즈니스는 반드시 `refundability`를
+`"non_refundable"`로 설정해야 한다(**MUST**).
 
-When a business requires the booker to be shown that a booking is non-refundable
-prior to confirmation, it emits a `messages[]` warning with
-`presentation: "disclosure"` and `code` equal to
-`dev.ucp.lodging.policy.cancellation`, targeting the item. The disclosure pairs
-with the governing cancellation policy at that node, as defined in
-[Presenting policies](../../overview/index.md#presenting-policies).
+확정 전에 예약이 환불 불가라는 사실을 예약자에게 보여 줘야 하는 경우,
+비즈니스는 해당 항목을 대상으로 `presentation: "disclosure"`이고 `code`가
+`dev.ucp.lodging.policy.cancellation`인 `messages[]` 경고를 내보낸다. 이
+고지는 [정책 표시](../../overview/index.md#presenting-policies)에 정의된
+대로 해당 노드에 적용되는 취소 정책과 짝을 이룬다.
 
-### Human-readable descriptions { #human-readable-descriptions }
+### 사람이 읽을 수 있는 설명 { #human-readable-descriptions }
 
-Because lodging cancellation rules frequently incorporate specific property
-local cutoff times (e.g., "by 3:00 PM property time 2 days before check-in")
-and seasonal rules, businesses **MUST** articulate the full timeline and terms in
-`description`. The `description` and `refundability` field **MUST NOT** contradict
-each other.
+숙박 취소 규칙에는 숙소 현지 기준의 마감 시각(예: "체크인 2일 전 숙소 시간
+오후 3시까지")이나 시즌별 규칙이 들어가는 경우가 많으므로, 비즈니스는 반드시
+전체 일정과 조건을 `description`에 명확히 기술해야 한다(**MUST**).
+`description`과 `refundability` 필드는 서로 모순되어서는 안 된다(**MUST NOT**).
 
-## Targeting and precedence { #targeting-and-precedence }
+## 대상 지정과 우선순위 { #targeting-and-precedence }
 
-Targeting and precedence are provided by the `policies[]` primitive and are not
-redefined here. In short: a policy with no `applies_to` is the response-wide
-default; a policy that targets specific room overrides will result in the
-narrowest same-type target winning. See
-[Targeting](../../overview/index.md#targeting) and
-[Precedence](../../overview/index.md#precedence).
+대상 지정과 우선순위는 `policies[]` 프리미티브가 제공하므로 여기서 다시
+정의하지 않는다. 요약하면, `applies_to`가 없는 정책은 응답 전체의 기본값이고,
+특정 객실을 대상으로 재정의하는 정책이 있으면 같은 유형 중 가장 좁은 대상이
+우선한다. [대상 지정](../../overview/index.md#targeting)과
+[우선순위](../../overview/index.md#precedence)를 참고한다.
 
-For lodging bookings, a common example is when a business states a single default cancellation
-policy once, then adds targeted overrides only for specific exceptions (such as
-a non-refundable room rate or promotional upgrade).
+숙박 예약에서 흔한 예는 비즈니스가 기본 취소 정책을 한 번만 명시하고, 특정
+예외(환불 불가 객실 요금이나 프로모션 업그레이드 등)에 대해서만 대상 지정
+재정의를 추가하는 경우다.
 
-## Responsibilities { #responsibilities }
+## 책임 { #responsibilities }
 
-Cancellation policies are business-stated facts. They are response-only data
-that a platform never submits. They carry no user-asserted claims and no PII.
+취소 정책은 비즈니스가 명시하는 사실이다. 플랫폼이 제출하는 일이 없는 응답
+전용 데이터이며, 사용자가 주장하는 내용이나 PII를 담지 않는다.
 
-A business **SHOULD** accurately summarize cancellation timelines, applicable
-penalties and cutoff deadlines in `description` and link to full policy terms
-via `url`. A platform **SHOULD** surface `url` alongside the policy description
-so the booker can review full dynamic property policies.
+비즈니스는 취소 일정, 적용되는 위약금, 마감 기한을 `description`에 정확히
+요약하고 `url`로 전체 정책 약관을 연결해야 한다(**SHOULD**). 플랫폼은 예약자가
+숙소의 전체 정책을 확인할 수 있도록 정책 설명과 함께 `url`을 노출해야
+한다(**SHOULD**).
 
-## Examples { #examples }
+## 예시 { #examples }
 
 <!-- ucp:example schema=lodging/booking target=$.policies -->
 ```json

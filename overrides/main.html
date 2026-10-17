@@ -11,7 +11,7 @@
 
 {#- Korean port: per-page link to the matching official page -#}
 {% block content %}
-  {% if page and not page.is_homepage %}
+  {% if page and page.file.src_uri != "index.md" %}
     {% set official = config.extra.ko_official_url %}
     {% if page.url.startswith("specification/") %}
       {% set src_url = official ~ "draft/" ~ page.url %}

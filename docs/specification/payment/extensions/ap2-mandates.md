@@ -14,56 +14,52 @@
    limitations under the License.
 -->
 
-# AP2 Mandates Extension { #ap2-mandates-extension }
+# AP2 위임(Mandate) 확장 { #ap2-mandates-extension }
 
-## Overview { #overview }
+## 개요 { #overview }
 
-The AP2 Mandates extension enables the secure exchange of user intents and
-authorizations using **Verifiable Digital Credentials**. It extends the
-standard Shopping Service Checkout capability to support the
-**[AP2 Protocol](https://ap2-protocol.org/){ target="_blank" }**.
+AP2 위임 확장은 **검증 가능한 디지털 자격 증명**(Verifiable Digital Credentials)을
+사용해 사용자의 의도와 승인을 안전하게 교환할 수 있게 한다. 표준 쇼핑 서비스의
+체크아웃 기능을 확장해
+**[AP2 프로토콜](https://ap2-protocol.org/){ target="_blank" }**을 지원한다.
 
-When this capability is negotiated and active, it transforms a standard
-checkout session into a cryptographically bound agreement:
+이 기능이 협상되어 활성화되면, 표준 체크아웃 세션은 암호학적으로 묶인 합의로
+바뀐다.
 
-* **Businesses** **MUST** embed a cryptographic signature in checkout
-    responses, proving the terms (price, line items) are authentic.
-* **Platforms** **MUST** provide cryptographically signed proofs (Mandates)
-    during the `complete` operation, proving the user explicitly authorized the
-    specific checkout state and funds transfer.
+* **비즈니스**는 체크아웃 응답에 암호 서명을 반드시 포함해(**MUST**) 조건(가격,
+    라인 아이템)이 진본임을 증명해야 한다.
+* **플랫폼**은 `complete` 작업 중에 암호 서명된 증명(위임)을 반드시 제공해(**MUST**),
+    사용자가 특정 체크아웃 상태와 자금 이체를 명시적으로 승인했음을 증명해야 한다.
 
-**Security Binding:** Once this extension is negotiated in the capability
-intersection, the session is **Security Locked**. Neither party may revert to
-a standard (unprotected) checkout flow.
+**보안 바인딩:** 이 확장이 기능 교집합에서 협상되면 세션은 **보안 잠금(Security
+Locked)** 상태가 된다. 어느 쪽도 표준(보호되지 않은) 체크아웃 흐름으로 되돌아갈 수
+없다.
 
-![High-level AP2 flow sequence diagram](site:specification/images/ucp-ap2-checkout-flow.png)
+![AP2 상위 수준 흐름 시퀀스 다이어그램](site:specification/images/ucp-ap2-checkout-flow.png)
 
-### Design { #design }
+### 설계 { #design }
 
-All AP2-specific fields are nested under an `ap2` object in both requests and
-responses. This design provides:
+AP2 전용 필드는 요청과 응답 모두에서 `ap2` 객체 아래에 중첩된다. 이 설계는 다음을
+제공한다.
 
-* **Schema modularity** — Base checkout schema stays clean; AP2 adds one
-    field containing all its data.
-* **Consistent canonicalization** — One rule: exclude `ap2` from the business's
-    signature computation. Future AP2 fields are automatically handled.
-* **Extension coexistence** — Multiple security extensions can coexist
-    without namespace collisions.
-* **Capability signal** — Presence of `ap2` object clearly indicates AP2
-    is active.
+* **스키마 모듈성** — 기본 체크아웃 스키마는 깔끔하게 유지되고, AP2는 자신의 모든
+    데이터를 담은 필드 하나만 추가한다.
+* **일관된 정규화** — 규칙은 하나다. 비즈니스의 서명 계산에서 `ap2`를 제외한다.
+    향후 추가될 AP2 필드도 자동으로 처리된다.
+* **확장 공존** — 여러 보안 확장이 네임스페이스 충돌 없이 공존할 수 있다.
+* **기능 신호** — `ap2` 객체가 있으면 AP2가 활성화되었음을 분명히 알 수 있다.
 
-## Discovery & Negotiation { #discovery-negotiation }
+## 디스커버리와 협상 { #discovery-negotiation }
 
-This extension follows the standard UCP negotiation protocol. It is activated
-only when it appears in the **Capability Intersection** of both the business
-and the platform.
+이 확장은 표준 UCP 협상 프로토콜을 따른다. 비즈니스와 플랫폼 양쪽의 **기능
+교집합**(Capability Intersection)에 나타날 때만 활성화된다.
 
-### Business Profile Advertisement { #business-profile-advertisement }
+### 비즈니스 프로필 광고 { #business-profile-advertisement }
 
-Businesses declare support by adding `dev.ucp.common.payment.ap2_mandate` to their
-`capabilities` list in `/.well-known/ucp`.
+비즈니스는 `/.well-known/ucp`의 `capabilities` 목록에
+`dev.ucp.common.payment.ap2_mandate`를 추가해 지원을 선언한다.
 
-**Business Profile Example:**
+**비즈니스 프로필 예시:**
 
 <!-- ucp:example schema=profile def=business_schema -->
 ```json
@@ -98,70 +94,68 @@ Businesses declare support by adding `dev.ucp.common.payment.ap2_mandate` to the
 }
 ```
 
-### Platform Profile Advertisement { #platform-profile-advertisement }
+### 플랫폼 프로필 광고 { #platform-profile-advertisement }
 
-Platforms declare support in their profile. If the platform is operating under
-the trusted platform provider model, the platform **MUST** provide at least one
-key in the top-level `keys` array in their profile.
+플랫폼은 자신의 프로필에 지원을 선언한다. 플랫폼이 신뢰할 수 있는 플랫폼 제공자
+모델로 운영되는 경우, 플랫폼은 프로필의 최상위 `keys` 배열에 키를 적어도 하나 반드시
+제공해야 한다(**MUST**).
 
-### Activation and Session Locking { #activation-and-session-locking }
+### 활성화와 세션 잠금 { #activation-and-session-locking }
 
-1. The platform advertises its profile URI (transport-specific mechanism).
-2. The business fetches the profile and computes the intersection.
-3. If `dev.ucp.common.payment.ap2_mandate` is present in the intersection:
-    * The business **MUST** include `ap2.merchant_authorization` in all
-        checkout responses.
-    * The business **MUST NOT** accept a `complete_checkout` request that
-        lacks `ap2.checkout_mandate`.
-    * The platform **MUST** verify the business's signature before presenting
-        the checkout to the user.
+1. 플랫폼은 자신의 프로필 URI를 알린다(전송 방식별 메커니즘).
+2. 비즈니스는 프로필을 가져와 교집합을 계산한다.
+3. 교집합에 `dev.ucp.common.payment.ap2_mandate`가 있으면 다음이 적용된다.
+    * 비즈니스는 모든 체크아웃 응답에 `ap2.merchant_authorization`을 반드시
+        포함해야 한다(**MUST**).
+    * 비즈니스는 `ap2.checkout_mandate`가 없는 `complete_checkout` 요청을
+        수락해서는 안 된다(**MUST NOT**).
+    * 플랫폼은 사용자에게 체크아웃을 보여 주기 전에 비즈니스의 서명을 반드시
+        검증해야 한다(**MUST**).
 
-### Signing Key Requirements { #signing-key-requirements }
+### 서명 키 요구 사항 { #signing-key-requirements }
 
-To utilize this extension, a public signing key **MUST** be available for the
-business to verify the mandate's signature.
+이 확장을 사용하려면, 비즈니스가 위임의 서명을 검증할 수 있는 공개 서명 키가 반드시
+있어야 한다(**MUST**).
 
-* **Platform Provider Flow:** Key provided in the platform profile's `keys`.
-* **User Credential Flow:** Key bound to the digital payment credential.
+* **플랫폼 제공자 흐름:** 플랫폼 프로필의 `keys`로 제공되는 키.
+* **사용자 자격 증명 흐름:** 디지털 결제 자격 증명에 바인딩된 키.
 
-If a public key cannot be resolved, or if the signature is invalid, the business
-**MUST** return an error.
+공개 키를 확인할 수 없거나 서명이 유효하지 않으면, 비즈니스는 반드시 에러를 반환해야
+한다(**MUST**).
 
-## Cryptographic Requirements { #cryptographic-requirements }
+## 암호학적 요구 사항 { #cryptographic-requirements }
 
-This extension uses the cryptographic primitives defined in the
-[Message Signatures](../../signatures.md) specification:
+이 확장은 [메시지 서명](../../signatures.md) 명세에 정의된 암호 기본 요소를 사용한다.
 
-* **Algorithm:** per AP2's Checkout JWT signing rule — AP2 v0.2 requires
-  ECDSA (`ES256`/`ES384`/`ES512`); see the note below.
-* **Canonicalization:** JCS ([RFC 8785](https://datatracker.ietf.org/doc/html/rfc8785))
-* **Key Format:** JWK ([RFC 7517](https://datatracker.ietf.org/doc/html/rfc7517))
-* **Key Discovery:** `keys[]` in `/.well-known/ucp` (see
-  [Key Discovery](../../overview/index.md#key-discovery))
+* **알고리즘:** AP2의 Checkout JWT 서명 규칙을 따른다. AP2 v0.2는 ECDSA
+  (`ES256`/`ES384`/`ES512`)를 요구한다. 아래 참고 사항을 보라.
+* **정규화:** JCS ([RFC 8785](https://datatracker.ietf.org/doc/html/rfc8785))
+* **키 형식:** JWK ([RFC 7517](https://datatracker.ietf.org/doc/html/rfc7517))
+* **키 디스커버리:** `/.well-known/ucp`의 `keys[]`
+  ([키 디스커버리](../../overview/index.md#key-discovery) 참고)
 
-See [Message Signatures](../../signatures.md) for key format and rotation.
+키 형식과 교체(rotation)는 [메시지 서명](../../signatures.md)을 참고한다.
 
-> **Note (algorithm requirement).** AP2 binds the Payment Mandate to the
-> Checkout via `hash(checkout_jwt)`; the underlying security property is
-> per-session unpredictability of the signed bytes — which UCP's unique
-> per-session Checkout `id` supplies structurally. AP2 v0.2 is internally
-> inconsistent on how to require this: `specification.md` states an
-> algorithm-class rule (non-deterministic only, e.g. ECDSA), while the
-> Security & Privacy considerations state an entropy rule satisfied by any
-> algorithm given sufficient payload entropy.
-> [AP2 #268](https://github.com/google-agentic-commerce/AP2/issues/268)
-> tracks converging on the entropy formulation. Follow AP2 for the
-> authoritative rule; under the entropy reading a UCP Checkout JWT may be
-> signed with any algorithm (including Ed25519), letting one key serve both
-> AP2 mandate signing and Web Bot Auth.
+> **참고(알고리즘 요구 사항).** AP2는 `hash(checkout_jwt)`를 통해 결제 위임(Payment
+> Mandate)을 체크아웃에 묶는다. 근본적인 보안 속성은 서명된 바이트가 세션마다 예측
+> 불가능해야 한다는 것이며, UCP에서는 세션마다 고유한 체크아웃 `id`가 이를 구조적으로
+> 제공한다. AP2 v0.2는 이를 어떻게 요구할지에 대해 내부적으로 일관되지 않다.
+> `specification.md`는 알고리즘 계열 규칙(비결정적 알고리즘만, 예: ECDSA)을
+> 명시하는 반면, Security & Privacy 고려 사항은 페이로드 엔트로피가 충분하면 어떤
+> 알고리즘으로도 충족되는 엔트로피 규칙을 명시한다.
+> [AP2 #268](https://github.com/google-agentic-commerce/AP2/issues/268)에서
+> 엔트로피 방식으로 수렴하는 논의를 추적하고 있다. 공식 규칙은 AP2를 따른다.
+> 엔트로피 해석에 따르면 UCP Checkout JWT는 어떤 알고리즘(Ed25519 포함)으로도 서명할
+> 수 있으므로, 키 하나로 AP2 위임 서명과 Web Bot Auth를 모두 처리할 수 있다.
 
-### Business Authorization { #business-authorization }
+### 비즈니스 승인 { #business-authorization }
 
-Businesses **MUST** embed their signature in the checkout response body under
-`ap2.merchant_authorization` using **JWS Detached Content** format
-([RFC 7515 Appendix F](https://datatracker.ietf.org/doc/html/rfc7515#appendix-F){target="_blank"}).
+비즈니스는 **JWS Detached Content** 형식
+([RFC 7515 Appendix F](https://datatracker.ietf.org/doc/html/rfc7515#appendix-F){target="_blank"})을
+사용해 체크아웃 응답 본문의 `ap2.merchant_authorization` 아래에 자신의 서명을 반드시
+포함해야 한다(**MUST**).
 
-**Checkout Response with Embedded Signature:**
+**서명이 포함된 체크아웃 응답:**
 
 <!-- ucp:example schema=shopping/checkout op=read -->
 ```json
@@ -179,22 +173,21 @@ Businesses **MUST** embed their signature in the checkout response body under
 }
 ```
 
-The `merchant_authorization` value is a JWS with detached payload in the format
-`<header>..<signature>`. The double dot (`..`) indicates the payload is
-transmitted separately (as the checkout body itself).
+`merchant_authorization` 값은 `<header>..<signature>` 형식의, 페이로드가 분리된
+JWS다. 이중 점(`..`)은 페이로드가 별도로(체크아웃 본문 자체로) 전송됨을 나타낸다.
 
-**JWS Header Claims:**
+**JWS 헤더 클레임:**
 
-| Claim | Type   | Required | Description                                        |
+| 클레임 | 타입   | 필수 | 설명                                        |
 | :---- | :----- | :------- | :------------------------------------------------- |
-| `alg` | string | Yes      | Signature algorithm accepted by AP2 (e.g. `ES256`) |
-| `kid` | string | Yes      | Key ID referencing the business's `keys`           |
+| `alg` | string | 예      | AP2가 허용하는 서명 알고리즘(예: `ES256`) |
+| `kid` | string | 예      | 비즈니스의 `keys`를 참조하는 키 ID           |
 
-**Signature Computation:**
+**서명 계산:**
 
-The signature **MUST** cover both the JWS header and the checkout payload. This
-prevents algorithm substitution attacks where an attacker modifies the `alg`
-claim without invalidating the signature.
+서명은 반드시 JWS 헤더와 체크아웃 페이로드를 모두 포함해야 한다(**MUST**). 이렇게
+하면 공격자가 서명을 무효화하지 않고 `alg` 클레임을 바꾸는 알고리즘 치환 공격을 막을
+수 있다.
 
 ```text
 sign_checkout(checkout, private_key, kid, alg="ES256"):
@@ -217,69 +210,66 @@ sign_checkout(checkout, private_key, kid, alg="ES256"):
     return checkout
 ```
 
-### Mandate Structure { #mandate-structure }
+### 위임 구조 { #mandate-structure }
 
-Mandates are **SD-JWT** credentials with Key Binding (`+kb`). The platform
-**MUST** produce two distinct mandate artifacts:
+위임은 키 바인딩(`+kb`)이 적용된 **SD-JWT** 자격 증명이다. 플랫폼은 서로 다른 두
+가지 위임 산출물을 반드시 생성해야 한다(**MUST**).
 
-| Mandate              | UCP Placement                             | Purpose                                              |
+| 위임              | UCP 내 위치                             | 목적                                              |
 | :------------------- | :---------------------------------------- | :--------------------------------------------------- |
-| **checkout_mandate** | `ap2.checkout_mandate`                    | Proof bound to checkout terms, protects business     |
-| **payment_mandate**  | `payment.instruments[*].credential.token` | Proof bound to payment authorization, protects funds |
+| **checkout_mandate** | `ap2.checkout_mandate`                    | 체크아웃 조건에 묶인 증명, 비즈니스를 보호     |
+| **payment_mandate**  | `payment.instruments[*].credential.token` | 결제 승인에 묶인 증명, 자금을 보호 |
 
-The checkout mandate **MUST** contain the full checkout response including the
-`ap2.merchant_authorization` field. This creates a nested cryptographic binding
-where the platform's signature covers the business's signature.
+체크아웃 위임은 `ap2.merchant_authorization` 필드를 포함한 전체 체크아웃 응답을
+반드시 담아야 한다(**MUST**). 이렇게 하면 플랫폼의 서명이 비즈니스의 서명을 감싸는
+중첩된 암호학적 바인딩이 만들어진다.
 
-**Specification Boundary:** This extension defines *where* mandates are placed
-in UCP requests and responses. The mandate credential structure (claims,
-selective disclosure, key binding) is defined by the
-[AP2 Protocol Specification](https://ap2-protocol.org/specification).
+**명세 경계:** 이 확장은 UCP 요청과 응답에서 위임이 *어디에* 놓이는지를 정의한다.
+위임 자격 증명의 구조(클레임, 선택적 공개, 키 바인딩)는
+[AP2 프로토콜 명세](https://ap2-protocol.org/specification)에서 정의한다.
 
-### Canonicalization { #canonicalization }
+### 정규화 { #canonicalization }
 
-All JSON payloads **MUST** be canonicalized using **JSON Canonicalization
-Scheme (JCS)** per [RFC 8785](https://datatracker.ietf.org/doc/html/rfc8785).
+모든 JSON 페이로드는 [RFC 8785](https://datatracker.ietf.org/doc/html/rfc8785)에
+따라 **JSON Canonicalization Scheme**(JCS)으로 반드시 정규화해야 한다(**MUST**).
 
-**Why JCS for Mandates?** UCP request signatures use `Content-Digest` (raw
-bytes) without canonicalization — the request is signed and verified
-immediately over the same HTTP connection. Mandates are different:
+**위임에 JCS를 쓰는 이유:** UCP 요청 서명은 정규화 없이 `Content-Digest`(원시
+바이트)를 사용한다. 요청은 같은 HTTP 연결 위에서 즉시 서명되고 검증되기 때문이다.
+위임은 다르다.
 
-* **Durability** — Mandates are stored as evidence of user consent. They may
-    be retrieved and verified days or months later.
-* **Cross-system transmission** — Mandates pass through multiple systems
-    (platform → business → PSP → card network) that may re-serialize JSON.
-* **Reproducibility** — Any party must reconstruct the exact signed bytes
-    from the logical JSON content, regardless of serialization differences.
+* **지속성** — 위임은 사용자 동의의 증거로 저장된다. 며칠 또는 몇 달 뒤에 다시
+    조회되어 검증될 수 있다.
+* **시스템 간 전송** — 위임은 JSON을 다시 직렬화할 수 있는 여러 시스템(플랫폼 →
+    비즈니스 → PSP → 카드 네트워크)을 거친다.
+* **재현성** — 직렬화 방식이 달라도, 어느 당사자든 논리적 JSON 내용으로부터 서명된
+    바이트를 정확히 재구성할 수 있어야 한다.
 
-JCS ensures that semantically identical JSON produces byte-identical output,
-making signatures reproducible across implementations and time.
+JCS는 의미상 동일한 JSON이 바이트 단위로 동일한 출력을 내도록 보장하므로, 구현체와
+시점이 달라도 서명을 재현할 수 있다.
 
-Verification and mandate construction operate on the complete checkout JSON,
-not a projection of schema-recognized fields; removing any member covered by
-`merchant_authorization` changes the JCS payload and invalidates the signature.
-This coverage includes `ucp` protocol-namespace members present in the checkout;
-only the `ap2` field is excluded as specified below.
+검증과 위임 생성은 스키마가 인식하는 필드만 추린 결과가 아니라 전체 체크아웃 JSON을
+대상으로 한다. `merchant_authorization`이 포함하는 멤버를 하나라도 제거하면 JCS
+페이로드가 바뀌어 서명이 무효화된다. 이 범위에는 체크아웃에 있는 `ucp` 프로토콜
+네임스페이스 멤버도 포함되며, 아래에 명시한 대로 `ap2` 필드만 제외된다.
 
-**AP2-Specific Rule:** When computing the business's `merchant_authorization`
-signature, exclude the `ap2` field entirely. This ensures future AP2 fields
-are automatically handled.
+**AP2 전용 규칙:** 비즈니스의 `merchant_authorization` 서명을 계산할 때는 `ap2`
+필드를 통째로 제외한다. 이렇게 하면 향후 추가될 AP2 필드도 자동으로 처리된다.
 
-## The Mandate Flow { #the-mandate-flow }
+## 위임 흐름 { #the-mandate-flow }
 
-Once the `dev.ucp.common.payment.ap2_mandate` capability is negotiated, the session
-is locked into the following flow. Both parties **MUST** follow these steps to
-ensure cryptographic integrity; any attempt to bypass these steps or submit
-a completion request without mandates **MUST** result in a session failure.
+`dev.ucp.common.payment.ap2_mandate` 기능이 협상되면, 세션은 다음 흐름으로 고정된다.
+암호학적 무결성을 보장하기 위해 양쪽 모두 이 단계를 반드시 따라야 하며(**MUST**), 이
+단계를 우회하거나 위임 없이 완료 요청을 제출하려는 모든 시도는 반드시 세션 실패로
+이어져야 한다(**MUST**).
 
-### Step 1: Checkout Creation & Signing { #step-1-checkout-creation-signing }
+### 1단계: 체크아웃 생성과 서명 { #step-1-checkout-creation-signing }
 
-The platform initiates the session. The business returns the `Checkout` object
-with `ap2.merchant_authorization` embedded in the response body.
+플랫폼이 세션을 시작한다. 비즈니스는 응답 본문에 `ap2.merchant_authorization`이
+포함된 `Checkout` 객체를 반환한다.
 
 {{ extension_schema_fields('payment_ap2_mandate.json#/$defs/dev.ucp.shopping.checkout', 'payment/extensions/ap2-mandates') }}
 
-**Example Response:**
+**응답 예시:**
 
 <!-- ucp:example schema=shopping/checkout op=read -->
 ```json
@@ -311,7 +301,7 @@ with `ap2.merchant_authorization` embedded in the response body.
 }
 ```
 
-The platform **MUST** verify the signature:
+플랫폼은 반드시 서명을 검증해야 한다(**MUST**).
 
 ```text
 verify_merchant_authorization(checkout, merchant_profile):
@@ -335,37 +325,34 @@ verify_merchant_authorization(checkout, merchant_profile):
     return verify(encoded_signature, signing_input, public_key, header.alg)
 ```
 
-### Step 2: User Consent & Mandate Generation { #step-2-user-consent-mandate-generation }
+### 2단계: 사용자 동의와 위임 생성 { #step-2-user-consent-mandate-generation }
 
-When the user confirms the purchase, the platform **MUST** facilitate the
-generation of cryptographically verifiable mandates.
+사용자가 구매를 확인하면, 플랫폼은 암호학적으로 검증 가능한 위임의 생성을 반드시
+지원해야 한다(**MUST**).
 
-#### Option 1: Trusted Platform Provider { #option-1-trusted-platform-provider }
+#### 옵션 1: 신뢰할 수 있는 플랫폼 제공자 { #option-1-trusted-platform-provider }
 
-A trusted platform provider acts on the user's behalf to generate the
-mandate credentials. The platform provider **MUST** ensure that mandates
-are not created without explicit user consent from trusted, deterministic
-channels.
+신뢰할 수 있는 플랫폼 제공자가 사용자를 대신해 위임 자격 증명을 생성한다. 플랫폼
+제공자는 신뢰할 수 있고 결정론적인 채널을 통한 사용자의 명시적 동의 없이 위임이
+생성되지 않도록 반드시 보장해야 한다(**MUST**).
 
-Upon user consent, the platform signs the mandates using their server-side
-key. The business trusts the platform's signature implies user consent.
+사용자가 동의하면 플랫폼은 서버 측 키로 위임에 서명한다. 비즈니스는 플랫폼의 서명이
+사용자 동의를 의미한다고 신뢰한다.
 
-#### Option 2: Digital Payment Credential { #option-2-digital-payment-credential }
+#### 옵션 2: 디지털 결제 자격 증명 { #option-2-digital-payment-credential }
 
-In this model the user has a VDC issued from a source trusted by the business
-(for example: a digital payment credential issued by a bank or network).
+이 모델에서 사용자는 비즈니스가 신뢰하는 출처에서 발급된 VDC(예: 은행이나 네트워크가
+발급한 디지털 결제 자격 증명)를 가지고 있다.
 
-The platform requests a presentation via a protocol like OpenID4VP. The User's
-Wallet (or equivalent) processes the request and signs the mandates using the
-private key associated with their payment credential.
+플랫폼은 OpenID4VP 같은 프로토콜로 제시(presentation)를 요청한다. 사용자의 지갑(또는
+이에 준하는 것)이 요청을 처리하고, 결제 자격 증명에 연결된 개인 키로 위임에 서명한다.
 
-The business trusts the Credential Issuer (Bank) and verifies the user's Key
-Binding (+kb) signature.
+비즈니스는 자격 증명 발급자(은행)를 신뢰하고, 사용자의 키 바인딩(+kb) 서명을
+검증한다.
 
-### Step 3: Submission (`complete_checkout`) { #step-3-submission-complete_checkout }
+### 3단계: 제출(`complete_checkout`) { #step-3-submission-complete_checkout }
 
-Once the mandates are generated, the platform submits them in the completion
-request:
+위임이 생성되면 플랫폼은 완료 요청에 이를 담아 제출한다.
 
 {{ extension_schema_fields('payment_ap2_mandate.json#/$defs/ap2_with_checkout_mandate', 'payment/extensions/ap2-mandates') }}
 
@@ -402,31 +389,29 @@ request:
 }
 ```
 
-* `ap2.checkout_mandate`: The SD-JWT+kb checkout mandate containing the
-    full checkout (with `ap2.merchant_authorization`)
-* `payment.instruments[*].credential.token`: Contains the payment mandate (composite token)
+* `ap2.checkout_mandate`: 전체 체크아웃(`ap2.merchant_authorization` 포함)을 담은
+    SD-JWT+kb 체크아웃 위임
+* `payment.instruments[*].credential.token`: 결제 위임(복합 토큰)을 담는다
 
-## Verification & Processing { #verification-processing }
+## 검증과 처리 { #verification-processing }
 
-### Business Verification { #business-verification }
+### 비즈니스 검증 { #business-verification }
 
-Upon receiving the `complete` request, the business **MUST**:
+`complete` 요청을 받으면 비즈니스는 반드시 다음을 수행해야 한다(**MUST**).
 
-1. **Enforce Negotiation:** If AP2 was negotiated, reject the request with
-    `mandate_required` error code if `ap2.checkout_mandate` is missing.
+1. **협상 강제:** AP2가 협상되었는데 `ap2.checkout_mandate`가 없으면
+    `mandate_required` 에러 코드로 요청을 거부한다.
 
-**Mandate Verification (per AP2 spec):**
+**위임 검증(AP2 명세에 따름):**
 
-1. **Verify Mandate:** Decode and verify the SD-JWT signature, key binding,
-    and expiration per the
-    [AP2 Protocol Specification](https://ap2-protocol.org/specification).
-2. **Extract Embedded Checkout:** Extract the checkout object from the
-    verified mandate claims.
+1. **위임 검증:** [AP2 프로토콜 명세](https://ap2-protocol.org/specification)에
+    따라 SD-JWT 서명, 키 바인딩, 만료를 디코딩하고 검증한다.
+2. **포함된 체크아웃 추출:** 검증된 위임 클레임에서 체크아웃 객체를 추출한다.
 
-**UCP Verification:**
+**UCP 검증:**
 
-1. **Verify Business Authorization:** Confirm `ap2.merchant_authorization`
-    in the embedded checkout is the business's own valid signature:
+1. **비즈니스 승인 검증:** 포함된 체크아웃의 `ap2.merchant_authorization`이
+    비즈니스 자신의 유효한 서명인지 확인한다.
 
     ```text
     jws = embedded_checkout.ap2.merchant_authorization
@@ -440,49 +425,48 @@ Upon receiving the `complete` request, the business **MUST**:
     verify(encoded_signature, signing_input, my_key, header.alg)
     ```
 
-2. **Verify Terms Match:** Confirm the embedded checkout terms match the
-    current session state (id, totals, line items).
+2. **조건 일치 검증:** 포함된 체크아웃의 조건이 현재 세션 상태(id, totals, line
+    items)와 일치하는지 확인한다.
 
-### PSP Verification { #psp-verification }
+### PSP 검증 { #psp-verification }
 
-The business passes the `token` (composite object) to their Payment
-Handler / PSP. The PSP verifies the `payment_mandate` per the
-[AP2 Protocol Specification](https://ap2-protocol.org/specification),
-including signature validation, expiration, and correlation with the
-checkout.
+비즈니스는 `token`(복합 객체)을 자신의 결제 핸들러 / PSP에 전달한다. PSP는
+[AP2 프로토콜 명세](https://ap2-protocol.org/specification)에 따라
+`payment_mandate`를 검증하며, 여기에는 서명 검증, 만료 확인, 체크아웃과의 연관성
+확인이 포함된다.
 
-## Schema { #schema }
+## 스키마 { #schema }
 
-### Business Authorization {: #merchant-authorization }
+### 비즈니스 승인 {: #merchant-authorization }
 
 {{ extension_schema_fields('payment_ap2_mandate.json#/$defs/merchant_authorization', 'payment/extensions/ap2-mandates') }}
 
-### AP2 Checkout Response { #ap2-checkout-response }
+### AP2 체크아웃 응답 { #ap2-checkout-response }
 
-The `ap2` object included in checkout responses.
+체크아웃 응답에 포함되는 `ap2` 객체.
 
 {{ extension_schema_fields('payment_ap2_mandate.json#/$defs/ap2_with_merchant_authorization', 'payment/extensions/ap2-mandates') }}
 
-### Checkout Mandate { #checkout-mandate }
+### 체크아웃 위임 { #checkout-mandate }
 
 {{ extension_schema_fields('payment_ap2_mandate.json#/$defs/checkout_mandate', 'payment/extensions/ap2-mandates') }}
 
-### AP2 Complete Request { #ap2-complete-request }
+### AP2 완료 요청 { #ap2-complete-request }
 
-The `ap2` object included in COMPLETE checkout requests.
+COMPLETE 체크아웃 요청에 포함되는 `ap2` 객체.
 
 {{ extension_schema_fields('payment_ap2_mandate.json#/$defs/ap2_with_checkout_mandate', 'payment/extensions/ap2-mandates') }}
 
-### Error Codes { #error-codes }
+### 에러 코드 { #error-codes }
 
 {{ extension_schema_fields('payment_ap2_mandate.json#/$defs/error_code', 'payment/extensions/ap2-mandates') }}
 
-| Error Code                       | Description                                                       |
+| 에러 코드                       | 설명                                                       |
 | :------------------------------- | :---------------------------------------------------------------- |
-| `mandate_required`               | AP2 was negotiated, but the request lacks `ap2.checkout_mandate`. |
-| `agent_missing_key`              | Platform profile lacks a valid `keys` entry.                      |
-| `mandate_invalid_signature`      | The mandate signature cannot be verified.                         |
-| `mandate_expired`                | The mandate `exp` timestamp has passed.                           |
-| `mandate_scope_mismatch`         | The mandate is bound to a different checkout.                     |
-| `merchant_authorization_invalid` | The business authorization signature could not be verified.       |
-| `merchant_authorization_missing` | The checkout response omits `ap2.merchant_authorization`.         |
+| `mandate_required`               | AP2가 협상되었지만 요청에 `ap2.checkout_mandate`가 없다. |
+| `agent_missing_key`              | 플랫폼 프로필에 유효한 `keys` 항목이 없다.                      |
+| `mandate_invalid_signature`      | 위임 서명을 검증할 수 없다.                         |
+| `mandate_expired`                | 위임의 `exp` 타임스탬프가 지났다.                           |
+| `mandate_scope_mismatch`         | 위임이 다른 체크아웃에 묶여 있다.                     |
+| `merchant_authorization_invalid` | 비즈니스 승인 서명을 검증할 수 없었다.       |
+| `merchant_authorization_missing` | 체크아웃 응답에 `ap2.merchant_authorization`이 빠져 있다.         |

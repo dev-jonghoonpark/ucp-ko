@@ -14,46 +14,45 @@
    limitations under the License.
 -->
 
-# Payment 3DS Challenge Action { #payment-3ds-challenge-action }
+# 결제 3DS 챌린지 액션 { #payment-3ds-challenge-action }
 
-This specification defines the 3DS challenge Action type declared by the
-[Payment Authentication extension](../authentication.md):
+이 명세는 [결제 인증 확장](../authentication.md)이 선언하는 3DS 챌린지 액션
+(Action) 타입을 정의한다.
 
 ```text
 dev.ucp.common.payment.three_ds_challenge
 ```
 
-It asks the Platform to present a buyer-facing payment-authentication surface to
-complete 3DS challenges.
+이 액션은 3DS 챌린지를 완료할 수 있도록 구매자에게 보이는 결제 인증 화면(surface)을
+표시해 달라고 플랫폼에 요청한다.
 
-## Purpose and Scope { #purpose-and-scope }
+## 목적과 범위 { #purpose-and-scope }
 
-A 3DS challenge Action lets the Business and payment handler ask the Platform to
-present an issuer or provider challenge to the Buyer. UCP does not carry EMV 3DS
-payloads such as CReq/CRes, AReq/ARes, RReq/RRes, or `transStatus`. Those details
-remain within the loaded surface and the Business, payment handler, PSP, 3DS
-server, issuer, or ACS integration.
+3DS 챌린지 액션을 통해 비즈니스와 결제 핸들러는 발급사(issuer)나 제공업체의
+챌린지를 구매자에게 표시해 달라고 플랫폼에 요청할 수 있다. UCP는 CReq/CRes,
+AReq/ARes, RReq/RRes, `transStatus` 같은 EMV 3DS 페이로드를 전달하지 않는다. 이런
+세부 정보는 로드된 화면과, 비즈니스·결제 핸들러·PSP·3DS 서버·발급사·ACS 연동
+내부에만 머문다.
 
-The Platform presents the surface and observes only when the Platform-facing
-interaction finishes or cannot continue. The Business determines the
-authentication and payment outcome from its server-side provider state.
+플랫폼은 화면을 표시하고, 플랫폼을 향한 상호작용이 끝났거나 더 진행할 수 없는
+시점만 관찰한다. 인증과 결제의 결과는 비즈니스가 서버 측 제공업체 상태를 바탕으로
+판단한다.
 
-## Blocking Action { #blocking-action }
+## 차단 액션 { #blocking-action }
 
-The 3DS challenge Action gates the associated payment attempt from producing a
-completed Checkout while the occurrence remains outstanding. It does not assert
-that the Complete Checkout operation was rejected, and a terminal surface event
-does not itself lift the gate.
+3DS 챌린지 액션은 해당 항목(occurrence)이 해결되지 않은 동안 연관된 결제 시도가
+완료된 체크아웃을 만들어 내지 못하도록 막는다. 이 액션은 체크아웃 완료(Complete
+Checkout) 작업이 거부되었다는 뜻이 아니며, 화면에서 종료 이벤트가 발생했다고 해서
+그 자체로 차단이 풀리지도 않는다.
 
-A Business **SHOULD** accept Complete Checkout, begin the payment attempt, and
-return `complete_in_progress` with the challenge Action. If the Business cannot
-accept completion before the challenge, it follows the core Checkout rule: it
-returns `incomplete` with a recoverable error Message whose `path` selects the
-challenge occurrence.
+비즈니스는 체크아웃 완료 요청을 수락하고 결제 시도를 시작한 뒤 챌린지 액션과 함께
+`complete_in_progress`를 반환해야 한다(**SHOULD**). 챌린지 전에 완료 요청을 수락할
+수 없다면 비즈니스는 핵심 체크아웃 규칙을 따른다. 즉, `path`가 챌린지 항목을
+가리키는 복구 가능한 오류 메시지와 함께 `incomplete`를 반환한다.
 
-## Runtime Shape { #runtime-shape }
+## 런타임 형태 { #runtime-shape }
 
-The Action is emitted under its type key:
+액션은 타입 키 아래에 담겨 전달된다.
 
 <!-- ucp:example schema=common/payment_authentication def=dev.ucp.shopping.checkout extract=$.actions target=$.actions op=read -->
 ```json
@@ -72,59 +71,59 @@ The Action is emitted under its type key:
 }
 ```
 
-The config shape is defined inline by the
-[Payment Authentication extension schema](site:schemas/common/payment_authentication.json).
+config 형태는
+[결제 인증 확장 스키마](site:schemas/common/payment_authentication.json)에
+인라인으로 정의되어 있다.
 
-| Field | Type | Required | Notes |
+| 필드 | 타입 | 필수 | 비고 |
 | :---- | :--- | :------- | :---- |
-| `payment_instrument_id` | string | ✓ | ID of the associated instrument in the containing Checkout. |
-| `url` | string | ✓ | Absolute HTTPS URL for the buyer-facing challenge surface. |
+| `payment_instrument_id` | string | ✓ | 이 체크아웃에 포함된, 연관 결제 수단의 ID. |
+| `url` | string | ✓ | 구매자에게 보이는 챌린지 화면의 절대 HTTPS URL. |
 
-`config.url` **SHOULD** be Business- or provider-operated and own any
-provider-specific POST, such as submitting CReq to an ACS challenge URL. The
-Platform performs an ordinary navigation to it; it **MUST NOT** construct
-provider requests, parse challenge payloads, or relay 3DS protocol data.
+`config.url`은 비즈니스나 제공업체가 운영하는 것이어야 하며, ACS 챌린지 URL로
+CReq를 제출하는 것처럼 제공업체 고유의 POST는 모두 이 URL이 맡아야
+한다(**SHOULD**). 플랫폼은 이 URL로 일반적인 내비게이션만 수행한다. 플랫폼은
+제공업체 요청을 구성하거나, 챌린지 페이로드를 파싱하거나, 3DS 프로토콜 데이터를
+중계해서는 안 된다(**MUST NOT**).
 
-## Platform Behavior { #platform-behavior }
+## 플랫폼 동작 { #platform-behavior }
 
-The Platform **MUST**:
+플랫폼은 반드시 다음을 수행해야 한다(**MUST**).
 
-1. validate the URL according to the Payment Authentication contract, the
-   payment handler and instrument context, and Platform policy;
-2. load the URL in an isolated, visible browser-capable surface;
-3. complete the `action.ready` handshake before presenting the challenge;
-4. prevent interaction with the rest of Checkout while the challenge is
-   outstanding;
-5. correlate embedded notifications with both this Action occurrence and the
-   mounted surface; and
-6. close the surface after `action.done`, `action.error`, unrecoverable load
-   failure, or abandonment.
+1. 결제 인증 계약, 결제 핸들러와 결제 수단 컨텍스트, 플랫폼 정책에 따라 URL을
+   검증한다.
+2. 격리되어 있고 사용자에게 보이는, 브라우저 기능을 갖춘 화면에 URL을 로드한다.
+3. 챌린지를 표시하기 전에 `action.ready` 핸드셰이크를 완료한다.
+4. 챌린지가 해결되지 않은 동안 체크아웃의 나머지 부분과 상호작용하지 못하게
+   막는다.
+5. 임베디드 알림을 이 액션 항목 및 마운트된 화면 모두와 대조해 연관시킨다.
+6. `action.done`, `action.error`, 복구할 수 없는 로드 실패, 이탈 이후에는 화면을
+   닫는다.
 
-Mounting the surface **MUST** follow the shared
-[Payment Authentication rendering contract](../authentication.md#surface-rendering-and-notifications)
-and [Embedded Protocol security requirements](../../../embedded-protocol.md#security).
+화면을 마운트할 때는 공통
+[결제 인증 렌더링 계약](../authentication.md#surface-rendering-and-notifications)과
+[임베디드 프로토콜 보안 요구 사항](../../../embedded-protocol.md#security)을 반드시
+따라야 한다(**MUST**).
 
-On the web the surface may be a full-page frame, modal frame, or separate window
-when the negotiated handler defines that presentation and its security policy.
-A native Platform may use an isolated webview, browser view, or system browser.
-A top-level or system-browser handoff is permitted only when the handler defines
-a completion channel that the Platform can authenticate and correlate with the
-Action occurrence.
+웹에서는 협상된 핸들러가 해당 표시 방식과 보안 정책을 정의한 경우, 화면이 전체
+페이지 프레임, 모달 프레임, 별도 창 중 하나일 수 있다. 네이티브 플랫폼은 격리된
+웹뷰, 브라우저 뷰, 시스템 브라우저를 사용할 수 있다. 최상위(top-level) 또는 시스템
+브라우저로 넘기는 방식은 플랫폼이 인증하고 액션 항목과 연관시킬 수 있는 완료
+채널을 핸들러가 정의한 경우에만 허용된다.
 
-The Platform **MUST NOT** infer an authentication outcome from frame content,
-URL changes, or notification diagnostics.
+플랫폼은 프레임 내용, URL 변경, 알림 진단 정보로부터 인증 결과를 추론해서는 안
+된다(**MUST NOT**).
 
-## Embedded Notifications { #embedded-notifications }
+## 임베디드 알림 { #embedded-notifications }
 
-After completing the shared
-[`action.ready` handshake](../authentication.md#ready-handshake), the
-surface sends JSON-RPC 2.0 notifications defined by the
-[payment Action embedded contract](../authentication.md#surface-rendering-and-notifications).
+공통 [`action.ready` 핸드셰이크](../authentication.md#ready-handshake)를 완료한
+뒤, 화면은 [결제 액션 임베디드 계약](../authentication.md#surface-rendering-and-notifications)에
+정의된 JSON-RPC 2.0 알림을 보낸다.
 
-### Done { #done }
+### 완료 { #done }
 
-When the Platform-facing challenge interaction finishes, the surface **MUST**
-send:
+플랫폼을 향한 챌린지 상호작용이 끝나면 화면은 반드시 다음을 보내야
+한다(**MUST**).
 
 <!-- ucp:example schema=transports/jsonrpc def=request op=read -->
 ```json
@@ -137,22 +136,21 @@ send:
 }
 ```
 
-`action.done` means only that the Platform should close the challenge surface
-and retrieve Checkout. It does not mean authentication or payment succeeded.
-After closing the surface, the Platform should issue Get Checkout to confirm
-processing state. Get Checkout is a read-only observation and does not
-itself advance the payment attempt; the Business advances Checkout state
-from server-side provider state (typically an out-of-band provider
-push/callback), independent of when the Platform calls Get Checkout.
+`action.done`은 플랫폼이 챌린지 화면을 닫고 체크아웃을 조회해야 한다는 뜻일 뿐이다.
+인증이나 결제가 성공했다는 뜻이 아니다. 화면을 닫은 뒤 플랫폼은 처리 상태를
+확인하기 위해 체크아웃 조회(Get Checkout)를 호출해야 한다. 체크아웃 조회는 읽기
+전용 관찰이며, 그 자체로 결제 시도를 진행시키지 않는다. 비즈니스는 플랫폼이
+체크아웃 조회를 언제 호출하는지와 무관하게, 서버 측 제공업체 상태(일반적으로 대역
+외(out-of-band) 제공업체 푸시/콜백)를 바탕으로 체크아웃 상태를 진행시킨다.
 
-A handler-owned surface **MAY** include provider-specific or diagnostic params
-such as correlation identifiers or SDK outcomes. Platforms **MUST** ignore
-unknown params for UCP processing unless the negotiated handler defines them.
-They are never authoritative payment outcomes by default.
+핸들러가 소유한 화면은 상관관계 식별자나 SDK 결과 같은 제공업체 고유 또는 진단용
+params를 포함할 수 있다(**MAY**). 협상된 핸들러가 정의하지 않은 알 수 없는
+params는 플랫폼이 UCP 처리 시 반드시 무시해야 한다(**MUST**). 이런 params는
+기본적으로 결코 권위 있는 결제 결과가 아니다.
 
-### Error { #error }
+### 오류 { #error }
 
-If the surface cannot continue, it **MAY** send:
+화면이 더 진행할 수 없으면 다음을 보낼 수 있다(**MAY**).
 
 <!-- ucp:example schema=transports/jsonrpc def=request op=read -->
 ```json
@@ -176,56 +174,53 @@ If the surface cannot continue, it **MAY** send:
 }
 ```
 
-Surface-level codes are the shared
-[well-known `action.error` codes](../authentication.md#surface-rendering-and-notifications).
-Buyer abandonment and provider authentication outcomes may be unavailable to the
-surface or known only by the provider backend; the Business and payment provider
-remain authoritative for those distinctions. After either notification, the
-Platform follows the shared Payment Authentication reconciliation contract.
+화면 수준 코드는 공통
+[잘 알려진 `action.error` 코드](../authentication.md#surface-rendering-and-notifications)를
+따른다. 구매자 이탈 여부와 제공업체 인증 결과는 화면이 알 수 없거나 제공업체
+백엔드만 알 수도 있다. 이런 구분에 대해서는 비즈니스와 결제 제공업체가 권위를
+갖는다. 어느 알림을 받든 플랫폼은 그 뒤 공통 결제 인증 조정(reconciliation) 계약을
+따른다.
 
-## Combined Provider Flows { #combined-provider-flows }
+## 결합된 제공업체 흐름 { #combined-provider-flows }
 
-A payment provider may serve both device data collection and a challenge from
-one `config.url`. The emitted Action type describes the Platform-facing behavior:
+결제 제공업체는 하나의 `config.url`에서 기기 데이터 수집과 챌린지를 함께 제공할 수
+있다. 발행되는 액션 타입은 플랫폼을 향한 동작을 나타낸다.
 
-- If the surface remains invisible and never requests Buyer interaction, the
-  Business emits device data collection.
-- If the surface may display a Buyer challenge, the Business emits 3DS challenge.
+- 화면이 계속 보이지 않고 구매자 상호작용을 전혀 요청하지 않는다면, 비즈니스는
+  기기 데이터 수집 액션을 발행한다.
+- 화면이 구매자 챌린지를 표시할 수 있다면, 비즈니스는 3DS 챌린지 액션을 발행한다.
 
-The Business must not emit an invisible DDC Action and then make that surface
-visible. If collection completes first, the preferred flow is to remove the DDC
-occurrence and emit a new challenge occurrence in a later Checkout response.
-The two occurrences have different Action types and IDs even when their
-`config.url` origin is the same.
+비즈니스는 보이지 않는 DDC 액션을 발행한 뒤 그 화면을 보이게 만들어서는 안 된다.
+수집이 먼저 끝난다면, 이후의 체크아웃 응답에서 DDC 항목을 제거하고 새 챌린지
+항목을 발행하는 흐름이 권장된다. 두 항목은 `config.url` 오리진이 같더라도 액션
+타입과 ID가 서로 다르다.
 
-## Deadline and Fallback { #deadline-and-fallback }
+## 기한과 폴백 { #deadline-and-fallback }
 
 [EMV 3-D Secure Protocol and Core Functions v2.3.1.1](https://www.emvco.com/specifications/emv-3-d-secure-protocol-and-core-functions-specification-6/){ target="_blank" }
-gives the ACS 10 minutes (600 seconds) after successfully sending each challenge
-interface to the challenge iframe (Req 226). The surface and provider own that
-per-interface timer. It does not define a single UCP deadline beginning at the
-initial navigation.
+은 ACS가 각 챌린지 인터페이스를 챌린지 iframe에 성공적으로 보낸 뒤 10분(600초)을
+허용한다(Req 226). 이 인터페이스별 타이머는 화면과 제공업체가 관리한다. 이 규정은
+최초 내비게이션 시점부터 시작되는 단일 UCP 기한을 정의하지 않는다.
 
-The Platform applies a bounded outer-surface deadline defined by the handler or
-Platform policy, measured from navigation and capped by Checkout `expires_at`.
-The Business **MUST** choose an expiry that accommodates the handler-defined
-window. The outer deadline governs only the Platform-owned container and does
-not replace or reset an ACS timer.
+플랫폼은 핸들러나 플랫폼 정책이 정의한, 상한이 있는 외부 화면 기한을 적용한다. 이
+기한은 내비게이션 시점부터 측정하며 체크아웃의 `expires_at`을 넘을 수 없다.
+비즈니스는 핸들러가 정의한 시간 범위를 수용할 수 있는 만료 시각을 반드시 선택해야
+한다(**MUST**). 외부 기한은 플랫폼이 소유한 컨테이너에만 적용되며, ACS 타이머를
+대체하거나 재설정하지 않는다.
 
-The Platform may close sooner after a valid terminal notification, load failure,
-Buyer dismissal, or terminal Checkout state. When the outer deadline elapses, it
-**MUST** close the surface, treat the interaction as abandoned, and follow the
-non-successful surface reconciliation path. It **MUST NOT** remount the same
-Action type and `id`; further handling follows the parent Checkout Actions
-fallback, handoff, and cancellation rules.
+플랫폼은 유효한 종료 알림, 로드 실패, 구매자의 닫기, 체크아웃 종료 상태가 발생하면
+더 일찍 화면을 닫을 수 있다. 외부 기한이 지나면 플랫폼은 반드시 화면을 닫고,
+상호작용을 이탈로 간주하며, 성공하지 못한 화면에 대한 조정 경로를 따라야
+한다(**MUST**). 같은 액션 타입과 `id`를 다시 마운트해서는 안 되며(**MUST NOT**),
+이후 처리는 상위 체크아웃 액션의 폴백, 핸드오프, 취소 규칙을 따른다.
 
-## Security { #security }
+## 보안 { #security }
 
-The common [Payment Authentication security requirements](../authentication.md#security-and-data-handling)
-apply. In addition:
+공통 [결제 인증 보안 요구 사항](../authentication.md#security-and-data-handling)이
+적용된다. 그 밖에 다음을 따른다.
 
-- The handler's trust policy **MUST** authorize the initial and redirect origins
-  before the Platform displays them.
-- The Platform validates both message source and origin.
-- A later Checkout response based on server-side provider state remains
-  authoritative regardless of any surface notification.
+- 플랫폼이 최초 오리진과 리디렉션 오리진을 표시하기 전에, 핸들러의 신뢰 정책이
+  반드시 해당 오리진을 승인해야 한다(**MUST**).
+- 플랫폼은 메시지 출처(source)와 오리진을 모두 검증한다.
+- 서버 측 제공업체 상태를 바탕으로 한 이후의 체크아웃 응답은 화면 알림과 관계없이
+  권위를 유지한다.

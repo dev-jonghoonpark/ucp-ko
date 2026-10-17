@@ -14,41 +14,39 @@
    limitations under the License.
 -->
 
-# Cart Capability - EP Binding { #cart-capability-ep-binding }
+# 장바구니 기능 - EP 바인딩 { #cart-capability-ep-binding }
 
-## Introduction { #introduction }
+## 소개 { #introduction }
 
-Embedded Cart Protocol (ECaP) is a cart-specific implementation of
-UCP's Embedded Protocol (EP) transport binding that enables a
-**host** to embed a **business's** cart interface and receive events as the
-buyer interacts with the cart.
-ECaP is a transport binding (like REST)—it defines **how**
-to communicate, not **what** data exists.
+임베디드 장바구니 프로토콜(Embedded Cart Protocol, ECaP)은 UCP 임베디드 프로토콜(EP)
+전송 바인딩의 장바구니 전용 구현이다. **호스트**는 이를 통해 **비즈니스**의 장바구니
+인터페이스를 임베드하고, 구매자가 장바구니와 상호작용할 때 이벤트를 받는다.
+ECaP는 REST와 같은 전송 바인딩으로, 어떤 데이터가 존재하는지(**무엇**)가 아니라
+**어떻게** 통신하는지를 정의한다.
 
-## Terminology & Actors { #terminology-actors }
+## 용어와 행위자 { #terminology-actors }
 
-### Commerce Roles { #commerce-roles }
+### 커머스 역할 { #commerce-roles }
 
-- **Business:** The seller providing goods/services and the cart building
-    experience.
-- **Buyer:** The end user looking to make a purchase through the cart building exercise.
+- **비즈니스(Business):** 상품·서비스와 장바구니 구성 경험을 제공하는 판매 주체.
+- **구매자(Buyer):** 장바구니 구성을 통해 구매하려는 최종 사용자.
 
-### Technical Components { #technical-components }
+### 기술 구성 요소 { #technical-components }
 
-- **Host:** The application embedding the cart (e.g., AI Agent app,
-    Super App, Browser). Responsible for user
-    authentication (including any prerequisites like identity linking).
-- **Embedded Cart:** The business's cart interface rendered in an
-    iframe or webview. Responsible for the cart building flow and potential transition
-    into lower-funnel constructs like checkout creations.
+- **호스트(Host):** 장바구니를 임베드하는 애플리케이션(예: AI 에이전트 앱,
+    슈퍼 앱, 브라우저). 사용자 인증(신원 연결 같은 사전 요건 포함)을
+    담당한다.
+- **임베디드 장바구니(Embedded Cart):** iframe 또는 웹뷰에서 렌더링되는 비즈니스의
+    장바구니 인터페이스. 장바구니 구성 흐름과, 체크아웃 생성 같은 하위 퍼널 단계로의
+    전환 가능성을 담당한다.
 
-### Discovery { #discovery }
+### 디스커버리 { #discovery }
 
-ECaP availability is signaled via service discovery. When a business advertises
-the `embedded` transport in their `/.well-known/ucp` profile, all cart
-`continue_url` values support the Embedded Cart Protocol.
+ECaP 지원 여부는 서비스 디스커버리로 알린다. 비즈니스가 `/.well-known/ucp` 프로필에
+`embedded` 전송 방식을 광고하면, 모든 장바구니 `continue_url` 값이 임베디드 장바구니
+프로토콜을 지원한다.
 
-**Service Discovery Example:**
+**서비스 디스커버리 예시:**
 
 <!-- ucp:example schema=profile def=business_schema extract=$.services target=$.ucp.services -->
 ```json
@@ -77,17 +75,17 @@ the `embedded` transport in their `/.well-known/ucp` profile, all cart
 }
 ```
 
-When `embedded` is absent from the service definition, the business only
-supports redirect-based cart continuation via `continue_url`.
+서비스 정의에 `embedded`가 없으면, 비즈니스는 `continue_url`을 통한 리디렉션 방식의
+장바구니 이어 가기만 지원한다.
 
-#### Per-Cart Configuration { #per-cart-configuration }
+#### 장바구니별 구성 { #per-cart-configuration }
 
-Service-level discovery declares that a business supports ECaP, but does not
-guarantee that business will enable it for every cart session. Businesses **MUST** include
-an embedded service binding with `config.delegate` in cart responses to
-indicate ECaP availability and allowed delegations for a specific session.
+서비스 수준 디스커버리는 비즈니스가 ECaP를 지원한다는 사실을 선언할 뿐, 모든 장바구니
+세션에서 ECaP를 활성화한다고 보장하지는 않는다. 비즈니스는 특정 세션의 ECaP 지원 여부와
+허용된 위임 항목을 나타내기 위해, 장바구니 응답에 `config.delegate`가 포함된 임베디드
+서비스 바인딩을 반드시 포함해야 한다(**MUST**).
 
-**Cart Response Example:**
+**장바구니 응답 예시:**
 
 <!-- ucp:example schema=shopping/cart op=read direction=response extract=$.ucp.services target=$.ucp.services -->
 ```json
@@ -114,110 +112,103 @@ indicate ECaP availability and allowed delegations for a specific session.
 }
 ```
 
-### Loading an Embedded Cart URL { #loading-an-embedded-cart-url }
+### 임베디드 장바구니 URL 로드 { #loading-an-embedded-cart-url }
 
-When a host receives a cart response with a `continue_url` from a business
-that advertises ECaP support, it **MAY** initiate an ECaP session by loading the
-URL in an embedded context.
+ECaP 지원을 광고하는 비즈니스로부터 `continue_url`이 담긴 장바구니 응답을 받으면,
+호스트는 해당 URL을 임베디드 컨텍스트에 로드해 ECaP 세션을 시작할 수 있다(**MAY**).
 
-**Example:**
+**예시:**
 
 ```text
 https://example.com/cart/cart123?ep_version=2026-01-23...
 ```
 
-Note: All query parameter values must be properly URL-encoded per RFC 3986.
+참고: 모든 쿼리 파라미터 값은 RFC 3986에 따라 올바르게 URL 인코딩되어야 한다.
 
-Before loading the embedded context, the host **SHOULD**:
+임베디드 컨텍스트를 로드하기 전에 호스트는 다음을 수행해야 한다(**SHOULD**).
 
-1. Check `config.delegate` in the response for available delegations
-2. Optionally complete authentication mechanisms (i.e. identity linking)
-   if required by the business
+1. 응답의 `config.delegate`에서 사용 가능한 위임 항목을 확인한다
+2. 비즈니스가 요구하는 경우 인증 절차(예: 신원 연결)를 선택적으로 완료한다
 
-To initiate the session, the host **MUST** augment the `continue_url` with supported
-ECaP query parameters.
+세션을 시작하려면 호스트는 반드시 `continue_url`에 지원되는 ECaP 쿼리 파라미터를
+추가해야 한다(**MUST**).
 
-All ECaP parameters are passed via URL query string, not HTTP headers, to ensure
-maximum compatibility across different embedding environments. Parameters **SHOULD**
-use either `ep` or `ep_cart` prefixes to avoid namespace pollution and clearly
-distinguish ECaP parameters from business-specific query parameters:
+다양한 임베딩 환경에서 최대한의 호환성을 보장하기 위해, 모든 ECaP 파라미터는 HTTP 헤더가
+아니라 URL 쿼리 문자열로 전달한다. 네임스페이스 오염을 피하고 ECaP 파라미터를 비즈니스
+고유의 쿼리 파라미터와 명확히 구분하기 위해, 파라미터는 `ep` 또는 `ep_cart` 접두사를
+사용해야 한다(**SHOULD**).
 
-- `ep_version` (string, **REQUIRED**): The UCP version for this session
-    (format: `YYYY-MM-DD`). Must match the version from service discovery.
-- `ep_auth` (string, **OPTIONAL**): Authentication token in business-defined
-    format.
-- `ep_color_scheme` (string, **OPTIONAL**): The color scheme preference for
-    the cart UI. Valid values: `light`, `dark`. When not provided, the
-    Embedded Cart follows system preference.
-- `ep_cart_delegate` (string, **OPTIONAL**): Comma-delimited list of delegations
-    the host wants to handle. **MAY** be empty if no delegations are needed.
-    **SHOULD** be a subset of `config.delegate` from the embedded service binding.
+- `ep_version` (string, **필수(REQUIRED)**): 이 세션의 UCP 버전
+    (형식: `YYYY-MM-DD`). 서비스 디스커버리의 버전과 일치해야 한다.
+- `ep_auth` (string, **선택(OPTIONAL)**): 비즈니스가 정의한 형식의 인증
+    토큰.
+- `ep_color_scheme` (string, **선택(OPTIONAL)**): 장바구니 UI의 색상 테마
+    선호. 유효한 값: `light`, `dark`. 제공되지 않으면 임베디드 장바구니는
+    시스템 설정을 따른다.
+- `ep_cart_delegate` (string, **선택(OPTIONAL)**): 호스트가 처리하려는 위임 항목의
+    쉼표 구분 목록. 위임이 필요 없으면 비어 있을 수 있다(**MAY**).
+    임베디드 서비스 바인딩의 `config.delegate`의 부분 집합이어야 한다(**SHOULD**).
 
-## Transport & Messaging { #transport-messaging }
+## 전송과 메시징 { #transport-messaging }
 
-ECaP uses the shared EP transport layer. See
-[Embedded Protocol — Transport & Messaging](../../embedded-protocol.md#transport-messaging)
-for message format, message types, and response handling conventions.
+ECaP는 공용 EP 전송 계층을 사용한다. 메시지 형식, 메시지 유형, 응답 처리 규칙은
+[임베디드 프로토콜 — 전송과 메시징](../../embedded-protocol.md#transport-messaging)을
+참고한다.
 
-The `ucp.version` in all responses **MUST** echo the `ep_version` negotiated
-during session initialization and confirmed by the host in the `ep.cart.ready`
-response. The version is session-bound — it **MUST NOT** change for the duration
-of the ECaP session.
+모든 응답의 `ucp.version`은 세션 초기화 중 협상되고 호스트가 `ep.cart.ready` 응답에서
+확인한 `ep_version`을 반드시 그대로 반영해야 한다(**MUST**). 버전은 세션에 묶여 있으며,
+ECaP 세션이 지속되는 동안 바뀌어서는 안 된다(**MUST NOT**).
 
-### Communication Channels { #communication-channels }
+### 통신 채널 { #communication-channels }
 
-ECaP follows the shared EP communication channel model. See
-[Embedded Protocol — Communication Channels](../../embedded-protocol.md#communication-channels)
-for the general pattern.
+ECaP는 공용 EP 통신 채널 모델을 따른다. 일반적인 패턴은
+[임베디드 프로토콜 — 통신 채널](../../embedded-protocol.md#communication-channels)을
+참고한다.
 
-For native hosts, the cart-specific globals are:
+네이티브 호스트의 경우 장바구니 전용 전역 객체는 다음과 같다.
 
-- `window.EmbeddedCartProtocolConsumer` (preferred)
+- `window.EmbeddedCartProtocolConsumer` (권장)
 - `window.webkit.messageHandlers.EmbeddedCartProtocolConsumer`
-- `window.EmbeddedCartProtocol` (Host → Embedded Cart)
+- `window.EmbeddedCartProtocol` (호스트 → 임베디드 장바구니)
 
-## Message API Reference { #message-api-reference }
+## 메시지 API 레퍼런스 { #message-api-reference }
 
-### Message Categories { #message-categories }
+### 메시지 분류 { #message-categories }
 
-#### Core Messages { #core-messages }
+#### 핵심 메시지 { #core-messages }
 
-Core messages are defined by the ECaP specification and **MUST** be supported by
-all implementations.
+핵심 메시지는 ECaP 명세에서 정의하며, 모든 구현이 반드시 지원해야 한다(**MUST**).
 
-| Category          | Purpose                                                                   | Pattern                | Core Messages                                                                             |
+| 분류          | 목적                                                                   | 패턴                | 핵심 메시지                                                                             |
 | :---------------- | :------------------------------------------------------------------------ | :--------------------- | :---------------------------------------------------------------------------------------- |
-| **Handshake**     | Establish connection between host and Embedded Cart.                      | Request                | `ep.cart.ready`                                                                           |
-| **Authentication**| Communicate auth data exchanges between Embedded Cart and host.           | Request                | `ep.cart.auth`                                                                            |
-| **Lifecycle**     | Inform of cart state in Embedded Cart.                                    | Notification           | `ep.cart.start`, `ep.cart.complete`                                                       |
-| **State Change**  | Inform of cart field changes.                                             | Notification           | `ep.cart.line_items.change`, `ep.cart.buyer.change`, `ep.cart.messages.change`            |
-| **Session Error** | Signal a session-level error unrelated to the cart resource.              | Notification           | `ep.cart.error`                                                                           |
+| **핸드셰이크**     | 호스트와 임베디드 장바구니 간 연결을 수립한다.                      | 요청                | `ep.cart.ready`                                                                           |
+| **인증**| 임베디드 장바구니와 호스트 간의 인증 데이터 교환을 전달한다.           | 요청                | `ep.cart.auth`                                                                            |
+| **수명 주기**     | 임베디드 장바구니의 장바구니 상태를 알린다.                                    | 알림           | `ep.cart.start`, `ep.cart.complete`                                                       |
+| **상태 변경**  | 장바구니 필드 변경을 알린다.                                             | 알림           | `ep.cart.line_items.change`, `ep.cart.buyer.change`, `ep.cart.messages.change`            |
+| **세션 오류** | 장바구니 리소스와 무관한 세션 수준 오류를 알린다.              | 알림           | `ep.cart.error`                                                                           |
 
-### Handshake Messages { #handshake-messages }
+### 핸드셰이크 메시지 { #handshake-messages }
 
 #### `ep.cart.ready` { #epcartready }
 
-Upon rendering, the Embedded Cart **MUST** broadcast readiness to the parent
-context using the `ep.cart.ready` message. This message initializes a secure
-communication channel between the host and Embedded Cart, communicates whether
-or not additional auth exchange is needed, and allows the host to provide
-any requested authorization data back to Embedded Cart.
+렌더링이 끝나면 임베디드 장바구니는 `ep.cart.ready` 메시지로 상위 컨텍스트에 준비 완료를
+반드시 알려야 한다(**MUST**). 이 메시지는 호스트와 임베디드 장바구니 사이의 보안 통신
+채널을 초기화하고, 추가 인증 교환이 필요한지 알리며, 호스트가 요청받은 인가 데이터를
+임베디드 장바구니에 다시 전달할 수 있게 한다.
 
-- **Direction:** Embedded Cart → Host
-- **Type:** Request
-- **Payload:**
-    - `delegate` (array of strings, **REQUIRED**): List of delegation
-        identifiers accepted by the Embedded Cart. **MUST** be a subset of
-        both `ep_cart_delegate` (what host requested) and `config.delegate`
-        from the cart response (what business allows). An empty array
-        means no delegations were accepted.
-    - `auth` (object, **OPTIONAL**): When `ep_auth` URL param is neither sufficient
-        nor applicable due to additional considerations, business can request for
-        authorization during initial handshake by specifying the `type` string
-        within this object. This `type` string value is a mirror of the payload content
-        included in [`ep.cart.auth`](#epcartauth).
+- **방향:** 임베디드 장바구니 → 호스트
+- **유형:** 요청
+- **페이로드:**
+    - `delegate` (array of strings, **필수(REQUIRED)**): 임베디드 장바구니가 수락한 위임
+        식별자 목록. `ep_cart_delegate`(호스트가 요청한 항목)와 장바구니 응답의
+        `config.delegate`(비즈니스가 허용한 항목) 양쪽의 부분 집합이어야
+        한다(**MUST**). 빈 배열은 수락된 위임이 없다는 뜻이다.
+    - `auth` (object, **선택(OPTIONAL)**): 추가 고려 사항 때문에 `ep_auth` URL 파라미터가
+        충분하지 않거나 적용할 수 없는 경우, 비즈니스는 이 객체 안에 `type` 문자열을
+        지정해 초기 핸드셰이크 중에 인가를 요청할 수 있다. 이 `type` 문자열 값은
+        [`ep.cart.auth`](#epcartauth)에 포함되는 페이로드 내용을 그대로 반영한다.
 
-**Example Message (no delegations accepted):**
+**메시지 예시(수락된 위임 없음):**
 
 <!-- ucp:example schema=transports/embedded_message def=request direction=request -->
 ```json
@@ -234,26 +225,26 @@ any requested authorization data back to Embedded Cart.
 }
 ```
 
-The `ep.cart.ready` message is a request, which means that the host **MUST** respond
-to complete the handshake.
+`ep.cart.ready` 메시지는 요청이므로, 호스트는 핸드셰이크를 완료하기 위해 반드시 응답해야
+한다(**MUST**).
 
-- **Direction:** Host → Embedded Cart
-- **Type:** Response
-- **Result Payload:**
-    - `ucp` (object, **REQUIRED**): UCP protocol metadata. The `version`
-        confirms the negotiated `ep_version` and `status` **MUST** be
-        `"success"`.
-    - `upgrade` (object, **OPTIONAL**): An object describing how the Embedded
-        Cart should update the communication channel it uses to communicate
-        with the host. When present, host **MUST NOT** include `credential`
-        — the channel will be re-established and any credential sent here
-        will be discarded.
-    - `credential` (string, **OPTIONAL**): The requested authorization data,
-        can be in the form of an OAuth token, JWT, API keys, etc. **MUST** be
-        set if `auth` is present in the request. **MUST NOT** be set if
-        `upgrade` is present.
+- **방향:** 호스트 → 임베디드 장바구니
+- **유형:** 응답
+- **결과 페이로드:**
+    - `ucp` (object, **필수(REQUIRED)**): UCP 프로토콜 메타데이터. `version`은
+        협상된 `ep_version`을 확인하며, `status`는 반드시 `"success"`여야
+        한다(**MUST**).
+    - `upgrade` (object, **선택(OPTIONAL)**): 임베디드 장바구니가 호스트와 통신하는
+        데 사용하는 통신 채널을 어떻게 갱신해야 하는지 설명하는 객체. 이 필드가
+        있으면 호스트는 `credential`을 포함해서는 안 된다(**MUST NOT**).
+        채널이 다시 수립되므로 여기서 보낸 자격 증명은
+        폐기된다.
+    - `credential` (string, **선택(OPTIONAL)**): 요청된 인가 데이터로, OAuth 토큰,
+        JWT, API 키 등의 형태일 수 있다. 요청에 `auth`가 있으면 반드시 설정해야
+        한다(**MUST**). `upgrade`가 있으면 설정해서는 안
+        된다(**MUST NOT**).
 
-**Example Message:**
+**메시지 예시:**
 
 <!-- ucp:example schema=transports/embedded_message def=response -->
 ```json
@@ -267,13 +258,13 @@ to complete the handshake.
 }
 ```
 
-Hosts **MAY** respond with an `upgrade` field to update the communication
-channel between host and Embedded Cart. Currently, this object only supports
-a `port` field, which **MUST** be a `MessagePort` object, and **MUST** be
-transferred to the embedded cart context (e.g., with `{transfer: [port2]}`
-on the host's `iframe.contentWindow.postMessage()` call):
+호스트는 호스트와 임베디드 장바구니 사이의 통신 채널을 갱신하기 위해 `upgrade` 필드로
+응답할 수 있다(**MAY**). 현재 이 객체는 `port` 필드만 지원한다. 이 필드는 반드시
+`MessagePort` 객체여야 하며(**MUST**), 반드시 임베디드 장바구니 컨텍스트로
+전달(transfer)되어야 한다(**MUST**)(예: 호스트의 `iframe.contentWindow.postMessage()`
+호출에서 `{transfer: [port2]}` 사용).
 
-**Example Message:**
+**메시지 예시:**
 
 <!-- ucp:example schema=transports/embedded_message def=response -->
 ```json
@@ -289,51 +280,48 @@ on the host's `iframe.contentWindow.postMessage()` call):
 }
 ```
 
-When the host responds with an `upgrade` object, the Embedded Cart **MUST**
-discard any other information in the message, send a new `ep.cart.ready` message
-over the upgraded communication channel, and wait for a new response. All
-subsequent messages **MUST** be sent only over the upgraded communication
-channel.
+호스트가 `upgrade` 객체로 응답하면, 임베디드 장바구니는 메시지의 다른 정보를 모두 폐기하고,
+갱신된 통신 채널로 새 `ep.cart.ready` 메시지를 보낸 뒤 새 응답을 기다려야 한다(**MUST**).
+이후의 모든 메시지는 반드시 갱신된 통신 채널로만 보내야 한다(**MUST**).
 
-If the host cannot complete the handshake (e.g., origin validation failure or
-protocol state violation), it **MUST** respond with an `error_response` result.
-When the host responds with an error, the session cannot proceed. The host
-**MUST** tear down the embedded context and **MAY** redirect the buyer to
-`continue_url` if present. The Embedded Cart **MUST NOT** send further
-messages after receiving a handshake error.
+호스트가 핸드셰이크를 완료할 수 없는 경우(예: 출처(origin) 검증 실패, 프로토콜 상태 위반),
+반드시 `error_response` 결과로 응답해야 한다(**MUST**). 호스트가 오류로 응답하면 세션은
+진행될 수 없다. 호스트는 반드시 임베디드 컨텍스트를 해제해야 하며(**MUST**),
+`continue_url`이 있으면 구매자를 그곳으로 리디렉션할 수 있다(**MAY**). 임베디드
+장바구니는 핸드셰이크 오류를 받은 뒤 더 이상 메시지를 보내서는 안 된다(**MUST NOT**).
 
-### Authentication { #authentication }
+### 인증 { #authentication }
 
 #### `ep.cart.auth` { #epcartauth }
 
-`ep.cart.auth` implements the shared EP authentication pattern — see
-[Embedded Protocol — Authentication](../../embedded-protocol.md#authentication) for
-the request/response contract, examples, and error escalation flow.
+`ep.cart.auth`는 공용 EP 인증 패턴을 구현한다. 요청/응답 계약, 예시, 오류 에스컬레이션
+흐름은 [임베디드 프로토콜 — 인증](../../embedded-protocol.md#authentication)을
+참고한다.
 
-- **Method:** `ep.cart.auth`
-- **Direction:** Embedded Cart → Host (request); Host → Embedded Cart (response)
+- **메서드:** `ep.cart.auth`
+- **방향:** 임베디드 장바구니 → 호스트(요청), 호스트 → 임베디드 장바구니(응답)
 
-When error escalation is required, Embedded Cart **MUST** issue an
-`ep.cart.error` notification per the
-[session error pattern](../../embedded-protocol.md#session-error).
+오류 에스컬레이션이 필요하면 임베디드 장바구니는
+[세션 오류 패턴](../../embedded-protocol.md#session-error)에 따라 반드시
+`ep.cart.error` 알림을 보내야 한다(**MUST**).
 
-### Lifecycle Messages { #lifecycle-messages }
+### 수명 주기 메시지 { #lifecycle-messages }
 
-Lifecycle notifications follow the shared EP pattern — see
-[Embedded Protocol — Lifecycle](../../embedded-protocol.md#lifecycle). All lifecycle
-notifications carry the full `cart` object as their payload.
+수명 주기 알림은 공용 EP 패턴을 따른다.
+[임베디드 프로토콜 — 수명 주기](../../embedded-protocol.md#lifecycle)를 참고한다. 모든
+수명 주기 알림은 전체 `cart` 객체를 페이로드로 담는다.
 
 #### `ep.cart.start` { #epcartstart }
 
-Signals that cart is visible and ready for interaction. Sent after a successful
-`ep.cart.ready` handshake.
+장바구니가 표시되어 상호작용할 준비가 되었음을 알린다. `ep.cart.ready` 핸드셰이크가
+성공한 뒤 전송된다.
 
-- **Direction:** Embedded Cart → Host
-- **Type:** Notification
-- **Payload:**
-    - `cart` (object, **REQUIRED**): The full current state of the cart.
+- **방향:** 임베디드 장바구니 → 호스트
+- **유형:** 알림
+- **페이로드:**
+    - `cart` (object, **필수(REQUIRED)**): 장바구니의 현재 전체 상태.
 
-**Example Message:**
+**메시지 예시:**
 
 <!-- ucp:example schema=transports/embedded_message def=request direction=request -->
 ```json
@@ -355,20 +343,20 @@ Signals that cart is visible and ready for interaction. Sent after a successful
 
 #### `ep.cart.complete` { #epcartcomplete }
 
-Indicates completion of cart building process and buyer now is ready to be
-transitioned to the next stage of their purchase journey.
+장바구니 구성 과정이 끝나 구매자가 구매 여정의 다음 단계로 넘어갈 준비가 되었음을
+나타낸다.
 
-This marks the completion of Embedded Cart. If `dev.ucp.shopping.checkout` is
-part of the negotiated capabilities during service discovery, host **MAY**
-proceed to initiate a checkout session based on the completed cart by issuing a
-[create checkout](../checkout/index.md#create-checkout) operation.
+이 메시지로 임베디드 장바구니가 완료된다. 서비스 디스커버리 중 협상된 기능에
+`dev.ucp.shopping.checkout`이 포함되어 있으면, 호스트는
+[체크아웃 생성](../checkout/index.md#create-checkout) 작업을 호출해 완료된 장바구니를
+기반으로 체크아웃 세션을 시작할 수 있다(**MAY**).
 
-- **Direction:** Embedded Cart → Host
-- **Type:** Notification
-- **Payload:**
-    - `cart` (object, **REQUIRED**): The final state of the cart.
+- **방향:** 임베디드 장바구니 → 호스트
+- **유형:** 알림
+- **페이로드:**
+    - `cart` (object, **필수(REQUIRED)**): 장바구니의 최종 상태.
 
-**Example Message:**
+**메시지 예시:**
 
 <!-- ucp:example schema=transports/embedded_message def=request direction=request -->
 ```json
@@ -388,23 +376,23 @@ proceed to initiate a checkout session based on the completed cart by issuing a
 }
 ```
 
-### State Change Messages { #state-change-messages }
+### 상태 변경 메시지 { #state-change-messages }
 
-State change notifications follow the shared EP pattern — see
-[Embedded Protocol — State Change](../../embedded-protocol.md#state-change). All state
-change notifications are sent from the Embedded Cart to the host and carry the
-full `cart` object as their payload.
+상태 변경 알림은 공용 EP 패턴을 따른다.
+[임베디드 프로토콜 — 상태 변경](../../embedded-protocol.md#state-change)을 참고한다. 모든
+상태 변경 알림은 임베디드 장바구니에서 호스트로 전송되며, 전체 `cart` 객체를 페이로드로
+담는다.
 
 #### `ep.cart.line_items.change` { #epcartline_itemschange }
 
-Line items have been modified (quantity changed, items added/removed).
+라인 아이템이 수정되었다(수량 변경, 항목 추가/삭제).
 
-- **Direction:** Embedded Cart → Host
-- **Type:** Notification
-- **Payload:**
-    - `cart` (object, **REQUIRED**): The full current state of the cart.
+- **방향:** 임베디드 장바구니 → 호스트
+- **유형:** 알림
+- **페이로드:**
+    - `cart` (object, **필수(REQUIRED)**): 장바구니의 현재 전체 상태.
 
-**Example Message:**
+**메시지 예시:**
 
 <!-- ucp:example schema=transports/embedded_message def=request direction=request -->
 ```json
@@ -425,14 +413,14 @@ Line items have been modified (quantity changed, items added/removed).
 
 #### `ep.cart.buyer.change` { #epcartbuyerchange }
 
-Buyer information has been updated (email, phone, name).
+구매자 정보(이메일, 전화번호, 이름)가 갱신되었다.
 
-- **Direction:** Embedded Cart → Host
-- **Type:** Notification
-- **Payload:**
-    - `cart` (object, **REQUIRED**): The full current state of the cart.
+- **방향:** 임베디드 장바구니 → 호스트
+- **유형:** 알림
+- **페이로드:**
+    - `cart` (object, **필수(REQUIRED)**): 장바구니의 현재 전체 상태.
 
-**Example Message:**
+**메시지 예시:**
 
 <!-- ucp:example schema=transports/embedded_message def=request direction=request -->
 ```json
@@ -452,15 +440,15 @@ Buyer information has been updated (email, phone, name).
 
 #### `ep.cart.messages.change` { #epcartmessageschange }
 
-Cart messages have been updated. Messages include errors, warnings, and
-informational notices about the cart state.
+장바구니 메시지가 갱신되었다. 메시지에는 장바구니 상태에 관한 오류, 경고, 정보성 알림이
+포함된다.
 
-- **Direction:** Embedded Cart → Host
-- **Type:** Notification
-- **Payload:**
-    - `cart` (object, **REQUIRED**): The full current state of the cart.
+- **방향:** 임베디드 장바구니 → 호스트
+- **유형:** 알림
+- **페이로드:**
+    - `cart` (object, **필수(REQUIRED)**): 장바구니의 현재 전체 상태.
 
-**Example Message:**
+**메시지 예시:**
 
 <!-- ucp:example schema=shopping/cart op=read direction=response extract=$.params.cart.messages target=$.messages -->
 ```json
@@ -486,36 +474,33 @@ informational notices about the cart state.
 }
 ```
 
-### Session Error Messages { #session-error-messages }
+### 세션 오류 메시지 { #session-error-messages }
 
 #### `ep.cart.error` { #epcarterror }
 
-`ep.cart.error` implements the shared EP session error pattern — see
-[Embedded Protocol — Session Error](../../embedded-protocol.md#session-error) for the
-payload specification and host handling requirements.
+`ep.cart.error`는 공용 EP 세션 오류 패턴을 구현한다. 페이로드 명세와 호스트 처리 요구
+사항은 [임베디드 프로토콜 — 세션 오류](../../embedded-protocol.md#session-error)를
+참고한다.
 
-## Security & Error Handling { #security-error-handling }
+## 보안과 오류 처리 { #security-error-handling }
 
-### Error Codes { #error-codes }
+### 오류 코드 { #error-codes }
 
-ECaP uses the shared EP error code set — see
-[Embedded Protocol — Error Codes](../../embedded-protocol.md#error-codes).
+ECaP는 공용 EP 오류 코드 집합을 사용한다.
+[임베디드 프로토콜 — 오류 코드](../../embedded-protocol.md#error-codes)를 참고한다.
 
-### Security for Web-Based Hosts { #security-for-web-based-hosts }
+### 웹 기반 호스트의 보안 { #security-for-web-based-hosts }
 
-ECaP inherits the shared EP security requirements for CSP, iframe sandboxing,
-credentialless iframes, and strict origin validation. See
-[Embedded Protocol — Security](../../embedded-protocol.md#security) for the full
-specification.
+ECaP는 CSP, iframe 샌드박싱, credentialless iframe, 엄격한 출처 검증에 관한 공용 EP 보안
+요구 사항을 그대로 따른다. 전체 명세는
+[임베디드 프로토콜 — 보안](../../embedded-protocol.md#security)을 참고한다.
 
-## Schema Definitions { #schema-definitions }
+## 스키마 정의 { #schema-definitions }
 
-The following schemas define the data structures used within the Embedded
-Cart protocol.
+다음 스키마는 임베디드 장바구니 프로토콜에서 사용하는 데이터 구조를 정의한다.
 
-### Cart { #cart }
+### 장바구니 { #cart }
 
-The core object representing the current state of the cart, including
-line items, totals, and buyer information.
+라인 아이템, 합계, 구매자 정보를 포함해 장바구니의 현재 상태를 나타내는 핵심 객체다.
 
 {{ schema_fields('cart_resp', 'shopping/cart') }}
