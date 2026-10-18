@@ -17,14 +17,14 @@
 # 주문 기능 - MCP 바인딩 { #order-capability-mcp-binding }
 
 이 문서는 [주문 기능(Order Capability)](index.md)의 Model Context Protocol(MCP)
-바인딩을 정의한다.
+바인딩을 정의합니다.
 
 ## 프로토콜 기본 사항 { #protocol-fundamentals }
 
 ### 디스커버리 { #discovery }
 
-비즈니스는 `/.well-known/ucp`에 있는 UCP 프로필을 통해 MCP 전송 방식 지원 여부를
-알린다.
+비즈니스는 `/.well-known/ucp`에 있는 UCP 프로필로 MCP 전송 방식 지원 여부를
+알립니다.
 
 <!-- ucp:example schema=profile def=business_schema -->
 ```json
@@ -59,7 +59,7 @@
 ### 요청 메타데이터 { #request-metadata }
 
 MCP 클라이언트는 모든 요청에 프로토콜 메타데이터를 담은 `meta` 객체를 반드시
-포함해야 한다(**MUST**).
+포함해야 합니다(**MUST**).
 
 <!-- ucp:example schema=transports/mcp_tool_call def=request direction=request -->
 ```json
@@ -81,22 +81,22 @@ MCP 클라이언트는 모든 요청에 프로토콜 메타데이터를 담은 `
 }
 ```
 
-[기능 협상](../../overview/index.md#negotiation-protocol)을 위해 모든 요청에
-`meta["ucp-agent"]` 필드가 **필수**다. 플랫폼은 추가 메타데이터 필드를 포함할 수
-있다(**MAY**).
+[기능 협상](../../overview/index.md#negotiation-protocol)에 쓰이므로 모든 요청에
+`meta["ucp-agent"]` 필드가 **필수**입니다. 플랫폼은 추가 메타데이터 필드를 포함할 수
+있습니다(**MAY**).
 
 ## 도구 { #tools }
 
-UCP 기능은 MCP 도구(Tool)와 1:1로 대응한다.
+UCP 기능은 MCP 도구(Tool)와 1:1로 대응합니다.
 
 | 도구 | 작업 | 설명 |
 | :---- | :---- | :---- |
-| `get_order` | [주문 조회](index.md#get-order) | 주문의 현재 상태를 조회한다. |
+| `get_order` | [주문 조회](index.md#get-order) | 주문의 현재 상태를 조회합니다. |
 
 ### `get_order` { #get_order }
 
-[주문 조회](index.md#get-order) 작업에 대응한다. 주문의 현재 상태 스냅숏을
-반환한다.
+[주문 조회](index.md#get-order) 작업에 대응합니다. 주문의 현재 상태 스냅숏을
+반환합니다.
 
 #### 입력 스키마 { #input-schema }
 
@@ -280,23 +280,23 @@ UCP 기능은 MCP 도구(Tool)와 1:1로 대응한다.
 
 ## 오류 처리 { #error-handling }
 
-비즈니스가 주문을 반환할 수 없는 경우, 응답에는 결과를 설명하는 `messages` 배열이
-포함된다. 플랫폼은 주문 필드에 접근하기 전에 반드시 `messages`를 확인해야
-한다(**MUST**).
+비즈니스가 주문을 반환할 수 없으면 응답의 `messages` 배열에 그 결과가 설명되어
+있습니다. 플랫폼은 주문 필드에 접근하기 전에 반드시 `messages`를 확인해야
+합니다(**MUST**).
 
 ## 준수 요건 { #conformance }
 
-MCP 바인딩을 구현하는 플랫폼은 다음을 따른다.
+MCP 바인딩을 구현하는 플랫폼의 요건은 다음과 같습니다.
 
-* 모든 요청에 `meta.ucp-agent.profile`을 반드시 포함해야 한다(**MUST**)
-* 주문 데이터에 접근하기 전에 응답의 `messages` 배열을 반드시 확인해야 한다(**MUST**)
-* 공식적인 주문 경험은 `permalink_url`을 통해 비즈니스에 위임해야 한다(**SHOULD**).
-  주문 세부 정보와 구매 후 작업의 기준(source of truth)은 비즈니스 사이트다
+* 모든 요청에 `meta.ucp-agent.profile`을 반드시 포함해야 합니다(**MUST**).
+* 주문 데이터에 접근하기 전에 응답의 `messages` 배열을 반드시 확인해야 합니다(**MUST**).
+* 공식 주문 경험은 `permalink_url`로 비즈니스에 넘겨야 합니다(**SHOULD**).
+  주문 세부 정보와 구매 후 작업의 기준(source of truth)은 비즈니스 사이트입니다.
 
-MCP 바인딩을 구현하는 비즈니스는 다음을 따른다.
+MCP 바인딩을 구현하는 비즈니스의 요건은 다음과 같습니다.
 
 * [OpenRPC 스키마](site:services/shopping/mcp.openrpc.json)에 따라 `get_order`
-  도구를 반드시 구현해야 한다(**MUST**)
+  도구를 반드시 구현해야 합니다(**MUST**).
 
 모든 전송 방식에 공통으로 적용되는 기능 수준 요구 사항은
-[주문 기능 - 가이드라인](index.md#operations-guidelines)을 참고한다.
+[주문 기능 - 가이드라인](index.md#operations-guidelines)을 참고하세요.

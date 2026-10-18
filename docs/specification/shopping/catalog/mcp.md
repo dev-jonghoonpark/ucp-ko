@@ -16,14 +16,14 @@
 
 # 카탈로그 - MCP 바인딩 { #catalog-mcp-binding }
 
-이 문서는 [카탈로그 기능](index.md)의 Model Context Protocol(MCP) 바인딩을 명세한다.
+이 문서는 [카탈로그 기능](index.md)의 Model Context Protocol(MCP) 바인딩을 설명합니다.
 
 ## 프로토콜 기본 사항 { #protocol-fundamentals }
 
 ### 디스커버리 { #discovery }
 
-비즈니스는 `/.well-known/ucp`에 있는 UCP 프로필을 통해 MCP 전송 방식 지원 여부를
-공시한다.
+비즈니스는 `/.well-known/ucp`에 있는 UCP 프로필로 MCP 전송 방식 지원 여부를
+알립니다.
 
 <!-- ucp:example schema=profile def=business_schema -->
 ```json
@@ -61,7 +61,7 @@
 ### 요청 메타데이터 { #request-metadata }
 
 MCP 클라이언트는 모든 요청에 프로토콜 메타데이터를 담은 `meta` 객체를 반드시 포함해야
-한다(**MUST**).
+합니다(**MUST**).
 
 <!-- ucp:example schema=shopping/catalog_search op=search direction=request extract=$.params.arguments.catalog -->
 ```json
@@ -89,20 +89,20 @@ MCP 클라이언트는 모든 요청에 프로토콜 메타데이터를 담은 `
 }
 ```
 
-버전 호환성 확인과 기능 협상을 위해 모든 요청에 `meta["ucp-agent"]` 필드가
-**필수(required)**다.
+버전 호환성 확인과 기능 협상에 쓰이므로 모든 요청에 `meta["ucp-agent"]` 필드가
+**필수(required)**입니다.
 
 ## 도구 { #tools }
 
 | 도구 | 기능 | 설명 |
 | :--- | :--- | :--- |
-| `search_catalog` | [검색](search.md) | 상품을 검색한다. |
-| `lookup_catalog` | [조회](lookup.md) | 식별자로 하나 이상의 상품 또는 변형(variant)을 조회한다. |
-| `get_product` | [조회](lookup.md#get-product-get_product) | 식별자로 상품의 전체 상세 정보를 가져온다. |
+| `search_catalog` | [검색](search.md) | 상품을 검색합니다. |
+| `lookup_catalog` | [조회](lookup.md) | 식별자로 하나 이상의 상품 또는 변형(variant)을 조회합니다. |
+| `get_product` | [조회](lookup.md#get-product-get_product) | 식별자로 상품의 전체 상세 정보를 가져옵니다. |
 
 ### `search_catalog` { #search_catalog }
 
-[카탈로그 검색](search.md) 기능에 대응한다.
+[카탈로그 검색](search.md) 기능에 대응합니다.
 
 #### 검색 요청 { #search-request }
 
@@ -259,10 +259,10 @@ MCP 클라이언트는 모든 요청에 프로토콜 메타데이터를 담은 `
 
 ### `lookup_catalog` { #lookup_catalog }
 
-[카탈로그 조회](lookup.md) 기능에 대응한다. 지원되는 식별자, 해석 동작, 클라이언트
-대응 관계 요구 사항은 해당 기능 문서를 참고한다.
+[카탈로그 조회](lookup.md) 기능에 대응합니다. 지원되는 식별자, 해석 동작, 클라이언트
+대응 관계 요구 사항은 해당 기능 문서를 참고하세요.
 
-`catalog.ids` 매개변수는 식별자 배열과 선택적 컨텍스트를 받는다.
+`catalog.ids` 매개변수는 식별자 배열과 선택적 컨텍스트를 받습니다.
 
 #### 조회 요청 { #lookup-request }
 
@@ -400,8 +400,8 @@ MCP 클라이언트는 모든 요청에 프로토콜 메타데이터를 담은 `
 
 #### 부분 성공 { #partial-success }
 
-일부 식별자를 찾지 못한 경우, 응답에는 찾은 상품이 포함된다. 응답에는 어떤 식별자를
-찾지 못했는지 알려 주는 정보성 메시지를 포함할 수 있다(MAY).
+일부 식별자를 찾지 못하면 응답에는 찾은 상품만 담깁니다. 어떤 식별자를 찾지 못했는지
+알려 주는 정보성 메시지를 응답에 포함할 수 있습니다(MAY).
 
 <!-- ucp:example schema=shopping/catalog_lookup op=lookup extract=$.result.structuredContent -->
 ```json
@@ -451,8 +451,8 @@ MCP 클라이언트는 모든 요청에 프로토콜 메타데이터를 담은 `
 
 ### `get_product` { #get_product }
 
-[카탈로그 조회](lookup.md#get-product-get_product) 기능에 대응한다. 대화형 옵션 선택을
-지원하는 전체 상품 상세 정보로 단일 `product` 객체를 반환한다.
+[카탈로그 조회](lookup.md#get-product-get_product) 기능에 대응합니다. 대화형 옵션 선택을
+지원하는 전체 상품 상세 정보를 담아 `product` 객체 하나를 반환합니다.
 
 #### 상품 조회 요청 { #get-product-request }
 
@@ -685,7 +685,7 @@ MCP 클라이언트는 모든 요청에 프로토콜 메타데이터를 담은 `
 #### 상품을 찾을 수 없음 { #product-not-found }
 
 식별자가 어떤 상품으로도 해석되지 않으면, 서버는 `ucp.status: "error"`와 설명 메시지를
-담은 성공 JSON-RPC 결과를 반환한다. 이는 전송 오류가 아니라 애플리케이션 수준의 결과다.
+담은 성공 JSON-RPC 결과를 반환합니다. 전송 오류가 아니라 애플리케이션 수준의 결과입니다.
 
 <!-- ucp:example schema=common/types/error_response op=read direction=response extract=$.result.structuredContent -->
 ```json
@@ -718,24 +718,24 @@ MCP 클라이언트는 모든 요청에 프로토콜 메타데이터를 담은 `
 
 ## 오류 처리 { #error-handling }
 
-UCP는 전송 오류와 비즈니스 결과를 분리하는 2계층 오류 모델을 사용한다.
+UCP는 전송 오류와 비즈니스 결과를 나누는 2계층 오류 모델을 사용합니다.
 
 ### 전송 오류 { #transport-errors }
 
 요청 처리를 가로막는 전송 수준의 실패(인증, 속도 제한, 서비스 불가)는 JSON-RPC `error`로
-반환된다. 전체 오류 코드 레지스트리와 JSON-RPC 오류 코드 매핑은
-[핵심 명세](../../overview/index.md#error-codes)를 참고한다.
+반환됩니다. 전체 오류 코드 레지스트리와 JSON-RPC 오류 코드 매핑은
+[핵심 명세](../../overview/index.md#error-codes)를 참고하세요.
 
 ### 비즈니스 결과 { #business-outcomes }
 
 모든 애플리케이션 수준의 결과는 UCP 엔벌로프와 선택적 `messages` 배열을 담은 성공
-JSON-RPC 결과로 반환된다. 메시지 의미와 일반적인 시나리오는
-[카탈로그 개요](index.md#messages-and-error-handling)를 참고한다.
+JSON-RPC 결과로 반환됩니다. 메시지 의미와 일반적인 시나리오는
+[카탈로그 개요](index.md#messages-and-error-handling)를 참고하세요.
 
 #### 예시: 모든 상품을 찾을 수 없음 { #example-all-products-not-found }
 
-요청한 식별자를 모두 해석하지 못하면 응답에는 빈 `products` 배열이 담긴다. 응답에는 어떤
-식별자를 찾지 못했는지 알려 주는 정보성 메시지를 포함할 수 있다(MAY).
+요청한 식별자를 하나도 해석하지 못하면 응답에는 빈 `products` 배열이 담깁니다. 어떤
+식별자를 찾지 못했는지 알려 주는 정보성 메시지를 응답에 포함할 수 있습니다(MAY).
 
 <!-- ucp:example schema=shopping/catalog_lookup op=lookup direction=response extract=$.result.structuredContent -->
 ```json
@@ -765,8 +765,8 @@ JSON-RPC 결과로 반환된다. 메시지 의미와 일반적인 시나리오�
 }
 ```
 
-비즈니스 결과는 JSON-RPC `result` 필드를 사용하고, 메시지는 응답 페이로드에 담는다.
-성공과 실패가 섞인 결과의 처리는 [부분 성공](#partial-success) 섹션을 참고한다.
+비즈니스 결과는 JSON-RPC `result` 필드를 사용하고, 메시지는 응답 페이로드에 담습니다.
+성공과 실패가 섞인 결과를 처리하는 방법은 [부분 성공](#partial-success) 섹션을 참고하세요.
 
 ## 엔티티 { #entities }
 
@@ -784,14 +784,14 @@ JSON-RPC 결과로 반환된다. 메시지 의미와 일반적인 시나리오�
 
 ## 적합성 { #conformance }
 
-적합한 MCP 전송 방식 구현은 반드시 다음을 충족해야 한다(**MUST**).
+적합한 MCP 전송 방식 구현은 반드시 다음 요건을 충족해야 합니다(**MUST**).
 
-1. JSON-RPC 2.0 프로토콜을 올바르게 구현한다.
-2. 비즈니스의 UCP 프로필에 공시된 각 카탈로그 기능에 대해, 각 기능의 요구 사항([검색](search.md), [조회](lookup.md))에 따라 도구를 구현한다. 각 기능은 독립적으로 채택할 수 있다. 조회 기능이 공시된 경우 `lookup_catalog`와 `get_product` 도구를 반드시 모두 제공해야 한다(MUST).
-3. 전송 문제에는 JSON-RPC 오류를, 비즈니스 결과에는 `messages` 배열을 사용한다.
-4. 조회 요청에는 성공 결과를 반환한다. 알 수 없는 식별자가 있으면 반환되는 상품 수가 줄어든다(정보성 `not_found` 메시지를 포함할 수 있다(MAY)).
-5. 도구 입력을 UCP 스키마로 검증한다.
-6. 유효한 `Price` 객체(금액 + 통화)를 가진 상품을 반환한다.
+1. JSON-RPC 2.0 프로토콜을 올바르게 구현합니다.
+2. 비즈니스의 UCP 프로필에 선언된 카탈로그 기능마다 해당 기능의 요구 사항([검색](search.md), [조회](lookup.md))에 따라 도구를 구현합니다. 각 기능은 따로따로 채택할 수 있습니다. 조회 기능을 선언했다면 `lookup_catalog`와 `get_product` 도구를 반드시 모두 제공해야 합니다(MUST).
+3. 전송 문제에는 JSON-RPC 오류를, 비즈니스 결과에는 `messages` 배열을 사용합니다.
+4. 조회 요청에는 성공 결과를 반환합니다. 알 수 없는 식별자가 있으면 그만큼 반환되는 상품 수가 줄어듭니다(정보성 `not_found` 메시지를 포함할 수 있습니다(MAY)).
+5. 도구 입력을 UCP 스키마로 검증합니다.
+6. 유효한 `Price` 객체(금액 + 통화)가 있는 상품을 반환합니다.
 7. 공통 페이지네이션 규약에 따라 검색에 커서 기반 페이지네이션을
-    지원한다([페이지네이션](search.md#pagination) 참고).
-8. 배치 크기 제한을 초과하는 요청에는 `-32602`(Invalid params)를 반환한다.
+    지원합니다([페이지네이션](search.md#pagination) 참고).
+8. 배치 크기 제한을 넘는 요청에는 `-32602`(Invalid params)를 반환합니다.

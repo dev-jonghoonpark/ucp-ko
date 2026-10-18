@@ -16,14 +16,14 @@
 
 # 장바구니 기능 - REST 바인딩 { #cart-capability-rest-binding }
 
-이 문서는 [장바구니 기능](index.md)의 REST 바인딩을 명세한다.
+이 문서는 [장바구니 기능](index.md)의 REST 바인딩을 명세합니다.
 
 ## 프로토콜 기본 사항 { #protocol-fundamentals }
 
 ### 디스커버리 { #discovery }
 
-비즈니스는 `/.well-known/ucp`에 있는 UCP 프로필을 통해 REST 전송 방식 지원 여부를
-공지한다.
+비즈니스는 `/.well-known/ucp`에 있는 UCP 프로필에서 REST 전송 방식 지원 여부를
+알립니다.
 
 <!-- ucp:example schema=profile def=business_schema -->
 ```json
@@ -64,9 +64,9 @@
 
 ### 기본 URL { #base-url }
 
-모든 UCP REST 엔드포인트는 비즈니스의 기본 URL을 기준으로 하며, 기본 URL은
-`/.well-known/ucp`의 UCP 프로필을 통해 디스커버리된다. 장바구니 기능의 엔드포인트는
-비즈니스 프로필의 `rest.endpoint` 필드에 정의된다.
+모든 UCP REST 엔드포인트는 비즈니스의 기본 URL을 기준으로 합니다. 기본 URL은
+`/.well-known/ucp`의 UCP 프로필에서 찾을 수 있습니다. 장바구니 기능의 엔드포인트는
+비즈니스 프로필의 `rest.endpoint` 필드에 정의합니다.
 
 ### 콘텐츠 타입 { #content-types }
 
@@ -74,20 +74,20 @@
 * **응답**: `application/json`
 
 모든 요청 및 응답 본문은 반드시
-[RFC 8259](https://tools.ietf.org/html/rfc8259){ target="_blank" }에 명시된 유효한 JSON이어야 한다(**MUST**).
+[RFC 8259](https://tools.ietf.org/html/rfc8259){ target="_blank" }에 명시된 유효한 JSON이어야 합니다(**MUST**).
 
 ### 전송 보안 { #transport-security }
 
-모든 REST 엔드포인트는 반드시 최소 TLS 1.3 버전의 HTTPS로 제공되어야 한다(**MUST**).
+모든 REST 엔드포인트는 반드시 TLS 1.3 이상의 HTTPS로 제공해야 합니다(**MUST**).
 
 ## 작업 { #operations }
 
 | 작업 | 메서드 | 엔드포인트 | 설명 |
 | :---- | :---- | :---- | :---- |
-| [장바구니 생성](#create-cart) | `POST` | `/carts` | 장바구니 세션을 생성한다. |
-| [장바구니 조회](#get-cart) | `GET` | `/carts/{id}` | 장바구니 세션을 조회한다. |
-| [장바구니 수정](#update-cart) | `PUT` | `/carts/{id}` | 장바구니 세션을 수정한다. |
-| [장바구니 취소](#cancel-cart) | `POST` | `/carts/{id}/cancel` | 장바구니 세션을 취소한다. |
+| [장바구니 생성](#create-cart) | `POST` | `/carts` | 장바구니 세션을 생성합니다. |
+| [장바구니 조회](#get-cart) | `GET` | `/carts/{id}` | 장바구니 세션을 조회합니다. |
+| [장바구니 수정](#update-cart) | `PUT` | `/carts/{id}` | 장바구니 세션을 수정합니다. |
+| [장바구니 취소](#cancel-cart) | `POST` | `/carts/{id}/cancel` | 장바구니 세션을 취소합니다. |
 
 ### 장바구니 생성 { #create-cart }
 
@@ -176,7 +176,7 @@
 
 === "에러 응답"
 
-    모든 상품이 품절된 경우 — 장바구니 리소스가 생성되지 않는다:
+    모든 상품이 품절된 경우에는 장바구니 리소스가 생성되지 않습니다.
 
     <!-- ucp:example schema=common/types/error_response op=read -->
     ```json
@@ -468,8 +468,8 @@
 
 ## HTTP 헤더 { #http-headers }
 
-다음 헤더는 HTTP 바인딩용으로 정의되며, 별도로 명시하지 않는 한 모든 작업에
-적용된다.
+다음 헤더는 HTTP 바인딩용으로 정의하며, 별도로 명시하지 않는 한 모든 작업에
+적용됩니다.
 
 {{ header_fields('create_cart', 'shopping/rest.openapi.json') }}
 
@@ -483,31 +483,31 @@
 
 | 상태 코드 | 설명 |
 | :--- | :--- |
-| `200 OK` | 요청이 성공했다. |
-| `201 Created` | 장바구니가 성공적으로 생성되었다. |
-| `400 Bad Request` | 요청이 유효하지 않거나 처리할 수 없다. |
-| `401 Unauthorized` | 인증이 필요하지만 실패했거나 제공되지 않았다. |
-| `403 Forbidden` | 요청은 인증되었지만 사용자에게 필요한 권한이 없다. |
-| `409 Conflict` | 충돌로 인해 요청을 완료할 수 없다(예: 멱등성 키 재사용). |
-| `422 Unprocessable Entity` | 프로필 내용의 형식이 잘못되었다(디스커버리 실패). |
-| `424 Failed Dependency` | 프로필 URL은 유효하지만 가져오기에 실패했다(디스커버리 실패). |
-| `429 Too Many Requests` | 요청 한도를 초과했다. |
-| `500 Internal Server Error` | 서버에서 예기치 않은 상황이 발생했다. |
-| `503 Service Unavailable` | 일시적으로 사용할 수 없다. |
+| `200 OK` | 요청이 성공했습니다. |
+| `201 Created` | 장바구니가 생성되었습니다. |
+| `400 Bad Request` | 요청이 유효하지 않거나 처리할 수 없습니다. |
+| `401 Unauthorized` | 인증이 필요한데 실패했거나 인증 정보가 없습니다. |
+| `403 Forbidden` | 요청은 인증되었지만 사용자에게 필요한 권한이 없습니다. |
+| `409 Conflict` | 충돌 때문에 요청을 완료할 수 없습니다(예: 멱등성 키 재사용). |
+| `422 Unprocessable Entity` | 프로필 내용의 형식이 잘못되었습니다(디스커버리 실패). |
+| `424 Failed Dependency` | 프로필 URL은 유효하지만 가져오지 못했습니다(디스커버리 실패). |
+| `429 Too Many Requests` | 요청 한도를 초과했습니다. |
+| `500 Internal Server Error` | 서버에서 예기치 않은 상황이 발생했습니다. |
+| `503 Service Unavailable` | 일시적으로 사용할 수 없습니다. |
 
 ### 에러 응답 { #error-responses }
 
 전체 에러 코드 레지스트리와 전송 방식 바인딩 예시는
-[핵심 명세](../../overview/index.md#error-handling)를 참고한다.
+[핵심 명세](../../overview/index.md#error-handling)를 참고하세요.
 
 * **프로토콜 에러**: 적절한 HTTP 상태 코드(401, 403, 409, 429,
-    503)와 함께 `code`와 `content`를 담은 JSON 본문을 반환한다.
-* **비즈니스 결과**: UCP 엔벨로프와 `messages` 배열을 담아 HTTP 200을 반환한다.
+    503)와 함께 `code`와 `content`를 담은 JSON 본문을 반환합니다.
+* **비즈니스 결과**: UCP 엔벨로프와 `messages` 배열을 담아 HTTP 200을 반환합니다.
 
 #### 비즈니스 결과 { #business-outcomes }
 
-비즈니스 결과(찾을 수 없음 및 유효성 검사 에러 포함)는 HTTP 200과 함께
-`messages`를 담은 UCP 엔벨로프로 반환된다:
+비즈니스 결과(찾을 수 없음, 유효성 검사 에러 포함)는 HTTP 200과 함께
+`messages`를 담은 UCP 엔벨로프로 반환합니다.
 
 <!-- ucp:example schema=common/types/error_response op=read -->
 ```json
@@ -535,15 +535,15 @@
 
 ### 인증 { #authentication }
 
-인증은 선택 사항이며 비즈니스 요구 사항에 따라 달라진다. 인증이 필요한 경우
-REST 전송 방식은 다음을 사용할 수 있다(**MAY**):
+인증은 선택 사항이며 비즈니스 요구 사항에 따라 달라집니다. 인증이 필요하면
+REST 전송 방식에서 다음 방법을 사용할 수 있습니다(**MAY**).
 
-1. **Open API**: 공개 작업에는 인증이 필요하지 않다.
-2. **API 키**: `X-API-Key` 헤더를 통해 전달한다.
-3. **OAuth 2.0**: `Authorization: Bearer {token}` 헤더를 통해 전달한다. 에이전트 인증
+1. **Open API**: 공개 작업에는 인증이 필요하지 않습니다.
+2. **API 키**: `X-API-Key` 헤더로 전달합니다.
+3. **OAuth 2.0**: `Authorization: Bearer {token}` 헤더로 전달합니다. 에이전트 인증
    접근에서는 플랫폼을 식별하고, 사용자 인증 접근에서는 플랫폼과 사용자를 모두
-   식별한다([신원 연결](../../common/identity-linking/index.md) 참고).
-4. **Mutual TLS**: 높은 보안이 요구되는 환경에 사용한다.
+   식별합니다([신원 연결](../../common/identity-linking/index.md) 참고).
+4. **Mutual TLS**: 높은 보안이 필요한 환경에서 사용합니다.
 
-비즈니스는 일부 작업에는 인증을 요구하고 나머지 작업은 공개로 둘 수 있다(**MAY**)
+비즈니스는 일부 작업에는 인증을 요구하고 나머지 작업은 공개로 둘 수 있습니다(**MAY**)
 (예: 인증 없는 공개 장바구니).

@@ -16,13 +16,13 @@
 
 # Location - MCP 바인딩 { #location-mcp-binding }
 
-이 문서는 [Location 기능(Capability)](index.md)의 Model Context Protocol(MCP) 바인딩을 명세한다.
+이 문서는 [Location 기능(Capability)](index.md)의 Model Context Protocol(MCP) 바인딩을 설명합니다.
 
 ## 프로토콜 기본 사항 { #protocol-fundamentals }
 
 ### 디스커버리 { #discovery }
 
-비즈니스는 `/.well-known/ucp`의 UCP 프로필을 통해 Common 서비스와 Location 기능에 대한 MCP 전송 방식 지원 여부를 알린다.
+비즈니스는 `/.well-known/ucp`의 UCP 프로필에서 Common 서비스와 Location 기능의 MCP 전송 방식 지원 여부를 알립니다.
 
 <!-- ucp:example schema=profile def=business_schema -->
 ```json
@@ -60,22 +60,22 @@
 ### 요청 메타데이터 { #request-metadata }
 
 MCP를 사용하는 플랫폼은 모든 요청에 반드시
-`meta["ucp-agent"].profile`이 포함된 `meta` 객체를 넣어야 한다(**MUST**). 이 필드는
-버전 호환성 확인과 기능 협상에 쓰이는 플랫폼의 UCP 프로필을 식별한다.
-프로토콜 메타데이터는 `location`의 도메인 요청과 분리되어 `meta`에
-남는다.
+`meta["ucp-agent"].profile`이 포함된 `meta` 객체를 넣어야 합니다(**MUST**). 이 필드는
+버전 호환성 확인과 기능 협상에 쓰이는 플랫폼의 UCP 프로필을 식별합니다.
+프로토콜 메타데이터는 `location`의 도메인 요청과 분리해 `meta`에
+둡니다.
 
 ## 도구 { #tools }
 
 | 도구 | 기능 | 설명 |
 | :--- | :--- | :--- |
-| `search_locations` | [Search](search.md) | 텍스트, 명시적 공간 관계, 필터로 Location을 검색한다. |
-| `lookup_locations` | [Lookup](lookup.md) | 식별자로 Location을 일괄 조회하며, 선택적으로 명시적 공간 관계와 필터로 범위를 좁힌다. |
+| `search_locations` | [Search](search.md) | 텍스트, 명시적 공간 관계, 필터로 Location을 검색합니다. |
+| `lookup_locations` | [Lookup](lookup.md) | 식별자로 Location을 일괄 조회하며, 선택적으로 명시적 공간 관계와 필터로 범위를 좁힐 수 있습니다. |
 
 ### `search_locations` { #search_locations }
 
-[Location Search](search.md) 기능에 대응한다.
-[전송 방식에 중립적인 Search 전체 예시](search.md#examples)를 참고한다.
+[Location Search](search.md) 기능에 대응합니다.
+[전송 방식에 중립적인 Search 전체 예시](search.md#examples)를 참고하세요.
 
 #### 요청 인자 { #request-arguments }
 
@@ -141,8 +141,8 @@ MCP를 사용하는 플랫폼은 모든 요청에 반드시
 
 ### `lookup_locations` { #lookup_locations }
 
-[Location Lookup](lookup.md) 기능에 대응한다.
-[전송 방식에 중립적인 Lookup 전체 예시](lookup.md#examples)를 참고한다.
+[Location Lookup](lookup.md) 기능에 대응합니다.
+[전송 방식에 중립적인 Lookup 전체 예시](lookup.md#examples)를 참고하세요.
 
 #### 요청 인자 { #request-arguments_1 }
 
@@ -211,15 +211,15 @@ MCP를 사용하는 플랫폼은 모든 요청에 반드시
 
 ## 오류 처리 { #error-handling }
 
-UCP는 전송 수준 오류와 비즈니스 결과를 구분하는 2계층 오류 모델을 사용한다.
+UCP는 전송 수준 오류와 비즈니스 결과를 구분하는 2계층 오류 모델을 사용합니다.
 
 ### 전송 오류 { #transport-errors }
 
-요청 처리를 막는 전송 수준 실패(인증, 요청 한도 제한, 잘못된 파라미터)는 JSON-RPC `error`로 반환한다. 자세한 내용은 [핵심 명세](../../overview/index.md#error-codes)를 참고한다.
+요청 처리를 막는 전송 수준 실패(인증, 요청 한도 제한, 잘못된 파라미터)는 JSON-RPC `error`로 반환합니다. 자세한 내용은 [핵심 명세](../../overview/index.md#error-codes)를 참고하세요.
 
 ### 비즈니스 결과 { #business-outcomes }
 
-모든 애플리케이션 수준 결과는 UCP 엔벌로프와 선택적 `messages` 배열을 담은 성공 JSON-RPC result로 반환한다. 메시지의 의미는 [Location 개요](index.md#messages-and-error-handling)를 참고한다.
+모든 애플리케이션 수준 결과는 UCP 엔벌로프와 선택적 `messages` 배열을 담은 성공 JSON-RPC result로 반환합니다. 메시지의 의미는 [Location 개요](index.md#messages-and-error-handling)를 참고하세요.
 
 ## 엔티티 { #entities }
 
@@ -257,23 +257,23 @@ UCP는 전송 수준 오류와 비즈니스 결과를 구분하는 2계층 오�
 
 ## 적합성 { #conformance }
 
-적합한 MCP 전송 방식 구현은 반드시 다음을 지켜야 한다(**MUST**).
+적합한 MCP 전송 방식 구현은 반드시 다음을 지켜야 합니다(**MUST**).
 
-1. JSON-RPC 2.0 프로토콜을 올바르게 구현한다.
+1. JSON-RPC 2.0 프로토콜을 올바르게 구현합니다.
 2. 비즈니스의 UCP 프로필에 알린 각 Location 기능의 도구를 해당 기능의
-    요구 사항([Search](search.md), [Lookup](lookup.md))에 따라 구현한다.
-    각 기능은 독립적으로 채택할 수 있다(**MAY**).
+    요구 사항([Search](search.md), [Lookup](lookup.md))에 따라 구현합니다.
+    각 기능은 독립적으로 채택할 수 있습니다(**MAY**).
 3. `distance`, `serves` 관계와 `filters.items` 재고 조건은 플랫폼이
-    명시적으로 제공한 피연산자로만 평가한다. `context`, `signals`, IP 주소에서
+    명시적으로 제공한 피연산자로만 평가합니다. `context`, `signals`, IP 주소에서
     피연산자를 유도해서는 안 되며, 입력이 없을 때 서비스 가능 여부나 상품
-    재고 여부를 암묵적으로 확인해서도 안 된다.
+    재고 여부를 암묵적으로 확인해서도 안 됩니다.
 4. `distance`, `serves`, 그리고 제공된 모든 `filters` 조건을
-    논리곱(AND)으로 적용한다.
+    논리곱(AND)으로 적용합니다.
 5. 공통 페이지네이션 규약에 따라 Search에서 커서 기반 페이지네이션을
-    지원한다([페이지네이션](search.md#pagination) 참고).
-6. Lookup 요청에는 성공 JSON-RPC result를 반환한다. 알 수 없는 식별자가 있으면 반환되는 Location이 줄거나
-    없을 뿐이다(`messages` 배열에 정보성 `not_found` 메시지를 포함할 수 있다(**MAY**)).
+    지원합니다([페이지네이션](search.md#pagination) 참고).
+6. Lookup 요청에는 성공 JSON-RPC result를 반환합니다. 알 수 없는 식별자가 있으면 반환되는 Location이 줄거나
+    없을 뿐입니다(`messages` 배열에 정보성 `not_found` 메시지를 포함할 수 있습니다(**MAY**)).
 7. Lookup 요청이 비즈니스의 배치 최대치를 초과하면 성공 JSON-RPC result를
     반환하고, 요청 순서대로 고유 식별자를 최대치만큼 앞에서부터 처리하며,
-    정보성 `batch_limit_applied` 메시지를 포함한다.
-8. 도구 입력을 UCP 스키마로 검증한다.
+    정보성 `batch_limit_applied` 메시지를 포함합니다.
+8. 도구 입력을 UCP 스키마로 검증합니다.

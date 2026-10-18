@@ -179,9 +179,9 @@ select, input {
 <div class="container">
   <div class="sectionDescription">
     <h1>UCP 플레이그라운드</h1>
-    <p>UCP 체크아웃 흐름 전체를 단계별로 따라가 본다. 이 인터랙티브 데모는
-    전적으로 브라우저에서 실행되며, 각 단계에서 페이로드를 시뮬레이션하고 실제
-    UCP 스키마로 검증한다.</p>
+    <p>UCP 체크아웃 흐름 전체를 단계별로 따라가 봅니다. 이 인터랙티브 데모는
+    브라우저에서만 실행되며, 각 단계에서 페이로드를 시뮬레이션하고 실제
+    UCP 스키마로 검증합니다.</p>
   </div>
 
   <!-- Stepper Navigation -->
@@ -190,7 +190,7 @@ select, input {
   <!-- VIEW: Profiles -->
   <div id="view-profiles" class="section active">
     <h2 class="title">1. 플랫폼 프로필</h2>
-    <p class="desc">플랫폼의 기능 프로필을 선택한다. 이 선택에 따라 어떤 확장(예: 풀필먼트, 할인)이 협상되는지가 정해진다.</p>
+    <p class="desc">플랫폼의 기능 프로필을 선택합니다. 어떤 확장(예: 풀필먼트, 할인)을 협상할지는 이 선택에 따라 정해집니다.</p>
     <div class="grid">
       <div class="card">
         <h3>구성</h3>
@@ -202,7 +202,7 @@ select, input {
           </select>
         </label>
         <p id="agent-desc" style="margin-top: 12px; color: var(--text-secondary); font-size: 0.85rem;">
-          기본 체크아웃과 주문 조회를 지원한다.
+          기본 체크아웃과 주문 조회를 지원합니다.
         </p>
       </div>
       <div class="json-panel">
@@ -221,7 +221,7 @@ select, input {
   <!-- VIEW: Discovery -->
   <div id="view-discovery" class="section">
     <h2 class="title">2. 디스커버리</h2>
-    <p class="desc">플랫폼이 비즈니스에서 <code>/.well-known/ucp</code>를 가져온다.</p>
+    <p class="desc">플랫폼이 비즈니스에서 <code>/.well-known/ucp</code>를 가져옵니다.</p>
     <div class="grid">
       <div class="json-panel">
         <div class="json-header"><span class="json-title">GET 요청</span></div>
@@ -243,7 +243,7 @@ Accept: application/json</pre>
   <!-- VIEW: Negotiation -->
   <div id="view-negotiation" class="section">
     <h2 class="title">3. 기능 협상</h2>
-    <p class="desc">플랫폼과 비즈니스 기능의 교집합이다. 부모 기능이 없는 확장은 제거된다.</p>
+    <p class="desc">플랫폼 기능과 비즈니스 기능의 교집합을 구합니다. 부모 기능이 없는 확장은 제거됩니다.</p>
     <div class="grid">
       <div class="json-panel">
         <div class="json-header"><span class="json-title">비즈니스 기능</span></div>
@@ -263,7 +263,7 @@ Accept: application/json</pre>
   <!-- VIEW: Create Checkout -->
   <div id="view-createCheckout" class="section">
     <h2 class="title">4. 체크아웃 생성</h2>
-    <p class="desc">플랫폼이 세션을 시작한다. 아래 오류 응답은 엄격한 <code>message.json</code> 스키마를 따른다.</p>
+    <p class="desc">플랫폼이 세션을 시작합니다. 아래 오류 응답은 엄격한 <code>message.json</code> 스키마를 따릅니다.</p>
     <div class="grid">
       <div class="json-panel">
         <div class="json-header"><span class="json-title">요청 페이로드</span></div>
@@ -292,7 +292,7 @@ Accept: application/json</pre>
   <!-- VIEW: Update Checkout -->
   <div id="view-updateCheckout" class="section">
     <h2 class="title">5. 체크아웃 업데이트</h2>
-    <p class="desc">누락된 정보로 체크아웃을 패치해 검증 오류를 해결한다.</p>
+    <p class="desc">누락된 정보로 체크아웃을 패치해 검증 오류를 해결합니다.</p>
     <div class="grid">
       <div class="json-panel">
         <div class="json-header">
@@ -315,7 +315,7 @@ Accept: application/json</pre>
   <!-- VIEW: Mint Instrument -->
   <div id="view-mintInstrument" class="section">
     <h2 class="title">6. 결제 수단 발급</h2>
-    <p class="desc">결제 핸들러 흐름을 시뮬레이션해 결제 자격 증명을 획득한다.</p>
+    <p class="desc">결제 핸들러 흐름을 시뮬레이션해 결제 자격 증명을 받습니다.</p>
     <div class="grid">
       <div class="card">
         <h3>핸들러 선택</h3>
@@ -343,7 +343,7 @@ Accept: application/json</pre>
   <!-- VIEW: Complete Checkout -->
   <div id="view-completeCheckout" class="section">
     <h2 class="title">7. 체크아웃 완료</h2>
-    <p class="desc">발급된 결제 수단을 제출해 거래를 마무리하고 주문을 생성한다.</p>
+    <p class="desc">발급된 결제 수단을 제출해 거래를 마무리하고 주문을 생성합니다.</p>
     <div class="grid">
       <div class="json-panel">
         <div class="json-header">
@@ -358,7 +358,7 @@ Accept: application/json</pre>
       </div>
     </div>
     <div class="callout hidden" id="order-success-msg" style="margin-bottom: 24px;">
-      <strong>성공!</strong> 주문 ID <span id="display-order-id"></span>이(가) 생성되었다.
+      <strong>성공!</strong> 주문 ID <span id="display-order-id"></span>이(가) 생성되었습니다.
     </div>
     <div class="actions">
       <button class="btn btn-ghost" data-nav="mintInstrument">&larr; 뒤로</button>
@@ -369,11 +369,11 @@ Accept: application/json</pre>
   <!-- VIEW: Webhook Simulation (Step 8) -->
   <div id="view-webhookSimulation" class="section">
     <h2 class="title">8. 웹훅 시뮬레이션</h2>
-    <p class="desc">백엔드 이벤트(예: 배송 센터 업데이트)가 에이전트로 웹훅 푸시를 트리거하는 상황을 시뮬레이션한다.</p>
+    <p class="desc">백엔드 이벤트(예: 배송 센터 업데이트)가 발생해 에이전트에 웹훅을 푸시하는 상황을 시뮬레이션합니다.</p>
     <div class="grid">
       <div class="card">
         <h3>이벤트 트리거</h3>
-        <p style="color:var(--text-secondary); margin-bottom: 12px; font-size: 0.85rem;">이 작업은 비즈니스 서버에서 실행되며 플랫폼의 웹훅 URL로 데이터를 푸시한다.</p>
+        <p style="color:var(--text-secondary); margin-bottom: 12px; font-size: 0.85rem;">이 작업은 비즈니스 서버에서 실행되며 플랫폼의 웹훅 URL로 데이터를 푸시합니다.</p>
         <button class="btn btn-primary" id="btn-run-webhook">"배송됨" 이벤트 시뮬레이션</button>
       </div>
       <div class="json-panel">
@@ -392,7 +392,7 @@ Accept: application/json</pre>
   <!-- About callout footer -->
   <div class="callout" style="margin-top: 48px;">
     <div class="calloutTitle">이 데모에 관하여</div>
-    <div class="calloutBody">이 플레이그라운드는 전적으로 브라우저에서 실행되는 시뮬레이션이다. UCP 프로토콜 흐름을 보여 주기 위해 모의 로직을 사용하며, 프로덕션 코드의 참고 자료로 의도된 것이 아니다. 실제 구현 예시와 모범 사례는 <a href="https://github.com/Universal-Commerce-Protocol/samples" target="_blank">GitHub의 샘플</a>을 확인한다.</div>
+    <div class="calloutBody">이 플레이그라운드는 브라우저에서만 실행되는 시뮬레이션입니다. UCP 프로토콜 흐름을 보여 주려고 모의 로직을 사용하며, 프로덕션 코드의 참고 자료로 만든 것은 아닙니다. 실제 구현 예시와 모범 사례는 <a href="https://github.com/Universal-Commerce-Protocol/samples" target="_blank">GitHub의 샘플</a>을 확인하세요.</div>
   </div>
 
 </div>
@@ -545,12 +545,12 @@ const UcpData = {
   agents: {
     basic: {
       label: "Standard",
-      description: "핵심 체크아웃 및 주문 기능을 지원한다.",
+      description: "핵심 체크아웃 및 주문 기능을 지원합니다.",
       caps: ["dev.ucp.shopping.checkout", "dev.ucp.shopping.order"]
     },
     full: {
       label: "Full",
-      description: "핵심 기능과 풀필먼트·할인 확장을 지원한다.",
+      description: "핵심 기능과 풀필먼트·할인 확장을 지원합니다.",
       caps: ["dev.ucp.shopping.checkout", "dev.ucp.shopping.order", "dev.ucp.shopping.fulfillment", "dev.ucp.shopping.discount", "dev.ucp.shopping.buyer_consent", "dev.ucp.common.payment.ap2_mandate"]
     }
   },
@@ -948,7 +948,7 @@ class UcpApp {
 
     this.state.lastRequests.create = payload;
     this.setJson('json-create-req', payload);
-    this.setJson('json-create-res', { hint: "'요청 실행'을 클릭해 전송한다..." });
+    this.setJson('json-create-res', { hint: "'요청 실행'을 클릭해 전송하세요..." });
     document.getElementById('nav-to-update').disabled = true;
   }
 
@@ -1006,7 +1006,7 @@ class UcpApp {
 
     this.state.lastRequests.update = patch;
     this.setJson('json-update-req', patch);
-    this.setJson('json-update-res', { hint: "'업데이트 실행'을 클릭한다..." });
+    this.setJson('json-update-res', { hint: "'업데이트 실행'을 클릭하세요..." });
     document.getElementById('nav-to-mint').disabled = true;
   }
 
