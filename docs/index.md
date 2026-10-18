@@ -62,7 +62,7 @@ image: assets/banner.png
     <div class="promo-card">
       <h3>알아보기</h3>
       <p>프로토콜 개요, 핵심 개념, 설계 원칙</p>
-      <a href="latest/specification/overview/" class="promo-button">
+      <a href="specification/overview/" class="promo-button">
         시작하기
       </a>
     </div>
@@ -313,7 +313,7 @@ image: assets/banner.png
             <div class="pane-text">
               <h3>카탈로그</h3>
               <p>플랫폼이 자유 텍스트 검색, 카테고리 필터링, 일괄 조회로 비즈니스의 상품 카탈로그를 검색하고 탐색할 수 있게 해, 가격 비교, 할인가 알림, 재입고·재고 부족 알림 같은 사용자 여정을 이끈다.</p>
-              <a href="latest/specification/shopping/catalog/" class="learn-more-btn">시작하기</a>
+              <a href="specification/shopping/catalog/" class="learn-more-btn">시작하기</a>
             </div>
             <div class="pane-visuals">
               <div class="image-container">
@@ -413,7 +413,7 @@ image: assets/banner.png
             <div class="pane-text">
               <h3>장바구니</h3>
               <p>AI 화면 전반에서 여러 상품을 담는 장바구니를 구성하고 관리할 수 있게 한다. 쇼핑객은 장바구니를 판매자 사이트로 바로 옮기거나, 통합된 다중 상품 체크아웃으로 그 자리에서 구매를 완료할 수 있다.</p>
-              <a href="latest/specification/shopping/cart/" class="learn-more-btn">시작하기</a>
+              <a href="specification/shopping/cart/" class="learn-more-btn">시작하기</a>
             </div>
             <div class="pane-visuals">
               <div class="image-container">
@@ -524,7 +524,7 @@ image: assets/banner.png
             <div class="pane-text">
               <h3>체크아웃</h3>
               <p>통합된 체크아웃 세션으로 수백만 비즈니스에 걸쳐 복잡한 장바구니 로직, 동적 가격 책정, 세금 계산 등을 지원한다.</p>
-              <a href="latest/specification/shopping/checkout/" class="learn-more-btn">시작하기</a>
+              <a href="specification/shopping/checkout/" class="learn-more-btn">시작하기</a>
             </div>
             <div class="pane-visuals">
               <div class="image-container">
@@ -605,7 +605,7 @@ image: assets/banner.png
             <div class="pane-text">
               <h3>체크아웃</h3>
               <p>통합된 체크아웃 세션으로 수백만 비즈니스에 걸쳐 복잡한 장바구니 로직, 동적 가격 책정, 세금 계산 등을 지원한다.</p>
-              <a href="latest/specification/shopping/checkout/" class="learn-more-btn">시작하기</a>
+              <a href="specification/shopping/checkout/" class="learn-more-btn">시작하기</a>
             </div>
             <div class="pane-visuals">
               <div class="image-container">
@@ -686,7 +686,7 @@ image: assets/banner.png
             <div class="pane-text">
               <h3>신원 연결</h3>
               <p>OAuth 2.0 표준을 통해 에이전트는 자격 증명을 공유하지 않고도 안전하게 인가된 관계를 유지할 수 있다.</p>
-              <a href="latest/specification/common/identity-linking/" class="learn-more-btn">시작하기</a>
+              <a href="specification/common/identity-linking/" class="learn-more-btn">시작하기</a>
             </div>
             <div class="pane-visuals">
               <div class="image-container">
@@ -726,7 +726,7 @@ image: assets/banner.png
             <div class="pane-text">
               <h3>주문</h3>
               <p>구매 확인부터 배송까지. 실시간 웹훅이 모든 채널에서 상태 업데이트, 배송 추적, 반품 처리를 지원한다.</p>
-              <a href="latest/specification/shopping/order/" class="learn-more-btn">시작하기</a>
+              <a href="specification/shopping/order/" class="learn-more-btn">시작하기</a>
             </div>
             <div class="pane-visuals">
               <div class="image-container">
@@ -797,7 +797,7 @@ image: assets/banner.png
         <div class="pane-text">
           <h3>예약</h3>
           <p>AI 화면 안에서 고품질 예약 흐름을 구현한다. 객실의 실시간 가격과 예약 가능 여부 확인, 간편한 투숙객 등록, 복잡한 결제 일정을 지원하는 안전한 체크아웃을 제공한다.</p>
-          <a href="draft/specification/lodging/booking/" class="learn-more-btn">시작하기</a>
+          <a href="specification/lodging/booking/" class="learn-more-btn">시작하기</a>
         </div>
             <div class="pane-visuals">
               <div class="image-container">
@@ -1051,7 +1051,7 @@ image: assets/banner.png
       <p>
         판매자의 체크아웃 API와 직접 통합하고 협상해, 플랫폼에 맞는 네이티브 UI와 워크플로를 구현한다.
       </p>
-      <a href="latest/specification/shopping/checkout/rest/" class="promo-button">시작하기</a>
+      <a href="specification/shopping/checkout/rest/" class="promo-button">시작하기</a>
     </div>
 
     <div class="two-column-promo-item">
@@ -1062,7 +1062,7 @@ image: assets/banner.png
       <p>
         비즈니스의 체크아웃 UI를 임베드하고 렌더링해 복잡한 체크아웃 흐름을 지원한다. 양방향 통신, 결제 및 배송지 위임 같은 고급 기능을 제공한다.
       </p>
-      <a href="latest/specification/shopping/checkout/embedded/" class="promo-button">작동 방식 보기</a>
+      <a href="specification/shopping/checkout/embedded/" class="promo-button">작동 방식 보기</a>
     </div>
 
   </div>
@@ -1080,7 +1080,7 @@ image: assets/banner.png
         <p>
           개방된 기반 위에서 커머스의 미래를 만든다. 차세대 디지털 커머스를 위해 설계된 오픈소스 표준을 함께 발전시켜 나갈 커뮤니티에 참여한다.
         </p>
-        <a href="latest/specification/overview/" class="lifecycle-container-item-link">기술 명세 보기</a>
+        <a href="specification/overview/" class="lifecycle-container-item-link">기술 명세 보기</a>
       </div>
       <div class="lifecycle-container-item">
         <div class="lifecycle-container-item-img-wrapper">
@@ -1559,7 +1559,7 @@ image: assets/banner.png
         <div class="get-started-container-step-icon-wrapper">
           <img src="assets/Icon=Experiment.svg" alt="실험" class="get-started-container-step-icon">
         </div>
-        <h3><a href="latest/specification/shopping/playground/" target="_blank">실험</a></h3>
+        <h3><a href="specification/shopping/playground/" target="_blank">실험</a></h3>
         <p>프로토콜과 다양한 에이전트 역할을 직접 실험한다</p>
       </div>
       <div class="get-started-container-step">

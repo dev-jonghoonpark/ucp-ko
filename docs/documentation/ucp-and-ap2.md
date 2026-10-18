@@ -56,6 +56,6 @@ Digital Credentials, VDC)을 사용하므로 중간에서 신뢰를 보증하는
 
 **의존성:** 체크아웃 기능(Capability)
 
-[AP2 위임 확장 전체 보기](../specification/ap2-mandates.md)
+[AP2 위임 확장 전체 보기](../specification/payment/extensions/ap2-mandates.md)
 
 [AP2 자세히 알아보기](https://ap2-protocol.org){target="_blank"}

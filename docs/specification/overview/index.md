@@ -801,7 +801,7 @@ AP2나 WBA와 연동하지 않는 비즈니스는 `keys[]`에 ES256 키 하나(�
 들어 `attribution`은 문자열 값으로 이루어진 딕셔너리이므로, `ucp`라는 이름의
 attribution 키는 프로토콜 네임스페이스 멤버가 아니라 평범한 attribution 데이터다.
 이 예약 안에서 작업하는 스키마 작성자를 위한 지침은 스키마 작성 가이드의
-[예약된 `ucp` 멤버](/documentation/schema-authoring/#the-reserved-ucp-member)
+[예약된 `ucp` 멤버](../../documentation/schema-authoring.md#the-reserved-ucp-member)
 섹션에 있다. 적격한 구조화 스코프에서 `ucp` 멤버를 만난 비즈니스나 플랫폼은
 인식하는 멤버를 각각의 정의에 따라 처리하고, 인식하지 못하는 멤버는 반드시
 무시해야 한다(**MUST**)(위의 *개방성* 참고). 어떤 멤버가 어휘에 들어가려면 무시해도

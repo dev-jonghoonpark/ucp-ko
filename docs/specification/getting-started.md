@@ -310,7 +310,7 @@ sequenceDiagram
 지원하는 결제 핸들러를 광고하는 UCP 메타데이터 블록을 구성하고, 최종 체크아웃 응답을 조립한다.
 
 !!! note "기능 협상"
-    프로덕션에서 비즈니스는 `UCP-Agent` 헤더로 플랫폼의 프로필을 확인하고, 양쪽이 지원하는 기능의 교집합을 계산해 협상된 활성 기능 집합을 `capabilities`에 담아 반환한다. 이 퀵스타트에서는 단순화를 위해 전체 기능 협상을 생략한다. 자세한 내용은 [디스커버리와 기능 협상](/documentation/core-concepts/#discovery-capability-negotiation)을 참고한다.
+    프로덕션에서 비즈니스는 `UCP-Agent` 헤더로 플랫폼의 프로필을 확인하고, 양쪽이 지원하는 기능의 교집합을 계산해 협상된 활성 기능 집합을 `capabilities`에 담아 반환한다. 이 퀵스타트에서는 단순화를 위해 전체 기능 협상을 생략한다. 자세한 내용은 [디스커버리와 기능 협상](../documentation/core-concepts.md#discovery-capability-negotiation)을 참고한다.
 
 === "Python"
 
@@ -939,7 +939,7 @@ UCP를 완전히 준수하는 서버를 만들려면 다음 작업도 필요하�
 
 * 구매자 정보(배송지 주소 등) 갱신을 처리하는 체크아웃 갱신 엔드포인트(`PUT /checkout-sessions/{id}`)를 구현한다.
 * 플랫폼이 제공한 결제 수단을 처리하는 체크아웃 완료 엔드포인트(`POST /checkout-sessions/{id}/complete`)를 구현한다.
-* `/.well-known/ucp`에 [UCP 디스커버리 프로필](/documentation/core-concepts/#discovery-capability-negotiation)을 게시해 서비스를 광고한다.
+* `/.well-known/ucp`에 [UCP 디스커버리 프로필](../documentation/core-concepts.md#discovery-capability-negotiation)을 게시해 서비스를 광고한다.
 * [UCP Conformance 저장소](https://github.com/Universal-Commerce-Protocol/conformance)의 적합성 테스트 스위트를 서버에 실행해 프로토콜 준수 여부를 검증한다.
 
 전체 참조 구현은 [UCP Samples 저장소](https://github.com/Universal-Commerce-Protocol/samples)를 참고한다.

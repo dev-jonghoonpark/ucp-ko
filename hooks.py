@@ -313,6 +313,15 @@ def on_page_markdown(markdown, page, config, files):
     # pointing to served assets folder.
     markdown = _root_pages_asset_link_rewrite(markdown, base_path)
 
+  elif mode == "all":
+    # Korean port: raw HTML asset paths are not rewritten by MkDocs, so make
+    # them absolute under the deployed base path (e.g. /ucp-ko/assets/...).
+    site_url = os.environ.get("SITE_URL", config.get("site_url") or "/")
+    base_path = urlparse(site_url).path
+    if not base_path.endswith("/"):
+      base_path += "/"
+    markdown = _root_pages_asset_link_rewrite(markdown, base_path)
+
   return markdown
 
 

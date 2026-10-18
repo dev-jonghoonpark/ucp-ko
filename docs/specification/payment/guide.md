@@ -800,7 +800,7 @@ INSTRUMENT_ACQUISITION(
 그리고 신뢰·실패·중단·폴백 동작을 문서화한다.
 
 공통 엔벨로프는 [개요 — 액션](../overview/index.md#actions)을, 확장 스키마 패턴은
-[스키마 작성 — 확장 선언 액션 유형](/documentation/schema-authoring/#extension-declared-action-types)을
+[스키마 작성 — 확장 선언 액션 유형](../../documentation/schema-authoring.md#extension-declared-action-types)을
 참고한다.
 
 ### 처리 { #processing }
