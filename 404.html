@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <title>페이지를 찾을 수 없습니다 · UCP 한국어</title>
+  <script>
+    // 버전별 배포 이전의 주소(/ucp-ko/specification/...)는 초안(draft) 번역으로 옮겨졌다.
+    (function () {
+      var base = "/ucp-ko/";
+      var path = location.pathname;
+      if (path.indexOf(base) !== 0) return;
+      var rest = path.slice(base.length);
+      var first = rest.split("/")[0];
+      if (/^(draft|latest|\d{4}-\d{2}-\d{2})$/.test(first)) return;
+      location.replace(base + "draft/" + rest + location.search + location.hash);
+    })();
+  </script>
+</head>
+<body>
+  <p>페이지를 찾을 수 없습니다. <a href="/ucp-ko/">UCP 한국어 번역 홈</a>으로 이동하세요.</p>
+</body>
+</html>
