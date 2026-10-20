@@ -4,13 +4,10 @@
     "clientKind": "git",
     "useIgnoreFile": true
   },
-  "files": {
-    "includes": ["**", "!docs/assets/**/*.svg"]
-  },
   "linter": {
     "enabled": true,
     "rules": {
-      "preset": "recommended",
+      "recommended": true,
       "complexity": {
         "noImportantStyles": "off"
       }

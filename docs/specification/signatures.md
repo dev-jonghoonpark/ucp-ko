@@ -14,30 +14,33 @@
    limitations under the License.
 -->
 
-# 메시지 서명 { #message-signatures }
+# Message Signatures { #message-signatures }
 
-이 명세는 진위성과 무결성을 보장할 수 있도록 UCP 메시지에 암호학적으로 서명하는 방법을
-정의합니다.
+This specification defines how UCP messages are cryptographically signed to
+ensure authenticity and integrity.
 
-## 개요 { #overview }
+## Overview { #overview }
 
-이 명세는 [RFC 9421](https://www.rfc-editor.org/rfc/rfc9421) HTTP Message
-Signatures로 UCP 메시지에 서명하고 이를 검증하는 방법을 정의합니다. UCP의 신원
-모델, 지원하는 인증 메커니즘, 키 디스커버리 프로토콜은
-[신원과 인증](overview/index.md#identity-authentication)을 참고하세요.
+This specification defines how to sign and verify UCP messages using
+[RFC 9421](https://www.rfc-editor.org/rfc/rfc9421) HTTP Message Signatures.
+For UCP's identity model, supported authentication mechanisms, and key
+discovery protocol, see
+[Identity & Authentication](overview.md#identity-authentication).
 
-HTTP Message Signatures는 다음 공격을 막아 줍니다.
+HTTP Message Signatures protect against:
 
-* **사칭** — 공격자가 정당한 참여자인 척하며 메시지를 보내는 행위
-* **변조** — 전송 중 메시지 내용을 수정하는 행위
-* **재전송 공격** — 탈취한 메시지를 다른 엔드포인트나 다른 시점에 다시 보내는 행위
-* **메서드/엔드포인트 혼동** — 서명된 페이로드를 다른 HTTP 메서드나 다른 경로로
-    재전송하는 행위
+* **Impersonation** — Attackers sending messages claiming to be legitimate
+    participants
+* **Tampering** — Modification of message contents in transit
+* **Replay attacks** — Captured messages resent to different endpoints or at
+    different times
+* **Method/endpoint confusion** — Signed payloads replayed with different
+    HTTP methods or to different paths
 
-### 아키텍처 { #architecture }
+### Architecture { #architecture }
 
-UCP는 모든 HTTP 기반 전송 방식에서 HTTP Message Signatures([RFC 9421](https://www.rfc-editor.org/rfc/rfc9421))를
-사용합니다.
+UCP uses HTTP Message Signatures ([RFC 9421](https://www.rfc-editor.org/rfc/rfc9421))
+for all HTTP-based transports:
 
 ```text
 +-----------------------------------------------------------------+
@@ -45,11 +48,9 @@ UCP는 모든 HTTP 기반 전송 방식에서 HTTP Message Signatures([RFC 9421]
 +-----------------------------------------------------------------+
 |  Signature Format: RFC 9421 (HTTP Message Signatures)           |
 |  Body Digest: RFC 9530 (Content-Digest, raw bytes)              |
-|  Algorithms: must verify ES256 (baseline); other algorithms     |
-|              optional — open vocabulary, counterparty-driven    |
-|              (see Signature Algorithms)                         |
-|  Key Format: JWK (RFC 7517 + RFC 8037 for Ed25519)              |
-|  Key Discovery: keys[] (RFC 7517 JWK Set) in /.well-known/ucp   |
+|  Algorithms: ES256 (required), ES384 (optional)                 |
+|  Key Format: JWK (RFC 7517)                                     |
+|  Key Discovery: signing_keys[] in /.well-known/ucp              |
 |  Replay Protection: idempotency-key (business layer)            |
 +-----------------------------------------------------------------+
                               |
@@ -67,101 +68,56 @@ UCP는 모든 HTTP 기반 전송 방식에서 HTTP Message Signatures([RFC 9421]
 +-----------------------------------------------------------------+
 ```
 
-**참고:** UCP는 MCP 전송 방식으로 SSE 기반 전송 대신 streamable HTTP를 지정합니다.
-덕분에 같은 RFC 9421 서명 메커니즘을 모든 UCP 전송 방식에 일관되게 적용할 수 있습니다.
+**Note:** UCP specifies streamable HTTP for MCP transport, replacing SSE-based
+transports. This allows the same RFC 9421 signature mechanism to apply uniformly
+across all UCP transports.
 
-## 공통 기반 { #shared-foundation }
+## Shared Foundation { #shared-foundation }
 
-다음 암호 기본 요소는 모든 UCP HTTP 전송 방식에서 공통으로 사용합니다.
+The following cryptographic primitives are shared across all UCP HTTP transports.
 
-### 서명 알고리즘 { #signature-algorithms }
+### Signature Algorithms { #signature-algorithms }
 
-UCP는 ECDSA(NIST P 곡선 기반)와 EdDSA(Ed25519) 두 가지 알고리즘 계열을 인정합니다.
-ECDSA P-256은 보편적인 기본선이고, EdDSA는 Web Bot Auth(WBA)와 상호 운용할 수 있게
-해 주는 추가 선택지입니다.
+UCP supports ECDSA signatures with the following curves:
 
-| 계열 | JWK `kty` / `crv` | JWA `alg` | 해시 |
-| :----- | :---------------- | :-------- | :--- |
-| ECDSA P-256 | `EC` / `P-256` | `ES256` | SHA-256 |
-| ECDSA P-384 | `EC` / `P-384` | `ES384` | SHA-384 |
-| EdDSA Ed25519 | `OKP` / `Ed25519` | `EdDSA` | (내장) |
+| Curve | JWK `alg` | Hash |
+| :---- | :--------- | :--- |
+| P-256 | `ES256` | SHA-256 |
+| P-384 | `ES384` | SHA-384 |
 
-**구현 요건:**
+**Implementation requirements:**
 
-* 모든 구현은 반드시 `ES256`(ECDSA P-256) 서명 검증을 지원해야 합니다(**MUST**). 이것이
-  UCP의 보편적 기본선입니다.
-* `ES384`(ECDSA P-384) 지원은 선택 사항입니다(**OPTIONAL**).
-* `EdDSA`(Ed25519) 지원은 선택 사항입니다(**OPTIONAL**). WBA를 인식하는 검증자는 자신의
-  서명자들이 실제로 쓰는 알고리즘을 지원해야 합니다(**SHOULD**)(현재 WBA 서명자 사이에서는
-  Ed25519가 가장 흔합니다). UCP는 보편적인 `ES256` 기본선 외에는 알고리즘 요건을 두지
-  않습니다.
-* `kty`/`crv`/`alg` 어휘는 **개방형**입니다. 지원하지 않는 타입, 곡선, 알고리즘의 키를
-  만나더라도 검증자는 공개된 키 집합을 거부해서는 안 됩니다(**MUST NOT**). 지원하지 않는
-  키는 그 검증자가 쓸 수 없는 키로 남을 뿐입니다. 그런 키를 참조하는 서명은
-  `algorithm_unsupported`로 실패합니다(다중 서명 요청에서는
-  [신원 확인 알고리즘](overview/index.md#identity-resolution-algorithm)에 따라 건너뜁니다).
+* All implementations **MUST** support verifying P-256 (`ES256`) signatures
+* Support for P-384 (`ES384`) is **OPTIONAL**
 
-**사용 지침:**
+**Usage guidance:**
 
-* **알고리즘은 상대방에 맞춰 고릅니다.** 서명자는 같은 서명이 충족해야 하는 모든
-  검증자, 즉 수신 측 UCP 검증자와 해당 서명을 적용하기로 한 WBA 검증자나 AP2 계층이
-  모두 수락하는 알고리즘을 사용해야 합니다(**SHOULD**). 알고리즘 하나로 모두를
-  충족할 수 있으면 키도 하나면 됩니다. 어떤 단일 알고리즘으로도 충족할 수 없을 때만
-  알고리즘이 서로 다른 키를 여러 개 공개합니다(서명마다 `kid`로 선택).
-* 상대방에게 특별한 제약이 없으면 **기본값은 `ES256`**입니다. UCP의 보편적 기본선이면서
-  Web Bot Auth에서도 유효한 알고리즘입니다. (WBA의 알고리즘 규칙과 현재 배포 현황은
-  [WBA 상호 운용](#wba-interop)에서 다룹니다.)
-* **AP2 위임(Mandate) 서명은 AP2 자체의 알고리즘 규칙을 따릅니다.**
-  [AP2 위임](payment/extensions/ap2-mandates.md)을 참고하세요.
-* 알고리즘은 JWK의 `kty`/`crv` 필드로 도출하며, `alg`는 `Signature-Input` 파라미터에
-  포함하지 **않습니다(NOT)**.
+* Signers **SHOULD** use P-256 for maximum compatibility
+* Signers **MAY** use P-384 when both parties support it
+* The algorithm is derived from the key's `crv` field in the JWK;
+  `alg` is **NOT** included in `Signature-Input` parameters
 
-**서명 키의 개수.** 당사자가 공개할 키의 개수는 UCP 규칙이 아니라 알고리즘 호환성에
-따라 정해집니다. 서명 대상이 모두 수락하는 단일 알고리즘이 있다면 키 하나로
-충분합니다. 대상들의 알고리즘 제약이 서로 양립할 수 없을 때만 (`kid`로 선택하는) 별도
-키가 필요합니다. 예를 들어 Ed25519만 수락하는 WBA 검증자와 Ed25519를 배제하는 AP2 위임
-알고리즘 요건이 함께 있는 경우입니다([AP2 위임](payment/extensions/ap2-mandates.md) 참고).
-알고리즘 하나로 모든 대상을 충족하면 키 하나로 모두 처리합니다. 키 두 개를 쓰는
-예시는 [비즈니스 프로필](overview/index.md#business-profile)을 참고하세요.
+### Key Format (JWK) { #key-format-jwk }
 
-전송 시 서명 인코딩에 관한 자세한 내용은
-[REST 요청 서명 — 서명 인코딩](#rest-request-signing)을 참고하세요.
+Public keys **MUST** be represented using **JSON Web Key (JWK)** format as
+defined in [RFC 7517](https://datatracker.ietf.org/doc/html/rfc7517).
 
-### 키 형식 (JWK) { #key-format-jwk }
+**EC Key Structure:**
 
-공개 키는 반드시 [RFC 7517](https://datatracker.ietf.org/doc/html/rfc7517)에 정의된
-**JSON Web Key(JWK)** 형식으로 표현해야 합니다(**MUST**). UCP는 잘 알려진 JWK 형태 두
-가지를 정의합니다. ECDSA 키용 **EC**(RFC 7518 §6.2)와 EdDSA 키용
-**OKP**([RFC 8037](https://datatracker.ietf.org/doc/html/rfc8037))입니다. JWK 어휘는
-개방형입니다([서명 알고리즘](#signature-algorithms) 참고). 프로필에 다른 타입의 키를
-공개할 수 있고(MAY), 검증자는 사용할 수 없는 키를 건너뜁니다.
-
-**EC 키 구조 (ECDSA P-256, P-384):**
-
-| 필드 | 타입   | 필수 | 설명                              |
+| Field | Type   | Required | Description                              |
 | :---- | :----- | :------- | :--------------------------------------- |
-| `kid` | string | 예      | 키 ID(서명에서 참조)        |
-| `kty` | string | 예      | 키 타입(`EC`)                          |
-| `crv` | string | 예      | 곡선 이름(`P-256` 또는 `P-384`)          |
-| `x`   | string | 예      | X 좌표(base64url 인코딩)         |
-| `y`   | string | 예      | Y 좌표(base64url 인코딩)         |
-| `use` | string | 아니요       | 키 용도(서명용은 `sig`)            |
-| `alg` | string | 아니요       | 알고리즘(`ES256`, `ES384`)             |
+| `kid` | string | Yes      | Key ID (referenced in signatures)        |
+| `kty` | string | Yes      | Key type (`EC` for elliptic curve)       |
+| `crv` | string | Yes*     | Curve name (`P-256`, `P-384`)            |
+| `x`   | string | Yes*     | X coordinate (base64url encoded)         |
+| `y`   | string | Yes*     | Y coordinate (base64url encoded)         |
+| `use` | string | No       | Key usage (`sig` for signing)            |
+| `alg` | string | No       | Algorithm (`ES256`, `ES384`)             |
 
-**OKP 키 구조 (EdDSA Ed25519):**
+\* Required for EC keys
 
-| 필드 | 타입   | 필수 | 설명                                          |
-| :---- | :----- | :------- | :--------------------------------------------------- |
-| `kid` | string | 예      | 키 ID(서명에서 참조)                    |
-| `kty` | string | 예      | 키 타입(`OKP`)                                     |
-| `crv` | string | 예      | 곡선 이름(`Ed25519`)                               |
-| `x`   | string | 예      | 공개 키 값(RFC 8037 §2에 따른 base64url 인코딩) |
-| `use` | string | 아니요       | 키 용도(서명용은 `sig`)                        |
-| `alg` | string | 아니요       | 알고리즘(`EdDSA`)                                  |
+**Example:**
 
-**EC 예시 (ES256):**
-
-<!-- ucp:example schema=profile extract=$ target=$.keys[0] -->
 ```json
 {
   "kid": "key-2024-01-15",
@@ -174,250 +130,87 @@ ECDSA P-256은 보편적인 기본선이고, EdDSA는 Web Bot Auth(WBA)와 상�
 }
 ```
 
-**OKP 예시 (Ed25519 / EdDSA):**
+### Key Discovery { #key-discovery }
 
-<!-- ucp:example schema=profile extract=$ target=$.keys[0] -->
-```json
-{
-  "kid": "poqkLGiymh_W0uP6PZFw-dvez3QJT5SolqXBCW38r0U",
-  "kty": "OKP",
-  "crv": "Ed25519",
-  "x": "JrQLj5P_89iXES9-vFgrIy29clF9CC_oPPsw3c5D0bs",
-  "use": "sig",
-  "alg": "EdDSA"
-}
-```
+Public keys are published in the `signing_keys` array of the party's UCP
+profile at `/.well-known/ucp`. For the complete key discovery protocol,
+profile trust model, and profile fetch requirements, see
+[Identity & Authentication — Key Discovery](overview.md#key-discovery).
 
-**이중 대상(dual-audience)** 서명(`tag="web-bot-auth"`가 있는 서명)에 쓰는 키는, 그
-키를 나열하는 모든 배열에서 반드시 해당 키의 JWK SHA-256
-Thumbprint([RFC 7638](https://www.rfc-editor.org/rfc/rfc7638))를 `kid`로 공개해야 합니다(**MUST**).
-WBA 형태 서명의 `keyid`가 바로 그 thumbprint이고, UCP 검증자는 `keyid`를 공개된 `kid`와
-대조해 키를 찾습니다. 둘 다 thumbprint로 설정하면 `UCP-Agent` 조회와 `Signature-Agent`
-조회가 같은 키를 찾게 됩니다. 그 밖의 키에서 `kid`는 불투명 식별자(RFC 7517)이며, 안정적인
-값이라면 무엇이든 쓸 수 있습니다(MAY).
+### Key Rotation { #key-rotation }
 
-### 키 디스커버리 { #key-discovery }
+To rotate keys without service interruption:
 
-공개 키는 서명자의 UCP 프로필에 공개됩니다. 공개 계약은
-[프로필 구조](overview/index.md#profile-structure)를, 검증자의 조회 규칙(확인
-메커니즘별로 어떤 키 목록을 읽는지)은 [키 디스커버리](overview/index.md#key-discovery)를
-참고하세요.
+1. **Add new key** — Publish new key in `signing_keys[]` alongside existing keys
+2. **Start signing** — Begin signing with the new key
+3. **Grace period** — Continue accepting signatures from old keys (minimum 7 days)
+4. **Remove old key** — Remove the old key from `signing_keys[]`
 
-### 키 교체 { #key-rotation }
+**Recommendations:**
 
-서비스 중단 없이 키를 교체하는 절차는 다음과 같습니다.
+* Rotate keys every 90 days
+* Support multiple active keys during transitions
+* Verifiers: accept any key in `signing_keys[]`
 
-1. **새 키 추가** — 프로필의 `keys[]`에 기존 키와 함께 새 키를 공개합니다
-2. **서명 시작** — 새 키로 서명을 시작합니다
-3. **유예 기간** — 기존 키로 만든 서명도 계속 수락합니다(최소 7일)
-4. **기존 키 제거** — `keys[]`에서 기존 키를 제거합니다. `keys[]`에 남아 있는 키는 계속
-   검증에 사용됩니다.
+**Key Compromise Response:**
 
-**권장 사항:**
+1. Immediately remove compromised key from profile
+2. Add new key with different `kid`
+3. Reject all signatures made with compromised key
 
-* 운영자는 90일마다 키를 교체해야 합니다(SHOULD).
-* 프로필은 전환 기간 동안 여러 활성 키를 지원해야 합니다(SHOULD).
+## REST Binding { #rest-binding }
 
-**키 유출 대응:**
+For HTTP REST transport, UCP uses
+[RFC 9421 (HTTP Message Signatures)](https://www.rfc-editor.org/rfc/rfc9421).
 
-1. 유출된 키를 즉시 `keys[]`에서 제거합니다. 배열에서 사라지기 전까지는 계속 검증에
-   사용됩니다
-2. 다른 `kid`로 새 키를 추가합니다
-3. 유출된 키로 만든 서명은 모두 거부합니다
+### Headers { #headers }
 
-### WBA 상호 운용 { #wba-interop }
+| Header            | Direction        | Required | Description                           |
+| :---------------- | :--------------- | :------- | :------------------------------------ |
+| `Signature-Input` | Request/Response | Yes      | Describes signed components           |
+| `Signature`       | Request/Response | Yes      | Contains signature value              |
+| `Content-Digest`  | Request/Response | Cond.*   | SHA-256 hash of request/response body |
 
-UCP 통합자는 자신의 기본 서명을 Web Bot Auth 호환 형태로 만들 수 있습니다(MAY). 키
-하나, 서명 작업 한 번, 전송되는 서명 하나로 이루어진 단일 **이중 대상** 서명을 UCP
-검증자(`UCP-Agent`로 확인)와 WBA 검증자(`Signature-Agent`로 확인)가 모두 수락하게
-하는 방식입니다. WBA 준수 검증자와 상호 운용하려는 통합자에게 권장하며(RECOMMENDED),
-아래 요건은 `tag="web-bot-auth"`가 있는 모든 서명에 적용됩니다. WBA 상호 운용은 요청에만
-해당합니다. 응답은 (`@status`를 포함하는) 표준 UCP 서명으로 서명하며
-`tag="web-bot-auth"`를 담지 않습니다.
+\* Required when request/response has a body
 
-**전송 형태.** 이중 대상 서명은 일반 UCP 서명에 몇 가지를 더한 형태입니다. `UCP-Agent`와
-**함께** `Signature-Agent` 헤더를 담고(추가 방식 — `Signature-Agent`가 `UCP-Agent`를
-대체하지 않습니다), `signature-agent` 컴포넌트에 서명하며, 서명 키의 RFC 7638 thumbprint를
-`keyid`로 쓰고, `created`, `expires`, `tag="web-bot-auth"`를 추가합니다.
+`Content-Digest` follows [RFC 9530](https://www.rfc-editor.org/rfc/rfc9530) and
+hashes the raw body bytes. This binds the message body to the signature without
+requiring JSON canonicalization. Implementations **MUST** use `sha-256`. For
+durable artifacts requiring canonicalization, see
+[AP2 Mandates - Canonicalization](ap2-mandates.md#canonicalization).
 
-<!-- ucp:example schema=shopping/checkout op=create direction=request -->
-```json
-POST /checkout-sessions HTTP/1.1
-Host: merchant.example.com
-Content-Type: application/json
-UCP-Agent: profile="https://platform.example/.well-known/ucp"
-Signature-Agent: sig1="https://platform.example/.well-known/ucp";type=jwks_uri
-Idempotency-Key: 550e8400-e29b-41d4-a716-446655440000
-Content-Digest: sha-256=:X48E9q...:
-Signature-Input: sig1=("@method" "@authority" "@path" "signature-agent";key="sig1" "ucp-agent" "idempotency-key" "content-digest" "content-type");keyid="poqkLGiymh_W0uP6PZFw-dvez3QJT5SolqXBCW38r0U";created=1738617600;expires=1738621200;tag="web-bot-auth"
-Signature: sig1=:base64_ed25519_signature_value:
+**Intermediary Warning:** Proxies, API gateways, and other intermediaries
+**MUST NOT** re-serialize JSON bodies, as this would invalidate the signature.
+The `Content-Digest` is computed over raw bytes; any modification breaks
+verification.
 
-{
-  "line_items": [
-    {
-      "item": {"id": "item_123"},
-      "quantity": 2
-    }
-  ]
-}
-```
+### REST Request Signing { #rest-request-signing }
 
-전송되는 서명은 하나, 대상은 둘입니다. UCP 형태 검증자는 `UCP-Agent`로 확인하고, 자신이
-기대하는 컴포넌트(`ucp-agent`, `idempotency-key`)를 찾은 뒤 나머지는 무시합니다. WBA 형태
-검증자는 `Signature-Agent`로 확인하고 자신의 컴포넌트(`@authority`, `signature-agent`,
-`tag`, `created`/`expires`)를 찾습니다. 두 검증자 모두 같은 키로 같은 바이트를 검증합니다.
-이 예시에서는 두 헤더가 같은 `/.well-known/ucp` URL을 가리키지만(`type=jwks_uri`이므로 WBA
-검증자는 프로필의 `keys[]`를 JWK Set으로 읽습니다 —
-[배포 패턴](overview/index.md#deployment-patterns-for-wba-interop) 참고),
-`Signature-Agent`가 다른 곳을 가리켜도 됩니다(MAY).
+**Signed Components:**
 
-세 개의 `sig1` 레이블, 즉 `Signature-Agent` 딕셔너리 멤버 키, 서명된
-`signature-agent` 컴포넌트의 `;key="sig1"` 파라미터, `Signature-Input` 서명 레이블은
-아래 옵트인 목록 3번 항목에 따라 서로 묶여 있습니다.
+| Component         | Required  | Description                            |
+| :---------------- | :-------- | :------------------------------------- |
+| `@method`         | Yes       | HTTP method (GET, POST, etc.)          |
+| `@authority`      | Yes       | Target host (prevents cross-host relay)|
+| `@path`           | Yes       | Request path                           |
+| `@query`          | Cond.\*   | Query string (if present)              |
+| `ucp-agent`       | Cond.\**  | Profile URL (binds identity)           |
+| `idempotency-key` | Cond.\*** | Idempotency header (state-changing)    |
+| `content-digest`  | Cond.†    | Body digest (if body present)          |
+| `content-type`    | Cond.†    | Content-Type (if body present)         |
 
-옵트인하려면 서명자는 기본 UCP 서명을 다음과 같이 바꿉니다. **MUST** 표시 항목은
-[draft-meunier-webbotauth-httpsig-protocol-00](https://datatracker.ietf.org/doc/draft-meunier-webbotauth-httpsig-protocol/00/)
-§4.2가 요구하는 사항입니다. 자세한 내용은 해당 초안을 참고하세요.
+\* Required if request has query parameters
 
-1. **WBA 검증자가 수락하는 알고리즘을 사용합니다.** WBA는 RFC 9421 HTTP Message
-   Signatures Algorithm 레지스트리의 모든 알고리즘(예: `ed25519`,
-   `ecdsa-p256-sha256` = `ES256`, `ecdsa-p384-sha384`, `rsa-pss-sha512`)을 허용합니다.
-   대상 검증자가 수락하는지 확인하세요. (비규범: 현재 가장 널리 배포된 알고리즘은 Ed25519입니다.)
-2. `UCP-Agent`와 함께 **반드시 `Signature-Agent` 헤더를 보내야 합니다(MUST)**. 이 헤더는
-   RFC 8941 Dictionary Structured Field로, 멤버의 sf-string 값은 HTTPS URL이고 `type`
-   파라미터로 디스커버리 메커니즘을 고릅니다. 멤버 키는 `Signature-Input` 서명 레이블과
-   일치합니다. `jwks_uri`/`cimd`/`directory` 변형과, 각 변형에서 UCP 프로필을 재사용하는
-   방법은 [배포 패턴](overview/index.md#deployment-patterns-for-wba-interop)을 참고하세요.
-   (`data:` URI 인라인 형태는 범위 밖입니다.)
-3. `Signature-Agent` 딕셔너리 멤버 키(`Signature-Input` 서명 레이블과 같음)와 일치하는
-   **`;key="<label>"`로 반드시 `signature-agent` 컴포넌트에 서명해야 합니다(MUST)**.
-   WBA §4.2.1을 따릅니다.
-4. [RFC 7638](https://www.rfc-editor.org/rfc/rfc7638)에 따라 **반드시 `keyid`를 서명
-   키의 JWK SHA-256 Thumbprint로 설정해야 하며(MUST)**, `UCP-Agent` 조회와 `Signature-Agent`
-   조회가 같은 키를 찾도록 그 키를 같은 thumbprint 값의 `kid`로 공개합니다
-   ([키 형식](#key-format-jwk) 참고). Ed25519(OKP) 키라면 thumbprint 멤버는
-   [RFC 8037](https://www.rfc-editor.org/rfc/rfc8037) §2에 따라 `crv`, `kty`, `x`이며,
-   부록 A.3에 계산 예시가 있습니다.
-5. **반드시 `created`와 `expires` 파라미터를 포함해야 합니다(MUST).** `expires` 간격은
-   최대 24시간이어야 합니다(SHOULD).
-6. 재전송을 막으려면 **`nonce`를 포함해야 합니다(SHOULD)**. `nonce`는 base64url로 인코딩한
-   무작위 값(권장(RECOMMENDED) 64바이트)이며, `created`/`expires` 기간 안에서 고유해야
-   합니다(WBA §4.2.3). UCP의 `Idempotency-Key`는 비즈니스 계층에서 페이로드 중복을 걸러 내는
-   장치일 뿐 전송에 결합된 nonce가 아니므로 그 역할을 대신하지 못합니다. 검증하는 오리진은
-   `nonce`를 요구할 수 있으며(**MAY**), nonce가 없거나 재사용된 서명에는 다시 챌린지(HTTP
-   429)할 수 있습니다(WBA §4.3–4.4).
-7. **반드시 `tag="web-bot-auth"`를 포함해야 합니다(MUST).** WBA 검증자는 이 태그를 보고
-   서명을 고릅니다.
+\** Required if `UCP-Agent` header is present
 
-**컴포넌트 요건은 그대로 유지되고 강제됩니다.** WBA 형태 서명에도 반드시 기본 UCP 서명과
-같은 컴포넌트([서명 컴포넌트](#rest-request-signing) 표의 필수 집합)가 포함되어야
-합니다(**MUST**). WBA는
-[draft-meunier-webbotauth-httpsig-protocol-00](https://datatracker.ietf.org/doc/draft-meunier-webbotauth-httpsig-protocol/00/)
-§4.2.4에 따라 이를 "추가 컴포넌트"로 수락합니다. 검증자는
-[신원 확인 알고리즘](overview/index.md#identity-resolution-algorithm)에 따라 `tag`와
-상관없이 이 요건을 강제하므로, Web Bot Auth에 옵트인해도 UCP가 인증하는 범위는 넓어지지
-않습니다.
+\*** Required for POST, PUT, DELETE, PATCH
 
-**상호 운용은 단방향입니다.** UCP 서명자는 Web Bot Auth 검증자의 요건을 충족합니다. WBA
-검증자는 UCP의 더 풍부한 포함 컴포넌트 집합을 허용된 "추가 컴포넌트"로 수락하기
-때문입니다(protocol-00 §4.2.4). 반대 방향은 성립하지 않습니다. (`@authority`만 포함하는)
-최소한의 WBA 서명은 UCP의 포함 범위 검사를 통과하지 못해 거부됩니다. UCP의 목표는 WBA
-검증자*가* 검증할 수 있게 하는 것이지, 임의의 WBA 서명자를 수락하는 것이 아닙니다. UCP
-검증자가 수락하는 범위는 WBA 검증자가 수락하는 범위의 진부분집합입니다.
+† Required if request has a body
 
-UCP 검증자는 같은 서명에서 새로운 요소 세 가지를 보게 됩니다.
-
-* `tag` 파라미터는 RFC 9421 §2.3의 서명 파라미터입니다. UCP 전용 검증자는 이 파라미터를
-  알지 못하며, RFC 9421의 관대한 파라미터 처리 규칙에 따라 무시합니다.
-* `signature-agent` 컴포넌트는 포함된 HTTP 필드로서 평소처럼 처리됩니다.
-  `;key="<label>"` 파라미터는 RFC 9421 §2.1.2에 따라 Dictionary 멤버를 선택합니다. WBA
-  형태 서명을 검증하려면 §2.1.2를 지원해야 합니다. UCP 기본 서명은 Dictionary 멤버
-  컴포넌트 선택을 쓰지 않으므로, UCP 기본 서명만 염두에 두고 만든 검증자라면 이 지원을
-  추가해야 할 수도 있습니다.
-* WBA 형태 서명에서는 `created`와 `expires`가 필수입니다(5번 항목, WBA §4.2). 이를 강제할지는
-  **애플리케이션이 정합니다**(RFC 9421 §3.2.1). RFC 9421을 준수한다고 자동으로 강제되는
-  것도 아니고, UCP가 별도로 요구하지도 않습니다. UCP 자체의 재전송 방지는 비즈니스 계층의
-  `Idempotency-Key`가 맡습니다. 신선도를 강제하는 WBA 인식 검증자는 유효 기간을 벗어난
-  서명을 거부합니다.
-
-**신원 확인.** WBA에 옵트인해도 기본 UCP 검증은 바뀌지 않습니다.
-[신원 확인 알고리즘](overview/index.md#identity-resolution-algorithm)을 참고하세요.
-
-**태그.** UCP는 자체 `tag`(RFC 9421 §2.3)를 정의하지 않습니다. UCP 검증자는 `UCP-Agent`
-헤더, 서명된 컴포넌트 집합, URL 라우팅으로 자신의 서명을 식별합니다.
-
-**다중 서명.** UCP 요청에는
-[RFC 9421 §4.3](https://www.rfc-editor.org/rfc/rfc9421#section-4.3) 레이블 메커니즘으로
-여러 서명을 담을 수 있습니다(**MAY**). 이 패턴은 실제로 분리가 필요할 때(대상마다 다른
-키, 여러 당사자의 공동 서명, 대상별 컴포넌트 집합이 서로 충돌하는 경우)만 사용합니다.
-키 하나로 UCP와 WBA를 함께 지원하려면 위에서 설명한 단일 서명 형태를 쓰는 편이 낫습니다.
-
-## REST 바인딩 { #rest-binding }
-
-HTTP REST 전송 방식에서 UCP는
-[RFC 9421 (HTTP Message Signatures)](https://www.rfc-editor.org/rfc/rfc9421)를 사용합니다.
-
-### 헤더 { #headers }
-
-| 헤더            | 방향        | 필수   | 설명                                  |
-| :---------------- | :--------------- | :--------- | :------------------------------------------- |
-| `Signature-Input` | 요청/응답 | 예        | 서명된 컴포넌트 기술                  |
-| `Signature`       | 요청/응답 | 예        | 서명 값                     |
-| `Content-Digest`  | 요청/응답 | 조건부 `*`  | 요청/응답 본문의 SHA-256 해시        |
-| `Signature-Agent` | 요청          | 조건부 `**` | WBA 키 출처([WBA 상호 운용](#wba-interop)) |
-
-* `*` 요청/응답에 본문이 있으면 필수
-
-* `**` Web Bot Auth 호환 서명 형태에 옵트인하면 필수. 기본 UCP 서명에는 없음(검증자는
-`UCP-Agent`에서 도출한 신원을 사용)
-
-`Content-Digest`는 [RFC 9530](https://www.rfc-editor.org/rfc/rfc9530)을 따르며 원본
-본문 바이트를 해시합니다. 덕분에 JSON 정규화 없이도 메시지 본문을 서명에 결합할 수 있습니다.
-구현은 반드시 `sha-256`을 사용해야 합니다(**MUST**). 정규화가 필요한 영속적 아티팩트는
-[AP2 위임 - 정규화](payment/extensions/ap2-mandates.md#canonicalization)를 참고하세요.
-
-**중개자 경고:** 프록시, API 게이트웨이 같은 중개자는 JSON 본문을 다시 직렬화해서는 안
-됩니다(**MUST NOT**). 다시 직렬화하면 서명이 무효가 됩니다. `Content-Digest`는 원본
-바이트로 계산하므로 조금이라도 수정하면 검증이 깨집니다.
-
-### REST 요청 서명 { #rest-request-signing }
-
-**서명 컴포넌트:**
-
-| 컴포넌트           | 필수     | 설명                                                  |
-| :------------------ | :----------- | :----------------------------------------------------------- |
-| `@method`           | 예          | HTTP 메서드(GET, POST 등)                                |
-| `@authority`        | 예          | 대상 호스트(다른 호스트로의 중계 방지)                      |
-| `@path`             | 예          | 요청 경로                                                 |
-| `@query`            | 조건부 `*`    | 쿼리 문자열(있는 경우)                                    |
-| `ucp-agent`         | 조건부 `**`   | 프로필 URL(신원 결합)                                 |
-| `signature-agent`   | 조건부 `***`  | WBA 키 출처([WBA 상호 운용](#wba-interop)에 옵트인한 경우) |
-| `idempotency-key`   | 조건부 `****` | 멱등성 헤더(상태 변경 요청)                          |
-| `webhook-id`        | 조건부 `‡`    | 이벤트 식별자(웹훅)                                  |
-| `webhook-timestamp` | 조건부 `‡`    | 이벤트 발생 시각(웹훅)                             |
-| `content-digest`    | 조건부 `†`    | 본문 다이제스트(본문이 있는 경우)                                |
-| `content-type`      | 조건부 `†`    | Content-Type(본문이 있는 경우)                               |
-
-* `*` 요청에 쿼리 파라미터가 있으면 필수
-
-* `**` `UCP-Agent` 헤더가 있으면 필수
-
-* `***` `Signature-Agent` 헤더가 있으면(즉 WBA 형태 서명이면) 필수
-
-* `****` 헤더가 있으면 필수. 요청이 애초에 `Idempotency-Key`를 담아야 하는지는 이 포함
-  범위 검사와 별개인 바인딩 수준의 규칙입니다
-
-* `‡` 헤더가 있으면 필수. 웹훅 전송에는 `Idempotency-Key`가 없으므로 이 두 헤더가
-  이벤트별 재전송을 판별하는 유일한 신호입니다. 이 헤더를 빠뜨린 서명은 이벤트 식별자나
-  이벤트 시각만 바꿔 서명된 전송을 재전송할 여지를 남깁니다.
-
-* `†` 요청에 본문이 있으면 필수
-
-**서명 생성:**
+**Signature Generation:**
 
 ```text
-sign_rest_request(method, path, query, body_bytes, idempotency_key, webhook_id,
-                  webhook_timestamp, private_key, kid):
+sign_rest_request(method, path, query, body_bytes, idempotency_key, private_key, kid):
     // 1. Compute body digest (if body present)
     if body_bytes:
         digest = sha256(body_bytes)  // Hash raw bytes, no canonicalization
@@ -428,8 +221,6 @@ sign_rest_request(method, path, query, body_bytes, idempotency_key, webhook_id,
     if query: components.append("@query")
     if ucp_agent: components.append("ucp-agent")
     if idempotency_key: components.append("idempotency-key")
-    if webhook_id: components.append("webhook-id")
-    if webhook_timestamp: components.append("webhook-timestamp")
     if body: components.extend(["content-digest", "content-type"])
 
     // 3. Build signature base (RFC 9421)
@@ -440,8 +231,6 @@ sign_rest_request(method, path, query, body_bytes, idempotency_key, webhook_id,
         query=query,
         headers={
             "idempotency-key": idempotency_key,
-            "webhook-id": webhook_id,
-            "webhook-timestamp": webhook_timestamp,
             "content-digest": digest_header,
             "content-type": "application/json"
         },
@@ -449,7 +238,7 @@ sign_rest_request(method, path, query, body_bytes, idempotency_key, webhook_id,
     )
 
     // 4. Sign
-    signature = sign(signature_base, private_key)  // ecdsa for EC, eddsa for OKP
+    signature = ecdsa_sign(signature_base, private_key)
 
     // 5. Return headers
     return {
@@ -460,87 +249,66 @@ sign_rest_request(method, path, query, body_bytes, idempotency_key, webhook_id,
     }
 ```
 
-**서명 인코딩:**
+**Signature Encoding:** ECDSA signatures **MUST** use fixed-width raw `r||s`
+encoding per RFC 9421, **not** ASN.1/DER. The signature value is the
+concatenation of `r` and `s` as fixed-length unsigned big-endian integers:
+64 bytes for P-256 (32 + 32), 96 bytes for P-384 (48 + 48). Many crypto
+libraries (OpenSSL, Java, .NET) default to DER encoding and require explicit
+conversion.
 
-* **ECDSA** 서명은 반드시 ASN.1/DER이 **아니라** RFC 9421 §3.3.1에 따른 고정 길이 원시
-  `r||s` 인코딩을 사용해야 합니다(**MUST**). 서명 값은 고정 길이 부호 없는 빅엔디언 정수
-  `r`과 `s`를 이어 붙인 값으로, P-256은 64바이트(32 + 32), P-384는 96바이트(48 + 48)입니다.
-  많은 암호 라이브러리(OpenSSL, Java, .NET)가 기본으로 DER 인코딩을 사용하므로 명시적으로
-  변환해야 합니다.
-* **EdDSA (Ed25519)** 서명은 반드시 RFC 8032 §5.1.6에 정의된 인코딩, 즉 인코딩된 `R`
-  점과 정수 `S`를 이어 붙인 64바이트를 사용해야 합니다(**MUST**). Ed25519 서명
-  라이브러리의 표준 출력이 이 형태이므로 DER 변환이 필요 없습니다.
+**Complete Request Example:**
 
-**전체 요청 예시:**
-
-<!-- ucp:example schema=shopping/checkout op=create direction=request -->
-```json
+```http
 POST /checkout-sessions HTTP/1.1
 Host: merchant.example.com
 Content-Type: application/json
 UCP-Agent: profile="https://platform.example/.well-known/ucp"
 Idempotency-Key: 550e8400-e29b-41d4-a716-446655440000
-Content-Digest: sha-256=:X48E9q...:
+Content-Digest: sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
 Signature-Input: sig1=("@method" "@authority" "@path" "ucp-agent" "idempotency-key" "content-digest" "content-type");keyid="platform-2026"
-Signature: sig1=:6G4i8TS6oUkGrx8KnCFUpsSPwd74...:
+Signature: sig1=:MEUCIQDTxNq8h7LGHpvVZQp1iHkFp9+3N8Mxk2zH1wK4YuVN8w...:
 
-{
-  "line_items": [
-    {
-      "item": {"id": "item_123"},
-      "quantity": 2
-    }
-  ]
-}
+{"checkout":{"line_items":[{"id":"prod_123","quantity":2}]}}
 ```
 
-**GET 요청 예시 (본문 없음, 멱등성 키 없음):**
+**GET Request Example (no body, no idempotency):**
 
 ```http
 GET /checkout-sessions/chk_123 HTTP/1.1
 Host: merchant.example.com
 Signature-Input: sig1=("@method" "@authority" "@path");keyid="platform-2026"
-Signature: sig1=:6G4i8TS6oUkGrx8KnCFUpsSPwd74...:
+Signature: sig1=:MEQCIBx7kL9nM2oP5qR8sT1uV4wX6yZaB3cD...:
 ```
 
-### REST 응답 서명 { #rest-response-signing }
+### REST Response Signing { #rest-response-signing }
 
-응답 서명에는 `@method` 대신 `@status`를 사용합니다.
+Response signatures use `@status` instead of `@method`:
 
-**서명 컴포넌트:**
+**Signed Components:**
 
-| 컴포넌트        | 필수   | 설명                       |
-| :--------------- | :--------- | :-------------------------------- |
-| `@status`        | 예        | HTTP 상태 코드(200, 201 등) |
-| `content-digest` | 조건부 `*`  | 본문 다이제스트(본문이 있는 경우)     |
-| `content-type`   | 조건부 `*`  | Content-Type(본문이 있는 경우)    |
+| Component        | Required | Description                       |
+| :--------------- | :------- | :-------------------------------- |
+| `@status`        | Yes      | HTTP status code (200, 201, etc.) |
+| `content-digest` | Cond.*   | Body digest (if body present)     |
+| `content-type`   | Cond.*   | Content-Type (if body present)    |
 
-* `*` 응답에 본문이 있으면 필수
+\* Required if response has a body
 
-**전체 응답 예시:**
-
-아래 응답 본문은 이해를 돕기 위해 축약했으며, 서명에 쓰이는 핵심 필드만 보여 줍니다. 실제
-체크아웃 응답에는 추가 필수 필드(`ucp`, `currency`, `line_items`, `totals`, `links`)도
-포함됩니다. 전체 형태는 [체크아웃 생성 응답](shopping/checkout/rest.md#create-checkout)을
-참고하세요.
+**Complete Response Example:**
 
 ```http
 HTTP/1.1 201 Created
 Content-Type: application/json
 Content-Digest: sha-256=:Y5fK8nLmPqRsT3vWxYzAbCdEfGhIjKlMnO...:
 Signature-Input: sig1=("@status" "content-digest" "content-type");created=1738617601;keyid="merchant-2026"
-Signature: sig1=:6G4i8TS6oUkGrx8KnCFUpsSPwd74...:
+Signature: sig1=:MFQCIH7kL9nM2oP5qR8sT1uV4wX6yZaB3cD...:
 
-{
-  "id": "chk_123",
-  "status": "ready_for_complete",
-  "...": "abbreviated; see linked spec for full shape"
-}
+{"checkout":{"id":"chk_123","status":"ready_for_complete"}}
 ```
 
-**응답 서명 생성:**
+**Response Signature Generation:**
 
-응답 서명은 `@method` 대신 `@status`를 쓴다는 점만 빼면 요청 서명과 같습니다.
+Response signing mirrors request signing with `@status` replacing `@method`:
 
 ```text
 sign_rest_response(status, body_bytes, private_key, kid):
@@ -559,7 +327,7 @@ sign_rest_response(status, body_bytes, private_key, kid):
     )
 
     // 3. Sign
-    signature = sign(signature_base, private_key)  // ecdsa for EC, eddsa for OKP
+    signature = ecdsa_sign(signature_base, private_key)
 
     // 4. Return headers
     return {
@@ -569,38 +337,27 @@ sign_rest_response(status, body_bytes, private_key, kid):
     }
 ```
 
-### REST 요청 검증 { #rest-request-verification }
+### REST Request Verification { #rest-request-verification }
 
-**서명자의 키 확인:**
+**Determining Signer's Profile URL:**
 
-키 확인 규칙(서명의 `tag`가 아니라 검증자의 능력과 실제로 있는 헤더로 결정)은
-[신원 확인 알고리즘](overview/index.md#identity-resolution-algorithm)을 참고하세요. 이
-절에서는 헤더 파싱만 다룹니다. 기본 UCP 방식에서는 `UCP-Agent`를, WBA 형태 방식에서는
-`Signature-Agent`를 파싱합니다.
+The signer's profile URL is obtained from the `UCP-Agent` header, which uses
+[RFC 8941 Dictionary](https://www.rfc-editor.org/rfc/rfc8941#section-3.2) syntax:
 
-**`UCP-Agent` 파싱 규칙** (기본 UCP 방식):
+```text
+UCP-Agent: profile="https://platform.example/.well-known/ucp"
+```
 
-1. RFC 8941 Dictionary로 파싱합니다
-2. `profile` 키를 추출합니다(필수(REQUIRED))
-3. 값은 반드시 HTTPS URL을 담은 따옴표 문자열이어야 합니다(MUST)
-4. 비즈니스 프로필이라면 URL은 반드시 `/.well-known/ucp`를 가리켜야 합니다(MUST). 플랫폼
-   프로필 URL에는 경로 제약이 없습니다
-5. HTTPS가 아닌 URL은 거부합니다
+**Parsing Rules:**
 
-**`Signature-Agent` 파싱 규칙** (WBA 형태 방식):
+1. Parse as RFC 8941 Dictionary
+2. Extract the `profile` key (REQUIRED)
+3. Value MUST be a quoted string containing an HTTPS URL
+4. For business profiles, URL MUST point to `/.well-known/ucp`; platform
+   profile URLs are not path-constrained
+5. Reject non-HTTPS URLs
 
-1. RFC 8941 Dictionary로 파싱합니다.
-2. 반드시 검증 중인 서명 레이블과 키가 같은 딕셔너리 멤버를 찾아야 합니다(**MUST**)
-   (`Signature-Input: sig1=...`이면 멤버 `sig1`을 찾습니다). 일치하는 멤버가 없으면 이
-   서명의 검증은 반드시 실패해야 합니다(**MUST**).
-3. 멤버의 값은 반드시 HTTPS URL을 담은 sf-string이어야 합니다(**MUST**). 확인 방식은 `type`
-   파라미터로 고르며, `jwks_uri`(JWK Set URL, 예: UCP 프로필), `cimd`(Client ID
-   Metadata Document), `directory`(잘 알려진 디렉터리를 호스팅하는 오리진) 중 하나입니다.
-   [배포 패턴](overview/index.md#deployment-patterns-for-wba-interop)을 참고하세요.
-   `data:` URI 인라인 형태는 UCP-WBA 상호 운용의 범위 밖입니다.
-4. URL이 HTTPS가 아니면 이 서명의 검증은 반드시 실패해야 합니다(**MUST**).
-
-**예시 (기본 UCP):**
+**Example:**
 
 ```text
 // Header
@@ -610,29 +367,10 @@ UCP-Agent: profile="https://platform.example/.well-known/ucp"
 profile_url = "https://platform.example/.well-known/ucp"
 ```
 
-**예시 (Signature-Agent, WBA 형태):**
+**Applicability:**
 
-```text
-// Headers
-Signature-Agent: sig1="https://platform.example/.well-known/ucp";type=jwks_uri
-Signature-Input: sig1=("@method" "@authority" ...);...
-
-// Parsed (member key matches sig1)
-type = jwks_uri
-jwks_uri = "https://platform.example/.well-known/ucp"
-```
-
-**적용 범위:**
-
-* **플랫폼 → 비즈니스 요청:** `UCP-Agent` 헤더의 프로필 URL
-* **비즈니스 → 플랫폼 웹훅:** `UCP-Agent` 헤더의 프로필 URL
-
-아래 두 루틴은 모두 **단일 후보** 서명을 검증합니다. `skip_signature(reason)`은 해당
-후보로는 메시지를 인증할 수 없다는 뜻입니다. 다중 서명을 처리할 때
-([RFC 9421 §4.3](https://www.rfc-editor.org/rfc/rfc9421#section-4.3),
-[신원 확인 알고리즘](overview/index.md#identity-resolution-algorithm) 참고)
-검증자는 다음 후보를 시도하며, **모든** 후보를 건너뛴 경우에만 메시지를 거부합니다.
-`success()`는 메시지를 인증합니다.
+* **Platform → Business requests:** Profile URL from `UCP-Agent` header
+* **Business → Platform webhooks:** Profile URL from `UCP-Agent` header
 
 ```text
 verify_rest_request(request):
@@ -641,53 +379,19 @@ verify_rest_request(request):
     keyid = sig_input.keyid
     components = sig_input.components
 
-    // 2. Resolve signer's public key (capability-based; see
-    // overview/index.md#identity-resolution-algorithm).
-    key_set = resolve_signer_key_set(request.headers)
-    // sig_capable skips keys not usable for verification: use:"enc", or
-    // key_ops present without "verify" (RFC 7517 §4.2, §4.3)
-    public_key = find_key_by_kid(sig_capable(key_set), keyid)
+    // 2. Fetch signer's public key
+    // See overview.md#profile-requirements for URL validation and fetch rules
+    profile_url = get_profile_url_from_ucp_agent(request.headers["UCP-Agent"])
+    profile = fetch_profile(profile_url)  // HTTPS-only, no redirects
+    public_key = find_key_by_kid(profile.signing_keys, keyid)
     if not public_key:
-        return skip_signature("key_not_found")
-
-    // pre-2a. WBA-shape signatures bind key identity to key bytes:
-    // keyid MUST equal the matched JWK's RFC 7638 thumbprint
-    // (see IRA step 4 / WBA architecture draft §4.2).
-    if sig_input.tag == "web-bot-auth":
-        if keyid != rfc7638_thumbprint(public_key):
-            return skip_signature("signature_invalid")
-    // 2a. Skip keys whose algorithm this verifier does not support.
-    // The kty/crv/alg vocabularies are open (see Signature Algorithms);
-    // an unsupported key never invalidates the whole key set.
-    if not algorithm_supported(public_key):
-        return skip_signature("algorithm_unsupported")
-
-    // 2b. Enforce covered-component requirements (all regimes/transports).
-    // Bind the target, the body when present, and every integrity-relevant
-    // header the request carries. A signature covering only WBA's minimum
-    // (@authority, signature-agent) does not authenticate a request whose
-    // body/method/path is unbound.
-    // (Which requests must CARRY Idempotency-Key is a binding rule,
-    // separate from this coverage check.)
-    required = ["@method", "@authority", "@path"]
-    if request.query:                        required += ["@query"]
-    if request.has_body:                     required += ["content-digest", "content-type"]
-    if "Idempotency-Key" in request.headers: required += ["idempotency-key"]
-    if "UCP-Agent" in request.headers:       required += ["ucp-agent"]
-    if "Webhook-Id" in request.headers:      required += ["webhook-id"]
-    if "Webhook-Timestamp" in request.headers: required += ["webhook-timestamp"]
-    if "Signature-Agent" in request.headers: required += ["signature-agent"]
-    for component in required:
-        if component not in components:
-            // coverage failure, a target/body/header the signature does not
-            // cover is treated as unsigned (see IRA step 5)
-            return skip_signature("coverage_insufficient")
+        return error("key_not_found")
 
     // 3. Verify body digest (if body present)
     if "content-digest" in components:
         expected = "sha-256=:" + base64(sha256(request.body_bytes)) + ":"
         if request.headers["Content-Digest"] != expected:
-            return skip_signature("digest_mismatch")
+            return error("digest_mismatch")
 
     // 4. Reconstruct signature base
     signature_base = build_signature_base(
@@ -697,17 +401,18 @@ verify_rest_request(request):
 
     // 5. Verify signature
     signature = parse_signature(request.headers["Signature"])
-    if not verify(signature_base, signature, public_key):
-        return skip_signature("signature_invalid")
+    if not ecdsa_verify(signature_base, signature, public_key):
+        return error("signature_invalid")
 
     return success()
 
-    // Note: Replay protection handled by the signed idempotency-key header
+    // Note: Replay protection handled by idempotency keys in request payload
 ```
 
-### REST 응답 검증 { #rest-response-verification }
+### REST Response Verification { #rest-response-verification }
 
-응답 검증은 `@method` 대신 `@status`를 쓴다는 점만 빼면 요청 검증과 같습니다.
+Response verification mirrors request verification with `@status` replacing
+`@method`:
 
 ```text
 verify_rest_response(response, signer_profile_url):
@@ -716,32 +421,17 @@ verify_rest_response(response, signer_profile_url):
     keyid = sig_input.keyid
     components = sig_input.components
 
-    // 2. Resolve signer's public key from the signer's profile.
+    // 2. Fetch signer's public key
     profile = fetch_profile(signer_profile_url)
-    // signature-capable keys only (see request path; RFC 7517 §4.2, §4.3)
-    public_key = find_key_by_kid(sig_capable(profile.keys), keyid)
+    public_key = find_key_by_kid(profile.signing_keys, keyid)
     if not public_key:
-        return skip_signature("key_not_found")
-
-    // 2a. Skip keys whose algorithm this verifier does not support.
-    // The kty/crv/alg vocabularies are open (see Signature Algorithms);
-    // an unsupported key never invalidates the whole key set.
-    if not algorithm_supported(public_key):
-        return skip_signature("algorithm_unsupported")
-
-    // 2b. Enforce covered-component requirements for responses (all regimes).
-    // No method/idempotency to bind, but the body still MUST be covered.
-    required = ["@status"]
-    if response.has_body: required += ["content-digest", "content-type"]
-    for component in required:
-        if component not in components:
-            return skip_signature("signature_invalid")
+        return error("key_not_found")
 
     // 3. Verify body digest (if body present)
     if "content-digest" in components:
         expected = "sha-256=:" + base64(sha256(response.body_bytes)) + ":"
         if response.headers["Content-Digest"] != expected:
-            return skip_signature("digest_mismatch")
+            return error("digest_mismatch")
 
     // 4. Reconstruct signature base
     signature_base = build_signature_base(
@@ -751,99 +441,86 @@ verify_rest_response(response, signer_profile_url):
 
     // 5. Verify signature
     signature = parse_signature(response.headers["Signature"])
-    if not verify(signature_base, signature, public_key):
-        return skip_signature("signature_invalid")
+    if not ecdsa_verify(signature_base, signature, public_key):
+        return error("signature_invalid")
 
     return success()
 ```
 
-### 재전송 방지 { #replay-protection }
+### Replay Protection { #replay-protection }
 
-UCP는 재전송 방지를 서명 계층이 아니라 **비즈니스 계층**에서 멱등성 키로 처리합니다.
-관심사는 다음과 같이 나뉩니다.
+UCP handles replay protection at the **business layer** through idempotency keys,
+not at the signature layer. This provides separation of concerns:
 
-| 계층 | 책임 |
+| Layer | Responsibility |
 | :---- | :------------- |
-| **서명** | 인증(누가), 무결성(무엇을) |
-| **멱등성** | 안전한 재시도, 재전송 방지 |
+| **Signature** | Authentication (who), Integrity (what) |
+| **Idempotency** | Safe retries, Replay protection |
 
-**동작 방식:**
+**How it works:**
 
-1. 상태를 변경하는 작업은 요청에 `idempotency-key`를 포함합니다
-2. 멱등성 키는 서명된 페이로드의 일부입니다
-3. 공격자는 서명을 무효화하지 않고서는 키를 수정할 수 없습니다
-4. 중복 요청에는 캐시된 응답을 반환합니다(새로운 부수 효과 없음)
+1. State-changing operations include an `idempotency-key` in the request
+2. The idempotency key is part of the signed payload
+3. Attackers cannot modify the key without invalidating the signature
+4. Duplicate requests return cached responses (no new side effects)
 
-**멱등성 키 위치:**
+**Idempotency Key Placement:**
 
-`Idempotency-Key` 헤더는 서명 컴포넌트에 포함됩니다.
+The `Idempotency-Key` header is included in the signed components:
 
 ```http
 POST /checkout-sessions HTTP/1.1
 Idempotency-Key: 550e8400-e29b-41d4-a716-446655440000
 Signature-Input: sig1=("@method" "@authority" "@path" "idempotency-key" ...);keyid="platform-2026"
-Signature: sig1=:6G4i8TS6oUkGrx8KnCFUpsSPwd74...:
+Signature: sig1=:MEUCIQD...:
 ```
 
-**멱등성 키 요건:**
+**Idempotency Key Requirements:**
 
-| 요건 | 값 |
+| Requirement | Value |
 | :---------- | :---- |
-| **엔트로피** | 최소 128비트(예: UUID v4, 22자 이상의 영숫자) |
-| **고유성** | 클라이언트별, 작업 유형별 |
-| **서버 저장 기간** | 최소 24시간, 권장 48시간 |
-| **중복 시 (페이로드 일치)** | 캐시된 응답 반환(다시 실행하지 않음) |
-| **중복 시 (페이로드 불일치)** | `409 Conflict`(REST) / `-32000`(MCP)으로 거부(실행하지 않음) |
-| **저장소 장애 시** | 실패 시 차단(fail closed)(503으로 요청 거부) |
+| **Entropy** | Minimum 128 bits (e.g., UUID v4, 22+ char alphanumeric) |
+| **Uniqueness** | Per-client, per-operation type |
+| **Server storage** | Minimum 24 hours, recommended 48 hours |
+| **On duplicate** | Return cached response, do not re-execute |
+| **On storage failure** | Fail closed (reject request with 503) |
 
-**페이로드 대조:** 비즈니스는 반드시 원본 본문 바이트의 SHA-256 해시, 즉 RFC 9530이
-`Content-Digest`로 규정하는 것과 같은 다이제스트를 비교해, 중복 키 요청의 페이로드가 원래
-요청의 페이로드와 일치하는지 판별해야 합니다(**MUST**). 서명을 사용하면 이 값이
-`Content-Digest` 헤더로 제공되며, 앞의 중개자 경고 덕분에 종단 간 바이트 동일성이
-보장됩니다. 비즈니스는 이 값을 멱등성 키와 함께 저장합니다. 서명되지 않은 요청이라면
-비즈니스가 받은 본문 바이트로 같은 다이제스트를 계산합니다. 따라서 플랫폼은 요청
-페이로드를 수정할 때마다 반드시 새 멱등성 키를 생성해야 합니다(**MUST**). 결제 수단을
-바꾼 재시도, 배송 주소 변경, 라인 아이템 교체 등 요청 본문이 조금이라도 바뀌면 모두
-해당합니다.
+**Note:** The RFC 9421 `created` parameter is **OPTIONAL**. UCP handles replay
+protection at the business layer through idempotency keys, not signature timestamps.
+Key rotation (removing compromised keys from `signing_keys`) provides the mechanism
+for invalidating old signatures.
 
-**참고:** **기본 UCP** 서명에서 RFC 9421 `created` 파라미터는 선택 사항이며(**OPTIONAL**),
-재전송 방지는 서명 타임스탬프가 아니라 비즈니스 계층의 멱등성 키로 처리합니다. **WBA 형태**
-서명은 WBA 검증자를 위해 `created`/`expires`를 추가로 담으며 `nonce`도 담아야
-합니다(SHOULD). 그 신선도 기간을 강제할지는 애플리케이션이 정합니다(RFC 9421 §3.2.1).
-[WBA 상호 운용](#wba-interop)을 참고하세요. 오래된 서명을 무효화하려면 키를
-교체합니다(프로필에 공개된 키 집합에서 유출된 키를 제거).
+### When Signatures Apply { #when-signatures-apply }
 
-### 서명 적용 대상 { #when-signatures-apply }
+**Requests:** Platforms **SHOULD** sign all requests when using HTTP Message
+Signatures. Alternative authentication mechanisms (API keys, OAuth, mTLS) may
+be used instead.
 
-**요청:** HTTP Message Signatures를 사용한다면 플랫폼은 모든 요청에 서명해야
-합니다(**SHOULD**). 다른 인증 메커니즘(API 키, OAuth, mTLS)을 대신 사용할 수도 있습니다.
+**Webhooks:** Webhook notifications **MUST** be signed. Recipients cannot
+otherwise verify authenticity of server-initiated push messages.
 
-**웹훅:** 웹훅 알림에는 반드시 서명해야 합니다(**MUST**). 그러지 않으면 수신자가 서버에서
-시작된 푸시 메시지의 진위를 검증할 수 없습니다.
+**Other responses:** Signatures are **RECOMMENDED** for:
 
-**그 밖의 응답:** 다음 응답에는 서명을 권장합니다(**RECOMMENDED**).
+* Payment authorization responses
+* Checkout completion responses
 
-* 결제 승인 응답
-* 체크아웃 완료 응답
+Signatures are **OPTIONAL** for:
 
-다음 응답에는 서명이 선택 사항입니다(**OPTIONAL**).
+* Cart operations (low-value, synchronous)
+* Catalog queries (read-only)
+* Error responses (4xx, 5xx)
 
-* 장바구니 작업(저가치, 동기식)
-* 카탈로그 쿼리(읽기 전용)
-* 에러 응답(4xx, 5xx)
+## MCP Transport { #mcp-transport }
 
-## MCP 전송 방식 { #mcp-transport }
+UCP specifies **streamable HTTP** for MCP transport, replacing SSE-based transports.
+Since MCP requests are standard HTTP requests with JSON-RPC bodies, the same
+RFC 9421 signature mechanism applies:
 
-UCP는 MCP 전송 방식으로 SSE 기반 전송 대신 **streamable HTTP**를 지정합니다. MCP 요청은
-JSON-RPC 본문을 담은 표준 HTTP 요청이므로 같은 RFC 9421 서명 메커니즘이 적용됩니다.
+* The `Content-Digest` header covers the JSON-RPC message body
+* The `Signature-Input` and `Signature` headers provide authentication
+* The `UCP-Agent` and `Idempotency-Key` headers work identically to REST
 
-* `Content-Digest` 헤더가 JSON-RPC 메시지 본문을 대상으로 합니다
-* `Signature-Input`과 `Signature` 헤더로 인증합니다
-* `UCP-Agent` 헤더는 REST와 똑같이 동작합니다. `Idempotency-Key`는 있으면 서명되지만, MCP
-  요청은 모두 POST이므로 필요 여부는 HTTP 메서드가 아니라 JSON-RPC 작업(상태 변경
-  여부)에 따라 정해집니다
-
-**서명이 포함된 MCP 요청 예시:**
+**Example MCP Request with Signature:**
 
 ```http
 POST /mcp HTTP/1.1
@@ -853,41 +530,43 @@ UCP-Agent: profile="https://platform.example/.well-known/ucp"
 Idempotency-Key: 550e8400-e29b-41d4-a716-446655440000
 Content-Digest: sha-256=:RK/0qy18MlBSVnWgjwz6lZEWjP/lF5HF9bvEF8FabDg=:
 Signature-Input: sig1=("@method" "@authority" "@path" "content-digest" "content-type" "ucp-agent" "idempotency-key");keyid="platform-2026"
-Signature: sig1=:6G4i8TS6oUkGrx8KnCFUpsSPwd74...:
+Signature: sig1=:MEUCIQDXyK9N3p5Rt...:
 
 {"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"complete_checkout","arguments":{"id":"chk_123","checkout":{...}}}}
 ```
 
-JSON-RPC 메시지가 곧 HTTP 본문입니다. `Content-Digest`가 이 본문을 서명에 결합하므로 JSON
-정규화는 필요 없습니다.
+The JSON-RPC message is the HTTP body. `Content-Digest` binds it to the signature.
+No JSON canonicalization is required.
 
-## 에러 처리 { #error-handling }
+## Error Handling { #error-handling }
 
-서명 검증 에러에는 표준 UCP 에러 코드를 사용합니다. 전체 에러 코드 레지스트리와 전송 바인딩은
-명세 개요의 [에러 처리](overview/index.md#error-handling)를 참고하세요.
+Signature verification errors use standard UCP error codes. See
+[Error Handling](overview.md#error-handling) in the specification overview for
+the complete error code registry and transport bindings.
 
-**서명 관련 에러:**
+**Signature-specific errors:**
 
-| 코드                    | HTTP | 설명                                          |
+| Code                    | HTTP | Description                                          |
 | :---------------------- | :--- | :--------------------------------------------------- |
-| `signature_missing`     | 401  | 필수 서명 헤더/필드가 없음          |
-| `signature_invalid`     | 401  | 서명 검증 실패                        |
-| `key_not_found`         | 401  | 서명자가 공개한 키 집합에서 키 ID를 찾을 수 없음       |
-| `digest_mismatch`       | 400  | 본문 다이제스트가 `Content-Digest` 헤더와 일치하지 않음    |
-| `algorithm_unsupported` | 400  | 지원하지 않는 서명 알고리즘                    |
+| `signature_missing`     | 401  | Required signature header/field not present          |
+| `signature_invalid`     | 401  | Signature verification failed                        |
+| `key_not_found`         | 401  | Key ID not found in signer's `signing_keys`          |
+| `digest_mismatch`       | 400  | Body digest doesn't match `Content-Digest` header    |
+| `algorithm_unsupported` | 400  | Signature algorithm not supported                    |
 
-**프로필 관련 에러** (기능 협상에도 사용):
+**Profile-related errors** (also used for capability negotiation):
 
-| 코드                    | HTTP | 설명                                               |
+| Code                    | HTTP | Description                                               |
 | :---------------------- | :--- | :-------------------------------------------------------- |
-| `invalid_profile_url`   | 400  | 프로필 URL의 형식이 잘못되었거나 스킴이 유효하지 않음                   |
-| `profile_unreachable`   | 424  | 서명자의 프로필을 가져올 수 없음                          |
-| `profile_not_trusted`   | 403  | 프로필 URL이 사전 승인된 플랫폼 레지스트리에 없음     |
+| `invalid_profile_url`   | 400  | Profile URL malformed or invalid scheme                   |
+| `profile_unreachable`   | 424  | Unable to fetch signer's profile                          |
+| `profile_not_trusted`   | 403  | Profile URL not in registry of pre-approved platforms     |
 
-**참고:** 재전송 방지는 서명 계층이 아니라 비즈니스 계층의 멱등성 키로 처리합니다. 중복
-요청에는 서명 에러가 아니라 캐시된 응답이 반환됩니다.
+**Note:** Replay protection is handled at the business layer through idempotency
+keys, not at the signature layer. Duplicate requests return cached responses
+rather than signature errors.
 
-### REST 에러 응답 { #rest-error-response }
+### REST Error Response { #rest-error-response }
 
 ```http
 HTTP/1.1 401 Unauthorized
@@ -899,9 +578,8 @@ Content-Type: application/json
 }
 ```
 
-### MCP 에러 응답 { #mcp-error-response }
+### MCP Error Response { #mcp-error-response }
 
-<!-- ucp:example schema=transports/jsonrpc def=error_response -->
 ```json
 {
   "jsonrpc": "2.0",
@@ -917,11 +595,8 @@ Content-Type: application/json
 }
 ```
 
-## 참고 자료 { #references }
+## References { #references }
 
 * [RFC 7517](https://datatracker.ietf.org/doc/html/rfc7517) — JSON Web Key (JWK)
-* [RFC 7518](https://datatracker.ietf.org/doc/html/rfc7518) — JSON Web Algorithms (JWA), §6.2 (EC 공개 키)
-* [RFC 8032](https://datatracker.ietf.org/doc/html/rfc8032) — Edwards-Curve Digital Signature Algorithm (EdDSA)
-* [RFC 8037](https://datatracker.ietf.org/doc/html/rfc8037) — CFRG Elliptic Curve Diffie-Hellman (ECDH) and Signatures in JOSE
 * [RFC 9421](https://www.rfc-editor.org/rfc/rfc9421) — HTTP Message Signatures
 * [RFC 9530](https://www.rfc-editor.org/rfc/rfc9530) — Digest Fields (Content-Digest)

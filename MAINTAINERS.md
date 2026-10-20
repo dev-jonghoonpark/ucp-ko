@@ -16,4 +16,36 @@
 
 # UCP Maintainers
 
-Please see the central [MAINTAINERS.md](https://github.com/Universal-Commerce-Protocol/.github/blob/main/MAINTAINERS.md) in the `.github` repository.
+## Tech Council
+
+The Tech Council is responsible for the technical direction and overall
+design of the protocol.
+
+<!-- cSpell:ignore Amit Handa Anurag Sinha Chris Sauve Daniel Wyckoff Drew -->
+<!-- cSpell:ignore Olson Ilya Grigorik Imran Hoosain Lee Richmond Maxime -->
+<!-- cSpell:ignore Najim Naga Malepati Venu Vemula -->
+| Name | Company |
+| :--- | :--- |
+| Aaron Glazer | Shopify |
+| Amit Handa | Google |
+| Anurag Sinha | Google |
+| Chris Sauve | Shopify |
+| Daniel Wyckoff | Shopify |
+| Drew Olson | Google |
+| Ilya Grigorik | Shopify |
+| Imran Hoosain | Etsy |
+| Maxime Najim | Target |
+| Naga Malepati | Wayfair |
+| Venu Vemula | Google |
+| Open | to be elected |
+
+## Governance Council
+
+The Governance Council is responsible for the overall adoption and health of
+the protocol.
+
+| Name | Company |
+| :--- | :--- |
+| Amit Handa | Google |
+| Ilya Grigorik | Shopify |
+| Open | to be elected |

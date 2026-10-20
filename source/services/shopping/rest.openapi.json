@@ -166,7 +166,7 @@
       "put": {
         "operationId": "update_checkout",
         "summary": "Update Checkout",
-        "description": "Update Checkout is a full replacement operation. A new Update Checkout operation is not permitted while Checkout status is `complete_in_progress`. Duplicate requests remain subject to Replay Protection. If the Business receives a new Update Checkout request in that state, it leaves the Checkout unchanged and returns the current Checkout with a recoverable error Message.",
+        "description": "If an optional field is provided in the request body, its value is treated as a complete replacement for the corresponding data. If optional field is omitted, then current checkout session is unchanged.",
         "parameters": [
           {
             "$ref": "#/components/parameters/authorization"
@@ -218,7 +218,7 @@
         },
         "responses": {
           "200": {
-            "description": "Current Checkout state after the Update request, whether the update was applied or rejected.",
+            "description": "Checkout session updated",
             "headers": {
               "Signature": {
                 "$ref": "#/components/headers/signature"
@@ -673,11 +673,6 @@
         "responses": {
           "200": {
             "description": "Order retrieved or business outcome message",
-            "headers": {
-              "Signature": { "$ref": "#/components/headers/signature" },
-              "Signature-Input": { "$ref": "#/components/headers/signature_input" },
-              "Content-Digest": { "$ref": "#/components/headers/content_digest" }
-            },
             "content": {
               "application/json": {
                 "schema": { "$ref": "#/components/schemas/order_response" }
@@ -974,7 +969,7 @@
       "checkout_response": {
         "oneOf": [
           { "$ref": "../../schemas/shopping/checkout.json" },
-          { "$ref": "../../schemas/common/types/error_response.json" }
+          { "$ref": "../../schemas/shopping/types/error_response.json" }
         ]
       },
       "cart": {
@@ -983,7 +978,7 @@
       "cart_response": {
         "oneOf": [
           { "$ref": "../../schemas/shopping/cart.json" },
-          { "$ref": "../../schemas/common/types/error_response.json" }
+          { "$ref": "../../schemas/shopping/types/error_response.json" }
         ]
       },
       "order": {
@@ -992,11 +987,11 @@
       "order_response": {
         "oneOf": [
           { "$ref": "../../schemas/shopping/order.json" },
-          { "$ref": "../../schemas/common/types/error_response.json" }
+          { "$ref": "../../schemas/shopping/types/error_response.json" }
         ]
       },
       "payment": {
-        "$ref": "../../schemas/common/types/payment.json"
+        "$ref": "../../schemas/shopping/payment.json"
       },
       "ucp": {
         "$ref": "../../schemas/ucp.json"
@@ -1019,7 +1014,7 @@
       "catalog_get_product_response": {
         "oneOf": [
           { "$ref": "../../schemas/shopping/catalog_lookup.json#/$defs/get_product_response" },
-          { "$ref": "../../schemas/common/types/error_response.json" }
+          { "$ref": "../../schemas/shopping/types/error_response.json" }
         ]
       }
     }

@@ -93,21 +93,13 @@
       "ucp_request": "omit"
     },
     "totals": {
-      "$ref": "../common/types/totals.json",
+      "$ref": "types/totals.json",
       "description": "Different totals for the order."
-    },
-    "policies": {
-      "type": "array",
-      "items": {
-        "$ref": "../common/types/policy.json"
-      },
-      "description": "Snapshot of the policies that applied to the items at checkout, captured on the order as a durable record. `applies_to` targets are relative to the response root.",
-      "ucp_request": "omit"
     },
     "messages": {
       "type": "array",
       "items": {
-        "$ref": "../common/types/message.json"
+        "$ref": "types/message.json"
       },
       "description": "Business outcome messages (errors, warnings, informational). Present when the business needs to communicate status or issues to the platform."
     },

@@ -14,10 +14,10 @@
           "description": "Free-text search query."
         },
         "context": {
-          "$ref": "../common/types/context.json"
+          "$ref": "types/context.json"
         },
         "signals": {
-          "$ref": "../common/types/signals.json"
+          "$ref": "types/signals.json"
         },
         "attribution": {
           "$ref": "types/attribution.json"
@@ -26,7 +26,7 @@
           "$ref": "types/search_filters.json"
         },
         "pagination": {
-          "$ref": "../common/types/pagination.json#/$defs/request"
+          "$ref": "types/pagination.json#/$defs/request"
         }
       }
     },
@@ -48,26 +48,14 @@
           "description": "Products matching the search criteria."
         },
         "pagination": {
-          "$ref": "../common/types/pagination.json#/$defs/response"
-        },
-        "actions": {
-          "$ref": "../common/types/actions.json",
-          "description": "Outstanding extension-defined Actions for this catalog search response.",
-          "ucp_request": "omit"
+          "$ref": "types/pagination.json#/$defs/response"
         },
         "messages": {
           "type": "array",
           "items": {
-            "$ref": "../common/types/message.json"
+            "$ref": "types/message.json"
           },
           "description": "Errors, warnings, or informational messages about the search results."
-        },
-        "policies": {
-          "type": "array",
-          "items": {
-            "$ref": "../common/types/policy.json"
-          },
-          "description": "Policies (e.g., return/refund terms) that apply to the products in these search results. `applies_to` targets are relative to the response root; when absent or empty, refer to the URLs in `links[]`."
         }
       }
     }

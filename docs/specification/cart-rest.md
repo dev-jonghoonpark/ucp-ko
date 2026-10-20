@@ -1,0 +1,546 @@
+<!--
+   Copyright 2026 UCP Authors
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+
+# Cart Capability - REST Binding { #cart-capability-rest-binding }
+
+This document specifies the REST binding for the [Cart Capability](cart.md).
+
+## Protocol Fundamentals { #protocol-fundamentals }
+
+### Discovery { #discovery }
+
+Businesses advertise REST transport availability through their UCP profile at
+`/.well-known/ucp`.
+
+```json
+{
+  "ucp": {
+    "version": "{{ ucp_version }}",
+    "services": {
+      "dev.ucp.shopping": [
+        {
+          "version": "{{ ucp_version }}",
+          "spec": "https://ucp.dev/{{ ucp_version }}/specification/overview",
+          "transport": "rest",
+          "schema": "https://ucp.dev/{{ ucp_version }}/services/shopping/rest.openapi.json",
+          "endpoint": "https://business.example.com/ucp/v1"
+        }
+      ]
+    },
+    "capabilities": {
+      "dev.ucp.shopping.checkout": [
+        {
+          "version": "{{ ucp_version }}",
+          "spec": "https://ucp.dev/{{ ucp_version }}/specification/checkout",
+          "schema": "https://ucp.dev/{{ ucp_version }}/schemas/shopping/checkout.json"
+        }
+      ],
+      "dev.ucp.shopping.cart": [
+        {
+          "version": "{{ ucp_version }}",
+          "spec": "https://ucp.dev/{{ ucp_version }}/specification/cart",
+          "schema": "https://ucp.dev/{{ ucp_version }}/schemas/shopping/cart.json"
+        }
+      ]
+    }
+  }
+}
+```
+
+### Base URL { #base-url }
+
+All UCP REST endpoints are relative to the business's base URL, which is
+discovered through the UCP profile at `/.well-known/ucp`. The endpoint for the
+cart capability is defined in the `rest.endpoint` field of the business profile.
+
+### Content Types { #content-types }
+
+* **Request**: `application/json`
+* **Response**: `application/json`
+
+All request and response bodies **MUST** be valid JSON as specified in
+[RFC 8259](https://tools.ietf.org/html/rfc8259){ target="_blank" }.
+
+### Transport Security { #transport-security }
+
+All REST endpoints **MUST** be served over HTTPS with minimum TLS version 1.3.
+
+## Operations { #operations }
+
+| Operation | Method | Endpoint | Description |
+| :---- | :---- | :---- | :---- |
+| [Create Cart](#create-cart) | `POST` | `/carts` | Create a cart session. |
+| [Get Cart](#get-cart) | `GET` | `/carts/{id}` | Get a cart session. |
+| [Update Cart](#update-cart) | `PUT` | `/carts/{id}` | Update a cart session. |
+| [Cancel Cart](#cancel-cart) | `POST` | `/carts/{id}/cancel` | Cancel a cart session. |
+
+### Create Cart { #create-cart }
+
+#### Input Schema { #input-schema }
+
+{{ schema_fields('cart_create_req', 'cart') }}
+
+#### Output Schema { #output-schema }
+
+{{ schema_fields('cart_resp', 'cart') }}
+
+#### Example { #example }
+
+=== "Request"
+
+    ```json
+    POST /carts HTTP/1.1
+    UCP-Agent: profile="https://platform.example/profile"
+    Content-Type: application/json
+
+    {
+      "line_items": [
+        {
+          "item": {
+            "id": "item_123"
+          },
+          "quantity": 2
+        }
+      ],
+      "context": {
+        "address_country": "US",
+        "address_region": "CA",
+        "postal_code": "94105"
+      }
+    }
+    ```
+
+=== "Response"
+
+    ```json
+    HTTP/1.1 201 Created
+    Content-Type: application/json
+
+    {
+      "ucp": {
+        "version": "{{ ucp_version }}",
+        "capabilities": {
+          "dev.ucp.shopping.checkout": [{"version": "{{ ucp_version }}"}],
+          "dev.ucp.shopping.cart": [{"version": "{{ ucp_version }}"}]
+        }
+      },
+      "id": "cart_abc123",
+      "line_items": [
+        {
+          "id": "li_1",
+          "item": {
+            "id": "item_123",
+            "title": "Red T-Shirt",
+            "price": 2500
+          },
+          "quantity": 2,
+          "totals": [
+            {"type": "subtotal", "amount": 5000},
+            {"type": "total", "amount": 5000}
+          ]
+        }
+      ],
+      "currency": "USD",
+      "totals": [
+        {
+          "type": "subtotal",
+          "amount": 5000
+        },
+        {
+          "type": "total",
+          "amount": 5000,
+          "display_text": "Estimated total (taxes calculated at checkout)"
+        }
+      ],
+      "continue_url": "https://business.example.com/checkout?cart=cart_abc123",
+      "expires_at": "2026-01-16T12:00:00Z"
+    }
+    ```
+
+=== "Error Response"
+
+    All items out of stock — no cart resource is created:
+
+    ```json
+    HTTP/1.1 200 OK
+    Content-Type: application/json
+
+    {
+      "ucp": { "version": "2026-01-15", "status": "error" },
+      "messages": [
+        {
+          "type": "error",
+          "code": "out_of_stock",
+          "content": "All requested items are currently out of stock",
+          "severity": "unrecoverable"
+        }
+      ],
+      "continue_url": "https://merchant.com/"
+    }
+    ```
+
+### Get Cart { #get-cart }
+
+#### Input Schema { #input-schema_1 }
+
+* `id` (String, required): The cart session ID (path parameter).
+
+#### Output Schema { #output-schema_1 }
+
+{{ schema_fields('cart_resp', 'cart') }}
+
+#### Example { #example_1 }
+
+=== "Request"
+
+    ```json
+    GET /carts/{id} HTTP/1.1
+    UCP-Agent: profile="https://platform.example/profile"
+    ```
+
+=== "Response"
+
+    ```json
+    HTTP/1.1 200 OK
+    Content-Type: application/json
+
+    {
+      "ucp": {
+        "version": "{{ ucp_version }}",
+        "capabilities": {
+          "dev.ucp.shopping.checkout": [{"version": "{{ ucp_version }}"}],
+          "dev.ucp.shopping.cart": [{"version": "{{ ucp_version }}"}]
+        }
+      },
+      "id": "cart_abc123",
+      "line_items": [
+        {
+          "id": "li_1",
+          "item": {
+            "id": "item_123",
+            "title": "Red T-Shirt",
+            "price": 2500
+          },
+          "quantity": 2,
+          "totals": [
+            {"type": "subtotal", "amount": 5000},
+            {"type": "total", "amount": 5000}
+          ]
+        }
+      ],
+      "currency": "USD",
+      "totals": [
+        {
+          "type": "subtotal",
+          "amount": 5000
+        },
+        {
+          "type": "total",
+          "amount": 5000
+        }
+      ],
+      "continue_url": "https://business.example.com/checkout?cart=cart_abc123",
+      "expires_at": "2026-01-16T12:00:00Z"
+    }
+    ```
+
+=== "Not Found"
+
+    ```json
+    HTTP/1.1 200 OK
+    Content-Type: application/json
+
+    {
+      "ucp": {
+        "version": "{{ ucp_version }}",
+        "status": "error",
+        "capabilities": {
+          "dev.ucp.shopping.cart": [{"version": "{{ ucp_version }}"}]
+        }
+      },
+      "messages": [
+        {
+          "type": "error",
+          "code": "not_found",
+          "content": "Cart not found or has expired",
+          "severity": "unrecoverable"
+        }
+      ],
+      "continue_url": "https://merchant.com/"
+    }
+    ```
+
+### Update Cart { #update-cart }
+
+#### Input Schema { #input-schema_2 }
+
+* `id` (String, required): The cart session ID (path parameter).
+
+{{ schema_fields('cart_update_req', 'cart') }}
+
+#### Output Schema { #output-schema_2 }
+
+{{ schema_fields('cart_resp', 'cart') }}
+
+#### Example { #example_2 }
+
+=== "Request"
+
+    ```json
+    PUT /carts/{id} HTTP/1.1
+    UCP-Agent: profile="https://platform.example/profile"
+    Content-Type: application/json
+
+    {
+      "id": "cart_abc123",
+      "line_items": [
+        {
+          "item": {
+            "id": "item_123"
+          },
+          "id": "li_1",
+          "quantity": 3
+        },
+        {
+          "item": {
+            "id": "item_456"
+          },
+          "id": "li_2",
+          "quantity": 1
+        }
+      ],
+      "context": {
+        "address_country": "US",
+        "address_region": "CA",
+        "postal_code": "94105"
+      }
+    }
+    ```
+
+=== "Response"
+
+    ```json
+    HTTP/1.1 200 OK
+    Content-Type: application/json
+
+    {
+      "ucp": {
+        "version": "{{ ucp_version }}",
+        "capabilities": {
+          "dev.ucp.shopping.checkout": [{"version": "{{ ucp_version }}"}],
+          "dev.ucp.shopping.cart": [{"version": "{{ ucp_version }}"}]
+        }
+      },
+      "id": "cart_abc123",
+      "line_items": [
+        {
+          "id": "li_1",
+          "item": {
+            "id": "item_123",
+            "title": "Red T-Shirt",
+            "price": 2500
+          },
+          "quantity": 3,
+          "totals": [
+            {"type": "subtotal", "amount": 7500},
+            {"type": "total", "amount": 7500}
+          ]
+        },
+        {
+          "id": "li_2",
+          "item": {
+            "id": "item_456",
+            "title": "Blue Jeans",
+            "price": 7500
+          },
+          "quantity": 1,
+          "totals": [
+            {"type": "subtotal", "amount": 7500},
+            {"type": "total", "amount": 7500}
+          ]
+        }
+      ],
+      "currency": "USD",
+      "totals": [
+        {
+          "type": "subtotal",
+          "amount": 15000
+        },
+        {
+          "type": "total",
+          "amount": 15000
+        }
+      ],
+      "continue_url": "https://business.example.com/checkout?cart=cart_abc123",
+      "expires_at": "2026-01-16T12:00:00Z"
+    }
+    ```
+
+### Cancel Cart { #cancel-cart }
+
+#### Input Schema { #input-schema_3 }
+
+* `id` (String, required): The cart session ID (path parameter).
+
+#### Output Schema { #output-schema_3 }
+
+{{ schema_fields('cart_resp', 'cart') }}
+
+#### Example { #example_3 }
+
+=== "Request"
+
+    ```json
+    POST /carts/{id}/cancel HTTP/1.1
+    UCP-Agent: profile="https://platform.example/profile"
+    Content-Type: application/json
+
+    {}
+    ```
+
+=== "Response"
+
+    ```json
+    HTTP/1.1 200 OK
+    Content-Type: application/json
+
+    {
+      "ucp": {
+        "version": "{{ ucp_version }}",
+        "capabilities": {
+          "dev.ucp.shopping.checkout": [{"version": "{{ ucp_version }}"}],
+          "dev.ucp.shopping.cart": [{"version": "{{ ucp_version }}"}]
+        }
+      },
+      "id": "cart_abc123",
+      "line_items": [
+        {
+          "id": "li_1",
+          "item": {
+            "id": "item_123",
+            "title": "Red T-Shirt",
+            "price": 2500
+          },
+          "quantity": 2,
+          "totals": [
+            {"type": "subtotal", "amount": 5000},
+            {"type": "total", "amount": 5000}
+          ]
+        }
+      ],
+      "currency": "USD",
+      "totals": [
+        {
+          "type": "subtotal",
+          "amount": 5000
+        },
+        {
+          "type": "total",
+          "amount": 5000
+        }
+      ],
+      "continue_url": "https://business.example.com/checkout?cart=cart_abc123"
+    }
+    ```
+
+## HTTP Headers { #http-headers }
+
+The following headers are defined for the HTTP binding and apply to all
+operations unless otherwise noted.
+
+{{ header_fields('create_cart', 'rest.openapi.json') }}
+
+### Specific Header Requirements { #specific-header-requirements }
+
+* **UCP-Agent**: All requests **MUST** include the `UCP-Agent` header
+    containing the platform profile URI using Dictionary Structured Field syntax
+    ([RFC 8941](https://datatracker.ietf.org/doc/html/rfc8941){target="_blank"}).
+    Format: `profile="https://platform.example/profile"`.
+* **Idempotency-Key**: Operations that modify state **SHOULD** support
+    idempotency. When provided, the server **MUST**:
+    1. Store the key with the operation result for at least 24 hours.
+    2. Return the cached result for duplicate keys.
+    3. Return `409 Conflict` if the key is reused with different parameters.
+
+## Protocol Mechanics { #protocol-mechanics }
+
+### Status Codes { #status-codes }
+
+| Status Code | Description |
+| :--- | :--- |
+| `200 OK` | The request was successful. |
+| `201 Created` | The cart was successfully created. |
+| `400 Bad Request` | The request was invalid or cannot be served. |
+| `401 Unauthorized` | Authentication is required and has failed or has not been provided. |
+| `403 Forbidden` | The request is authenticated but the user does not have the necessary permissions. |
+| `409 Conflict` | The request could not be completed due to a conflict (e.g., idempotent key reuse). |
+| `422 Unprocessable Entity` | The profile content is malformed (discovery failure). |
+| `424 Failed Dependency` | The profile URL is valid but fetch failed (discovery failure). |
+| `429 Too Many Requests` | Rate limit exceeded. |
+| `500 Internal Server Error` | An unexpected condition was encountered on the server. |
+| `503 Service Unavailable` | Temporary unavailability. |
+
+### Error Responses { #error-responses }
+
+See the [Core Specification](overview.md#error-handling) for the complete error
+code registry and transport binding examples.
+
+* **Protocol errors**: Return appropriate HTTP status code (401, 403, 409, 429,
+    503) with JSON body containing `code` and `content`.
+* **Business outcomes**: Return HTTP 200 with UCP envelope and `messages` array.
+
+#### Business Outcomes { #business-outcomes }
+
+Business outcomes (including not found and validation errors) are returned with
+HTTP 200 and the UCP envelope containing `messages`:
+
+```json
+{
+  "ucp": {
+    "version": "{{ ucp_version }}",
+    "status": "error",
+    "capabilities": {
+      "dev.ucp.shopping.cart": [{"version": "{{ ucp_version }}"}]
+    }
+  },
+  "messages": [
+    {
+      "type": "error",
+      "code": "not_found",
+      "content": "Cart not found or has expired",
+      "severity": "unrecoverable"
+    }
+  ],
+  "continue_url": "https://merchant.com/"
+}
+```
+
+## Security Considerations { #security-considerations }
+
+### Authentication { #authentication }
+
+Authentication is optional and depends on business requirements. When
+authentication is required, the REST transport **MAY** use:
+
+1. **Open API**: No authentication required for public operations.
+2. **API Keys**: Via `X-API-Key` header.
+3. **OAuth 2.0**: Via `Authorization: Bearer {token}` header. Identifies the
+   platform for agent-authenticated access, or both platform and user for
+   user-authenticated access (see [Identity Linking](identity-linking.md)).
+4. **Mutual TLS**: For high-security environments.
+
+Businesses **MAY** require authentication for some operations while leaving
+others open (e.g., public cart without authentication).

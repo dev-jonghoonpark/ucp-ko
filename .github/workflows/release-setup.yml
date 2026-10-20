@@ -1,0 +1,86 @@
+---
+#   Copyright 2026 Google LLC
+#
+#   Licensed under the Apache License, Version 2.0 (the "License");
+#   you may not use this file except in compliance with the License.
+#   You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#   Unless required by applicable law or agreed to in writing, software
+#   distributed under the License is distributed on an "AS IS" BASIS,
+#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#   See the License for the specific language governing permissions and
+#   limitations under the License.
+name: Setup Release Branch
+
+on:
+  create:
+
+jobs:
+  configure-release:
+    # Only run when a branch starting with 'release/' is created
+    if: >-
+      github.event.ref_type == 'branch' &&
+      startsWith(github.ref, 'refs/heads/release/')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Generate GitHub App Token (if available)
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        # Only attempt this if the secret exists (e.g., on the main repo)
+        env:
+          APP_ID: ${{ secrets.RELEASE_APP_ID }}
+        if: ${{ env.APP_ID != '' }}
+        with:
+          app-id: ${{ secrets.RELEASE_APP_ID }}
+          private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          # Checkout the newly created branch
+          ref: ${{ github.ref_name }}
+          # Use the app token if generated, otherwise fallback to default GITHUB_TOKEN
+          token: ${{ steps.app-token.outputs.token || secrets.GITHUB_TOKEN }}
+
+      - name: Update mkdocs.yml version
+        run: |
+          # Extract version from branch name (release/2026-01-23 -> 2026-01-23)
+          VERSION=${GITHUB_REF_NAME#release/}
+          echo "Configuring release version: $VERSION"
+
+          # Replace 'ucp_version: "draft"' with the actual version
+          sed -i "s/ucp_version: \"draft\"/ucp_version: \"$VERSION\"/" mkdocs.yml
+
+          # Verify the change
+          grep "ucp_version:" mkdocs.yml
+
+      - name: Commit and Push
+        env:
+          # Use the app token if generated, otherwise fallback to default GITHUB_TOKEN
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token || secrets.GITHUB_TOKEN }}
+          APP_SLUG: ${{ steps.app-token.outputs.app-slug }}
+        run: |
+          # Configure Git identity conditionally
+          if [ -n "$APP_SLUG" ]; then
+            git config user.name "${APP_SLUG}[bot]"
+            git config user.email "${APP_SLUG}[bot]@users.noreply.github.com"
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          fi
+
+          git add mkdocs.yml
+
+          # Only commit if there are changes
+          if git diff --staged --quiet; then
+            echo "No changes to commit (version might already be set)"
+          else
+            git commit -m "chore: bake version $VERSION into mkdocs.yml"
+            # Authenticate the push
+            git push https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git HEAD:${{ github.ref_name }}
+          fi

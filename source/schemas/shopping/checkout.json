@@ -47,7 +47,7 @@
       }
     },
     "context": {
-      "$ref": "../common/types/context.json",
+      "$ref": "types/context.json",
       "ucp_request": {
         "create": "optional",
         "update": "optional",
@@ -55,7 +55,7 @@
       }
     },
     "signals": {
-      "$ref": "../common/types/signals.json",
+      "$ref": "types/signals.json",
       "ucp_request": "optional"
     },
     "attribution": {
@@ -72,7 +72,7 @@
         "completed",
         "canceled"
       ],
-      "description": "Checkout state indicating the current phase and required processing. See Checkout Status lifecycle documentation for state transition details.",
+      "description": "Checkout state indicating the current phase and required action. See Checkout Status lifecycle documentation for state transition details.",
       "ucp_request": "omit"
     },
     "currency": {
@@ -81,19 +81,14 @@
       "ucp_request": "omit"
     },
     "totals": {
-      "$ref": "../common/types/totals.json",
+      "$ref": "types/totals.json",
       "description": "Different cart totals.",
-      "ucp_request": "omit"
-    },
-    "actions": {
-      "$ref": "../common/types/actions.json",
-      "description": "Outstanding extension-defined Actions for this checkout.",
       "ucp_request": "omit"
     },
     "messages": {
       "type": "array",
       "items": {
-        "$ref": "../common/types/message.json"
+        "$ref": "types/message.json"
       },
       "description": "List of messages with error and info about the checkout session state.",
       "ucp_request": "omit"
@@ -101,17 +96,9 @@
     "links": {
       "type": "array",
       "items": {
-        "$ref": "../common/types/link.json"
+        "$ref": "types/link.json"
       },
       "description": "Links to be displayed by the platform (Privacy Policy, TOS). Mandatory for legal compliance.",
-      "ucp_request": "omit"
-    },
-    "policies": {
-      "type": "array",
-      "items": {
-        "$ref": "../common/types/policy.json"
-      },
-      "description": "Policies (e.g., return/refund terms) that apply to the items in this checkout. `applies_to` targets are relative to the response root; when absent or empty, refer to the URLs in `links[]`.",
       "ucp_request": "omit"
     },
     "expires_at": {
@@ -127,7 +114,7 @@
       "ucp_request": "omit"
     },
     "payment": {
-      "$ref": "../common/types/payment.json",
+      "$ref": "payment.json",
       "ucp_request": {
         "create": "optional",
         "update": "optional",

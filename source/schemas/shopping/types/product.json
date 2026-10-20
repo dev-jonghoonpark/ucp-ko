@@ -25,7 +25,7 @@
       "description": "Product title."
     },
     "description": {
-      "$ref": "../../common/types/description.json",
+      "$ref": "description.json",
       "description": "Product description in one or more formats."
     },
     "url": {
@@ -41,17 +41,17 @@
       "description": "Product categories with optional taxonomy identifiers."
     },
     "price_range": {
-      "$ref": "../../common/types/price_range.json",
+      "$ref": "price_range.json",
       "description": "Price range across all variants."
     },
     "list_price_range": {
-      "$ref": "../../common/types/price_range.json",
+      "$ref": "price_range.json",
       "description": "List price range before discounts (for strikethrough display)."
     },
     "media": {
       "type": "array",
       "items": {
-        "$ref": "../../common/types/media.json"
+        "$ref": "media.json"
       },
       "description": "Product media (images, videos, 3D models). First item is the featured media for listings."
     },

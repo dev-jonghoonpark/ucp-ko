@@ -17,11 +17,10 @@
           "properties": {
             "cart_id": {
               "type": "string",
-              "description": "Cart ID to convert to checkout. Because line_items remains required by the base checkout schema, the platform SHOULD pass an empty array (\"line_items\": []). The business MUST use cart contents (line_items, context, buyer) and MUST ignore overlapping fields in the checkout payload.",
+              "description": "Cart ID to convert to checkout. Business MUST use cart contents (line_items, context, buyer) and MUST ignore overlapping fields in checkout payload.",
               "ucp_request": {
                 "create": "optional",
-                "update": "omit",
-                "complete": "omit"
+                "update": "omit"
               }
             }
           }
@@ -46,7 +45,10 @@
     "id": {
       "type": "string",
       "description": "Unique cart identifier.",
-      "ucp_request": "omit"
+      "ucp_request": {
+        "create": "omit",
+        "update": "required"
+      }
     },
     "line_items": {
       "type": "array",
@@ -54,25 +56,40 @@
         "$ref": "types/line_item.json"
       },
       "description": "Cart line items. Same structure as checkout. Full replacement on update.",
-      "ucp_request": "required"
+      "ucp_request": {
+        "create": "required",
+        "update": "required"
+      }
     },
     "context": {
-      "$ref": "../common/types/context.json",
+      "$ref": "types/context.json",
       "description": "Buyer signals for localization (country, region, postal_code). Merchant uses for pricing, availability, currency. Falls back to geo-IP if omitted.",
-      "ucp_request": "optional"
+      "ucp_request": {
+        "create": "optional",
+        "update": "optional"
+      }
     },
     "signals": {
-      "$ref": "../common/types/signals.json",
-      "ucp_request": "optional"
+      "$ref": "types/signals.json",
+      "ucp_request": {
+        "create": "optional",
+        "update": "optional"
+      }
     },
     "attribution": {
       "$ref": "types/attribution.json",
-      "ucp_request": "optional"
+      "ucp_request": {
+        "create": "optional",
+        "update": "optional"
+      }
     },
     "buyer": {
       "$ref": "types/buyer.json",
       "description": "Optional buyer information for personalized estimates.",
-      "ucp_request": "optional"
+      "ucp_request": {
+        "create": "optional",
+        "update": "optional"
+      }
     },
     "currency": {
       "type": "string",
@@ -80,19 +97,14 @@
       "ucp_request": "omit"
     },
     "totals": {
-      "$ref": "../common/types/totals.json",
+      "$ref": "types/totals.json",
       "description": "Estimated cost breakdown. May be partial if shipping/tax not yet calculable.",
-      "ucp_request": "omit"
-    },
-    "actions": {
-      "$ref": "../common/types/actions.json",
-      "description": "Outstanding extension-defined Actions for this cart.",
       "ucp_request": "omit"
     },
     "messages": {
       "type": "array",
       "items": {
-        "$ref": "../common/types/message.json"
+        "$ref": "types/message.json"
       },
       "description": "Validation messages, warnings, or informational notices.",
       "ucp_request": "omit"
@@ -100,17 +112,9 @@
     "links": {
       "type": "array",
       "items": {
-        "$ref": "../common/types/link.json"
+        "$ref": "types/link.json"
       },
       "description": "Optional merchant links (policies, FAQs).",
-      "ucp_request": "omit"
-    },
-    "policies": {
-      "type": "array",
-      "items": {
-        "$ref": "../common/types/policy.json"
-      },
-      "description": "Policies (e.g., return/refund terms) that apply to the items in this cart. `applies_to` targets are relative to the response root; when absent or empty, refer to the URLs in `links[]`.",
       "ucp_request": "omit"
     },
     "continue_url": {

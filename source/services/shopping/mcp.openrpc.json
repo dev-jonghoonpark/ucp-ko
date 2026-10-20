@@ -22,25 +22,25 @@
       "checkout_result": {
         "oneOf": [
           { "$ref": "../../schemas/shopping/checkout.json" },
-          { "$ref": "../../schemas/common/types/error_response.json" }
+          { "$ref": "../../schemas/shopping/types/error_response.json" }
         ]
       },
       "cart_result": {
         "oneOf": [
           { "$ref": "../../schemas/shopping/cart.json" },
-          { "$ref": "../../schemas/common/types/error_response.json" }
+          { "$ref": "../../schemas/shopping/types/error_response.json" }
         ]
       },
       "order_result": {
         "oneOf": [
           { "$ref": "../../schemas/shopping/order.json" },
-          { "$ref": "../../schemas/common/types/error_response.json" }
+          { "$ref": "../../schemas/shopping/types/error_response.json" }
         ]
       },
       "catalog_get_product_result": {
         "oneOf": [
           { "$ref": "../../schemas/shopping/catalog_lookup.json#/$defs/get_product_response" },
-          { "$ref": "../../schemas/common/types/error_response.json" }
+          { "$ref": "../../schemas/shopping/types/error_response.json" }
         ]
       },
       "meta": {
@@ -115,7 +115,6 @@
     {
       "name": "update_checkout",
       "summary": "Update checkout",
-      "description": "Update Checkout is a full replacement operation. A new Update Checkout operation is not permitted while Checkout status is `complete_in_progress`. Duplicate requests remain subject to Replay Protection. If the Business receives a new Update Checkout request in that state, it leaves the Checkout unchanged and returns the current Checkout with a recoverable error Message.",
       "params": [
         {
           "name": "meta",
