@@ -2,25 +2,33 @@
 
 {#- Korean port: site-wide notice that this is an unofficial translation -#}
 {% block announce %}
+  {% set ko_version = config.extra.ko_doc_version %}
+  {% set ko_is_draft = ko_version == "draft" %}
   <strong>비공식 한국어 번역</strong>입니다.
-  원문 기준: {{ config.extra.ko_source_date }}
+  {% if ko_is_draft %}
+    문서 버전: 초안(draft) · 원문 기준: {{ config.extra.ko_source_date }}
+  {% else %}
+    문서 버전: {{ ko_version }} · 원문 기준: {{ config.extra.ko_source_date }}
+  {% endif %}
   (<a href="https://github.com/Universal-Commerce-Protocol/ucp/tree/{{ config.extra.ko_source_commit }}">{{ config.extra.ko_source_commit[:7] }}</a>)
-  · 최신 버전은 내용이 다를 수 있으니
+  · 다른 버전은 상단 버전 선택기에서 고를 수 있으며, 최신 내용은
   <a href="{{ config.extra.ko_official_url }}">공식 문서(ucp.dev)</a>를 함께 확인하세요.
 {% endblock %}
 
 {#- Korean port: per-page link to the matching official page -#}
 {% block content %}
+  {% set ko_version = config.extra.ko_doc_version %}
+  {% set ko_is_draft = ko_version == "draft" %}
   {% if page and page.file.src_uri != "index.md" %}
     {% set official = config.extra.ko_official_url %}
+    {% set ns = namespace(draft_only=false, latest_url=none) %}
     {% if page.url.startswith("specification/") %}
-      {% set src_url = official ~ "draft/" ~ page.url %}
-      {% set ns = namespace(draft_only=false) %}
-      {% for prefix in config.extra.ko_draft_only %}
+      {% set src_url = official ~ ko_version ~ "/" ~ page.url %}
+      {% for prefix in config.extra.ko_draft_only or [] %}
         {% if page.url.startswith(prefix) %}{% set ns.draft_only = true %}{% endif %}
       {% endfor %}
-      {% if not ns.draft_only %}
-        {% set latest_url = official ~ "latest/" ~ page.url %}
+      {% if ko_is_draft and not ns.draft_only %}
+        {% set ns.latest_url = official ~ "latest/" ~ page.url %}
       {% endif %}
     {% else %}
       {% set src_url = official ~ page.url %}
@@ -29,15 +37,22 @@
       <p class="admonition-title">한국어 번역 안내</p>
       <p>
         이 페이지는 UCP 공식 문서를 한국어로 옮긴 비공식 번역입니다.
-        {{ config.extra.ko_source_date }} 시점의 원문(main 브랜치,
-        <a href="https://github.com/Universal-Commerce-Protocol/ucp/tree/{{ config.extra.ko_source_commit }}">{{ config.extra.ko_source_commit[:7] }}</a>)을
-        기준으로 했기 때문에 <strong>현재 공식 문서나 최신 버전과 내용이 다를 수 있습니다.</strong>
+        {% if ko_is_draft %}
+          {{ config.extra.ko_source_date }} 시점의 원문(main 브랜치,
+          <a href="https://github.com/Universal-Commerce-Protocol/ucp/tree/{{ config.extra.ko_source_commit }}">{{ config.extra.ko_source_commit[:7] }}</a>)을
+          기준으로 한 <strong>초안(draft)</strong> 번역이므로
+          <strong>현재 공식 문서나 최신 버전과 내용이 다를 수 있습니다.</strong>
+        {% else %}
+          공식 릴리스 <strong>{{ ko_version }}</strong>(태그
+          <a href="https://github.com/Universal-Commerce-Protocol/ucp/tree/{{ config.extra.ko_source_commit }}">v{{ ko_version }}</a>)을
+          기준으로 했습니다. <strong>다른 버전이나 이후 갱신된 공식 문서와는 내용이 다를 수 있습니다.</strong>
+        {% endif %}
         구현할 때는 반드시 공식 문서를 확인하세요.
       </p>
       <p>
         <a href="{{ src_url }}">공식 원문 보기</a>
-        {% if latest_url %} · <a href="{{ latest_url }}">최신 안정 버전(latest) 보기</a>{% endif %}
-        {% if ns and ns.draft_only %} · 이 페이지는 아직 최신 안정 버전(latest)에 포함되지 않은 초안(draft) 문서입니다.{% endif %}
+        {% if ns.latest_url %} · <a href="{{ ns.latest_url }}">최신 안정 버전(latest) 보기</a>{% endif %}
+        {% if ns.draft_only %} · 이 페이지는 아직 최신 안정 버전(latest)에 포함되지 않은 초안(draft) 문서입니다.{% endif %}
         · <a href="https://github.com/Universal-Commerce-Protocol/ucp">공식 GitHub 저장소</a>
       </p>
     </div>

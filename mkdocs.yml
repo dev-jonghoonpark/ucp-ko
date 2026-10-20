@@ -142,6 +142,7 @@ extra:
   ucp_version: "draft"
   ucp_url: https://ucp.dev
   # Korean port metadata (see overrides/main.html)
+  ko_doc_version: draft
   ko_source_commit: 3ab41043b79373df33a6e2c377bc82a806175f78
   ko_source_date: "2026-10-16"
   ko_official_url: https://ucp.dev/
@@ -150,6 +151,8 @@ extra:
     - specification/common/ask/
     - specification/lodging/
     - specification/shopping/ask/
+  version:
+    provider: mike
 
 # Configuration
 theme:
