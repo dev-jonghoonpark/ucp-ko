@@ -1,0 +1,793 @@
+# 체크아웃 기능 - MCP 바인딩
+
+이 문서는 [체크아웃 기능(Capability)](https://dev-jonghoonpark.github.io/ucp-ko/2026-04-08/2026-04-08/specification/checkout/index.md)의 Model Context Protocol(MCP) 바인딩을 정의합니다.
+
+## 프로토콜 기본 사항
+
+### 디스커버리
+
+비즈니스는 `/.well-known/ucp`에 있는 UCP 프로필로 MCP 전송 방식을 지원하는지 알립니다.
+
+```json
+{
+  "ucp": {
+    "version": "2026-04-08",
+    "services": {
+      "dev.ucp.shopping": [
+        {
+          "version": "2026-04-08",
+          "spec": "https://ucp.dev/2026-04-08/specification/overview",
+          "transport": "mcp",
+          "schema": "https://ucp.dev/2026-04-08/services/shopping/mcp.openrpc.json",
+          "endpoint": "https://business.example.com/ucp/mcp"
+        }
+      ]
+    },
+    "capabilities": {
+      "dev.ucp.shopping.checkout": [
+        {
+          "version": "2026-04-08",
+          "spec": "https://ucp.dev/2026-04-08/specification/checkout",
+          "schema": "https://ucp.dev/2026-04-08/schemas/shopping/checkout.json"
+        }
+      ],
+      "dev.ucp.shopping.fulfillment": [
+        {
+          "version": "2026-04-08",
+          "spec": "https://ucp.dev/2026-04-08/specification/fulfillment",
+          "schema": "https://ucp.dev/2026-04-08/schemas/shopping/fulfillment.json",
+          "extends": "dev.ucp.shopping.checkout"
+        }
+      ]
+    },
+    "payment_handlers": {
+      "com.example.vendor.delegate_payment": [
+        {
+          "id": "handler_1",
+          "version": "2026-04-08",
+          "spec": "https://example.vendor.com/specs/delegate-payment",
+          "schema": "https://example.vendor.com/schemas/delegate-payment-config.json",
+          "available_instruments": [
+            {"type": "card", "constraints": {"brands": ["visa", "mastercard"]}}
+          ],
+          "config": {}
+        }
+      ]
+    }
+  }
+}
+```
+
+### 요청 메타데이터
+
+MCP 클라이언트는 모든 요청에 프로토콜 메타데이터를 담은 `meta` 객체를 반드시 포함해야 합니다(**MUST**).
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "tools/call",
+  "params": {
+    "name": "create_checkout",
+    "arguments": {
+      "meta": {
+        "ucp-agent": {
+          "profile": "https://platform.example/profiles/shopping-agent.json"
+        },
+        "idempotency-key": "550e8400-e29b-41d4-a716-446655440000"
+      },
+      "checkout": { ... }
+    }
+  }
+}
+```
+
+[기능 협상](https://dev-jonghoonpark.github.io/ucp-ko/2026-04-08/2026-04-08/specification/overview/#negotiation-protocol)을 위해 모든 요청에 `meta["ucp-agent"]` 필드가 **필수**입니다. `complete_checkout`과 `cancel_checkout` 작업에는 안전한 재시도를 위해 `meta["idempotency-key"]`도 있어야 합니다. 플랫폼은 메타데이터 필드를 추가로 포함할 수 있습니다(**MAY**).
+
+## 도구
+
+UCP 기능은 MCP 도구(Tool)와 1:1로 대응합니다.
+
+### 식별자 패턴
+
+MCP 도구는 리소스 식별 정보와 페이로드 데이터를 분리합니다.
+
+- **요청:** 기존 체크아웃에 대한 작업(`get`, `update`, `complete`, `cancel`)에서는 최상위 `id` 파라미터로 대상 리소스를 식별합니다. 요청 페이로드의 `checkout` 객체에 `id` 필드를 넣어서는 안 됩니다(**MUST NOT**).
+- **응답:** 모든 응답은 전체 리소스 상태의 일부로 `checkout.id`를 포함합니다.
+- **생성:** `create_checkout` 작업은 요청에 `id`가 필요 없으며, 응답에 새로 할당된 `checkout.id`가 들어 있습니다.
+
+| 도구                | 작업                                                                                                                         | 설명                   |
+| ------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ---------------------- |
+| `create_checkout`   | [체크아웃 생성](https://dev-jonghoonpark.github.io/ucp-ko/2026-04-08/2026-04-08/specification/checkout/#create-checkout)     | 체크아웃 세션 생성     |
+| `get_checkout`      | [체크아웃 조회](https://dev-jonghoonpark.github.io/ucp-ko/2026-04-08/2026-04-08/specification/checkout/#get-checkout)        | 체크아웃 세션 조회     |
+| `update_checkout`   | [체크아웃 업데이트](https://dev-jonghoonpark.github.io/ucp-ko/2026-04-08/2026-04-08/specification/checkout/#update-checkout) | 체크아웃 세션 업데이트 |
+| `complete_checkout` | [체크아웃 완료](https://dev-jonghoonpark.github.io/ucp-ko/2026-04-08/2026-04-08/specification/checkout/#complete-checkout)   | 주문 확정              |
+| `cancel_checkout`   | [체크아웃 취소](https://dev-jonghoonpark.github.io/ucp-ko/2026-04-08/2026-04-08/specification/checkout/#cancel-checkout)     | 체크아웃 세션 취소     |
+
+### `create_checkout`
+
+[체크아웃 생성](https://dev-jonghoonpark.github.io/ucp-ko/2026-04-08/2026-04-08/specification/checkout/#create-checkout) 작업에 대응합니다.
+
+#### 입력 스키마
+
+- `checkout` ([Checkout](https://dev-jonghoonpark.github.io/ucp-ko/2026-04-08/2026-04-08/specification/checkout/#create-checkout)): **필수**. 초기 체크아웃 세션 데이터와 선택적 확장을 담습니다.
+  - 확장(선택 사항):
+    - `dev.ucp.shopping.buyer_consent`: [구매자 동의](https://dev-jonghoonpark.github.io/ucp-ko/2026-04-08/2026-04-08/specification/buyer-consent/index.md)
+    - `dev.ucp.shopping.fulfillment`: [풀필먼트](https://dev-jonghoonpark.github.io/ucp-ko/2026-04-08/2026-04-08/specification/fulfillment/index.md)
+    - `dev.ucp.shopping.discount`: [할인](https://dev-jonghoonpark.github.io/ucp-ko/2026-04-08/2026-04-08/specification/discount/index.md)
+    - `dev.ucp.shopping.ap2_mandate`: [AP2 위임](https://dev-jonghoonpark.github.io/ucp-ko/2026-04-08/2026-04-08/specification/ap2-mandates/index.md)
+
+#### 출력 스키마
+
+- [Checkout](https://dev-jonghoonpark.github.io/ucp-ko/2026-04-08/2026-04-08/specification/checkout/#create-checkout) 객체.
+
+#### 예시
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "tools/call",
+  "params": {
+    "name": "create_checkout",
+    "arguments": {
+      "meta": {
+        "ucp-agent": {
+          "profile": "https://platform.example/profiles/v2026-01/shopping-agent.json"
+        }
+      },
+      "checkout": {
+        "buyer": {
+          "email": "jane.doe@example.com",
+          "first_name": "Jane",
+          "last_name": "Doe"
+        },
+        "line_items": [
+          {
+            "id": "li_1",
+            "item": {
+              "id": "item_123"
+            },
+            "quantity": 1
+          }
+        ],
+        "currency": "USD",
+        "fulfillment": {
+          "methods": [
+            {
+              "type": "shipping",
+              "destinations": [
+                {
+                  "street_address": "123 Main St",
+                  "address_locality": "Springfield",
+                  "address_region": "IL",
+                  "postal_code": "62701",
+                  "address_country": "US"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }
+}
+```
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "result": {
+    "structuredContent": {
+      "ucp": {
+        "version": "2026-04-08",
+        "capabilities": {
+          "dev.ucp.shopping.checkout": [
+            {"version": "2026-04-08"}
+          ],
+          "dev.ucp.shopping.fulfillment": [
+            {"version": "2026-04-08"}
+          ]
+        },
+        "payment_handlers": {
+          "com.example.vendor.delegate_payment": [
+            {"id": "handler_1", "version": "2026-04-08", "available_instruments": [{"type": "card"}], "config": {}}
+          ]
+        }
+      },
+      "id": "checkout_abc123",
+      "status": "incomplete",
+      "buyer": {
+        "email": "jane.doe@example.com",
+        "first_name": "Jane",
+        "last_name": "Doe"
+      },
+      "line_items": [
+        {
+          "id": "li_1",
+          "item": {
+            "id": "item_123",
+            "title": "Blue Jeans",
+            "price": 5000
+          },
+          "quantity": 1,
+          "totals": [
+            {"type": "subtotal", "amount": 5000},
+            {"type": "total", "amount": 5000}
+          ]
+        }
+      ],
+      "currency": "USD",
+      "totals": [
+        {
+          "type": "subtotal",
+          "amount": 5000
+        },
+        {
+          "type": "fulfillment",
+          "display_text": "Shipping",
+          "amount": 500
+        },
+        {
+          "type": "total",
+          "amount": 5500
+        }
+      ],
+      "fulfillment": {
+        "methods": [
+          {
+            "id": "shipping_1",
+            "type": "shipping",
+            "line_item_ids": ["li_1"],
+            "selected_destination_id": "dest_home",
+            "destinations": [
+              {
+                "id": "dest_home",
+                "street_address": "123 Main St",
+                "address_locality": "Springfield",
+                "address_region": "IL",
+                "postal_code": "62701",
+                "address_country": "US"
+              }
+            ],
+            "groups": [
+              {
+                "id": "package_1",
+                "line_item_ids": ["li_1"],
+                "selected_option_id": "standard",
+                "options": [
+                  {
+                    "id": "standard",
+                    "title": "Standard Shipping",
+                    "description": "Arrives in 5-7 business days",
+                    "totals": [
+                      {
+                        "type": "total",
+                        "amount": 500
+                      }
+                    ]
+                  },
+                  {
+                    "id": "express",
+                    "title": "Express Shipping",
+                    "description": "Arrives in 2-3 business days",
+                    "totals": [
+                      {
+                        "type": "total",
+                        "amount": 1000
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "links": [
+        {
+          "type": "privacy_policy",
+          "url": "https://business.example.com/privacy"
+        },
+        {
+          "type": "terms_of_service",
+          "url": "https://business.example.com/terms"
+        }
+      ],
+      "continue_url": "https://business.example.com/checkout-sessions/checkout_abc123",
+      "expires_at": "2026-01-11T18:30:00Z"
+    },
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"ucp\":{...},\"id\":\"checkout_abc123\",...}"
+      }
+    ]
+  }
+}
+```
+
+모든 상품의 재고가 없어 체크아웃 리소스가 생성되지 않는 경우입니다.
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "result": {
+    "structuredContent": {
+      "ucp": { "version": "2026-01-11", "status": "error" },
+      "messages": [
+        {
+          "type": "error",
+          "code": "out_of_stock",
+          "content": "All requested items are currently out of stock",
+          "severity": "unrecoverable"
+        }
+      ],
+      "continue_url": "https://merchant.com/"
+    },
+    "content": [
+      {"type": "text", "text": "{\"ucp\":{...},\"messages\":[...]}"}
+    ]
+  }
+}
+```
+
+### `get_checkout`
+
+[체크아웃 조회](https://dev-jonghoonpark.github.io/ucp-ko/2026-04-08/2026-04-08/specification/checkout/#get-checkout) 작업에 대응합니다.
+
+#### 입력 스키마
+
+- `id` (String): **필수**. 체크아웃 세션의 ID.
+
+#### 출력 스키마
+
+- [Checkout](https://dev-jonghoonpark.github.io/ucp-ko/2026-04-08/2026-04-08/specification/checkout/#get-checkout) 객체.
+
+### `update_checkout`
+
+[체크아웃 업데이트](https://dev-jonghoonpark.github.io/ucp-ko/2026-04-08/2026-04-08/specification/checkout/#update-checkout) 작업에 대응합니다.
+
+#### 입력 스키마
+
+- `id` (String): **필수**. 업데이트할 체크아웃 세션의 ID.
+- `checkout` ([Checkout](https://dev-jonghoonpark.github.io/ucp-ko/2026-04-08/2026-04-08/specification/checkout/#update-checkout)): **필수**. 업데이트된 체크아웃 세션 데이터를 담습니다.
+  - 확장(선택 사항):
+    - `dev.ucp.shopping.buyer_consent`: [구매자 동의](https://dev-jonghoonpark.github.io/ucp-ko/2026-04-08/2026-04-08/specification/buyer-consent/index.md)
+    - `dev.ucp.shopping.fulfillment`: [풀필먼트](https://dev-jonghoonpark.github.io/ucp-ko/2026-04-08/2026-04-08/specification/fulfillment/index.md)
+    - `dev.ucp.shopping.discount`: [할인](https://dev-jonghoonpark.github.io/ucp-ko/2026-04-08/2026-04-08/specification/discount/index.md)
+    - `dev.ucp.shopping.ap2_mandate`: [AP2 위임](https://dev-jonghoonpark.github.io/ucp-ko/2026-04-08/2026-04-08/specification/ap2-mandates/index.md)
+
+#### 출력 스키마
+
+- [Checkout](https://dev-jonghoonpark.github.io/ucp-ko/2026-04-08/2026-04-08/specification/checkout/#update-checkout) 객체.
+
+#### 예시
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 2,
+  "method": "tools/call",
+  "params": {
+    "name": "update_checkout",
+    "arguments": {
+      "meta": {
+        "ucp-agent": {
+          "profile": "https://platform.example/profiles/v2026-01/shopping-agent.json"
+        }
+      },
+      "id": "checkout_abc123",
+      "checkout": {
+        "buyer": {
+          "email": "jane.doe@example.com",
+          "first_name": "Jane",
+          "last_name": "Doe"
+        },
+        "line_items": [
+          {
+            "item": {
+              "id": "item_123"
+            },
+            "id": "li_1",
+            "quantity": 1
+          }
+        ],
+        "currency": "USD",
+        "fulfillment": {
+          "methods": [
+            {
+              "id": "shipping_1",
+              "line_item_ids": ["li_1"],
+              "groups": [
+                {
+                  "id": "package_1",
+                  "selected_option_id": "express"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }
+}
+```
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 2,
+  "result": {
+    "structuredContent": {
+      "ucp": {
+        "version": "2026-04-08",
+        "capabilities": {
+          "dev.ucp.shopping.checkout": [
+            {"version": "2026-04-08"}
+          ],
+          "dev.ucp.shopping.fulfillment": [
+            {"version": "2026-04-08"}
+          ]
+        },
+        "payment_handlers": {
+          "com.example.vendor.delegate_payment": [
+            {"id": "handler_1", "version": "2026-04-08", "available_instruments": [{"type": "card"}], "config": {}}
+          ]
+        }
+      },
+      "id": "checkout_abc123",
+      "status": "incomplete",
+      "buyer": {
+        "email": "jane.doe@example.com",
+        "first_name": "Jane",
+        "last_name": "Doe"
+      },
+      "line_items": [
+        {
+          "id": "li_1",
+          "item": {
+            "id": "item_123",
+            "title": "Blue Jeans",
+            "price": 5000
+          },
+          "quantity": 1,
+          "totals": [
+            {"type": "subtotal", "amount": 5000},
+            {"type": "total", "amount": 5000}
+          ]
+        }
+      ],
+      "currency": "USD",
+      "totals": [
+        {
+          "type": "subtotal",
+          "amount": 5000
+        },
+        {
+          "type": "fulfillment",
+          "display_text": "Shipping",
+          "amount": 1000
+        },
+        {
+          "type": "total",
+          "amount": 6000
+        }
+      ],
+      "fulfillment": {
+        "methods": [
+          {
+            "id": "shipping_1",
+            "type": "shipping",
+            "line_item_ids": ["li_1"],
+            "selected_destination_id": "dest_home",
+            "destinations": [
+              {
+                "id": "dest_home",
+                "street_address": "123 Main St",
+                "address_locality": "Springfield",
+                "address_region": "IL",
+                "postal_code": "62701",
+                "address_country": "US"
+              }
+            ],
+            "groups": [
+              {
+                "id": "package_1",
+                "line_item_ids": ["li_1"],
+                "selected_option_id": "express",
+                "options": [
+                  {
+                    "id": "standard",
+                    "title": "Standard Shipping",
+                    "description": "Arrives in 5-7 business days",
+                    "totals": [
+                      {
+                        "type": "total",
+                        "amount": 500
+                      }
+                    ]
+                  },
+                  {
+                    "id": "express",
+                    "title": "Express Shipping",
+                    "description": "Arrives in 2-3 business days",
+                    "totals": [
+                      {
+                        "type": "total",
+                        "amount": 1000
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "links": [
+        {
+          "type": "privacy_policy",
+          "url": "https://business.example.com/privacy"
+        },
+        {
+          "type": "terms_of_service",
+          "url": "https://business.example.com/terms"
+        }
+      ],
+      "continue_url": "https://business.example.com/checkout-sessions/checkout_abc123",
+      "expires_at": "2026-01-11T18:30:00Z"
+    },
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"ucp\":{...},\"id\":\"checkout_abc123\",...}"
+      }
+    ]
+  }
+}
+```
+
+### `complete_checkout`
+
+[체크아웃 완료](https://dev-jonghoonpark.github.io/ucp-ko/2026-04-08/2026-04-08/specification/checkout/#complete-checkout) 작업에 대응합니다.
+
+#### 입력 스키마
+
+- `meta` (Object): **필수**. 다음을 담은 요청 메타데이터:
+  - `ucp-agent` (Object): **필수**. 플랫폼 에이전트 식별 정보.
+  - `idempotency-key` (String, UUID): **필수**. 안전한 재시도를 위한 고유 키.
+- `id` (String): **필수**. 체크아웃 세션의 ID.
+- `checkout` ([Checkout](https://dev-jonghoonpark.github.io/ucp-ko/2026-04-08/2026-04-08/specification/checkout/#complete-checkout)): **필수**. 거래 실행에 필요한 결제 자격 증명과 기타 최종 확정 데이터를 담습니다.
+
+#### 출력 스키마
+
+- [Checkout](https://dev-jonghoonpark.github.io/ucp-ko/2026-04-08/2026-04-08/specification/checkout/#complete-checkout) 객체. `id`와 `permalink_url`만 담은 부분 `order`를 포함합니다.
+
+### `cancel_checkout`
+
+[체크아웃 취소](https://dev-jonghoonpark.github.io/ucp-ko/2026-04-08/2026-04-08/specification/checkout/#cancel-checkout) 작업에 대응합니다.
+
+#### 입력 스키마
+
+- `meta` (Object): **필수**. 다음을 담은 요청 메타데이터:
+  - `ucp-agent` (Object): **필수**. 플랫폼 에이전트 식별 정보.
+  - `idempotency-key` (String, UUID): **필수**. 안전한 재시도를 위한 고유 키.
+- `id` (String): **필수**. 체크아웃 세션의 ID.
+
+#### 출력 스키마
+
+- `status: canceled`인 [Checkout](https://dev-jonghoonpark.github.io/ucp-ko/2026-04-08/2026-04-08/specification/checkout/#cancel-checkout) 객체.
+
+## 오류 처리
+
+UCP는 프로토콜 오류와 비즈니스 결과를 구분합니다. 전체 오류 코드 레지스트리와 전송 바인딩 예시는 [핵심 명세](https://dev-jonghoonpark.github.io/ucp-ko/2026-04-08/2026-04-08/specification/overview/#error-handling)를 참고하세요.
+
+- **프로토콜 오류**: 요청 처리를 가로막는 전송 계층 수준의 실패(인증, 속도 제한, 서비스 불가)입니다. 코드 `-32000`(디스커버리 오류는 `-32001`)과 함께 JSON-RPC `error`로 반환됩니다.
+- **비즈니스 결과**: 요청이 정상적으로 처리된 뒤의 애플리케이션 수준 결과입니다. UCP 엔벨로프와 `messages`를 담은 JSON-RPC `result`로 반환됩니다.
+
+### 비즈니스 결과
+
+비즈니스 결과(구매할 수 없는 상품 같은 오류 포함)는 JSON-RPC `result`로 반환되며, 그 `structuredContent`에 UCP 엔벨로프와 `messages`가 담깁니다.
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "result": {
+    "structuredContent": {
+      "ucp": {
+        "version": "2026-04-08",
+        "capabilities": {
+          "dev.ucp.shopping.checkout": [{"version": "2026-04-08"}]
+        }
+      },
+      "id": "checkout_abc123",
+      "status": "incomplete",
+      "line_items": [
+        {
+          "id": "li_1",
+           "item": {
+              "id": "item_123",
+              "title": "Blue Jeans",
+              "price": 5000
+            },
+          "quantity": 12,
+          "totals": [...]
+        }
+      ],
+      "totals": [...],
+      "messages": [
+        {
+          "type": "warning",
+          "code": "quantity_adjusted",
+          "content": "Quantity adjusted, requested 100 units but only 12 available",
+          "path": "$.line_items[0].quantity"
+        }
+      ],
+      "continue_url": "https://merchant.com/checkout/checkout_abc123"
+    },
+    "content": [
+      {"type": "text", "text": "{\"ucp\":{...},\"id\":\"checkout_abc123\",...}"}
+    ]
+  }
+}
+```
+
+`create_checkout`에서 모든 상품을 구매할 수 없어 체크아웃을 생성하지 못하는 경우에도 결과는 JSON-RPC `result`로 반환되며, 그 `structuredContent`에 UCP 엔벨로프와 `messages`가 담깁니다.
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "result": {
+    "structuredContent": {
+      "ucp": { "version": "2026-01-11", "status": "error" },
+      "messages": [
+        {
+          "type": "error",
+          "code": "item_unavailable",
+          "content": "Items are not available for purchase in your region",
+          "severity": "unrecoverable",
+          "path": "$.line_items"
+        }
+      ],
+      "continue_url": "https://merchant.com/"
+    },
+    "content": [
+      {"type": "text", "text": "{\"ucp\":{...},\"messages\":[...]}"}
+    ]
+  }
+}
+```
+
+## 메시지 서명
+
+MCP 전송 방식을 사용할 때 플랫폼은 에이전트를 인증해야 합니다(**SHOULD**). HTTP 메시지 서명을 사용한다면 모든 체크아웃 작업은 [메시지 서명](https://dev-jonghoonpark.github.io/ucp-ko/2026-04-08/2026-04-08/specification/signatures/index.md) 명세를 따릅니다.
+
+### 요청 서명
+
+UCP의 MCP 전송 방식은 **스트리밍 가능한 HTTP**(streamable HTTP)를 사용하므로 REST와 같은 RFC 9421 서명 메커니즘을 쓸 수 있습니다. 서명은 HTTP 계층에 적용됩니다.
+
+| 헤더              | 필수     | 설명                       |
+| ----------------- | -------- | -------------------------- |
+| `Signature-Input` | 예       | 서명된 구성 요소 기술      |
+| `Signature`       | 예       | 서명 값                    |
+| `Content-Digest`  | 예       | 요청 본문의 SHA-256 해시   |
+| `UCP-Agent`       | 예       | 서명자 신원(프로필 URL)    |
+| `Idempotency-Key` | 조건부\* | 재전송 방지를 위한 고유 키 |
+
+\* `complete_checkout`과 `cancel_checkout`에서는 필수
+
+**서명된 요청 예시:**
+
+```http
+POST /mcp HTTP/1.1
+Host: business.example.com
+Content-Type: application/json
+UCP-Agent: profile="https://platform.example/.well-known/ucp"
+Idempotency-Key: 550e8400-e29b-41d4-a716-446655440000
+Content-Digest: sha-256=:RK/0qy18MlBSVnWgjwz6lZEWjP/lF5HF9bvEF8FabDg=:
+Signature-Input: sig1=("@method" "@authority" "@path" "content-digest" "content-type" "ucp-agent" "idempotency-key");keyid="platform-2026"
+Signature: sig1=:MEUCIQDXyK9N3p5Rt...:
+
+{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"complete_checkout","arguments":{"id":"checkout_abc123","checkout":{"payment":{...}}}}}
+```
+
+`Content-Digest`가 JSON-RPC 본문을 서명에 결합합니다. JSON 정규화(canonicalization)는 필요하지 않습니다.
+
+자세한 내용은 [메시지 서명 - MCP 전송 방식](https://dev-jonghoonpark.github.io/ucp-ko/2026-04-08/2026-04-08/specification/signatures/#mcp-transport)을 참고하세요.
+
+### 응답 서명
+
+다음 응답에는 서명을 권장합니다(**RECOMMENDED**).
+
+- `complete_checkout` 응답(주문 확정)
+
+다음 응답의 서명은 선택 사항입니다(**OPTIONAL**).
+
+- `create_checkout`, `get_checkout`, `update_checkout`, `cancel_checkout`
+
+**서명된 응답 예시:**
+
+```http
+HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Digest: sha-256=:Y5fK8nLmPqRsT3vWxYzAbCdEfGhIjKlMnO...:
+Signature-Input: sig1=("@status" "content-digest" "content-type");keyid="merchant-2026"
+Signature: sig1=:MFQCIH7kL9nM2oP5qR8sT1uV4wX6yZaB3cD...:
+
+{"jsonrpc":"2.0","id":1,"result":{"content":[{"type":"text","text":"..."}],"structuredContent":{"id":"checkout_abc123","status":"completed"}}}
+```
+
+서명 알고리즘은 [메시지 서명 - REST 응답 서명](https://dev-jonghoonpark.github.io/ucp-ko/2026-04-08/2026-04-08/specification/signatures/#rest-response-signing)을 참고하세요(HTTP 기반 MCP에도 똑같이 적용됩니다).
+
+## 적합성
+
+적합한 MCP 전송 방식 구현은 반드시 다음을 충족해야 합니다(**MUST**).
+
+1. JSON-RPC 2.0 프로토콜을 올바르게 구현합니다.
+1. 이 명세에 정의된 핵심 체크아웃 도구를 모두 제공합니다.
+1. [핵심 명세](https://dev-jonghoonpark.github.io/ucp-ko/2026-04-08/2026-04-08/specification/overview/#error-handling)에 따라 오류를 반환합니다.
+1. 비즈니스 결과를 UCP 엔벨로프와 `messages` 배열을 담은 JSON-RPC `result`로 반환합니다.
+1. 도구 입력을 UCP 스키마로 검증합니다.
+1. 스트리밍을 지원하는 HTTP 전송 방식을 제공합니다.
+
+적합한 구현은 다음을 충족해야 합니다(**SHOULD**).
+
+1. 지원되는 메커니즘(API 키, OAuth, mTLS, 또는 [메시지 서명](https://dev-jonghoonpark.github.io/ucp-ko/2026-04-08/2026-04-08/specification/signatures/index.md)에 따른 HTTP 메시지 서명) 중 하나로 에이전트를 인증합니다.
+1. 들어오는 요청을 처리하기 전에 인증을 검증합니다.
+
+## 구현
+
+UCP 작업은 [OpenRPC](https://open-rpc.org/)(JSON-RPC 스키마 형식)로 정의되어 있습니다. [MCP 명세](https://modelcontextprotocol.io/)에 따르면 모든 도구 호출은 `tools/call` 메서드를 사용하고, 작업 이름과 인자를 `params`로 감싸야 합니다. 구현자는 반드시 다음 변환을 적용해야 합니다(**MUST**).
+
+| OpenRPC  | MCP                |
+| -------- | ------------------ |
+| `method` | `params.name`      |
+| `params` | `params.arguments` |
+
+**파라미터 규칙:**
+
+- `meta`: 요청 메타데이터를 담습니다.
+- `id`: 대상 리소스를 식별합니다(경로 파라미터에 해당).
+- `checkout`: 도메인 페이로드를 담습니다(본문에 해당).
+
+**예시:** OpenRPC에 다음과 같이 정의된 `complete_checkout` 작업이 있다고 해 봅시다.
+
+```json
+{
+  "method": "complete_checkout",
+  "params": {
+    "meta": {
+      "ucp-agent": { "profile": "https://..." },
+      "idempotency-key": "550e8400-e29b-41d4-a716-446655440000"
+    },
+    "id": "checkout_abc123",
+    "checkout": { "payment": {...} }
+  }
+}
+```
+
+구현자는 이 작업을 반드시 MCP `tools/call` 엔드포인트로 노출해야 합니다(**MUST**).
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "tools/call",
+  "params": {
+    "name": "complete_checkout",
+    "arguments": {
+      "meta": {
+        "ucp-agent": { "profile": "https://..." },
+        "idempotency-key": "550e8400-e29b-41d4-a716-446655440000"
+      },
+      "id": "checkout_abc123",
+      "checkout": { "payment": {...} }
+    }
+  }
+}
+```
