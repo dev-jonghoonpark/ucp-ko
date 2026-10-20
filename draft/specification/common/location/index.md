@@ -1,0 +1,212 @@
+# 위치 기능
+
+위치(Location) 기능을 사용하면 플랫폼이 비즈니스의 물리적 위치(소매 매장, 음식점, 브랜드 보관함 등)를 찾고, 검색하고, 조회할 수 있습니다.
+
+이 기능은 특정 버티컬에 묶이지 않으며, 다음과 같은 핵심 커머스 흐름을 지원합니다.
+
+- **근처 픽업 장소 탐색**: 구매자 픽업이 가능한 소매 매장이나 음식점 지점처럼 가까운 위치를 찾고, 영업시간을 확인하고, 상품을 고르기 전에 선택한 상품을 지금 어디에서 구할 수 있는지 파악합니다.
+- **풀필먼트 지역 확인**: 특정 위치(예: 유틸리티 거점, 음식점, 지역 서비스 제공자)가 구매자의 주소에 서비스할 수 있는지 확인합니다(`serves` 관계).
+
+## 기능
+
+| 기능                                                                                                                                    | 설명                                                                                                               |
+| --------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| [`dev.ucp.common.location.search`](https://dev-jonghoonpark.github.io/ucp-ko/draft/draft/specification/common/location/search/index.md) | 자유 텍스트 질의, 명시적 공간 관계(`distance`, `serves`), 필터(`hours`, `amenities`, `items`)로 위치를 검색합니다. |
+| [`dev.ucp.common.location.lookup`](https://dev-jonghoonpark.github.io/ucp-ko/draft/draft/specification/common/location/lookup/index.md) | 식별자로 하나 이상의 위치에 대한 전체 정보를 조회합니다. 같은 관계와 필터로 결과를 좁힐 수도 있습니다.             |
+
+## 핵심 개념
+
+- **위치(Location)**: 지도에서 찾을 수 있는 물리적 개체입니다. 표시 이름, 주소, 영업시간, **지리적 맥락**(지리 좌표)으로 정의됩니다.
+- **편의시설(Amenities)**: 위치가 갖춘 고정적인 특징, 서비스, 역량입니다. 응답은 역방향 DNS 형식의 편의시설 식별자를 키로 하는 맵을 사용합니다. 이 방식에서는 이름이 충돌하지 않고, 식별자마다 항목이 하나뿐이며, 구매자용 설명이 함께 제공되어 사용자 정의 편의시설도 화면에 표시할 수 있습니다. [편의시설 어휘](https://dev-jonghoonpark.github.io/ucp-ko/draft/draft/specification/common/location/search/#amenity-vocabulary)를 참고하세요.
+- **상품 재고 여부(Item Availability)**: `items` 필터는 후보 위치에서 비즈니스가 참조된 모든 상품을 지금 제공할 수 있는지를 묻습니다. 위치가 반환되었다는 것은 대략적이고 잠정적인 확인일 뿐이며, 상품 단위의 세부 정보나 예약을 뜻하지 않습니다. [상품 재고 필터](https://dev-jonghoonpark.github.io/ucp-ko/draft/draft/specification/common/location/search/#item-availability-filter)를 참고하세요.
+- **근접성과 서비스 가능 여부**: 서로 구별되는 두 가지 명시적 공간 관계가 있습니다.
+  - **`distance`**: 위치의 좌표를 플랫폼이 제공한 중심점과 경계를 포함하는 반경에 비교합니다.
+  - **`serves`**: 플랫폼이 제공한 명시적 대상 하나에 위치가 잠정적으로 서비스할 수 있는지를 묻습니다. 답을 정하는 권한은 비즈니스에 있으며, UCP는 그 바탕이 되는 서비스 범위의 기하 정보를 모델링하거나 노출하지 않습니다. 위치의 좌표 주변에 암묵적인 기하학적 경계가 있는 것도 아닙니다. [공간 관계](https://dev-jonghoonpark.github.io/ucp-ko/draft/draft/specification/common/location/search/#spatial-relations)를 참고하세요.
+- **영업시간**: 정기 주간 일정(`hours`)과 특정 날짜의 예외(`exception_hours`)로 이루어지며, 위치의 `timezone`을 기준으로 해석합니다. [영업시간](#operating-hours)을 참고하세요.
+
+### 다른 기능과의 관계
+
+위치 기능은 다른 기능(쇼핑의 카탈로그, 장바구니, 체크아웃 등)과 긴밀하게 맞물려 지역 기반 커머스의 토대가 됩니다.
+
+1. **안정적인 식별자**: 위치 검색과 조회는 물리적 개체를 나타내는 안정적인 `Location.id` 값을 비즈니스 범위 안에서 반환합니다. 위치 ID는 물리적 개체를 선택할 뿐이며, 상호작용 방식을 정하거나 재고를 보장하거나 운영 조건을 확정하지 않습니다. 모든 조건은 거래를 처리하면서 후속 기능이 권한을 갖고 협상하고 다시 검증합니다 (예: 반환된 ID를 `selected_destination_id`로 제출하는 경우. [선택과 위치 식별](https://dev-jonghoonpark.github.io/ucp-ko/draft/draft/specification/shopping/extensions/fulfillment/#selection-and-location-identity) 참고).
+1. **탐색 관심사의 분리**: 각 기능은 좁은 질문 하나에만 답하고, 이후 단계에서 앞선 신호를 다시 검증합니다. 위치 기능은 참조된 상품 집합을 지금 어느 장소에서 제공할 수 있는지에 답합니다([`items` 필터](https://dev-jonghoonpark.github.io/ucp-ko/draft/draft/specification/common/location/search/#item-availability-filter)).
+1. **잠정적 경계와 권한 있는 경계**:
+   - *탐색 단계(잠정적)*: 영업시간, 현재 상품 재고, 편의시설에 기반한 위치 응답은 질의 시점의 비즈니스 *현재 조건*을 나타냅니다. 이는 **잠정적 신호**이며 구속력 있는 약속이 아닙니다.
+   - *체크아웃 단계(권한 있음)*: 위치에 따라 달라지는 최종 거래 조건(예: 픽업)은 반드시 권한 있는 방식으로 협상하고 확정해야 합니다(**MUST**). 탐색 신호는 재검증 없이 캐시하거나 세션 간에 재사용하지 않는 것이 좋습니다(**SHOULD NOT**).
+
+## 영업시간
+
+### 표현 방식
+
+hours 필터의 [`open_at`](https://dev-jonghoonpark.github.io/ucp-ko/draft/draft/specification/common/location/search/#hours-based-filter) 값은 정확한 시각(instant)입니다. 영업시간은 위치의 현지 날짜와 시계 시각을 사용하며, 위치의 IANA 시간대로 해석합니다.
+
+- `hours`는 정기 주간 구간의 목록입니다. 각 항목에는 `day`, `opens`, `closes`가 있습니다. `day`는 구간이 시작되는 요일을 나타내는 안정적인 UCP 요일 식별자이며, 현지화된 표시 텍스트가 아닙니다. 플랫폼은 화면에 표시할 때 이를 현지화할 수 있습니다(**MAY**). 시각은 24시간제 `HH:MM` 형식을 사용합니다.
+- `exception_hours`는 특정 날짜의 시간 구간이나 전일 휴무의 목록입니다. 각 항목에는 `YYYY-MM-DD` 형식의 현지 날짜 범위 `valid_from`과 `valid_through`가 있으며, 두 경계 모두 범위에 포함됩니다. 두 경계가 같으면 하루만 선택합니다. `opens`와 `closes`를 모두 지정하면 시간 구간을, 둘 다 생략하면 전일 휴무를 정의합니다. 선택 항목인 `title`은 사람이 읽을 수 있는 짧은 제목입니다. 표시용 메타데이터일 뿐 일정 평가에는 영향을 주지 않습니다.
+- `timezone`은 두 일정 모두에 적용되는 정규 현지 상용시 기준을 식별하며, 이 기준은 비즈니스가 소유합니다.
+
+### 평가
+
+시간 구간은 `opens`에 열리고 `closes`에 닫힙니다. 예를 들어 `10:00`–`17:00`은 `17:00` 직전까지 열려 있고 `17:00`에 닫힙니다. `closes`가 `opens`보다 이르면 구간은 다음 현지 날짜로 이어집니다. 이 마감 경계 규칙에는 예약된 예외가 하나 있습니다. 정확히 `00:00`–`23:59`인 쌍은 일광 절약 시간 전환을 포함해 현지 상용 날짜 전체를 나타냅니다. `opens`와 `closes`가 같은 쌍은 `00:00`–`00:00`을 포함해 모두 유효하지 않습니다.
+
+일정 평가 결과는 시각마다 하나로 정해집니다. `timezone`으로 시각을 위치의 현지 날짜, 요일, 시각으로 변환한 뒤, 그 현지 값에 유효한 일정을 적용합니다. 일광 절약 시간(DST)이 앞으로 전환될 때 건너뛴 구간의 현지 시계 표기는 어떤 시각에도 대응하지 않으며, 다른 시각으로 밀리지도 않습니다. DST가 뒤로 전환될 때는 같은 현지 시각이 반복되는데, 이렇게 겹친 구간의 두 시각은 같은 일정 결과를 받습니다. 지금의 일정 구조로는 겹친 구간의 두 시각을 구별할 수 없습니다.
+
+같은 `day`에 `hours` 항목이 여러 개 있으면 분할 근무로 합쳐집니다. 어떤 요일이 빠져 있으면 그날 시작하는 정기 구간이 없다는 뜻이지만, 전날의 구간이 그날까지 이어질 수는 있습니다. `hours`가 없으면 정기 일정을 알 수 없다는 뜻이지 휴무라는 뜻이 아닙니다. 일시적인 전일 휴무를 나타내려면 비즈니스는 정기 `hours`를 그대로 두고, 해당 날짜에 `opens`와 `closes`가 없는 `exception_hours` 항목을 추가합니다.
+
+예외 일정은 적용되는 모든 현지 날짜에서 정기 일정을 대신합니다. 어떤 구간이 예외가 적용되는 현지 날짜로 이어지면 현지 자정부터는 예외가 우선합니다. 서로 다른 예외 범위가 겹치면 유효하지 않으며, 한 범위가 다른 범위를 포함하는 경우도 마찬가지입니다. 경계가 같은 시간 구간 항목들은 분할 근무로 함께 존재할 수 있지만, 전일 휴무는 해당 경계에서 단독으로만 존재합니다. 배열 순서로 우선순위가 정해지지는 않습니다.
+
+#### 예외 영업시간 예시
+
+```json
+{
+  "id": "loc_downtown",
+  "name": "Downtown Store",
+  "timezone": "America/New_York",
+  "exception_hours": [
+    {
+      "title": "Holiday hours",
+      "valid_from": "2026-12-24",
+      "valid_through": "2026-12-26",
+      "opens": "10:00",
+      "closes": "14:00"
+    },
+    {
+      "title": "Holiday hours",
+      "valid_from": "2026-12-24",
+      "valid_through": "2026-12-26",
+      "opens": "16:00",
+      "closes": "18:00"
+    }
+  ]
+}
+```
+
+두 항목의 날짜 경계가 같으므로, 범위에 포함된 날짜마다 독립적으로 적용되는 분할 근무를 정의합니다. 전일 휴무라면 `opens`와 `closes`를 모두 생략한 항목 하나를 사용합니다.
+
+### 지침
+
+#### 비즈니스
+
+각 위치의 정규 일정 기준은 비즈니스가 소유합니다. 비즈니스가 `hours`나 `exception_hours`를 내보낼 때는 반드시 모든 `day`, `opens`, `closes`, `valid_from`, `valid_through` 값을 그 기준으로 표현해야 하며(**MUST**), 반드시 `timezone`을 유효한 [IANA(Internet Assigned Numbers Authority) 시간대 데이터베이스](https://www.iana.org/time-zones) 식별자로 포함해야 합니다(**MUST**). 요청한 플랫폼이나 구매자의 시간대에 맞춰 정규 일정 기준을 바꿔서는 안 됩니다(**MUST NOT**). JSON Schema가 모든 의미적 제약을 강제하지는 않으므로, 비즈니스는 반드시 위 규칙을 지킨 일정만 내보내야 합니다(**MUST**). 여기에는 `opens`와 `closes`가 서로 다를 것, `valid_from` 값이 `valid_through`보다 늦지 않을 것, 예외 범위가 유효하게 교차할 것이 포함됩니다. 현재나 미래의 어떤 시각에도 더 이상 일정에 영향을 줄 수 없는 `exception_hours` 항목은 생략해야 합니다(**SHOULD**). 또한 자신의 일정이 권한을 갖는 계획 기간까지 이미 알려진 미래 예외를 게시해야 합니다(**SHOULD**).
+
+#### 플랫폼
+
+반환된 일정을 평가할 때 플랫폼은 반드시 반환된 위치의 `timezone`을 사용해야 합니다(**MUST**). 플랫폼은 표시를 위해 날짜가 정해진 구체적인 발생 시점을 다른 시간대로 변환할 수 있지만(**MAY**), 정규 일정 값을 다른 시간대로 재해석해서는 안 됩니다(**MUST NOT**). 일정 데이터가 없거나 유효하지 않거나 달리 사용할 수 없는 위치를 영업 중이라고 추론해서는 안 됩니다(**MUST NOT**). 플랫폼은 자체 표시 정책에 따라 `title`을 표시할 수 있지만(**MAY**), 이를 위치의 영업 여부 판단에 사용해서는 안 됩니다(**MUST NOT**).
+
+## 공유 엔티티
+
+### 편의시설
+
+위치 응답은 편의시설을 편의시설 식별자를 키로 하는 맵으로 표현합니다. 비즈니스는 반드시 모든 항목에 비어 있지 않은 일반 텍스트 형식의 구매자용 `description`을 제공해야 합니다(**MUST**). 이 설명은 간결한 목록에 그대로 쓸 수 있도록 짧고 그 자체로 뜻이 통하는 레이블이나 구문이어야 하며(**SHOULD**), 가능하면 요청에 맞게 현지화해야 합니다(**SHOULD**). 이 설명은 편의시설 식별이나 필터링에 관여하지 않습니다. 설명이 없는 항목은 스키마상 유효하지 않으며, 플랫폼은 키에서 표시 텍스트를 추론하지 말고 반드시 유효하지 않은 응답을 거부해야 합니다(**MUST**).
+
+편의시설 표시는 식별자와 무관합니다. 비즈니스가 제공한 `description`만 있으면 어떤 편의시설이든 표시할 수 있습니다. 플랫폼은 자체 표시 정책을 관리하며, 편의시설을 표시할지, 어디에 표시할지 정할 수 있습니다(**MAY**)(예: 간결한 요약 카드에서는 생략). 편의시설을 표시할 때는 표시하는 모든 항목에 제공된 `description`을 사용해야 하며(**SHOULD**), 식별자를 모른다는 이유만으로 항목을 숨겨서는 안 됩니다(**MUST NOT**). 플랫폼은 인식한 편의시설에 아이콘, 그룹화 같은 구조화된 표시를 더할 수 있지만(**MAY**), 인식하지 못한 식별자에서 의미를 추론하거나 이를 다른 편의시설과 같은 것으로 취급해서는 안 됩니다(**MUST NOT**).
+
+Buyer-facing presentation metadata for one amenity identifier. The containing map key, not this metadata, defines amenity identity and filter matching.
+
+| 이름        | 타입   | 필수 여부    | 설명                                                                                                                                                                                                                                                                           |
+| ----------- | ------ | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| description | string | **Required** | Short, plain-text, buyer-facing label or phrase for the amenity, suitable for direct use in a compact list (e.g., 'Curbside pickup'). The Business SHOULD localize it for the request when possible. This content does not participate in amenity identity or filter matching. |
+
+### 컨텍스트
+
+작업에 쓰이는 구매자 위치와 시장 컨텍스트입니다. 모든 필드는 관련성과 현지화를 위한 선택적 힌트입니다. 플랫폼은 요청 헤더에서 컨텍스트를 지리적으로 감지할 수 있습니다(**MAY**).
+
+컨텍스트 신호는 잠정적인 값이며 권한 있는 데이터가 아닙니다. 비즈니스는 이를 순위, 현지화, 범위가 제한된 기본 탐색 페이지 선택에 반영할 수 있으며(**MAY**), 더 신뢰도 높은 신호(인증된 계정, 위험 탐지)와 맞지 않으면 무시하거나 순위를 낮출 수 있습니다(**MAY**). 하지만 이를 명시적인 `distance`나 `serves` 피연산자, 또는 `filters.items`의 상품 식별자 대신 사용해서는 안 됩니다(**MUST NOT**). 컨텍스트 신호는 근접성, 서비스 가능 여부, 상품 재고 중 어느 것도 증명하지 않습니다([요청 문법](https://dev-jonghoonpark.github.io/ucp-ko/draft/draft/specification/common/location/search/#request-grammar) 참고).
+
+| 이름            | 타입                                                                                             | 필수 여부 | 설명                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| --------------- | ------------------------------------------------------------------------------------------------ | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| address_country | string                                                                                           | Optional  | The country, as a 2-letter ISO 3166-1 alpha-2 code (e.g. "US"). A 3-letter alpha-3 code or full country name MAY also be used.                                                                                                                                                                                                                                                                                                                                     |
+| address_region  | string                                                                                           | Optional  | The first-level administrative region within the country (e.g. a state or province such as California).                                                                                                                                                                                                                                                                                                                                                            |
+| postal_code     | string                                                                                           | Optional  | The postal code (e.g. "94043").                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| location        | string                                                                                           | Optional  | Stable, opaque identifier for a Location in the Business's namespace. This provisional, non-binding hint is distinct from the Buyer's locality. The operation specification or an active capability/extension defines its effects. A common example in retail shopping is the default home store ID selected and saved by the user when purchasing groceries.                                                                                                      |
+| intent          | string                                                                                           | Optional  | Background context describing buyer's intent (e.g., 'looking for a gift under $50', 'need something durable for outdoor use'). Informs relevance, recommendations, and personalization.                                                                                                                                                                                                                                                                            |
+| language        | string                                                                                           | Optional  | Preferred language for content. Use IETF BCP 47 language tags (e.g., 'en', 'fr-CA', 'zh-Hans'). For REST, equivalent to Accept-Language header—platforms SHOULD fall back to Accept-Language when this field is absent; when provided, overrides Accept-Language. Businesses MAY return content in a different language if unavailable.                                                                                                                            |
+| currency        | string                                                                                           | Optional  | Preferred currency (ISO 4217, e.g., 'EUR', 'USD'). Businesses determine presentment currency from context and authoritative signals; this hint MAY inform selection in multi-currency markets. Also serves as the denomination for price filter values — platforms SHOULD include this field when sending price filters. Response prices include explicit currency confirming the resolution.                                                                      |
+| eligibility     | Array\[[Reverse Domain Name](/ucp-ko/draft/draft/specification/reference/#reverse-domain-name)\] | Optional  | Buyer claims about eligible benefits such as loyalty membership, payment instrument perks, and similar. Recognized claims MAY inform the Business response (e.g., member-only product availability, adjusted pricing in catalog, provisional discounts at cart or checkout). Businesses MUST ignore unrecognized values without error. Values MUST use reverse-domain naming (e.g., 'com.example.loyalty_gold', 'org.school.student') and MUST be non-identifying. |
+| payment         | Array[object]                                                                                    | Optional  | Buyer-preferred payment handlers in priority order (most preferred first). Each entry names a handler advertised in the Business profile's `ucp.payment_handlers`, optionally narrowed to preferred instrument types. The Business SHOULD use it to preselect or prioritize the handler (and type, when given) and MAY ignore unavailable or ineligible entries; unrecognized values MUST be ignored without error.                                                |
+
+### 신호
+
+인가와 악용 방지를 돕기 위해 플랫폼이 제공하는 환경 데이터입니다. 신호 값은 구매자가 스스로 주장한 내용이어서는 안 됩니다(**MUST NOT**). 자세한 내용과 개인정보 보호 요구 사항은 [신호](https://dev-jonghoonpark.github.io/ucp-ko/draft/draft/specification/overview/#signals)를 참고하세요.
+
+| 이름               | 타입   | 필수 여부 | 설명                                           |
+| ------------------ | ------ | --------- | ---------------------------------------------- |
+| dev.ucp.buyer_ip   | string | Optional  | Client's IP address (IPv4 or IPv6).            |
+| dev.ucp.user_agent | string | Optional  | Client's HTTP User-Agent header or equivalent. |
+
+## 메시지와 오류 처리
+
+모든 위치 응답에는 선택적 `messages` 배열이 있으며, 비즈니스는 이 배열로 오류, 경고, 안내 정보에 대한 맥락을 전달할 수 있습니다.
+
+### 메시지 유형
+
+메시지는 비즈니스 처리 결과와 그 맥락을 전달합니다.
+
+| 유형      | 사용 시점                                    | 예시 코드                                 |
+| --------- | -------------------------------------------- | ----------------------------------------- |
+| `error`   | 비즈니스 수준 오류                           | 비즈니스 정의 코드(자유 형식 코드 허용)   |
+| `warning` | 구매에 영향을 주는 중요한 상황               | `permanently_closed`, `temporary_closure` |
+| `info`    | 작업을 실패시키지 않는 진단 정보나 추가 맥락 | `not_found`, `holiday_hours_active`       |
+
+#### 메시지(오류)
+
+| 이름         | 타입                                                                  | 필수 여부    | 설명                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| ------------ | --------------------------------------------------------------------- | ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| type         | string                                                                | **Required** | **Constant = error**. Message type discriminator.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| code         | [Error Code](/ucp-ko/draft/draft/specification/reference/#error-code) | **Required** | Error code identifying the type of error. Standard errors are defined in capability specifications (see examples) and have standardized semantics; freeform codes are permitted.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| path         | string                                                                | Optional     | RFC 9535 JSONPath to the component the message refers to (e.g., $.line_items[0]).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| content_type | string                                                                | Optional     | Content format, default = plain. **Enum:** `plain`, `markdown`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| content      | string                                                                | **Required** | Human-readable message.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| severity     | string                                                                | **Required** | Reflects the resource state and recommended action. 'recoverable': platform can resolve the condition in band, for example by modifying inputs or processing a related Action, and submit a new operation when needed. 'requires_buyer_input': merchant requires information their API doesn't support collecting programmatically (checkout incomplete). 'requires_buyer_review': buyer must authorize before order placement due to policy, regulatory, or entitlement rules. 'unrecoverable': no valid resource exists to act on, retry with new resource or inputs. Errors with 'requires\_*' severity contribute to 'status: requires_escalation'.* *Enum:*\* `recoverable`, `requires_buyer_input`, `requires_buyer_review`, `unrecoverable` |
+
+#### 메시지(경고)
+
+| 이름         | 타입                                                                      | 필수 여부    | 설명                                                                                                                                                                                                                                                |
+| ------------ | ------------------------------------------------------------------------- | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| type         | string                                                                    | **Required** | **Constant = warning**. Message type discriminator.                                                                                                                                                                                                 |
+| path         | string                                                                    | Optional     | RFC 9535 JSONPath to the component the message refers to (e.g., $.line_items[0]).                                                                                                                                                                   |
+| code         | [Warning Code](/ucp-ko/draft/draft/specification/reference/#warning-code) | **Required** | Warning code identifying the type of warning. Standard codes are defined in capability specifications (see examples) and have standardized semantics; freeform codes are permitted.                                                                 |
+| content      | string                                                                    | **Required** | Human-readable warning message that MUST be displayed.                                                                                                                                                                                              |
+| content_type | string                                                                    | Optional     | Content format, default = plain. **Enum:** `plain`, `markdown`                                                                                                                                                                                      |
+| presentation | string                                                                    | Optional     | Rendering contract for this warning. 'notice' (default): platform MUST display, MAY dismiss. 'disclosure': platform MUST display in proximity to the path-referenced component, MUST NOT hide or auto-dismiss. See specification for full contract. |
+| image_url    | string                                                                    | Optional     | URL to a required visual element (e.g., warning symbol, energy class label).                                                                                                                                                                        |
+| url          | string                                                                    | Optional     | Reference URL for more information (e.g., regulatory site, registry entry, policy page).                                                                                                                                                            |
+
+#### 메시지(정보)
+
+| 이름         | 타입                                                                | 필수 여부    | 설명                                                                                                                                                                                           |
+| ------------ | ------------------------------------------------------------------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| type         | string                                                              | **Required** | **Constant = info**. Message type discriminator.                                                                                                                                               |
+| path         | string                                                              | Optional     | RFC 9535 JSONPath to the component the message refers to (e.g., $.line_items[0]).                                                                                                              |
+| code         | [Info Code](/ucp-ko/draft/draft/specification/reference/#info-code) | Optional     | Info code identifying the type of informational message. Standard codes are defined in capability specifications (see examples) and have standardized semantics; freeform codes are permitted. |
+| content_type | string                                                              | Optional     | Content format, default = plain. **Enum:** `plain`, `markdown`                                                                                                                                 |
+| content      | string                                                              | **Required** | Human-readable message.                                                                                                                                                                        |
+
+### 일반적인 시나리오
+
+#### 빈 검색 결과
+
+유효한 검색에 일치하는 결과가 없으면 비즈니스는 반드시 빈 `locations` 배열을 반환해야 합니다(**MUST**). 일반적인 불일치에는 메시지가 필요 없으며, `filters.items` 식별자를 알 수 없거나, 재고가 없거나, 평가할 수 없는 경우도 마찬가지입니다.
+
+```json
+{
+  "ucp": {...},
+  "locations": []
+}
+```
+
+일반적인 빈 결과는 오류가 아닙니다. 질의는 유효했지만 일치하는 위치가 없었을 뿐입니다.
+
+## 전송 바인딩
+
+위 기능들은 특정 전송 프로토콜에 바인딩됩니다.
+
+- [REST 바인딩](https://dev-jonghoonpark.github.io/ucp-ko/draft/draft/specification/common/location/rest/index.md): RESTful API 매핑.
+- [MCP 바인딩](https://dev-jonghoonpark.github.io/ucp-ko/draft/draft/specification/common/location/mcp/index.md): JSON-RPC 기반 Model Context Protocol 매핑.
+
+## 보안 및 개인정보 보호 고려 사항
+
+1. **기본은 대략적으로**: 플랫폼은 탐색 단계에서 기본적으로 대략적인 위치 힌트(예: 우편번호나 반올림한 좌표)를 보내야 합니다(**SHOULD**). 정확한 위치나 좌표는 구매자가 명시적으로 동의했거나 특정 위치를 선택한 경우에만 공유해야 합니다(**SHOULD**).
+1. **재고 탐색 공격 완화**: 비즈니스는 상품 재고를 캐내거나 디렉터리를 공격적으로 열거하는 시도를 줄이기 위해 `filters.items`가 포함된 요청에 속도 제한을 적용해야 합니다(**SHOULD**).
+1. **비공개/다크 위치**: 비즈니스는 내부 전용이거나 구매자가 접근할 수 없는 위치(예: 다크 키친, 풀필먼트 전용 허브)를 반드시 검색 결과에서 빼야 합니다(**MUST**).
+1. **물리적 주소 위조(무결성)**: 위치 탐색은 읽기 전용이지만, 응답의 물리적 주소가 변조되면(예: MITM 공격) 물리적 안전과 사기 위험이 생깁니다. 플랫폼은 위치 페이로드를 구매자에게 보여 주기 전에 서명을 검증해야 합니다(**SHOULD**).
+1. **데이터 보존 및 로그 정제**: 비즈니스는 구매자의 명시적 동의 없이 정확한 위치 입력을 요청 수명 주기가 끝난 뒤까지 저장해서는 안 됩니다(**MUST NOT**). 서버 로그에 정확한 구매자 이력이 실수로 남지 않도록 좌표 입력의 소수점 자릿수를 줄여(예: 소수점 둘째 자리, 약 1km 정확도) 정제해야 합니다.

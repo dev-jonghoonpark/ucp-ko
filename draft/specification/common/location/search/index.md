@@ -1,0 +1,335 @@
+# 위치 검색 기능
+
+- **기능 이름:** `dev.ucp.common.location.search`
+
+물리적 위치(예: 소매 매장, 음식점, 창고)를 검색합니다. 자유 텍스트 질의, 명시적 `distance` 및 `serves` 관계, 그리고 영업시간·편의시설·현재 상품 재고에 따른 구조화된 필터링을 지원합니다.
+
+## 작업
+
+| 작업          | 설명                                                                      |
+| ------------- | ------------------------------------------------------------------------- |
+| **위치 검색** | 질의 텍스트, 명시적 공간 관계, 컨텍스트, 필터를 사용해 위치를 검색합니다. |
+
+### 요청
+
+Request body for location search. The `distance` and `serves` relations and every supplied `filters` predicate combine with AND; `query` does not relax them.
+
+| 이름       | 타입                                                                                  | 필수 여부 | 설명                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| ---------- | ------------------------------------------------------------------------------------- | --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| query      | string                                                                                | Optional  | Free-text search query for natural language location search (e.g., 'restaurants near me that deliver', 'hotels with pool').                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| context    | [Context](/ucp-ko/draft/draft/specification/reference/#context)                       | Optional  | Provisional buyer signals for relevance and localization—not authoritative data. Businesses SHOULD use these values when verified inputs (e.g., shipping address) are absent, and MAY ignore or down-rank them if inconsistent with higher-confidence signals (authenticated account, risk detection) or regulatory constraints (export controls). Eligibility and policy enforcement MUST occur at checkout time using binding transaction data. Context SHOULD be non-identifying and can be disclosed progressively—coarse signals early, finer resolution as the session progresses. Higher-resolution data (shipping address, billing address) supersedes context. |
+| signals    | [Signals](/ucp-ko/draft/draft/specification/reference/#signals)                       | Optional  | Environment data provided by the platform to support authorization and abuse prevention. Values MUST NOT be buyer-asserted claims — platforms provide signals based on direct observation or independently verifiable third-party attestations. All signal keys MUST use reverse-domain naming to ensure provenance and prevent collisions when multiple extensions contribute to the shared namespace.                                                                                                                                                                                                                                                                 |
+| distance   | [Location Distance](/ucp-ko/draft/draft/specification/reference/#location-distance)   | Optional  | Optional explicit-center radius predicate. When present, it combines with `serves` and every supplied `filters` predicate using AND.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| serves     | [Location Serves](/ucp-ko/draft/draft/specification/reference/#location-serves)       | Optional  | Optional authoritative service-target predicate. When present, it combines with `distance` and every supplied `filters` predicate using AND.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| filters    | [Location Filter](/ucp-ko/draft/draft/specification/reference/#location-filter)       | Optional  | Filter criteria to narrow Location Search and Lookup results. All supplied filters combine with AND.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| pagination | [Pagination Request](/ucp-ko/draft/draft/specification/reference/#pagination-request) | Optional  | Pagination parameters for requests.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+
+### 응답
+
+| 이름       | 타입                                                                                                      | 필수 여부    | 설명                                                                  |
+| ---------- | --------------------------------------------------------------------------------------------------------- | ------------ | --------------------------------------------------------------------- |
+| ucp        | [UCP Location Response Schema](/ucp-ko/draft/draft/specification/reference/#ucp-response-location-schema) | **Required** | UCP metadata for location responses.                                  |
+| locations  | Array\[[Location](/ucp-ko/draft/draft/specification/reference/#location)\]                                | **Required** | Locations matching the search criteria.                               |
+| pagination | [Pagination Response](/ucp-ko/draft/draft/specification/reference/#pagination-response)                   | Optional     | Pagination information in responses.                                  |
+| messages   | Array\[[Message](/ucp-ko/draft/draft/specification/reference/#message)\]                                  | Optional     | Errors, warnings, or informational messages about the search results. |
+
+## 요청 문법
+
+요청 입력마다 맡는 역할이 다릅니다.
+
+| 입력                  | 의미                                                                                                    |
+| --------------------- | ------------------------------------------------------------------------------------------------------- |
+| `query`               | 자유 텍스트 검색(예: "배달되는 근처 음식점").                                                           |
+| `distance`            | 후보 위치와, 플랫폼이 명시적으로 제공한 중심점 및 경계를 포함하는 반경 사이의 관계.                     |
+| `serves`              | 후보 위치와, 플랫폼이 명시적으로 제공한 하나의 서비스 대상 사이의 관계.                                 |
+| `filters`             | 위치의 고유한 사실이나 현재 사실에 대한 조건: `hours`, `amenities`, `items`, 그리고 확장이 정의한 필터. |
+| `context` / `signals` | 관련성, 현지화, 범위가 제한된 기본 선택을 위한 잠정적 힌트. 공간적 증거는 아님.                         |
+| `pagination`          | 범위가 제한된 결과 페이지의 형태에 대한 요청.                                                           |
+
+`distance`와 `serves`는 후보 위치를 플랫폼이 제공한 외부 사실과 비교하므로 요청 루트에 둡니다. 반면 `filters` 조건은 위치 자체에 어떤 사실이 있는지, 또는 위치가 현재 그 조건을 충족하는지를 묻습니다. 두 관계는 서로 독립적입니다. 어느 쪽이든 단독으로 요청의 기준이 될 수 있고, 서로 다른 지점을 사용할 수 있으며, 어느 쪽도 상대의 피연산자를 물려받지 않습니다.
+
+어떤 후보 위치든 모든 명시적 구조화 제약은 논리곱(AND)으로 결합됩니다.
+
+```text
+matches = distance (when present)
+      AND serves (when present)
+      AND every supplied filters.* predicate
+```
+
+이 규칙은 관찰 가능한 결과만 정의하며, 백엔드의 평가 순서는 정의하지 않습니다.
+
+비즈니스는 일반적인 자유 텍스트 검색처럼 `query` 텍스트로 결과를 좁히고 순위를 매길 수 있으며(**MAY**), 그 안의 공간 표현(예: "근처")이 텍스트 관련성과 순위에 영향을 주도록 할 수도 있습니다. 하지만 `query`에는 어느 방향으로든 구조적 권한이 없습니다. 비즈니스는 `query` 텍스트가 `distance`나 `serves` 관계, 또는 `filters` 조건을 만든다고 취급해서는 안 됩니다(**MUST NOT**). 구조화된 매칭은 명시적 제약만으로 성립하며, 공간적 증거는 [공간 관계](#spatial-relations)의 피연산자에서만 나옵니다. 비즈니스는 `query` 텍스트 때문에 명시적 구조화 제약을 완화해서도 안 됩니다(**MUST NOT**). `distance`, `serves`, 또는 `filters` 조건을 충족하지 못한 위치는 질의와 아무리 잘 맞더라도 제외됩니다.
+
+### 범위가 제한된 탐색
+
+공간 관계가 없는 요청도 유효합니다. 빈 본문 `{}`, `context`나 `signals`만 담은 요청, `pagination`만 담은 요청, 필터만 담은 요청은 모두 비즈니스 정책이 정하는 기본 선택 범위 안에서의 제한된 탐색입니다. 공간적 주장도 아니고 전체 내보내기도 아닙니다. `filters.items`만 담은 요청도 공간과 무관합니다. 명시적 상품 식별자로 후보 집합을 제한할 뿐 어떤 공간 관계도 주장하지 않습니다. 페이지 크기는 공통 [페이지네이션](#pagination) 규약을 따릅니다.
+
+비즈니스는 `context`, `signals`, IP에서 추정한 지역 정보를 사용해 범위가 제한된 기본 탐색 페이지의 순위, 현지화, 선택에 영향을 줄 수 있습니다(**MAY**). 이런 힌트를 사용하는 비즈니스는 그렇게 선택한 결과를 위치가 어떤 대상에 서비스한다거나 명시되지 않은 반경 안에 있다는 증거로 취급해서는 안 됩니다(**MUST NOT**). 공간적 매칭은 명시적 `distance`와 `serves` 피연산자로만 성립합니다.
+
+### 거부와 빈 결과
+
+검색 요청 스키마를 통과하지 못한 요청은 바인딩의 잘못된 요청(invalid-request) 메커니즘을 사용합니다. `distance`, `serves`, 지원하지 않는 필터에 대해 정의된 의미 오류도 같은 메커니즘으로 전달합니다. [공간 관계](#spatial-relations)와 [검색 필터](#search-filters)를 참고하세요. 형식이 올바른 관계나 지원되는 조건이 단지 어떤 위치와도 일치하지 않을 뿐이라면, 이는 성공적인 빈 비즈니스 결과로 처리합니다 ([빈 검색 결과](https://dev-jonghoonpark.github.io/ucp-ko/draft/draft/specification/common/location/#common-scenarios) 참고).
+
+## 공간 관계
+
+### 거리
+
+`distance` 관계는 명시적 중심점에서 경계를 포함한 반경 안에 있는 위치와 일치합니다. 두 멤버 모두 필수입니다. `distance.center`는 World Geodetic System 1984(WGS 84) 십진 도 단위의 `geo.json` 지점이고, `distance.max`는 경계를 포함하는 최대 거리(미터)입니다.
+
+| 이름   | 타입                                                    | 필수 여부    | 설명                                                                                                                                                                                    |
+| ------ | ------------------------------------------------------- | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| center | [Geo](/ucp-ko/draft/draft/specification/reference/#geo) | **Required** | Explicit center of the radius. The Platform MUST supply it; the Business MUST NOT derive it from context, signals, an IP address, or `serves`.                                          |
+| max    | number                                                  | **Required** | Inclusive maximum distance in RFC 7035 distance unit (meters). A Business unable to honor the supplied value MUST reject the request rather than clamp it or substitute another radius. |
+
+플랫폼은 `distance`를 제공할 때마다 반드시 `distance.center`를 제공해야 합니다(**MUST**). 비즈니스는 누락된 중심점을 `context`, `signals`, 인터넷 프로토콜(IP) 주소, 또는 `serves`에서 도출해서는 안 됩니다(**MUST NOT**). 필수 피연산자가 빠진 요청은 의도보다 넓은 요청이 아니라 잘못된 요청입니다.
+
+매칭 의미는 다음으로 한정됩니다.
+
+- 계산된 거리는 `distance.center`와 위치의 권한 있는 `geo` 사이의 WGS 84 타원체 위 최단 측지 거리(미터)입니다. 두 지점이 180도 자오선의 반대편에 있을 때도 별도 처리 없이 같은 규칙(최단 측지선)을 적용합니다.
+- 비즈니스는 반올림하지 않은 계산값을 반드시 `distance.max`와 비교해야 합니다(**MUST**). 그 값이 `distance.max` 이하이면 위치가 일치하며, 정확히 같은 경우도 일치합니다.
+- 비즈니스는 측지 거리 비교 대신 허용 오차 범위를 적용하거나, 피연산자를 대체하거나, 반경을 제한하거나, 경로·이동·평면 거리를 평가해서는 안 됩니다(**MUST NOT**).
+- 비즈니스는 WGS 84 역측지 결과를 충분한 정밀도로 내서 매칭 결과가 위에서 정의한 반올림 없는 비교와 일치하기만 한다면 어떤 알고리즘으로든 값을 계산할 수 있습니다(**MAY**).
+- 제공된 `distance.max`를 지킬 수 없는 비즈니스(예: 반경 상한이 요청 값보다 작은 경우)는 조치 가능한 오류로 요청을 반드시 거부해야 합니다(**MUST**). 반경을 조용히 제한하거나 자체 반경으로 대체해서는 안 됩니다(**MUST NOT**). [페이지네이션](#pagination)에서 더 적은 결과를 반환해도 된다고 허용했다고 해서 `distance.max`를 줄여도 된다는 뜻은 결코 아닙니다.
+- 사용할 수 있는 권한 있는 `geo`가 없는 위치는 일치하지 않습니다. 이런 제외는 불일치일 뿐 오류가 아닙니다.
+
+이 관계는 엄격한 제한이며, 거리순 정렬을 요청하거나 암시하지 않습니다. 다른 협상된 입력이 지정하지 않는 한, 순위는 별도의 비즈니스 동작입니다.
+
+### 서비스 대상
+
+`serves` 관계는 하나의 명시적 대상에 잠정적으로 서비스할 수 있는 위치와 일치합니다. 이 관계는 항목이 하나인 맵입니다. 플랫폼은 `point`, `address`, 또는 협상된 역방향 도메인 확장 대상 중 정확히 하나의 대상 표현을 반드시 제공해야 합니다(**MUST**).
+
+| 이름    | 타입                                                              | 필수 여부 | 설명                                      |
+| ------- | ----------------------------------------------------------------- | --------- | ----------------------------------------- |
+| point   | [Geo](/ucp-ko/draft/draft/specification/reference/#geo)           | Optional  | WGS 84 coordinates of the service target. |
+| address | [Locality](/ucp-ko/draft/draft/specification/reference/#locality) | Optional  | Coarse locality of the service target.    |
+
+- `point`는 WGS 84 위도·경도 좌표 쌍이며 `distance.center`와 같은 좌표 표현을 사용합니다.
+- `address`는 대략적인 지역입니다. 이를 제공할 때 플랫폼은 비어 있지 않은 `address_country`, `address_region`, `postal_code` 중 하나 이상을 반드시 포함해야 합니다(**MUST**). `address`가 비어 있거나, 인식되지 않는 필드만 담고 있거나, 인식되는 필드가 모두 비어 있으면 잘못된 값입니다. `serves` 맵이 비어 있거나 대상을 둘 이상 담고 있어도 잘못된 값입니다.
+
+권한은 명시적 대상에 있습니다. `serves`를 생략해도 서비스 가능 여부를 암묵적으로 확인하지 않으며, 비즈니스는 `context`, `signals`, IP 주소에서 대상을 도출해서는 안 됩니다(**MUST NOT**).
+
+위치에서 현재 이용할 수 있는 서비스 또는 풀필먼트 방식 중 하나 이상이 대상에 잠정적으로 서비스할 수 있으면 그 위치는 일치합니다. 이 일치는 비즈니스의 서비스 범위 기하 정보를 공개하지 않고, 해당하는 방식을 특정하지 않으며, 수용량을 예약하지 않고, 체크아웃이나 풀필먼트의 성공을 보장하지도 않습니다. 비즈니스는 커머스 흐름의 이후 단계에서 구속력 있는 거래 데이터를 기준으로 서비스 가능 여부를 다시 검증합니다.
+
+형식은 올바르지만 평가할 수 없는 대상을 받은 비즈니스(예: 모델링하지 않는 우편번호 체계)는 반드시 조치 가능한 요청 오류를 반환해야 합니다(**MUST**). 더 대략적인 해석으로 대체하거나 범위를 넓힌 결과를 반환해서는 안 됩니다(**MUST NOT**). 네임스페이스가 붙은 대상의 확장이 협상되지 않았다면, 비즈니스는 대상을 조용히 생략하지 말고 반드시 조치 가능한 요청 오류를 반환해야 합니다(**MUST**).
+
+이 관계에는 의도된 상관관계 한계도 있습니다. `serves`와 [`filters.items`](#item-availability-filter)를 모두 만족하는 위치는 각 제약을 독립적으로 충족한 것입니다. 이 일치로 확인되는 것은 하나 이상의 방식이 대상에 잠정적으로 서비스할 수 있고, 비즈니스가 그 위치에서 참조된 모든 상품을 현재 제공할 수 있다는 사실뿐입니다. 같은 방식으로 그 상품들을 그 대상에게 풀필먼트할 수 있는지는 확인하지 않습니다.
+
+## 검색 필터
+
+표준 위치 필터는 `hours`, `amenities`, `items`입니다. 비즈니스는 `additionalProperties`로 사용자 정의 필터를 추가로 지원할 수 있습니다(**MAY**). 제공된 모든 필터는 AND로 결합됩니다. 지원하지 않는 필터를 받은 비즈니스는 조치 가능한 오류로 요청을 반드시 거부해야 합니다(**MUST**). 필터를 무시하고 범위를 넓힌 결과를 반환해서는 안 됩니다(**MUST NOT**).
+
+| 이름      | 타입                                                                               | 필수 여부 | 설명                                                                                                                                                                                                   |
+| --------- | ---------------------------------------------------------------------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| hours     | object                                                                             | Optional  | Filter by operating hours, evaluated at the one supplied instant.                                                                                                                                      |
+| amenities | Array\[[Amenity Type](/ucp-ko/draft/draft/specification/reference/#amenity-type)\] | Optional  | Filter by amenity identifier. A Location matches only when its `amenities` map contains every supplied identifier as an exact key; descriptions and namespace prefixes do not participate in matching. |
+| items     | Array[string]                                                                      | Optional  | Current item-availability filter. A candidate Location matches only when the Business can currently provide every referenced item at that Location; all references combine with AND.                   |
+
+### 영업시간 기반 필터
+
+표준 `filters.hours` 객체에는 `Z` 또는 숫자 오프셋으로 표현된 RFC 3339 시각인 `open_at`이 필요합니다.
+
+플랫폼은 구매자의 의도와 관련된 시각을 `open_at`으로 고릅니다. 현재 시각을 사용할 수도 있고, 예상 도착·픽업·주문 접수 시각 같은 다른 시각을 고를 수도 있습니다. 플랫폼은 고른 시각을 상호작용에 맞는 단위로 반올림하거나 조정할 수 있지만(**MAY**), 보내는 값은 하나의 특정 시각을 나타냅니다.
+
+비즈니스는 각 후보 위치마다 반드시 `open_at`을 제공된 그대로 평가해야 합니다(**MUST**). 위치의 권한 있는 `timezone`으로 그 시각을 현지 날짜, 요일, 시간으로 변환한 다음, [영업시간](https://dev-jonghoonpark.github.io/ucp-ko/draft/draft/specification/common/location/#operating-hours)에 따라 유효한 일정을 평가합니다. `open_at`의 `Z` 또는 숫자 오프셋은 시각을 식별할 뿐, 위치의 시간대를 식별하지 않습니다.
+
+비즈니스는 위치가 `open_at`에 영업 중임을 확인할 수 있을 때만 그 위치를 반환해야 합니다(**MUST**). 일정 데이터가 없거나, 잘못되었거나, 권한 있게 평가할 수 있는 범위를 벗어나거나, 그 밖의 이유로 사용할 수 없으면 그 위치는 필터와 일치하지 않습니다. 비즈니스는 제공된 시각을 반올림하거나, 옮기거나, 다른 방식으로 재해석해서는 안 됩니다(**MUST NOT**).
+
+### 편의시설 필터
+
+`amenities` 필터는 고정적인 특징, 서비스, 역량을 식별합니다. 위치는 응답의 `amenities` 맵에 제공된 모든 식별자가 정확한 키로 들어 있을 때만 일치합니다. 잘 알려진 값은 [편의시설 어휘](#amenity-vocabulary)를 참고하세요.
+
+#### 편의시설 어휘
+
+UCP는 편의시설 식별자용 개방형 역방향 DNS 어휘를 정의합니다. 잘 알려진 UCP 식별자의 정의가 해당 편의시설을 정확히 설명한다면 비즈니스는 그 식별자를 사용해야 하며(**SHOULD**), 자신이 관리하는 네임스페이스 아래에 식별자를 추가로 정의할 수 있습니다(**MAY**). 다음 표는 잘 알려진 값의 일부입니다.
+
+| 편의시설 이름                              | 도메인      | 의미 정의                                                  |
+| ------------------------------------------ | ----------- | ---------------------------------------------------------- |
+| `dev.ucp.amenity.wi_fi`                    | 공통 / 범용 | 매장 내 무료 또는 구매자가 이용할 수 있는 무선 인터넷.     |
+| `dev.ucp.amenity.parking`                  | 공통 / 범용 | 현장에서 이용할 수 있는 전용 주차장 또는 차고.             |
+| `dev.ucp.amenity.shopping.curbside_pickup` | 소매 쇼핑   | 건물에 들어가지 않고 주문을 픽업할 수 있는 전용 차량 공간. |
+| `dev.ucp.amenity.shopping.in_store_pickup` | 소매 쇼핑   | 주문 픽업을 위한 매장 내 전용 카운터 또는 공간.            |
+
+위치 응답은 공통 [편의시설 표현](https://dev-jonghoonpark.github.io/ucp-ko/draft/draft/specification/common/location/#amenity)을 사용합니다. 이 표현 덕분에 사용자 정의 식별자도 표준화된 의미를 부여하지 않고 화면에 표시할 수 있습니다.
+
+플랫폼은 편의시설 필터를 식별자 배열로 제공합니다. 매칭은 키 전체가 정확히 일치하는지로 판단하며, 네임스페이스 접두사에는 와일드카드나 상속 의미가 없습니다. 비즈니스는 제공된 식별자를 무시해서는 안 됩니다(**MUST NOT**). 권한 있는 편의시설 집합에 제공된 키가 하나라도 없는 위치는 일치하지 않습니다. 비즈니스가 사용하지 않는 식별자도 마찬가지이며, 일반적인 불일치에는 진단 정보가 필요하지 않습니다. `filters.amenities`가 있으면 비즈니스는 반환하는 각 위치의 `amenities` 맵에 제공된 모든 식별자를 반드시 포함해야 합니다(**MUST**). 반환된 위치에 이 맵이 없거나 요청된 키가 하나라도 빠져 있다면, 플랫폼은 범위가 넓어졌거나 검증할 수 없는 결과를 받아들이지 말고 해당 위치를 비준수로 반드시 거부해야 합니다(**MUST**).
+
+### 상품 재고 필터
+
+표준 `filters.items` 값은 서로 다른 상품 식별자로 이루어진 비어 있지 않은 배열입니다. 각 식별자는 해당 도메인에서 주문할 수 있는 상품(예: 쇼핑 변형 상품이나 음식 메뉴 항목)을 가리키는, 안정적이고 불투명하며 비즈니스 범위 안에서 유효한 참조입니다. 이 필터가 묻는 것은 "참조된 모든 상품을 비즈니스가 현재 어느 위치에서 제공할 수 있는가?"라는 대략적인 탐색 질문 하나입니다.
+
+위치는 비즈니스가 그 위치에서 참조된 모든 상품을 현재 제공할 수 있을 때만 일치합니다. 비즈니스는 요청을 처리하는 시점의 현재 데이터를 기준으로 각 식별자를 독립적으로 평가하며, 상품별 결과는 AND로 결합됩니다. 평가는 위치의 영업시간이나 풀필먼트 방식과 무관합니다. `filters.hours`는 별도의 논리곱 조건이며, `filters.hours.open_at`이 미래의 도착 또는 픽업 시각을 나타내더라도 재고 평가 시점은 바뀌지 않습니다.
+
+알 수 없거나, 현재 재고가 없거나, 후보 위치에서 평가할 수 없는 식별자가 있으면 그 위치는 필터를 통과하지 못합니다. 비즈니스는 범위를 넓힌 결과를 반환하려고 이런 식별자를 무시해서는 안 되며(**MUST NOT**), 해당 후보는 일치하지 않습니다. 이는 일반적인 불일치이므로 진단 정보가 필요하지 않습니다([빈 검색 결과](https://dev-jonghoonpark.github.io/ucp-ko/draft/draft/specification/common/location/#common-scenarios) 참고).
+
+일치는 대략적이고 잠정적인 확인일 뿐이며, 응답은 상품별 사실을 되돌려 주지 않고 의도적으로 위치 형태를 유지합니다. 이 결과는 플랫폼이 고른 수량을 평가하지 않고, 참조된 상품을 하나의 장바구니로 함께 거래할 수 있음을 증명하지 않으며, 풀필먼트 방식을 선택하거나 특정하지 않고, 어떤 상품도 예약하지 않으며, 미래 시점의 재고를 예측하지도 않습니다. 비즈니스는 커머스 흐름의 이후 단계에서 거래별 재고, 수량, 방식, 조건을 반드시 다시 검증해야 합니다(**MUST**). [다른 기능과의 관계](https://dev-jonghoonpark.github.io/ucp-ko/draft/draft/specification/common/location/#relationship-to-other-capabilities)를 참고하세요.
+
+`filters.items`를 픽업 편의시설(예: `dev.ucp.amenity.shopping.in_store_pickup`)과 결합하면, 참조된 모든 상품의 재고가 현재 있고 일반적으로 픽업을 지원하는 위치와 일치합니다. 두 조건은 여전히 독립적입니다. 이 결합으로 참조된 상품을 픽업으로 받을 수 있는지까지 확인하지는 않습니다. 방식까지 특정하는 정확한 단일 매장 찾기는 기본 위치 기능의 범위를 벗어나며, 상품 재고와 풀필먼트 방식을 연관 지을 수 있는 해당 도메인 기능이 필요합니다.
+
+## 페이지네이션
+
+목록 작업에는 커서 기반 페이지네이션을 사용합니다. 커서는 불투명한 문자열입니다. 비즈니스는 커서를 상태 없는 키셋 토큰으로 인코딩할 수 있습니다(**MAY**).
+
+### 페이지 크기
+
+`limit` 파라미터는 요청하는 페이지 크기일 뿐, 보장되는 결과 수가 아닙니다. `limit`이 생략되면 비즈니스는 반드시 기본 페이지 크기를 적용해야 합니다(**MUST**). 기본값 10을 권장하지만(**RECOMMENDED**), 비즈니스는 다른 값을 선택할 수 있습니다(**MAY**).
+
+비즈니스는 최대 페이지 크기를 적용하는 경우를 포함해, 요청된 페이지 크기나 기본 페이지 크기보다 적은 결과를 반환할 수 있습니다(**MAY**). 플랫폼은 응답 개수가 두 값 중 어느 것과 같다고 가정해서는 안 됩니다(**MUST NOT**). 이 허용은 페이지 크기에만 적용되며, `distance.max`를 줄여도 된다는 뜻은 아닙니다([거리](#distance) 참고).
+
+### 페이지네이션 요청
+
+Pagination parameters for requests.
+
+| 이름   | 타입    | 필수 여부 | 설명                                                                                                                                                                                                                                                                                                                                                                                             |
+| ------ | ------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| cursor | string  | Optional  | Opaque cursor from previous response.                                                                                                                                                                                                                                                                                                                                                            |
+| limit  | integer | Optional  | Requested page size, not a guaranteed result count. When omitted, the Business MUST apply a default page size. A default of 10 is RECOMMENDED, but the Business MAY choose another value. The Business MAY return fewer results than the requested or default page size, including when enforcing its maximum page size. A Platform MUST NOT assume that the response count equals either value. |
+
+### 페이지네이션 응답
+
+Pagination information in responses.
+
+| 이름          | 타입    | 필수 여부    | 설명                                                                                  |
+| ------------- | ------- | ------------ | ------------------------------------------------------------------------------------- |
+| cursor        | string  | Optional     | Cursor to fetch the next page of results. MUST be present when has_next_page is true. |
+| has_next_page | boolean | **Required** | Whether more results are available.                                                   |
+| total_count   | integer | Optional     | Total number of matching items, if available.                                         |
+
+## 예시
+
+다음 요청과 응답은 전송 방식과 무관한 UCP 페이로드입니다.
+
+### 특정 지점에 서비스하고 특정 시각에 영업 중인 식료품점
+
+```json
+{
+  "query": "grocery store near me",
+  "context": {
+    "address_country": "US",
+    "address_region": "CA",
+    "postal_code": "94043"
+  },
+  "serves": {
+    "point": {
+      "latitude": 37.422,
+      "longitude": -122.084
+    }
+  },
+  "filters": {
+    "hours": {
+      "open_at": "2026-05-18T17:00:00Z"
+    },
+    "amenities": ["dev.ucp.amenity.shopping.curbside_pickup"]
+  }
+}
+```
+
+```json
+{
+  "ucp": {
+    "version": "draft",
+    "capabilities": {
+      "dev.ucp.common.location.search": [
+        {"version": "draft"}
+      ]
+    }
+  },
+  "locations": [
+    {
+      "id": "loc_valley_grocers",
+      "name": "Valley Grocers",
+      "address": {
+        "street_address": "789 Maple Ave",
+        "address_locality": "Mountain View",
+        "address_region": "CA",
+        "address_country": "US",
+        "postal_code": "94043"
+      },
+      "geo": {
+        "latitude": 37.420,
+        "longitude": -122.080
+      },
+      "amenities": {
+        "dev.ucp.amenity.shopping.curbside_pickup": {
+          "description": "Curbside pickup"
+        },
+        "dev.ucp.amenity.shopping.in_store_pickup": {
+          "description": "In-store pickup"
+        },
+        "dev.ucp.amenity.parking": {
+          "description": "On-site parking"
+        },
+        "com.example.amenity.in_person_installation": {
+          "description": "In-person installation by appointment"
+        }
+      },
+      "timezone": "America/Los_Angeles",
+      "hours": [
+        {"day": "monday", "opens": "08:00", "closes": "21:00"}
+      ]
+    }
+  ]
+}
+```
+
+권한 있는 서비스 대상은 명시적 `serves.point`이며, 대략적인 `context` 힌트는 순위와 현지화에만 영향을 줍니다. 제공된 시각은 `America/Los_Angeles` 기준 월요일 `10:00`으로, 반환된 영업 구간 안에 있습니다. 전체 일정 평가 규칙은 [영업시간](https://dev-jonghoonpark.github.io/ucp-ko/draft/draft/specification/common/location/#operating-hours)을 참고하세요. 사용자 정의 편의시설은 식별자에 표준화된 UCP 의미를 부여하지 않고도 설명으로 화면에 표시할 수 있습니다.
+
+### 일정 거리 안에서 요청한 모든 상품의 재고가 있는 위치
+
+```json
+{
+  "distance": {
+    "center": {
+      "latitude": 40.707,
+      "longitude": -74.011
+    },
+    "max": 10000
+  },
+  "filters": {
+    "items": [
+      "item_id_phone_15_pro",
+      "item_id_phone_15_pro_case_black"
+    ]
+  }
+}
+```
+
+```json
+{
+  "ucp": {
+    "version": "draft",
+    "capabilities": {
+      "dev.ucp.common.location.search": [
+        {"version": "draft"}
+      ]
+    }
+  },
+  "locations": [
+    {
+      "id": "loc_downtown_electronics",
+      "name": "Downtown Electronics",
+      "address": {
+        "street_address": "100 Broadway",
+        "address_locality": "New York",
+        "address_region": "NY",
+        "address_country": "US",
+        "postal_code": "10005"
+      },
+      "amenities": {
+        "dev.ucp.amenity.shopping.curbside_pickup": {
+          "description": "Curbside pickup"
+        },
+        "dev.ucp.amenity.shopping.in_store_pickup": {
+          "description": "In-store pickup"
+        }
+      }
+    }
+  ]
+}
+```
+
+반환된 각 위치는 `distance` 관계와, 제공된 모든 식별자에 대한 `items` 재고 조건을 충족합니다. 응답은 상품별 사실을 되돌려 주지 않습니다. 또한 `distance` 관계를 썼다고 해서 비즈니스가 평가에 사용한 위치 좌표를 공개해야 하는 것은 아닙니다.
+
+## 전송 바인딩
+
+- [REST 바인딩](https://dev-jonghoonpark.github.io/ucp-ko/draft/draft/specification/common/location/rest/#post-locationssearch): `POST /locations/search`
+- [MCP 바인딩](https://dev-jonghoonpark.github.io/ucp-ko/draft/draft/specification/common/location/mcp/#search_locations): `search_locations` 도구

@@ -1,0 +1,542 @@
+# 카탈로그 기능
+
+## 개요
+
+카탈로그 기능(Capability)을 사용하면 플랫폼이 비즈니스의 상품 카탈로그를 검색하고 탐색할 수 있습니다. 체크아웃 전에 상품을 찾는 단계로, 다음과 같은 사용 사례를 지원합니다.
+
+- 자유 텍스트 상품 검색
+- 카테고리 및 필터 기반 탐색
+- 식별자로 상품/변형 일괄 조회
+- 변형 간 가격 비교
+
+## 기능
+
+| 기능                                                                                                                                      | 설명                                    |
+| ----------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------- |
+| [`dev.ucp.shopping.catalog.search`](https://dev-jonghoonpark.github.io/ucp-ko/draft/draft/specification/shopping/catalog/search/index.md) | 쿼리 텍스트와 필터로 상품을 검색합니다. |
+| [`dev.ucp.shopping.catalog.lookup`](https://dev-jonghoonpark.github.io/ucp-ko/draft/draft/specification/shopping/catalog/lookup/index.md) | 식별자로 상품 또는 변형을 조회합니다.   |
+
+## 핵심 개념
+
+- **상품(Product)**: 제목, 설명, 미디어와 하나 이상의 변형으로 구성된 카탈로그 항목입니다.
+- **변형(Variant)**: 특정 옵션 선택(예: "Blue / Large"), 가격, 재고 상태가 정해진 구매 가능한 항목입니다.
+- **가격(Price)**: 가격 값에는 금액(통화의 최소 단위)과 통화 코드가 모두 들어 있어 다중 통화 카탈로그를 지원합니다.
+- **판매 기준(Sale basis)**: 수량을 표시하는 방식입니다. 개수 단위(`each`, 기본값)이거나 무게, 길이, 면적, 부피, 시간 같은 측정 단위입니다. [수량과 단위](https://dev-jonghoonpark.github.io/ucp-ko/draft/draft/specification/overview/#quantities-and-units)를 참고하세요.
+
+### 체크아웃과의 관계
+
+카탈로그 작업은 체크아웃의 `line_items[].item.id`에 바로 쓸 수 있는 상품 ID와 변형 ID를 반환합니다. 카탈로그 조회로 얻은 변형 ID는 체크아웃이 기대하는 아이템 ID와 일치해야 합니다.
+
+카탈로그 응답(가격, 재고 상태 등)은 해당 요청 시점의 비즈니스 조건을 반영하지만 거래상의 확약은 아닙니다. 권위는 체크아웃에 있습니다. 응답은 세션마다 다를 수 있으므로, 재검증 없이 다른 세션에서 재사용하지 않는 것이 좋습니다(**SHOULD NOT**).
+
+## 판매 기준과 수량 단위
+
+`variants[].quantity_unit`은 거래 전에 변형의 판매 기준을 알려 줍니다. 이 서술자는 공통 [수량과 단위](https://dev-jonghoonpark.github.io/ucp-ko/draft/draft/specification/overview/#quantities-and-units) 계약을 따릅니다. 서술자가 없으면 기본값인 `each` 기준이라는 뜻이며, `each`가 아닌 기준은 비즈니스가 서술자를 포함해 알립니다.
+
+플랫폼은 거래 전에 카탈로그에서 판매 기준을 파악합니다. `unit`과 `scale`은 수량을 표시하는 방식을 정의하고, 선택 사항인 [`increment`](https://dev-jonghoonpark.github.io/ucp-ko/draft/draft/specification/overview/#ordering-increment)는 비즈니스가 판매하는 주문 단위를 알려 줍니다. 플랫폼은 이를 바탕으로 수량 조절 UI를 만들고 제출 전에 입력을 검증할 수 있습니다. 바나나를 파운드 단위로, 1/4파운드 배수로 판매하는 비즈니스라면 `{ "unit": "LBR", "scale": 2, "display_text": "lb", "increment": 25 }`를 알립니다.
+
+판매 기준이 물리적 측정에만 국한되지는 않습니다. 분 단위 주차, 시간 단위 인건비 같은 계량형 상품도 같은 계약에 따라 같은 서술자(`MIN`, `HUR`)를 사용합니다.
+
+`variants[].id`는 구매 가능한 변형을 식별하고, `quantity_unit`은 그 변형을 주문할 때 쓰는 단위와 세분성을 정의합니다. `quantity_unit`이 `{ "unit": "LBR", "scale": 2, "display_text": "lb" }`인 바나나는 1/100파운드 단위로 판매되므로, `quantity`가 `150`이면 1.50 lb입니다.
+
+### 단가와의 구분
+
+`quantity_unit`과 변형의 [`unit_price`](#variant)는 서로 다른 질문에 답하며, 각각 독립적으로 설정합니다.
+
+- `quantity_unit`은 **판매 기준**입니다. `quantity`를 세는 단위이자 `price`를 매기는 단위입니다.
+- `unit_price`는 **표시용 비교 지표**입니다. 매대에서처럼 비교할 수 있도록 파생한 "표준 측정량당 가격"(예: 100 mL당)입니다. `measure`는 변형의 포장 또는 내용량이고, `reference`는 비교 기준이 되는 분모입니다.
+
+`quantity_unit`, `unit_price.measure`, `unit_price.reference`의 단위 필드는 공통 [수량과 단위](https://dev-jonghoonpark.github.io/ucp-ko/draft/draft/specification/overview/#quantities-and-units) 계약을 따릅니다. 두 단가 필드는 공통 측정 타입을 사용하므로 정수 `value` 필드는 단계 수입니다. 비즈니스는 변형에 `quantity_unit`이나 `unit_price` 중 하나만 제공하거나, 둘 다 제공하거나, 둘 다 제공하지 않을 수 있습니다(**MAY**).
+
+표시용 비교 지표가 의미를 잃지 않도록, 비즈니스는 반드시 `unit_price.measure.value`와 `unit_price.reference.value` 모두에 양의 정수를 사용해야 합니다(**MUST**). 비즈니스는 반드시 `unit_price.currency`를 `price.currency`와 같게 설정해야 합니다(**MUST**). `unit_price` 안에서 비즈니스는 반드시 `measure.unit`과 `reference.unit`에 같은 값을 사용해야 합니다(**MUST**). 두 측정값의 `scale` 값은 서로 달라도 됩니다(**MAY**). 비즈니스는 단가를 계산하면서 단위 간 변환이나 통화 변환을 해서는 안 됩니다(**MUST NOT**). 각 측정값은 공통 단위 기준으로 정수 `value × 10^-scale`를 나타냅니다. 비즈니스는 반드시 `price.amount`와 이 스케일 적용 값으로 비교 지표를 계산해야 합니다(**MUST**).
+
+```text
+(price.amount / (measure.value × 10^-measure.scale)) × (reference.value × 10^-reference.scale)
+```
+
+비즈니스는 반드시 가격 규칙에 따라 결과를 통화의 최소 단위로 한 번 반올림해 `unit_price.amount`로 반환해야 합니다(**MUST**). 반환된 `unit_price.amount`가 권위를 가집니다. 플랫폼은 이 값을 다시 계산하거나 자체 결과로 대체해서는 안 됩니다(**MUST NOT**).
+
+동일 단위·동일 통화 규칙은 의미상의 불변 조건입니다. JSON Schema는 해당 필드를 각각 독립적으로 검증할 뿐, 두 동일성 중 어느 것도 강제하지 않습니다.
+
+예를 들어 `each`로 판매하는 50 m 케이블 스풀은 `quantity_unit`을 생략하고 미터당 `unit_price`를 둘 수 있습니다. 이때 `measure`는 `{ "value": 5000, "unit": "MTR", "scale": 2, "display_text": "m" }`, `reference`는 `{ "value": 1, "unit": "MTR", "display_text": "m" }`가 될 수 있습니다. 두 측정값 모두 `MTR`을 사용하며, 단위 간 변환 없이 각각 50 m와 1 m를 나타냅니다.
+
+거래 라인에서는 필드가 있느냐 없느냐로 역할이 드러납니다. 가격 기준이 판매 기준과 다른 라인에는 비즈니스가 반드시 `unit_price`를 빠짐없이 담아 보내야 합니다(**MUST**)([체크아웃 — 가격 기준](https://dev-jonghoonpark.github.io/ucp-ko/draft/draft/specification/shopping/checkout/#quantity-and-sale-basis) 참고). 이 스풀의 미터당 가격처럼 카탈로그에만 있는 `unit_price`는 표시용 비교 지표이고, 라인 수준의 `unit_price`에는 청구 금액을 계산하는 기준 요율이 담깁니다.
+
+### 예시: 무게 단위로 판매하는 상품
+
+파운드 단위로 판매하는 바나나의 `get_product` 응답입니다. 변형은 `quantity_unit`으로 `{ "unit": "LBR", "scale": 2, "display_text": "lb", "increment": 25 }`를, `price`로 `79`를 알립니다. 즉 1파운드당 $0.79이며 0.25 lb 배수로 판매합니다.
+
+```json
+{
+  "ucp": { "version": "draft" },
+  "product": {
+    "id": "prod_bananas",
+    "title": "Bananas",
+    "description": { "plain": "Fresh bananas sold by the pound." },
+    "price_range": {
+      "min": { "amount": 79, "currency": "USD" },
+      "max": { "amount": 79, "currency": "USD" }
+    },
+    "variants": [
+      {
+        "id": "var_bananas",
+        "title": "Bananas",
+        "description": { "plain": "Fresh bananas sold by the pound." },
+        "price": { "amount": 79, "currency": "USD" },
+        "quantity_unit": { "unit": "LBR", "scale": 2, "display_text": "lb", "increment": 25 },
+        "availability": { "available": true }
+      }
+    ]
+  }
+}
+```
+
+## 공통 엔터티
+
+### 컨텍스트
+
+카탈로그 작업에 쓰는 위치 및 시장 컨텍스트입니다. 모든 필드는 관련성과 현지화를 위한 선택적 힌트입니다. 플랫폼은 요청 헤더로 컨텍스트를 지리적으로 감지할 수 있습니다(MAY).
+
+컨텍스트 신호는 잠정적인 값일 뿐 권위 있는 데이터가 아닙니다. 비즈니스는 검증된 입력(예: 배송 주소)이 없을 때 이 값을 사용해야 하며(SHOULD), 더 신뢰도 높은 신호(인증된 계정, 위험 탐지)나 규제상 제약(수출 통제)과 맞지 않으면 무시하거나 순위를 낮출 수 있습니다(MAY). 자격 판단과 정책 적용은 반드시 체크아웃 시점에 구속력 있는 거래 데이터로 이루어져야 합니다(MUST).
+
+비즈니스는 컨텍스트 신호를 바탕으로 통화를 포함한 시장 배정을 결정합니다. 가격 필터 값은 `context.currency` 기준이며, 표시 통화가 다르면 비즈니스는 적용 전에 변환해야 합니다(SHOULD)([가격 필터](https://dev-jonghoonpark.github.io/ucp-ko/draft/draft/specification/shopping/catalog/search/#price-filter) 참고). 응답 가격에는 결정 결과를 확인할 수 있도록 통화 코드가 명시됩니다.
+
+`context.eligibility` 주장이 있고 비즈니스가 이를 수락했다면, 취소선 표시를 위해 `price` / `list_price`를 직접 조정할 수 있으며(**MAY**), `code: "eligibility_benefit"`이 담긴 `messages`로 조정 내용이 어떤 주장에 따른 것인지 밝힐 수 있습니다(**MAY**).
+
+| 이름            | 타입                                                                                             | 필수 여부 | 설명                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| --------------- | ------------------------------------------------------------------------------------------------ | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| address_country | string                                                                                           | Optional  | The country, as a 2-letter ISO 3166-1 alpha-2 code (e.g. "US"). A 3-letter alpha-3 code or full country name MAY also be used.                                                                                                                                                                                                                                                                                                                                     |
+| address_region  | string                                                                                           | Optional  | The first-level administrative region within the country (e.g. a state or province such as California).                                                                                                                                                                                                                                                                                                                                                            |
+| postal_code     | string                                                                                           | Optional  | The postal code (e.g. "94043").                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| location        | string                                                                                           | Optional  | Stable, opaque identifier for a Location in the Business's namespace. This provisional, non-binding hint is distinct from the Buyer's locality. The operation specification or an active capability/extension defines its effects. A common example in retail shopping is the default home store ID selected and saved by the user when purchasing groceries.                                                                                                      |
+| intent          | string                                                                                           | Optional  | Background context describing buyer's intent (e.g., 'looking for a gift under $50', 'need something durable for outdoor use'). Informs relevance, recommendations, and personalization.                                                                                                                                                                                                                                                                            |
+| language        | string                                                                                           | Optional  | Preferred language for content. Use IETF BCP 47 language tags (e.g., 'en', 'fr-CA', 'zh-Hans'). For REST, equivalent to Accept-Language header—platforms SHOULD fall back to Accept-Language when this field is absent; when provided, overrides Accept-Language. Businesses MAY return content in a different language if unavailable.                                                                                                                            |
+| currency        | string                                                                                           | Optional  | Preferred currency (ISO 4217, e.g., 'EUR', 'USD'). Businesses determine presentment currency from context and authoritative signals; this hint MAY inform selection in multi-currency markets. Also serves as the denomination for price filter values — platforms SHOULD include this field when sending price filters. Response prices include explicit currency confirming the resolution.                                                                      |
+| eligibility     | Array\[[Reverse Domain Name](/ucp-ko/draft/draft/specification/reference/#reverse-domain-name)\] | Optional  | Buyer claims about eligible benefits such as loyalty membership, payment instrument perks, and similar. Recognized claims MAY inform the Business response (e.g., member-only product availability, adjusted pricing in catalog, provisional discounts at cart or checkout). Businesses MUST ignore unrecognized values without error. Values MUST use reverse-domain naming (e.g., 'com.example.loyalty_gold', 'org.school.student') and MUST be non-identifying. |
+| payment         | Array[object]                                                                                    | Optional  | Buyer-preferred payment handlers in priority order (most preferred first). Each entry names a handler advertised in the Business profile's `ucp.payment_handlers`, optionally narrowed to preferred instrument types. The Business SHOULD use it to preselect or prioritize the handler (and type, when given) and MAY ignore unavailable or ineligible entries; unrecognized values MUST be ignored without error.                                                |
+
+### 신호
+
+인가와 악용 방지에 도움이 되도록 플랫폼이 제공하는 환경 데이터입니다. 신호 값은 구매자가 주장한 내용이어서는 안 됩니다(MUST NOT). 자세한 내용과 개인정보 보호 요건은 [신호](https://dev-jonghoonpark.github.io/ucp-ko/draft/draft/specification/overview/#signals)를 참고하세요.
+
+| 이름               | 타입   | 필수 여부 | 설명                                           |
+| ------------------ | ------ | --------- | ---------------------------------------------- |
+| dev.ucp.buyer_ip   | string | Optional  | Client's IP address (IPv4 or IPv6).            |
+| dev.ucp.user_agent | string | Optional  | Client's HTTP User-Agent header or equivalent. |
+
+### 어트리뷰션
+
+플랫폼이 제공하는 유입 및 전환 이벤트 컨텍스트로, 플랫폼이 전달하는 캠페인 ID, 클릭 식별자, 소스/매체 표식 등이 해당합니다. 자세한 내용과 동의 요건은 [어트리뷰션](https://dev-jonghoonpark.github.io/ucp-ko/draft/draft/specification/overview/#attribution)을 참고하세요.
+
+Platform-emitted referral and conversion-event context — campaign identifiers, click IDs, source/medium markers, etc. The same parameters platforms communicate via URL query parameters in browser-based flows.
+
+### 상품
+
+판매 가능한 항목을 나타내는 카탈로그 항목으로, 구매 가능한 변형이 하나 이상 있습니다.
+
+`media`와 `variants`는 순서가 있는 배열입니다. 비즈니스는 가장 관련성 높은 변형과 미디어 항목을 맨 앞에 반환해야 합니다(**SHOULD**). 조회에서는 기본값을, 검색에서는 쿼리와 컨텍스트에 가장 잘 맞는 항목을 앞에 둡니다. 플랫폼은 자신이 표시하는 첫 번째 미디어 항목을 대표 항목으로 취급해야 합니다(**SHOULD**).
+
+| 이름             | 타입                                                                                   | 필수 여부    | 설명                                                                                             |
+| ---------------- | -------------------------------------------------------------------------------------- | ------------ | ------------------------------------------------------------------------------------------------ |
+| id               | string                                                                                 | **Required** | Global ID (GID) uniquely identifying this product.                                               |
+| handle           | string                                                                                 | Optional     | URL-safe slug for SEO-friendly URLs (e.g., 'blue-runner-pro'). Use id for stable API references. |
+| title            | string                                                                                 | **Required** | Product title.                                                                                   |
+| description      | [Description](/ucp-ko/draft/draft/specification/reference/#description)                | **Required** | Product description in one or more formats.                                                      |
+| url              | string                                                                                 | Optional     | Canonical product page URL.                                                                      |
+| categories       | Array\[[Category](/ucp-ko/draft/draft/specification/reference/#category)\]             | Optional     | Product categories with optional taxonomy identifiers.                                           |
+| price_range      | [Price Range](/ucp-ko/draft/draft/specification/reference/#price-range)                | **Required** | Price range across all variants.                                                                 |
+| list_price_range | [Price Range](/ucp-ko/draft/draft/specification/reference/#price-range)                | Optional     | List price range before discounts (for strikethrough display).                                   |
+| media            | Array\[[Media](/ucp-ko/draft/draft/specification/reference/#media)\]                   | Optional     | Product media (images, videos, 3D models). First item is the featured media for listings.        |
+| options          | Array\[[Product Option](/ucp-ko/draft/draft/specification/reference/#product-option)\] | Optional     | Product options (Size, Color, etc.).                                                             |
+| variants         | Array\[[Variant](/ucp-ko/draft/draft/specification/reference/#variant)\]               | **Required** | Purchasable variants of this product. First item is the featured variant for listings.           |
+| rating           | [Rating](/ucp-ko/draft/draft/specification/reference/#rating)                          | Optional     | Aggregate product rating.                                                                        |
+| tags             | Array[string]                                                                          | Optional     | Product tags for categorization and search.                                                      |
+| metadata         | object                                                                                 | Optional     | Business-defined custom data extending the standard product model.                               |
+
+### 변형
+
+특정 옵션 선택, 가격, 재고 상태가 정해진 구매 가능한 항목입니다.
+
+조회 응답의 각 변형에는 대응 관계를 파악할 수 있도록 `inputs` 배열이 있습니다. 어떤 요청 식별자가 이 변형으로 해석되었는지, 일치 방식이 `exact`였는지 `featured`(서버가 선택)였는지가 담깁니다. 자세한 내용은 [클라이언트 대응](https://dev-jonghoonpark.github.io/ucp-ko/draft/draft/specification/shopping/catalog/lookup/#client-correlation)을 참고하세요.
+
+`media`는 순서가 있는 배열입니다. 비즈니스는 변형의 대표 미디어 항목을 첫 번째 요소로 반환해야 합니다(**SHOULD**). 플랫폼은 자신이 표시하는 첫 번째 미디어 항목을 대표 항목으로 취급해야 합니다(**SHOULD**).
+
+| 이름          | 타입                                                                                     | 필수 여부    | 설명                                                                                                                                                                                                                                                                                                                                                                      |
+| ------------- | ---------------------------------------------------------------------------------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| id            | string                                                                                   | **Required** | Global ID (GID) uniquely identifying this variant. Used as item.id in checkout.                                                                                                                                                                                                                                                                                           |
+| sku           | string                                                                                   | Optional     | Business-assigned identifier for inventory and fulfillment.                                                                                                                                                                                                                                                                                                               |
+| barcodes      | Array[object]                                                                            | Optional     | Industry-standard product identifiers for cross-reference and correlation.                                                                                                                                                                                                                                                                                                |
+| handle        | string                                                                                   | Optional     | URL-safe variant handle/slug.                                                                                                                                                                                                                                                                                                                                             |
+| title         | string                                                                                   | **Required** | Variant display title (e.g., 'Blue / Large').                                                                                                                                                                                                                                                                                                                             |
+| description   | [Description](/ucp-ko/draft/draft/specification/reference/#description)                  | **Required** | Variant description in one or more formats.                                                                                                                                                                                                                                                                                                                               |
+| url           | string                                                                                   | Optional     | Canonical variant page URL.                                                                                                                                                                                                                                                                                                                                               |
+| categories    | Array\[[Category](/ucp-ko/draft/draft/specification/reference/#category)\]               | Optional     | Variant categories with optional taxonomy identifiers.                                                                                                                                                                                                                                                                                                                    |
+| price         | [Price](/ucp-ko/draft/draft/specification/reference/#price)                              | **Required** | Current selling price. Price is the amount per one whole `quantity_unit.unit` (for example, per lb or per hour); when `quantity_unit` is absent, it is per `each`. Line total is `price × quantity × 10^-scale`, computed and rounded once by the Business; `totals` remain authoritative.                                                                                |
+| quantity_unit | [Quantity Unit](/ucp-ko/draft/draft/specification/reference/#quantity-unit)              | Optional     | Sale basis this variant's `quantity` is denominated in. The default sale basis is `each`, whose machine identity is (`C62`, 0); `C62` is the UN/CEFACT Rec20 code for one/each. An absent catalog descriptor encodes that default. An `increment` advertises the ordering granularity in steps (for example, `scale` 2 with `increment` 25 sells in 0.25-unit multiples). |
+| list_price    | [Price](/ucp-ko/draft/draft/specification/reference/#price)                              | Optional     | List price before discounts (for strikethrough display).                                                                                                                                                                                                                                                                                                                  |
+| unit_price    | [Unit Price](/ucp-ko/draft/draft/specification/reference/#unit-price)                    | Optional     | Price per standard unit of measurement, for shelf-style comparison display. MAY be omitted when unit pricing does not apply.                                                                                                                                                                                                                                              |
+| availability  | [Availability](/ucp-ko/draft/draft/specification/reference/#availability)                | Optional     | Variant availability for purchase.                                                                                                                                                                                                                                                                                                                                        |
+| options       | Array\[[Selected Option](/ucp-ko/draft/draft/specification/reference/#selected-option)\] | Optional     | Option values that define this variant (e.g., Color: Blue, Size: Large).                                                                                                                                                                                                                                                                                                  |
+| media         | Array\[[Media](/ucp-ko/draft/draft/specification/reference/#media)\]                     | Optional     | Variant media (images, videos, 3D models). First item is the featured media for listings.                                                                                                                                                                                                                                                                                 |
+| rating        | [Rating](/ucp-ko/draft/draft/specification/reference/#rating)                            | Optional     | Variant rating.                                                                                                                                                                                                                                                                                                                                                           |
+| tags          | Array[string]                                                                            | Optional     | Variant tags for categorization and search.                                                                                                                                                                                                                                                                                                                               |
+| metadata      | object                                                                                   | Optional     | Business-defined custom data extending the standard variant model.                                                                                                                                                                                                                                                                                                        |
+| seller        | object                                                                                   | Optional     | Optional seller context for this variant.                                                                                                                                                                                                                                                                                                                                 |
+
+### 가격
+
+| 이름     | 타입                                                          | 필수 여부    | 설명                                                  |
+| -------- | ------------------------------------------------------------- | ------------ | ----------------------------------------------------- |
+| amount   | [Amount](/ucp-ko/draft/draft/specification/reference/#amount) | **Required** | Amount in ISO 4217 minor units. Use 0 for free items. |
+| currency | string                                                        | **Required** | ISO 4217 currency code (e.g., 'USD', 'EUR', 'GBP').   |
+
+### 가격 범위
+
+| 이름 | 타입                                                        | 필수 여부    | 설명                        |
+| ---- | ----------------------------------------------------------- | ------------ | --------------------------- |
+| min  | [Price](/ucp-ko/draft/draft/specification/reference/#price) | **Required** | Minimum price in the range. |
+| max  | [Price](/ucp-ko/draft/draft/specification/reference/#price) | **Required** | Maximum price in the range. |
+
+### 미디어
+
+상품이나 변형에 속한 하나의 논리적 미디어 항목으로, 이미지, 동영상, 3D 모델 등이 있습니다. 미디어 항목은 플랫폼이 렌더링하는 리소스입니다. `url`은 항목을 식별하고, `sources`는 대체 렌디션을 나열합니다. `preview`는 플랫폼이 항목 대신 또는 항목보다 먼저 보여 줄 수 있는 정지 이미지이고, `width`와 `height`는 고유 픽셀 크기입니다. `preview`와 각 `sources` 항목의 `width`와 `height`는 해당 정지 이미지나 렌디션의 픽셀 크기입니다.
+
+`type`은 개방형 문자열이며, 잘 알려진 값으로 `image`, `video`, `external_video`, `model_3d` 네 가지가 있습니다. 플랫폼은 미디어 항목의 `type`을 인식하지 못한다는 이유로 상품이나 응답을 거부해서는 안 됩니다(**MUST NOT**). 그런 항목은 `preview`와 `name`으로 표시하거나 생략할 수 있습니다(**MAY**). `type`을 인식하면 타입에 맞게 표시할 수 있다는 점이 다를 뿐입니다.
+
+플랫폼은 `https` 스킴을 사용하지 않는 미디어 URL의 로드나 임베드를 거부할 수 있습니다(**MAY**).
+
+플랫폼은 `mime_type`과 크기를 기준으로 `sources`에서 렌디션을 고릅니다. `sources`를 제공하는 비즈니스는 `url`에 해당하는 렌디션도 포함해야 합니다(**SHOULD**).
+
+| 이름     | 타입                                                                               | 필수 여부    | 설명                                                                                                                                                                                                                                                               |
+| -------- | ---------------------------------------------------------------------------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| type     | string                                                                             | **Required** | Media type. Well-known values: `image`, `video`, `external_video`, `model_3d`. A Platform MUST NOT reject the containing object for an unrecognized value; it MAY present the item from `preview` and `name`, or omit it.                                          |
+| url      | string                                                                             | **Required** | URL of the media resource the Platform renders; interpretation is specialized per `type`.                                                                                                                                                                          |
+| name     | string                                                                             | Optional     | Human-readable title or label for the media, distinct from `alt_text` (accessibility text). Often present for `video` and `model_3d`.                                                                                                                              |
+| alt_text | string                                                                             | Optional     | Accessibility text describing the media.                                                                                                                                                                                                                           |
+| width    | integer                                                                            | Optional     | Intrinsic pixel width of the media item, for image and video types; a rendition's own dimensions are on its `sources` entry.                                                                                                                                       |
+| height   | integer                                                                            | Optional     | Intrinsic pixel height of the media item, for image and video types; a rendition's own dimensions are on its `sources` entry.                                                                                                                                      |
+| duration | integer                                                                            | Optional     | Duration in seconds, for time-based media such as `video` and `external_video`.                                                                                                                                                                                    |
+| preview  | object                                                                             | Optional     | Poster/thumbnail still the Platform renders before or instead of the primary resource. A Business SHOULD provide it for `video`, `external_video`, and `model_3d` unless no suitable still exists, and MAY provide it for `image` as a low-resolution placeholder. |
+| sources  | Array\[[Media Source](/ucp-ko/draft/draft/specification/reference/#media-source)\] | Optional     | Alternate renditions of the resource at `url`. The Business SHOULD include the rendition at `url`.                                                                                                                                                                 |
+
+#### 이미지
+
+`url`은 바로 표시할 수 있는 이미지입니다. `sources`가 있으면 해당 이미지의 대체 인코딩과 크기를 나열합니다. 예를 들면 `image/avif`, `image/webp`, `image/jpeg`이나 반응형 레이아웃을 위한 너비별 변형입니다. `sources`에서 고르지 않는 플랫폼은 `url`을 바로 로드하므로, 비즈니스는 `url`을 가장 폭넓게 디코딩할 수 있는 렌디션으로 지정해야 합니다(**SHOULD**).
+
+| 이름    | 타입                                                                               | 필수 여부    | 설명                                                                                                                                                                                    |
+| ------- | ---------------------------------------------------------------------------------- | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| url     | string                                                                             | **Required** | A directly displayable image.                                                                                                                                                           |
+| sources | Array\[[Media Source](/ucp-ko/draft/draft/specification/reference/#media-source)\] | Optional     | Alternate encodings and sizes of the image (e.g. `image/avif`, `image/webp`, `image/jpeg`; width variants for responsive layout). `url` SHOULD be the most broadly decodable rendition. |
+
+#### 동영상
+
+`url`은 동영상의 재생 가능한 렌디션으로, 프로그레시브 파일이거나 적응형 스트리밍 매니페스트입니다. `sources`가 있으면 대체 렌디션과 매니페스트를 나열합니다.
+
+| 이름    | 타입                                                                               | 필수 여부    | 설명                                                                                          |
+| ------- | ---------------------------------------------------------------------------------- | ------------ | --------------------------------------------------------------------------------------------- |
+| url     | string                                                                             | **Required** | A playable rendition of the video: a progressive file or an adaptive-streaming manifest.      |
+| width   | integer                                                                            | Optional     | Intrinsic pixel width of the video; a rendition's own dimensions are on its `sources` entry.  |
+| height  | integer                                                                            | Optional     | Intrinsic pixel height of the video; a rendition's own dimensions are on its `sources` entry. |
+| sources | Array\[[Media Source](/ucp-ko/draft/draft/specification/reference/#media-source)\] | Optional     | Alternate renditions (MP4/WebM) and adaptive manifests (HLS/DASH).                            |
+
+#### 외부 동영상
+
+서드파티 플레이어로 표시하는 동영상입니다. `url`은 플랫폼이 임베드하는 플레이어입니다. 비즈니스가 CDN을 포함한 임의의 오리진에서 파일로 제공하는 동영상은 `video`에 해당합니다. 서드파티 플레이어를 임베드하지 않는 플랫폼은 `preview`를 표시하거나 항목을 생략합니다.
+
+플레이어를 임베드하는 플랫폼은 반드시 플레이어를 플랫폼의 권한과 격리해야 합니다(**MUST**). 플랫폼 자격 증명, 플랫폼 API나 에이전트 도구 접근, 프로토콜 메시징 권한, 호스트 애플리케이션 내비게이션 권한 중 어느 것도 주지 않습니다. 임베드하기 전에 `url`이 userinfo가 없고 플랫폼과 same-site가 아닌 절대 `https` URL이 아니라면, 반드시 항목을 거부해야 합니다(**MUST**). 웹에서 플레이어는 `src`가 `url`인 iframe 하나이며, 샌드박스와 credentialless를 적용하고 플레이어에 필요한 권한만 부여합니다.
+
+```html
+<iframe sandbox="allow-scripts allow-same-origin" allow="fullscreen" credentialless src="https://videos.example.com/embed/123"></iframe>
+```
+
+[Iframe 샌드박스 속성](https://dev-jonghoonpark.github.io/ucp-ko/draft/draft/specification/embedded-protocol/#iframe-sandbox-attributes)과 [Credentialless Iframe](https://dev-jonghoonpark.github.io/ucp-ko/draft/draft/specification/embedded-protocol/#credentialless-iframes)을 참고하세요.
+
+| 이름    | 타입                                                                               | 필수 여부    | 설명                                                                                                                                                 |
+| ------- | ---------------------------------------------------------------------------------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| url     | string                                                                             | **Required** | The third-party player the Platform embeds. A video the Business serves as files from any origin, including a CDN, is `video`, not `external_video`. |
+| sources | Array\[[Media Source](/ucp-ko/draft/draft/specification/reference/#media-source)\] | Optional     | Not used: a video presented through a player has no renditions.                                                                                      |
+
+#### 3D 모델
+
+`url`은 GLB 같은 기본 모델 파일입니다. `sources`가 있으면 glTF, USDZ 같은 대체 형식을 나열합니다.
+
+| 이름    | 타입                                                                               | 필수 여부    | 설명                                                 |
+| ------- | ---------------------------------------------------------------------------------- | ------------ | ---------------------------------------------------- |
+| url     | string                                                                             | **Required** | The primary model file (e.g. GLB).                   |
+| width   | integer                                                                            | Optional     | Not applicable: a 3D model has no pixel dimensions.  |
+| height  | integer                                                                            | Optional     | Not applicable: a 3D model has no pixel dimensions.  |
+| sources | Array\[[Media Source](/ucp-ko/draft/draft/specification/reference/#media-source)\] | Optional     | Alternate file formats of the model (glTF/GLB/USDZ). |
+
+### 상품 옵션
+
+| 이름   | 타입                                                                               | 필수 여부    | 설명                                 |
+| ------ | ---------------------------------------------------------------------------------- | ------------ | ------------------------------------ |
+| name   | string                                                                             | **Required** | Option name (e.g., 'Size', 'Color'). |
+| values | Array\[[Option Value](/ucp-ko/draft/draft/specification/reference/#option-value)\] | **Required** | Available values for this option.    |
+
+### 옵션 값
+
+| 이름  | 타입   | 필수 여부    | 설명                                                                                                                                                  |
+| ----- | ------ | ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| id    | string | Optional     | Optional server-assigned identifier for this option value. When present in a selected_option, the server SHOULD use it for matching instead of label. |
+| label | string | **Required** | Display text for this option value (e.g., 'Small', 'Blue').                                                                                           |
+
+### 선택된 옵션
+
+| 이름  | 타입   | 필수 여부    | 설명                                                                                                                                                    |
+| ----- | ------ | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| name  | string | **Required** | Option name (e.g., 'Size').                                                                                                                             |
+| id    | string | Optional     | Optional option value identifier from option_value.id. When present, the server SHOULD use it for matching; name and label remain required for display. |
+| label | string | **Required** | Selected option label (e.g., 'Large').                                                                                                                  |
+
+### 평점
+
+| 이름      | 타입    | 필수 여부    | 설명                                                       |
+| --------- | ------- | ------------ | ---------------------------------------------------------- |
+| value     | number  | **Required** | Average rating value.                                      |
+| scale_min | number  | Optional     | Minimum value on the rating scale (e.g., 1 for 1-5 stars). |
+| scale_max | number  | **Required** | Maximum value on the rating scale (e.g., 5 for 5-star).    |
+| count     | integer | Optional     | Number of reviews contributing to the rating.              |
+
+### 정책
+
+카탈로그 응답의 상품에 적용되는 정책(반품·환불 조건, 보증 등)입니다. `applies_to`의 JSONPath 대상은 응답 루트를 기준으로 합니다. 검색과 일괄 조회에서는 `$.products[N]`, get_product에서는 `$.product`입니다. 전체 모델은 [정책](https://dev-jonghoonpark.github.io/ucp-ko/draft/draft/specification/overview/#policies)을 참고하세요.
+
+| 이름        | 타입                                                                                    | 필수 여부    | 설명                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| ----------- | --------------------------------------------------------------------------------------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| type        | [Reverse Domain Name](/ucp-ko/draft/draft/specification/reference/#reverse-domain-name) | **Required** | Policy type discriminator. Open reverse-DNS vocabulary. See specification documentation for the registry of well-known policy types. Businesses MAY define custom types in their own domain (e.g., `com.example.policy.price_match`). Platforms MUST tolerate unknown values.                                                                                                                                                                                                                                                                                                                                                                                                      |
+| description | [Description](/ucp-ko/draft/draft/specification/reference/#description)                 | **Required** | Human-readable policy summary in one or more formats (plain, markdown, html). Required on every policy so a platform can present it without understanding any type-specific fields. This is not the buyer-facing disclosure — display is compelled by a `messages[]` warning (see the Policies section).                                                                                                                                                                                                                                                                                                                                                                           |
+| applies_to  | Array[string]                                                                           | Optional     | RFC 9535 JSONPath expressions identifying the nodes this policy applies to, relative to the embedding response root (e.g., `$.line_items[0]` in cart/checkout, `$.products[2]` in catalog). Each target covers the node it names and everything nested under it, so a target on a product also covers its variants. A singular query (RFC 9535 Section 2.3.5.1; name and index selectors only) names a single node; filters, wildcards, and slices match a set. When omitted, the policy applies to the entire response. When policies of the same `type` contest a node, the narrowest target wins and overrides the rest. See the Policies section for how specificity resolves. |
+| url         | string                                                                                  | Optional     | Optional link to the full policy document.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+
+## 액션
+
+카탈로그 검색, 일괄 조회, 성공한 Get Product 응답에는 확장이 정의한 액션(Action)이 포함될 수 있습니다. 카탈로그에서 액션은 해당 타입이 정의하는 효과를 막고 있는 미처리 작업으로, 비즈니스가 어떤 상품을 반환하는지나 플랫폼이 상품을 어떻게 다루는지에 영향을 줄 수 있습니다.
+
+검색, 일괄 조회, 성공한 Get Product는 서로 독립된 카탈로그 작업이며, 각 응답이 상위 리소스의 수명을 공유하지 않습니다. 비즈니스는 서로 다른 응답에서 같은 액션 `id`를 사용할 수 있으며(**MAY**), 값이 같다고 해서 같은 작업을 가리키지는 않습니다. 구체적인 액션 타입 계약에서 자신의 인스턴스에 대해 더 강한 대응 관계를 정의할 수는 있습니다(**MAY**).
+
+검색과 일괄 조회에서 비즈니스는 액션 타입 계약과 자체 정책에 따라, 원래라면 관련 있었을 상품을 하나도 반환하지 않을지, 일부만 반환할지, 모두 반환할지 결정합니다. 메시지에서 액션을 가리켜 응답을 설명할 수 있습니다. 성공한 Get Product에는 여전히 `product`가 포함되며, 기존 에러 응답은 바뀌지 않습니다.
+
+액션을 처리한 뒤 플랫폼은 카탈로그 작업을 새로 수행하며, 그 뒤의 비즈니스 응답이 권위를 가집니다. 카탈로그는 액션의 수명 주기, 폴링, 재개 동작을 정의하지 않습니다. 구체적인 액션 타입 계약에서 자신의 인스턴스 처리에 관한 그런 동작을 정의할 수 있습니다(**MAY**). 공통 형태와 규칙은 [개요 — 액션](https://dev-jonghoonpark.github.io/ucp-ko/draft/draft/specification/overview/#actions)에 정의되어 있습니다.
+
+예를 들어 다음 검색 응답은 상품을 반환하지 않고, 연령 확인이 결과에 영향을 줄 수 있다고 설명합니다.
+
+```json
+{
+  "ucp": {...},
+  "products": [],
+  "actions": {
+    "com.example.identity.age_verification": [
+      {
+        "id": "age-check-1"
+      }
+    ]
+  },
+  "messages": [
+    {
+      "type": "info",
+      "code": "age_verification_required",
+      "content": "Complete age verification to see age-restricted products matching your search.",
+      "path": "$.actions['com.example.identity.age_verification'][0]"
+    }
+  ]
+}
+```
+
+상품을 하나도 반환하지 않는 것은 비즈니스가 고를 수 있는 방법 중 하나일 뿐이며, 일부 또는 전체 결과를 반환해도 명세에 부합합니다. 액션 타입과 메시지 코드는 예시이며, 카탈로그는 둘 다 정의하지 않습니다.
+
+## 메시지와 에러 처리
+
+모든 카탈로그 응답에는 선택 사항인 `messages` 배열이 있어, 비즈니스가 에러, 경고, 정보성 알림의 맥락을 전달할 수 있습니다.
+
+### 메시지 타입
+
+메시지는 비즈니스의 처리 결과를 전달하고 맥락을 제공합니다.
+
+| 타입      | 사용 시점                      | 예시 코드                                        |
+| --------- | ------------------------------ | ------------------------------------------------ |
+| `error`   | 비즈니스 수준 에러             | `NOT_FOUND`, `OUT_OF_STOCK`, `REGION_RESTRICTED` |
+| `warning` | 구매에 영향을 주는 중요한 조건 | `DELAYED_FULFILLMENT`, `FINAL_SALE`              |
+| `info`    | 문제없이 덧붙이는 추가 맥락    | `PROMOTIONAL_PRICING`, `LIMITED_AVAILABILITY`    |
+
+`presentation: "disclosure"`가 있는 경고에는 플랫폼이 숨기거나 닫아서는 안 되는 고지(예: 알레르기 유발 성분 표시, 안전 경고)가 담깁니다. 전체 렌더링 계약은 [경고 표시](https://dev-jonghoonpark.github.io/ucp-ko/draft/draft/specification/shopping/checkout/#warning-presentation)를 참고하세요.
+
+**참고**: 대부분의 카탈로그 에러는 `severity: "recoverable"`을 사용하며, 에이전트가 이를 프로그램으로 처리합니다(재시도, 사용자에게 알림, 대안 제시). `get_product`는 식별자를 해석할 수 없으면 `severity: "unrecoverable"`을 반환하며, 이때 에이전트는 같은 `id`로 재시도해서는 안 됩니다(MUST NOT)([REST](https://dev-jonghoonpark.github.io/ucp-ko/draft/draft/specification/shopping/catalog/rest/#product-not-found)와 [MCP](https://dev-jonghoonpark.github.io/ucp-ko/draft/draft/specification/shopping/catalog/mcp/#product-not-found) 예시 참고).
+
+#### 메시지 (에러)
+
+| 이름         | 타입                                                                  | 필수 여부    | 설명                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| ------------ | --------------------------------------------------------------------- | ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| type         | string                                                                | **Required** | **Constant = error**. Message type discriminator.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| code         | [Error Code](/ucp-ko/draft/draft/specification/reference/#error-code) | **Required** | Error code identifying the type of error. Standard errors are defined in capability specifications (see examples) and have standardized semantics; freeform codes are permitted.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| path         | string                                                                | Optional     | RFC 9535 JSONPath to the component the message refers to (e.g., $.line_items[0]).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| content_type | string                                                                | Optional     | Content format, default = plain. **Enum:** `plain`, `markdown`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| content      | string                                                                | **Required** | Human-readable message.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| severity     | string                                                                | **Required** | Reflects the resource state and recommended action. 'recoverable': platform can resolve the condition in band, for example by modifying inputs or processing a related Action, and submit a new operation when needed. 'requires_buyer_input': merchant requires information their API doesn't support collecting programmatically (checkout incomplete). 'requires_buyer_review': buyer must authorize before order placement due to policy, regulatory, or entitlement rules. 'unrecoverable': no valid resource exists to act on, retry with new resource or inputs. Errors with 'requires\_*' severity contribute to 'status: requires_escalation'.* *Enum:*\* `recoverable`, `requires_buyer_input`, `requires_buyer_review`, `unrecoverable` |
+
+#### 메시지 (경고)
+
+| 이름         | 타입                                                                      | 필수 여부    | 설명                                                                                                                                                                                                                                                |
+| ------------ | ------------------------------------------------------------------------- | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| type         | string                                                                    | **Required** | **Constant = warning**. Message type discriminator.                                                                                                                                                                                                 |
+| path         | string                                                                    | Optional     | RFC 9535 JSONPath to the component the message refers to (e.g., $.line_items[0]).                                                                                                                                                                   |
+| code         | [Warning Code](/ucp-ko/draft/draft/specification/reference/#warning-code) | **Required** | Warning code identifying the type of warning. Standard codes are defined in capability specifications (see examples) and have standardized semantics; freeform codes are permitted.                                                                 |
+| content      | string                                                                    | **Required** | Human-readable warning message that MUST be displayed.                                                                                                                                                                                              |
+| content_type | string                                                                    | Optional     | Content format, default = plain. **Enum:** `plain`, `markdown`                                                                                                                                                                                      |
+| presentation | string                                                                    | Optional     | Rendering contract for this warning. 'notice' (default): platform MUST display, MAY dismiss. 'disclosure': platform MUST display in proximity to the path-referenced component, MUST NOT hide or auto-dismiss. See specification for full contract. |
+| image_url    | string                                                                    | Optional     | URL to a required visual element (e.g., warning symbol, energy class label).                                                                                                                                                                        |
+| url          | string                                                                    | Optional     | Reference URL for more information (e.g., regulatory site, registry entry, policy page).                                                                                                                                                            |
+
+#### 메시지 (정보)
+
+| 이름         | 타입                                                                | 필수 여부    | 설명                                                                                                                                                                                           |
+| ------------ | ------------------------------------------------------------------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| type         | string                                                              | **Required** | **Constant = info**. Message type discriminator.                                                                                                                                               |
+| path         | string                                                              | Optional     | RFC 9535 JSONPath to the component the message refers to (e.g., $.line_items[0]).                                                                                                              |
+| code         | [Info Code](/ucp-ko/draft/draft/specification/reference/#info-code) | Optional     | Info code identifying the type of informational message. Standard codes are defined in capability specifications (see examples) and have standardized semantics; freeform codes are permitted. |
+| content_type | string                                                              | Optional     | Content format, default = plain. **Enum:** `plain`, `markdown`                                                                                                                                 |
+| content      | string                                                              | **Required** | Human-readable message.                                                                                                                                                                        |
+
+### 일반적인 시나리오
+
+#### 빈 검색 결과
+
+검색 결과가 없으면 메시지 없이 빈 배열을 반환합니다.
+
+```json
+{
+  "ucp": {...},
+  "products": []
+}
+```
+
+이는 에러가 아닙니다. 쿼리는 유효했지만 결과가 없었을 뿐입니다.
+
+#### 이월 주문 경고
+
+상품은 구매할 수 있지만 풀필먼트가 지연되는 경우, 경고 메시지와 함께 상품을 반환합니다. 특정 변형을 가리키려면 `path` 필드를 사용합니다.
+
+```json
+{
+  "ucp": {...},
+  "products": [
+    {
+      "id": "prod_xyz789",
+      "title": "Professional Chef Knife Set",
+      "description": { "plain": "Complete professional knife collection." },
+      "price_range": {
+        "min": { "amount": 29900, "currency": "USD" },
+        "max": { "amount": 29900, "currency": "USD" }
+      },
+      "variants": [
+        {
+          "id": "var_abc",
+          "title": "12-piece Set",
+          "description": { "plain": "Complete professional knife collection." },
+          "price": { "amount": 29900, "currency": "USD" },
+          "availability": { "available": true }
+        }
+      ]
+    }
+  ],
+  "messages": [
+    {
+      "type": "warning",
+      "code": "delayed_fulfillment",
+      "path": "$.products[0].variants[0]",
+      "content": "12-piece set on backorder, ships in 2-3 weeks"
+    }
+  ]
+}
+```
+
+에이전트는 해당 옵션을 보여 주면서 사용자에게 지연 사실을 알릴 수 있습니다. `path` 필드는 RFC 9535 JSONPath로 특정 구성 요소를 가리킵니다.
+
+#### 식별자를 찾을 수 없음
+
+요청한 식별자가 존재하지 않아도, 찾은 상품(있다면)과 함께 성공으로 반환합니다. 응답에 찾지 못한 식별자를 알리는 정보성 메시지를 포함할 수 있습니다(MAY).
+
+```json
+{
+  "ucp": {...},
+  "products": [],
+  "messages": [
+    {
+      "type": "info",
+      "code": "not_found",
+      "content": "prod_invalid"
+    }
+  ]
+}
+```
+
+에이전트는 각 변형의 `inputs` 배열로 결과의 대응 관계를 파악합니다. [클라이언트 대응](https://dev-jonghoonpark.github.io/ucp-ko/draft/draft/specification/shopping/catalog/lookup/#client-correlation)을 참고하세요.
+
+#### 상품 고지
+
+상품에 고지(예: 알레르기 유발 성분 안내, 안전 경고)가 필요하면 `presentation: "disclosure"`가 있는 경고로 반환합니다. `path` 필드는 응답에서 관련 구성 요소를 가리키며, 상품을 가리키면 고지가 그 상품의 모든 변형에 적용됩니다.
+
+```json
+{
+  "ucp": {...},
+  "products": [
+    {
+      "id": "prod_nut_butter",
+      "title": "Artisan Nut Butter Collection",
+      "description": { "plain": "Assorted artisan nut butters." },
+      "price_range": {
+        "min": { "amount": 1299, "currency": "USD" },
+        "max": { "amount": 1499, "currency": "USD" }
+      },
+      "variants": [
+        {
+          "id": "var_almond",
+          "title": "Almond Butter",
+          "description": { "plain": "Smooth almond butter." },
+          "price": { "amount": 1299, "currency": "USD" },
+          "availability": { "available": true }
+        },
+        {
+          "id": "var_cashew",
+          "title": "Cashew Butter",
+          "description": { "plain": "Creamy cashew butter." },
+          "price": { "amount": 1499, "currency": "USD" },
+          "availability": { "available": true }
+        }
+      ]
+    }
+  ],
+  "messages": [
+    {
+      "type": "warning",
+      "code": "allergens",
+      "path": "$.products[0]",
+      "content": "**Contains: tree nuts.** Produced in a facility that also processes peanuts, milk, and soy.",
+      "content_type": "markdown",
+      "presentation": "disclosure",
+      "image_url": "https://merchant.com/allergen-tree-nuts.svg",
+      "url": "https://merchant.com/allergen-info"
+    }
+  ]
+}
+```
+
+전체 렌더링 계약은 [경고 표시](https://dev-jonghoonpark.github.io/ucp-ko/draft/draft/specification/shopping/checkout/#warning-presentation)를 참고하세요.
+
+## 스코프
+
+카탈로그 검색과 카탈로그 조회 기능은 사용자 인증 접근을 위해 다음과 같은 잘 알려진 스코프를 정의합니다.
+
+| 스코프                                 | 설명                                                                                             |
+| -------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `dev.ucp.shopping.catalog.search:read` | 인증된 사용자를 대신해 검색합니다. 개인화된 결과, 회원 가격, 접근이 제한된 재고 등이 해당합니다. |
+| `dev.ucp.shopping.catalog.lookup:read` | 인증된 사용자를 대신해 조회합니다. 특정 상품의 개인화된 가격이나 재고 상태 등이 해당합니다.      |
+
+스코프 선언과 도출, 사용자 정의 스코프로 이 집합을 확장하는 규칙은 [신원 연결 — 스코프](https://dev-jonghoonpark.github.io/ucp-ko/draft/draft/specification/common/identity-linking/#scopes)에 정의되어 있습니다.
+
+## 전송 바인딩
+
+위 기능은 다음 전송 프로토콜에 바인딩됩니다.
+
+- [REST 바인딩](https://dev-jonghoonpark.github.io/ucp-ko/draft/draft/specification/shopping/catalog/rest/index.md): RESTful API 매핑
+- [MCP 바인딩](https://dev-jonghoonpark.github.io/ucp-ko/draft/draft/specification/shopping/catalog/mcp/index.md): JSON-RPC 기반 Model Context Protocol 매핑
