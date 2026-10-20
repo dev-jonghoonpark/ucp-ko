@@ -14,29 +14,28 @@
    limitations under the License.
 -->
 
-# Discount Extension { #discount-extension }
+# 할인 확장 { #discount-extension }
 
-## Overview { #overview }
+## 개요 { #overview }
 
-Discount extension allows businesses to indicate that they support discount
-codes on cart and checkout sessions, and specifies how the discount codes are
-to be shared between the platform and the business.
+할인 확장을 사용하면 비즈니스가 장바구니와 체크아웃 세션에서 할인 코드를 지원한다고
+알릴 수 있습니다. 이 확장은 플랫폼과 비즈니스가 할인 코드를 주고받는 방식도 명세합니다.
 
-**Key features:**
+**주요 특징:**
 
-- Submit one or more discount codes
-- Receive applied discounts with human-readable titles and amounts
-- Rejected codes communicated via `messages[]` with detailed error codes
-- Automatic discounts surfaced alongside code-based discounts
+- 하나 이상의 할인 코드 제출
+- 사람이 읽을 수 있는 제목과 금액이 포함된 적용 할인 수신
+- 거부된 코드는 상세 에러 코드와 함께 `messages[]`로 전달
+- 코드 기반 할인과 함께 자동 할인도 노출
 
-**Dependencies:**
+**의존성:**
 
-- Cart Capability or Checkout Capability
+- 장바구니 기능 또는 체크아웃 기능
 
-## Discovery { #discovery }
+## 디스커버리 { #discovery }
 
-Businesses advertise discount support in their profile. The capability can
-extend cart, checkout, or both:
+비즈니스는 프로필에서 할인 지원 여부를 알립니다. 이 기능은 장바구니, 체크아웃 또는
+둘 다를 확장할 수 있습니다.
 
 <!-- ucp:example schema=profile def=business_schema extract=$.ucp.capabilities target=$.ucp.capabilities -->
 ```json
@@ -57,47 +56,45 @@ extend cart, checkout, or both:
 }
 ```
 
-Businesses MAY advertise discount support for cart only, checkout only, or
-both. Platforms SHOULD check which resources are extended before submitting
-discount codes.
+비즈니스는 장바구니만, 체크아웃만, 또는 둘 다에 할인 지원을 알릴 수
+있습니다(MAY). 플랫폼은 할인 코드를 제출하기 전에 어떤 리소스가 확장되었는지 확인해야
+합니다(SHOULD).
 
-## Schema { #schema }
+## 스키마 { #schema }
 
-When this capability is active, cart and/or checkout are extended with a
-`discounts` object.
+이 기능이 활성화되면 장바구니나 체크아웃(또는 둘 다)에 `discounts` 객체가 추가됩니다.
 
-### Discounts Object { #discounts-object }
+### Discounts 객체 { #discounts-object }
 
 {{ extension_schema_fields('discount.json#/$defs/discounts_object', 'shopping/extensions/discount') }}
 
-### Applied Discount { #applied-discount }
+### 적용된 할인 { #applied-discount }
 
 {{ extension_schema_fields('discount.json#/$defs/applied_discount', 'shopping/extensions/discount') }}
 
-### Allocation { #allocation }
+### 배분 { #allocation }
 
 {{ extension_schema_fields('discount.json#/$defs/allocation', 'shopping/extensions/discount') }}
 
-## Allocation Details { #allocation-details }
+## 배분 세부 사항 { #allocation-details }
 
-The `applied` array explains how discounts were calculated and distributed.
-The `applied[].amount` describes the magnitude of the applied discount (always
-positive); the corresponding `totals[]` entry amount represents its signed
-effect on the receipt (negative for discounts).
+`applied` 배열은 할인이 어떻게 계산되고 배분되었는지 설명합니다.
+`applied[].amount`는 적용된 할인의 크기이고(항상 양수), 이에 대응하는
+`totals[]` 항목의 금액은 영수증에 반영되는 부호 있는 값입니다(할인은 음수).
 
-### Allocation Method { #allocation-method }
+### 배분 방식 { #allocation-method }
 
-The `method` field indicates how the discount was calculated:
+`method` 필드는 할인을 계산한 방식을 나타냅니다.
 
-| Method   | Meaning                                 | Example                                          |
+| 방식 | 의미 | 예시 |
 | -------- | --------------------------------------- | ------------------------------------------------ |
-| `each`   | Applied independently per eligible item | "10% off each item" → 10% × item price           |
-| `across` | Split proportionally by value           | "$10 off order" → $6 to $60 item, $4 to $40 item |
+| `each`   | 대상 상품마다 독립적으로 적용 | "각 상품 10% 할인" → 10% × 상품 가격 |
+| `across` | 금액에 비례하여 분할 | "주문 $10 할인" → $60 상품에 $6, $40 상품에 $4 |
 
-### Stacking Order { #stacking-order }
+### 중복 적용 순서 { #stacking-order }
 
-When multiple discounts are applied, `priority` indicates the calculation order.
-Lower numbers are applied first:
+여러 할인이 적용될 때는 `priority`가 계산 순서를 나타냅니다.
+숫자가 작을수록 먼저 적용됩니다.
 
 ```text
 Cart: $100
@@ -105,52 +102,50 @@ Discount A (priority: 1): 20% off → $100 × 0.8 = $80
 Discount B (priority: 2): $10 off → $80 - $10 = $70
 ```
 
-The order matters because percentage discounts compound differently depending on
-when they're applied.
+퍼센트 할인은 언제 적용하느냐에 따라 누적 결과가 달라지므로 순서가 중요합니다.
 
-### Allocations Array { #allocations-array }
+### Allocations 배열 { #allocations-array }
 
-The `allocations` array breaks down where each discount dollar landed, using
-JSONPath to identify targets:
+`allocations` 배열은 JSONPath로 대상을 지정해 할인 금액이 각각 어디에
+반영되었는지 세분화해 보여 줍니다.
 
-| Path Pattern                         | Target            |
+| 경로 패턴 | 대상 |
 | ------------------------------------ | ----------------- |
-| `$.line_items[0]`                    | First line item   |
-| `$.line_items[1]`                    | Second line item  |
-| `$.totals[?@.type == "fulfillment"]` | Fulfillment total |
+| `$.line_items[0]`                    | 첫 번째 라인 아이템 |
+| `$.line_items[1]`                    | 두 번째 라인 아이템 |
+| `$.totals[?@.type == "fulfillment"]` | 풀필먼트 합계 |
 
-This enables platforms to explain exactly how much each discount contributed to
-each line item, even when multiple discounts stack.
+덕분에 플랫폼은 여러 할인이 중복 적용되더라도 각 할인이 라인 아이템마다
+얼마씩 기여했는지 정확히 설명할 수 있습니다.
 
-**Invariant:** Sum of `allocations[].amount` equals `applied_discount.amount`.
+**불변 조건:** `allocations[].amount`의 합은 `applied_discount.amount`와 같습니다.
 
-## Operations { #operations }
+## 작업 { #operations }
 
-Discount codes are submitted via standard cart or checkout create/update
-operations. The same semantics apply to both resources.
+할인 코드는 표준 장바구니 또는 체크아웃 생성/수정 작업으로 제출합니다. 두 리소스
+모두 같은 의미 체계를 따릅니다.
 
-**Request behavior:**
+**요청 동작:**
 
-- **Replacement semantics**: Submitting `discounts.codes` replaces any previously submitted codes
-- **Clear codes**: Send empty array `"codes": []` to remove all discount codes
-- **Case-insensitive**: Codes are matched case-insensitively by business
+- **교체 의미 체계**: `discounts.codes`를 제출하면 이전에 제출한 코드를 모두 대체합니다.
+- **코드 초기화**: 빈 배열 `"codes": []`를 보내면 모든 할인 코드가 제거됩니다.
+- **대소문자 무시**: 비즈니스는 대소문자를 구분하지 않고 코드를 매칭합니다.
 
-**Response behavior:**
+**응답 동작:**
 
-- `discounts.applied` contains all active discounts (code-based + automatic)
-- Rejected codes communicated via `messages[]` (see below)
-- Discount amounts reflected in `totals[]` and `line_items[].totals[]`
+- `discounts.applied`에는 활성화된 모든 할인(코드 기반 + 자동)이 포함됩니다.
+- 거부된 코드는 `messages[]`로 전달됩니다(아래 참고).
+- 할인 금액은 `totals[]`와 `line_items[].totals[]`에 반영됩니다.
 
-**Cart-to-checkout continuity:** When a cart is converted to a checkout via the
-cart capability's `cart_id` field, businesses MUST carry forward any discount
-codes that were applied to the cart. Codes that are no longer valid at checkout
-time (e.g., expired, ineligible) SHOULD be communicated via `messages[]` using
-standard rejection codes.
+**장바구니에서 체크아웃으로의 연속성:** 장바구니 기능의 `cart_id` 필드로
+장바구니가 체크아웃으로 전환되면, 비즈니스는 반드시 장바구니에 적용된 할인 코드를
+그대로 이어 가야 합니다(MUST). 체크아웃 시점에 더 이상 유효하지 않은 코드(예: 만료,
+자격 미달)는 표준 거부 코드를 사용해 `messages[]`로 전달해야 합니다(SHOULD).
 
-## Rejected Codes { #rejected-codes }
+## 거부된 코드 { #rejected-codes }
 
-When a submitted discount code cannot be applied, businesses communicate this
-via the `messages[]` array:
+제출된 할인 코드를 적용할 수 없으면 비즈니스는 `messages[]` 배열로 그 사실을
+알립니다.
 
 <!-- ucp:example schema=shopping/cart target=$.messages -->
 ```json
@@ -164,79 +159,73 @@ via the `messages[]` array:
 ]
 ```
 
-> **Implementation guidance:** Operations that affect order totals, or the
-> user's expectation of the total, **SHOULD** use `type: "warning"` to ensure
-> they are surfaced to the user rather than silently handled by platforms.
-> Rejected discounts are a prime example—the user expects a discount but won't
-> receive it, so they should be informed.
+> **구현 지침:** 주문 합계나 합계에 대한 사용자의 기대에 영향을 주는 작업에는
+> `type: "warning"`을 사용해, 플랫폼이 조용히 넘기지 않고 사용자에게 보여 주도록
+> 해야 합니다(**SHOULD**). 거부된 할인이 대표적인 예입니다. 사용자는 할인을 기대했지만
+> 실제로는 받지 못하므로 그 사실을 알려야 합니다.
 
-**Error codes for rejected discounts:**
+**거부된 할인의 에러 코드:**
 
-| Code                                   | Description                                 |
+| 코드 | 설명 |
 | -------------------------------------- | ------------------------------------------- |
-| `discount_code_expired`                | Code has expired                            |
-| `discount_code_invalid`                | Code not found or malformed                 |
-| `discount_code_already_applied`        | Code is already applied                     |
-| `discount_code_combination_disallowed` | Cannot combine with another active discount |
-| `discount_code_user_not_logged_in`     | Code requires authenticated user            |
-| `discount_code_user_ineligible`        | User does not meet eligibility criteria     |
+| `discount_code_expired`                | 코드가 만료됨 |
+| `discount_code_invalid`                | 코드를 찾을 수 없거나 형식이 잘못됨 |
+| `discount_code_already_applied`        | 코드가 이미 적용됨 |
+| `discount_code_combination_disallowed` | 다른 활성 할인과 함께 사용할 수 없음 |
+| `discount_code_user_not_logged_in`     | 인증된 사용자만 사용할 수 있는 코드 |
+| `discount_code_user_ineligible`        | 사용자가 자격 요건을 충족하지 않음 |
 
-## Automatic Discounts { #automatic-discounts }
+## 자동 할인 { #automatic-discounts }
 
-Businesses may apply discounts automatically based on cart contents, customer
-segment, or promotional rules:
+비즈니스는 장바구니 내용, 고객 세그먼트, 프로모션 규칙에 따라 할인을 자동으로
+적용할 수 있습니다. 자동 할인의 특징은 다음과 같습니다.
 
-- Appear in `discounts.applied` with `automatic: true` and no `code` field
-- Applied without platform action
-- Cannot be removed by the platform
-- Surfaced for transparency (platform can explain to user why discount was applied)
+- `discounts.applied`에 `automatic: true`로 나타나며 `code` 필드가 없습니다.
+- 플랫폼이 아무 조치를 하지 않아도 적용됩니다.
+- 플랫폼이 제거할 수 없습니다.
+- 투명성을 위해 노출됩니다(플랫폼은 할인이 적용된 이유를 사용자에게 설명할 수 있습니다).
 
-## Eligibility Claims { #eligibility-claims }
+## 자격 주장 { #eligibility-claims }
 
-Eligibility claims are buyer claims about eligible benefits (see
-[Context](../checkout/index.md#context)) such as loyalty membership, payment instrument
-perks, and similar. When the discount extension is active, Businesses that
-choose to accept eligibility claims **MUST** surface their effect on pricing
-as provisional discounts in the `applied` array. Platforms **MUST** display
-provisional discounts to the buyer.
+자격 주장(eligibility claim)은 로열티 멤버십, 결제 수단 혜택처럼 구매자가 자신이 받을 수 있다고
+내세우는 혜택입니다([컨텍스트](../checkout/index.md#context) 참고). 할인 확장이
+활성화된 상태에서 자격 주장을 수락하기로 한 비즈니스는 반드시 그로 인한 가격 변동을
+`applied` 배열에 잠정 할인으로 노출해야 합니다(**MUST**). 플랫폼은 반드시 잠정 할인을
+구매자에게 표시해야 합니다(**MUST**).
 
-### Discount Behavior { #discount-behavior }
+### 할인 동작 { #discount-behavior }
 
-Platforms send buyer claims via `context.eligibility` on cart or checkout
-requests (see [Context](../checkout/index.md#context)). When a Business recognizes a
-claim and it affects pricing, it **MUST** surface a corresponding provisional
-discount in the `discounts.applied` array. This gives the Platform structured
-attribution to display to the buyer.
+플랫폼은 장바구니 또는 체크아웃 요청의 `context.eligibility`로 구매자의 주장을
+보냅니다([컨텍스트](../checkout/index.md#context) 참고). 비즈니스가 주장을 인식했고 그 주장이
+가격에 영향을 준다면, 비즈니스는 반드시 `discounts.applied` 배열에 해당 잠정 할인을
+노출해야 합니다(**MUST**). 그러면 플랫폼은 구매자에게 표시할 구조화된 귀속 정보를 얻게 됩니다.
 
-Eligibility-triggered discounts use the following fields:
+자격 주장으로 적용된 할인은 다음 필드를 사용합니다.
 
-| Field         | Value                      | Purpose                                 |
+| 필드 | 값 | 목적 |
 | ------------- | -------------------------- | --------------------------------------- |
-| `automatic`   | `true`                     | No code required                        |
-| `provisional` | `true`                     | Requires verification at completion     |
-| `eligibility` | `"com.example.store_card"` | The accepted claim                      |
-| `code`        | *(omitted)*                | Not code-based                          |
+| `automatic`   | `true`                     | 코드가 필요 없음 |
+| `provisional` | `true`                     | 완료 시 검증 필요 |
+| `eligibility` | `"com.example.store_card"` | 수락된 주장 |
+| `code`        | *(생략)* | 코드 기반이 아님 |
 
-Standard `priority`, `method`, and `allocations` fields apply for stacking with
-other discounts.
+다른 할인과 중복 적용할 때는 표준 `priority`, `method`, `allocations` 필드를 그대로 씁니다.
 
-### Verification at Checkout { #verification-at-checkout }
+### 체크아웃 시 검증 { #verification-at-checkout }
 
-Discounts from accepted but unverified claims carry `provisional: true`.
-Provisional discounts remain until the claim is verified, rescinded, or
-replaced during the session. At checkout completion, all remaining provisional
-claims **MUST** be resolved (see
-[Eligibility Verification at Completion](../checkout/index.md#eligibility-verification-at-completion)).
+수락되었지만 아직 검증되지 않은 주장에서 나온 할인에는 `provisional: true`가 붙습니다.
+잠정 할인은 세션 중에 주장이 검증되거나 철회되거나 대체될 때까지 유지됩니다. 체크아웃 완료
+시점에는 남아 있는 잠정 주장을 반드시 모두 해소해야 합니다(**MUST**)
+([완료 시 자격 검증](../checkout/index.md#eligibility-verification-at-completion) 참고).
 
-### Example: Provisional Discount with Attribution { #example-provisional-discount-with-attribution }
+### 예시: 귀속 정보가 포함된 잠정 할인 { #example-provisional-discount-with-attribution }
 
-Using the same claim-resolution pattern described in
-[Eligibility Verification at Completion](../checkout/index.md#eligibility-verification-at-completion),
-the discount extension provides structured attribution. The Platform claims a
-store card benefit; the Business surfaces the provisional discount with full
-stacking and allocation details:
+[완료 시 자격 검증](../checkout/index.md#eligibility-verification-at-completion)에서
+설명한 것과 같은 주장 해소 패턴으로, 할인 확장은 구조화된 귀속 정보를 제공합니다.
+플랫폼이 스토어 카드 혜택을 주장하면 비즈니스는 중복 적용 및 배분 세부 정보를 모두
+담아 잠정 할인을 노출합니다.
 
-=== "Request"
+=== "요청"
 
     <!-- ucp:example schema=shopping/cart op=create direction=request -->
     ```json
@@ -255,7 +244,7 @@ stacking and allocation details:
     }
     ```
 
-=== "Response"
+=== "응답"
 
     <!-- ucp:example schema=shopping/cart op=read -->
     ```json
@@ -288,47 +277,45 @@ stacking and allocation details:
     }
     ```
 
-The Platform can now render: "Store Card 5% Off: -$2.50 *(verified at
-purchase)*" with full confidence in the attribution, amount, and allocation.
+이제 플랫폼은 귀속 정보, 금액, 배분을 믿고 "Store Card 5% Off: -$2.50 *(구매 시
+검증)*"처럼 렌더링할 수 있습니다.
 
-## Impact on Line Items and Totals { #impact-on-line-items-and-totals }
+## 라인 아이템과 합계에 미치는 영향 { #impact-on-line-items-and-totals }
 
-Applied discounts are reflected in the core cart or checkout fields using two
-distinct total types:
+적용된 할인은 서로 다른 두 가지 합계 유형으로 핵심 장바구니 또는 체크아웃
+필드에 반영됩니다.
 
-| Total Type       | When to Use                                               |
+| 합계 유형 | 사용 시점 |
 | ---------------- | --------------------------------------------------------- |
-| `items_discount` | Discounts allocated to line items (`$.line_items[*]`)     |
-| `discount`       | Order-level discounts (shipping, fees, flat order amount) |
+| `items_discount` | 라인 아이템에 배분된 할인(`$.line_items[*]`) |
+| `discount`       | 주문 수준 할인(배송비, 수수료, 주문 정액 할인) |
 
-**Determining the type:** If a discount has `allocations` pointing to line
-items, it contributes to `items_discount`. Discounts without allocations, or
-with allocations to shipping/fees, contribute to `discount`.
+**유형 결정:** 할인에 라인 아이템을 가리키는 `allocations`가 있으면
+`items_discount`에 반영됩니다. 배분이 없거나 배송비/수수료에 배분된 할인은
+`discount`에 반영됩니다.
 
-| Discount Type        | Where Reflected                            |
+| 할인 유형 | 반영 위치 |
 | -------------------- | ------------------------------------------ |
-| Line-item discount   | `line_items[].totals[type=items_discount]` |
-| Order-level discount | `totals[type=discount]`                    |
+| 라인 아이템 할인 | `line_items[].totals[type=items_discount]` |
+| 주문 수준 할인 | `totals[type=discount]`                    |
 
-**Invariant:** `totals[type=items_discount].amount` equals
-`sum(line_items[].totals[type=items_discount].amount)`.
+**불변 조건:** `totals[type=items_discount].amount`는
+`sum(line_items[].totals[type=items_discount].amount)`와 같습니다.
 
-The `discounts.applied` array shows **what** was applied. The `totals[]` and
-`line_items[].totals[]` show **where** and **how much**.
+`discounts.applied` 배열은 **무엇이** 적용되었는지 보여 줍니다. `totals[]`와
+`line_items[].totals[]`는 **어디에** **얼마나** 적용되었는지 보여 줍니다.
 
-**Amount convention:** Discount amounts in `discounts.applied` are positive
-integers (the value of the discount). Discount entries in `totals[]` are
-negative (the effect on the receipt) — the sign is schema-enforced.
+**금액 규칙:** `discounts.applied`의 할인 금액은 양의 정수(할인 값)입니다. `totals[]`의
+할인 항목은 음수(영수증에 반영되는 값)이며, 부호는 스키마가 강제합니다.
 
-## Examples { #examples }
+## 예시 { #examples }
 
-### Cart with discount codes { #cart-with-discount-codes }
+### 할인 코드가 적용된 장바구니 { #cart-with-discount-codes }
 
-Discount codes applied during cart exploration. The cart response includes
-estimated discount amounts, giving the buyer visibility into savings before
-proceeding to checkout.
+장바구니를 살펴보는 중에 할인 코드를 적용한 경우입니다. 장바구니 응답에 예상 할인
+금액이 포함되므로 구매자는 체크아웃으로 넘어가기 전에 절약 금액을 확인할 수 있습니다.
 
-=== "Request"
+=== "요청"
 
     <!-- ucp:example schema=shopping/cart op=create direction=request -->
     ```json
@@ -347,7 +334,7 @@ proceeding to checkout.
     }
     ```
 
-=== "Response"
+=== "응답"
 
     <!-- ucp:example schema=shopping/cart op=read -->
     ```json
@@ -393,12 +380,12 @@ proceeding to checkout.
     }
     ```
 
-### Order-level discount { #order-level-discount }
+### 주문 수준 할인 { #order-level-discount }
 
-A flat discount applied to the order total. No allocations—the discount applies
-to the order as a whole and uses `type: "discount"` in totals.
+주문 합계에 정액 할인을 적용한 경우입니다. 배분은 없습니다. 할인은 주문 전체에 적용되며
+합계에서 `type: "discount"`를 사용합니다.
 
-=== "Request"
+=== "요청"
 
     <!-- ucp:example schema=shopping/cart op=update direction=request -->
     ```json
@@ -410,7 +397,7 @@ to the order as a whole and uses `type: "discount"` in totals.
     }
     ```
 
-=== "Response"
+=== "응답"
 
     <!-- ucp:example schema=shopping/cart op=read -->
     ```json
@@ -437,12 +424,12 @@ to the order as a whole and uses `type: "discount"` in totals.
     }
     ```
 
-### Mixed discounts (item + order level) { #mixed-discounts-item-order-level }
+### 혼합 할인(상품 + 주문 수준) { #mixed-discounts-item-order-level }
 
-This example shows both discount types: a per-item discount (20% off) allocated
-to line items, and an automatic shipping discount at the order level.
+이 예시는 두 가지 할인 유형을 모두 보여 줍니다. 라인 아이템에 배분된 상품별 할인(20% 할인)과
+주문 수준의 자동 배송비 할인입니다.
 
-=== "Request"
+=== "요청"
 
     <!-- ucp:example schema=shopping/cart op=update direction=request -->
     ```json
@@ -454,7 +441,7 @@ to line items, and an automatic shipping discount at the order level.
     }
     ```
 
-=== "Response"
+=== "응답"
 
     <!-- ucp:example schema=shopping/cart op=read -->
     ```json
@@ -506,13 +493,12 @@ to line items, and an automatic shipping discount at the order level.
     }
     ```
 
-### Rejected discount code { #rejected-discount-code }
+### 거부된 할인 코드 { #rejected-discount-code }
 
-When a discount code cannot be applied, the rejection is communicated via the
-`messages[]` array. The code still appears in `discounts.codes` (echoed back)
-but not in `discounts.applied`.
+할인 코드를 적용할 수 없으면 거부 사실이 `messages[]` 배열로 전달됩니다. 해당 코드는
+`discounts.codes`에는 그대로 되돌아오지만 `discounts.applied`에는 나타나지 않습니다.
 
-=== "Request"
+=== "요청"
 
     <!-- ucp:example schema=shopping/cart op=update direction=request -->
     ```json
@@ -524,7 +510,7 @@ but not in `discounts.applied`.
     }
     ```
 
-=== "Response"
+=== "응답"
 
     <!-- ucp:example schema=shopping/cart op=read -->
     ```json
@@ -559,11 +545,11 @@ but not in `discounts.applied`.
     }
     ```
 
-### Stacked discounts with allocations { #stacked-discounts-with-allocations }
+### 배분이 포함된 중복 할인 { #stacked-discounts-with-allocations }
 
-Multiple discounts applied with full allocation breakdown:
+여러 할인이 적용된 경우의 전체 배분 내역입니다.
 
-=== "Response"
+=== "응답"
 
     <!-- ucp:example schema=shopping/cart op=read -->
     ```json
@@ -636,6 +622,6 @@ Multiple discounts applied with full allocation breakdown:
     }
     ```
 
-With this data, an agent can explain:
-> "Your T-Shirt ($60) got $12 off from the 20% summer sale, plus $3 from your
-> loyalty reward (split proportionally). Total savings on this item: $15.
+이 데이터가 있으면 에이전트는 다음과 같이 설명할 수 있습니다.
+> "티셔츠($60)는 20% 여름 세일로 $12, 로열티 리워드로 $3(비례 분할)가 할인되었습니다.
+> 이 상품의 총 할인 금액은 $15입니다.

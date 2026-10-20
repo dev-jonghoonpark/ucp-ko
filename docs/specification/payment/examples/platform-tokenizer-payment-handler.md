@@ -14,55 +14,51 @@
    limitations under the License.
 -->
 
-# Platform Tokenizer Payment Handler { #platform-tokenizer-payment-handler }
+# 플랫폼 토크나이저 결제 핸들러 { #platform-tokenizer-payment-handler }
 
-* **Handler Name:** `com.example.platform_tokenizer`
-* **Type:** Payment Handler Example
+* **핸들러 이름:** `com.example.platform_tokenizer`
+* **유형:** 결제 핸들러 예시
 
-## Introduction { #introduction }
+## 소개 { #introduction }
 
-This example demonstrates a tokenization payment handler where the
-**platform acts as the tokenizer**. The platform's
-**payment credential provider** securely stores sensitive payment data
-(e.g., stored cards from user wallets) and generates tokens internally without
-calling an external `/tokenize` endpoint.
+이 예시는 **플랫폼이 토크나이저 역할을 하는** 토큰화 결제 핸들러를 보여 줍니다.
+플랫폼의 **결제 자격 증명 제공자**는 민감한 결제 데이터(예: 사용자 지갑에 저장된 카드)를
+안전하게 보관하며, 외부 `/tokenize` 엔드포인트를 호출하지 않고 내부에서 토큰을 생성합니다.
 
-The platform's credential provider exposes a `/detokenize` endpoint for
-businesses to call back and retrieve the sensitive instrument details for
-processing.
+플랫폼의 자격 증명 제공자는 `/detokenize` 엔드포인트를 노출합니다. 비즈니스는 이
+엔드포인트를 호출해 결제 처리에 필요한 민감한 결제 수단 정보를 가져옵니다.
 
-This pattern is ideal for platforms that operate as wallet providers with
-compliant credential storage.
+이 패턴은 규정을 준수하는 자격 증명 저장소를 갖추고 지갑 제공자로 운영되는 플랫폼에
+가장 적합합니다.
 
-**Note:** While this example uses card credentials, the pattern applies to
-**any credential type**. Compliance requirements vary by credential type
-(e.g., PCI DSS for cards).
+**참고:** 이 예시는 카드 자격 증명을 사용하지만, 패턴 자체는 **모든 자격 증명 유형**에
+적용됩니다. 규정 준수 요건은 자격 증명 유형에 따라 다릅니다(예: 카드의 경우 PCI DSS).
 
-### Key Benefits { #key-benefits }
+### 주요 이점 { #key-benefits }
 
-* **Zero early transmission:** Platforms never expose sensitive data until a payment request is being finalized.
-* **Platform-controlled security:** Platform defines token lifecycle and binding policies.
-* **PSP flexibility:** Businesses can delegate detokenization to their PSP, keeping sensitive data out of business systems entirely.
+* **사전 전송 없음:** 결제 요청이 최종 확정되기 전까지 플랫폼은 민감한 데이터를 절대 노출하지 않습니다.
+* **플랫폼 주도 보안:** 토큰 수명 주기와 바인딩 정책을 플랫폼이 정의합니다.
+* **PSP 유연성:** 비즈니스는 역토큰화를 PSP에 위임해 민감한 데이터가 비즈니스 시스템에 아예 들어오지 않게 할 수 있습니다.
 
-### QuickStart { #quickstart }
+### 빠른 시작 { #quickstart }
 
-| If you are a...                        | Start here                                    |
+| 해당하는 역할                          | 시작 위치                                     |
 | :------------------------------------- | :-------------------------------------------- |
-| **Business** accepting this handler    | [Business Integration](#business-integration) |
-| **Platform** implementing this handler | [Platform Integration](#platform-integration) |
-| **PSP** processing for businesses      | [PSP Integration](#psp-integration)           |
+| 이 핸들러를 수용하는 **비즈니스**      | [비즈니스 연동](#business-integration) |
+| 이 핸들러를 구현하는 **플랫폼**        | [플랫폼 연동](#platform-integration) |
+| 비즈니스를 대신해 처리하는 **PSP**     | [PSP 연동](#psp-integration)           |
 
 ---
 
-## Participants { #participants }
+## 참여자 { #participants }
 
-| Participant  | Role                                                                                            | Prerequisites                         |
+| 참여자       | 역할                                                                                            | 사전 요건                             |
 | :----------- | :---------------------------------------------------------------------------------------------- | :------------------------------------ |
-| **Business** | Advertises handler, receives tokens, optionally delegates to PSP                                | Yes — onboards with platform          |
-| **Platform** | Operates a payment credential provider that generates tokens and exposes `/detokenize` endpoint | Yes — implements tokenization service |
-| **PSP**      | Optionally detokenizes on business's behalf, processes payments                                 | Yes — onboards with platform          |
+| **Business** | 핸들러를 선언하고 토큰을 받으며, 필요하면 PSP에 위임합니다                                      | 있음 — 플랫폼에 온보딩                |
+| **Platform** | 토큰을 생성하고 `/detokenize` 엔드포인트를 노출하는 결제 자격 증명 제공자를 운영합니다            | 있음 — 토큰화 서비스 구현             |
+| **PSP**      | 필요에 따라 비즈니스를 대신해 역토큰화하고 결제를 처리합니다                                    | 있음 — 플랫폼에 온보딩                |
 
-### Pattern Flow: Business Detokenizes { #pattern-flow-business-detokenizes }
+### 패턴 흐름: 비즈니스가 역토큰화 { #pattern-flow-business-detokenizes }
 
 ```text
 +-----------------+                              +------------+
@@ -97,7 +93,7 @@ compliant credential storage.
          |<---------------------------------------------|
 ```
 
-### Pattern Flow: PSP Detokenizes { #pattern-flow-psp-detokenizes }
+### 패턴 흐름: PSP가 역토큰화 { #pattern-flow-psp-detokenizes }
 
 ```text
 +-----------------+     +------------+      +---------+
@@ -140,57 +136,53 @@ compliant credential storage.
 
 ---
 
-## Business Integration { #business-integration }
+## 비즈니스 연동 { #business-integration }
 
-### Prerequisites { #prerequisites }
+### 사전 요건 { #prerequisites }
 
-#### CRITICAL: Security & Compliance Required { #critical-security-compliance-required }
+#### 중요: 보안 및 규정 준수 필수 { #critical-security-compliance-required }
 
-Before accepting this handler, businesses must register with the platform to
-obtain authentication credentials for calling `/detokenize`.
+이 핸들러를 수용하기 전에 비즈니스는 플랫폼에 등록해 `/detokenize` 호출에 필요한
+인증 자격 증명을 발급받아야 합니다.
 
-As the party receiving sensitive instrument details via the `/detokenize`
-endpoint, businesses **MUST** be compliant with relevant data security
-standards for the credential type being handled (e.g., PCI DSS for cards).
-This includes:
+비즈니스는 `/detokenize` 엔드포인트로 민감한 결제 수단 정보를 받는 당사자이므로,
+반드시 취급하는 자격 증명 유형에 해당하는 데이터 보안 표준을 준수해야 합니다(**MUST**)
+(예: 카드의 경우 PCI DSS). 여기에는 다음이 포함됩니다.
 
-* Secure transmission (HTTPS/TLS with strong cipher suites)
-* Secure handling of sensitive data during payment processing
-* Compliance with all regulations regarding the storage and processing of financial instruments
+* 안전한 전송(강력한 암호 스위트를 사용하는 HTTPS/TLS)
+* 결제 처리 중 민감한 데이터의 안전한 취급
+* 금융 결제 수단의 저장 및 처리에 관한 모든 규정 준수
 
-Optionally, businesses may configure their PSP to detokenize on their behalf
-(PSP must also be compliant).
+비즈니스는 PSP가 자신을 대신해 역토큰화하도록 설정할 수도 있습니다(PSP 역시
+규정을 준수해야 합니다).
 
-**Prerequisites Output:**
+**사전 요건 산출물:**
 
-| Field                      | Description                                                   |
+| 필드                       | 설명                                                          |
 | :------------------------- | :------------------------------------------------------------ |
-| `identity.access_token`    | Business identifier assigned by platform during onboarding    |
-| Authentication credentials | API key or OAuth token for authenticating `/detokenize` calls |
+| `identity.access_token`    | 온보딩 시 플랫폼이 부여한 비즈니스 식별자                     |
+| 인증 자격 증명             | `/detokenize` 호출 인증용 API 키 또는 OAuth 토큰              |
 
-### Handler Configuration { #handler-configuration }
+### 핸들러 설정 { #handler-configuration }
 
-Businesses advertise the platform's tokenization handler. The `config`
-contains the business's identity with the platform for token binding. The
-platform's handler specification (referenced via `spec`) documents the
-`/detokenize` endpoint URL exposed by the platform's
-**payment credential provider**.
+비즈니스는 플랫폼의 토큰화 핸들러를 선언합니다. `config`에는 플랫폼에 등록된 비즈니스 신원이
+담기며, 이 값은 토큰 바인딩에 쓰입니다. `spec`으로 참조하는 플랫폼의 핸들러 명세에는
+플랫폼의 **결제 자격 증명 제공자**가 노출하는 `/detokenize` 엔드포인트 URL이 나와 있습니다.
 
-The handler accepts [PanCredential](site:schemas/common/types/pan_credential.json) and [NetworkTokenCredential](site:schemas/common/types/network_token_credential.json) for tokenization and produces [TokenCredential](site:schemas/common/types/token_credential.json) for checkout.
+이 핸들러는 토큰화 입력으로 [PanCredential](site:schemas/common/types/pan_credential.json)과 [NetworkTokenCredential](site:schemas/common/types/network_token_credential.json)을 받고, 체크아웃용으로 [TokenCredential](site:schemas/common/types/token_credential.json)을 생성합니다.
 
-**Note:** The result of `/detokenize` contains **sensitive payment data**.
-Both the sender (platform's credential provider) and receiver
-(business or PSP) **MUST** be compliant with relevant standards for the
-credential type (e.g., PCI DSS for cards).
+**참고:** `/detokenize`의 결과에는 **민감한 결제 데이터**가 담깁니다. 송신자(플랫폼의
+자격 증명 제공자)와 수신자(비즈니스 또는 PSP) 모두 반드시 해당 자격 증명 유형의 관련
+표준을 준수해야 합니다(**MUST**)(예: 카드의 경우 PCI DSS).
 
-#### Business Config (Discovery) { #business-config-discovery }
+#### 비즈니스 설정(디스커버리) { #business-config-discovery }
 
-| Field         | Type   | Required | Description                                 |
+| 필드          | 타입   | 필수     | 설명                                        |
 | :------------ | :----- | :------- | :------------------------------------------ |
-| `environment` | string | Yes      | API environment (`sandbox` or `production`) |
-| `business_id` | string | Yes      | Business identifier assigned by platform    |
+| `environment` | string | 예       | API 환경(`sandbox` 또는 `production`)       |
+| `business_id` | string | 예       | 플랫폼이 부여한 비즈니스 식별자             |
 
-#### Example Business Handler Declaration { #example-business-handler-declaration }
+#### 비즈니스 핸들러 선언 예시 { #example-business-handler-declaration }
 
 <!-- ucp:example schema=profile def=business_schema extract=$.ucp.payment_handlers target=$.ucp.payment_handlers -->
 ```json
@@ -223,17 +215,17 @@ credential type (e.g., PCI DSS for cards).
 }
 ```
 
-#### Response Config (Checkout) { #response-config-checkout }
+#### 응답 설정(체크아웃) { #response-config-checkout }
 
-The response config includes runtime token lifecycle information.
+응답 설정에는 런타임 토큰 수명 주기 정보가 포함됩니다.
 
-| Field               | Type    | Required | Description                   |
+| 필드                | 타입    | 필수     | 설명                          |
 | :------------------ | :------ | :------- | :---------------------------- |
-| `environment`       | string  | Yes      | API environment               |
-| `business_id`       | string  | Yes      | Business identifier           |
-| `token_ttl_seconds` | integer | No       | Token time-to-live in seconds |
+| `environment`       | string  | 예       | API 환경                      |
+| `business_id`       | string  | 예       | 비즈니스 식별자               |
+| `token_ttl_seconds` | integer | 아니요   | 토큰 유효 시간(초)            |
 
-#### Example Response Config { #example-response-config }
+#### 응답 설정 예시 { #example-response-config }
 
 <!-- ucp:example schema=payment_handler def=response_schema -->
 ```json
@@ -256,19 +248,19 @@ The response config includes runtime token lifecycle information.
 }
 ```
 
-### Processing Payments { #processing-payments }
+### 결제 처리 { #processing-payments }
 
-Upon receiving a checkout with a token credential:
+토큰 자격 증명이 담긴 체크아웃을 받으면 다음을 수행합니다.
 
-1. **Validate Handler:** Confirm `instrument.handler_id` matches the expected handler ID.
-2. **Detokenize or Delegate:**
-   * **Option A (Direct):** Call the platform's **credential provider** `/detokenize` endpoint directly, then process payments.
-   * **Option B (Delegated):** Forward the token to a PSP for detokenization and payment processing.
-3. **Return Response:** Respond with the finalized checkout state.
+1. **핸들러 검증:** `instrument.handler_id`가 예상한 핸들러 ID와 일치하는지 확인합니다.
+2. **역토큰화 또는 위임:**
+   * **옵션 A(직접):** 플랫폼 **자격 증명 제공자**의 `/detokenize` 엔드포인트를 직접 호출한 뒤 결제를 처리합니다.
+   * **옵션 B(위임):** 토큰을 PSP에 전달해 역토큰화와 결제 처리를 맡깁니다.
+3. **응답 반환:** 확정된 체크아웃 상태로 응답합니다.
 
-For option B, see section [PSP Integration](#psp-integration).
+옵션 B는 [PSP 연동](#psp-integration) 섹션을 참고하세요.
 
-#### Detokenize Request Example (Business) { #detokenize-request-example-business }
+#### 역토큰화 요청 예시(비즈니스) { #detokenize-request-example-business }
 
 <!-- ucp:example skip reason="tokenization API, not UCP payload" -->
 ```json
@@ -285,47 +277,46 @@ Authorization: Bearer {business_api_key}
 }
 ```
 
-Note: No `identity` is needed if the business authenticates
-directly—the platform knows who they are based on the API key.
+참고: 비즈니스가 직접 인증하는 경우에는 `identity`가 필요 없습니다. 플랫폼이 API 키로
+비즈니스를 식별할 수 있기 때문입니다.
 
 ---
 
-## Platform Integration { #platform-integration }
+## 플랫폼 연동 { #platform-integration }
 
-### Prerequisites { #prerequisites_1 }
+### 사전 요건 { #prerequisites_1 }
 
-This handler is implemented by platforms that operate
-**compliant payment credential providers** or wallet services. The payment
-credential provider (not the main platform application) handles sensitive
-data and exposes the `/detokenize` endpoint. To implement, platforms must:
+이 핸들러는 **규정을 준수하는 결제 자격 증명 제공자**나 지갑 서비스를 운영하는 플랫폼이
+구현합니다. 민감한 데이터를 다루고 `/detokenize` 엔드포인트를 노출하는 쪽은 메인 플랫폼
+애플리케이션이 아니라 결제 자격 증명 제공자입니다. 이 핸들러를 구현하려면 플랫폼은 다음을 해야 합니다.
 
-1. Deploy a **compliant payment credential provider** that maintains compliance for credential storage and handling.
-2. Expose a `/detokenize` endpoint conforming to the API pattern from the credential provider.
-3. Onboard businesses and PSPs who will call the credential provider's `/detokenize` endpoint.
+1. 자격 증명 저장과 취급에 관한 규정 준수를 유지하는 **규정 준수 결제 자격 증명 제공자**를 배포합니다.
+2. 자격 증명 제공자에서 API 패턴을 따르는 `/detokenize` 엔드포인트를 노출합니다.
+3. 자격 증명 제공자의 `/detokenize` 엔드포인트를 호출할 비즈니스와 PSP를 온보딩합니다.
 
-**Implementation Requirements:**
+**구현 요건:**
 
-| Requirement            | Description                                                                                     |
+| 요건                   | 설명                                                                                            |
 | :--------------------- | :---------------------------------------------------------------------------------------------- |
-| `/detokenize` endpoint | Exposed by the compliant payment credential provider (not the platform application)             |
-| Token storage          | Map tokens to credentials with binding metadata in the credential provider                      |
-| Participant allowlist  | Only onboarded businesses/PSPs can call the credential provider's `/detokenize`                 |
-| Binding verification   | payment credential provider verifies `binding` and the requesting participant on detokenization |
+| `/detokenize` endpoint | 플랫폼 애플리케이션이 아니라 규정을 준수하는 결제 자격 증명 제공자가 노출합니다                 |
+| 토큰 저장소            | 자격 증명 제공자 안에서 토큰을 바인딩 메타데이터와 함께 자격 증명에 매핑합니다                    |
+| 참여자 허용 목록       | 온보딩된 비즈니스/PSP만 자격 증명 제공자의 `/detokenize`를 호출할 수 있습니다                       |
+| 바인딩 검증            | 역토큰화 시 결제 자격 증명 제공자가 `binding`과 요청 참여자를 검증합니다                          |
 
-### Handler Configuration (Platform) { #handler-configuration-platform }
+### 핸들러 설정(플랫폼) { #handler-configuration-platform }
 
-Platforms advertise this handler in their UCP profile's `payment_handlers`
-registry using `platform_config`.
+플랫폼은 `platform_config`를 사용해 UCP 프로필의 `payment_handlers` 레지스트리에 이
+핸들러를 선언합니다.
 
-#### Platform Config (Discovery) { #platform-config-discovery }
+#### 플랫폼 설정(디스커버리) { #platform-config-discovery }
 
-| Field                       | Type    | Required | Description                                 |
+| 필드                        | 타입    | 필수     | 설명                                        |
 | :-------------------------- | :------ | :------- | :------------------------------------------ |
-| `environment`               | string  | Yes      | API environment (`sandbox` or `production`) |
-| `platform_id`               | string  | Yes      | Platform identifier                         |
-| `default_token_ttl_seconds` | integer | No       | Default token TTL offered to businesses     |
+| `environment`               | string  | 예       | API 환경(`sandbox` 또는 `production`)       |
+| `platform_id`               | string  | 예       | 플랫폼 식별자                               |
+| `default_token_ttl_seconds` | integer | 아니요   | 비즈니스에 제공하는 기본 토큰 TTL           |
 
-#### Example Platform Handler Declaration { #example-platform-handler-declaration }
+#### 플랫폼 핸들러 선언 예시 { #example-platform-handler-declaration }
 
 <!-- ucp:example schema=profile def=business_schema extract=$.ucp.payment_handlers target=$.ucp.payment_handlers -->
 ```json
@@ -359,24 +350,24 @@ registry using `platform_config`.
 }
 ```
 
-### Token Generation { #token-generation }
+### 토큰 생성 { #token-generation }
 
-The platform application orchestrates the payment flow but
-**never has access to sensitive payment data**. Instead:
+플랫폼 애플리케이션은 결제 흐름을 조율하지만 **민감한 결제 데이터에는 절대 접근하지
+않습니다**. 대신 다음과 같이 동작합니다.
 
-1. The platform's **payment credential provider** securely stores payment credentials.
-2. When a payment is needed, the platform application requests a token from the credential provider.
-3. The credential provider generates a token bound to the `binding` resource and issued to the business's `identity` (from the handler declaration).
-4. The credential provider returns the token to the platform application.
-5. The platform application includes this token in the checkout submission.
+1. 플랫폼의 **결제 자격 증명 제공자**가 결제 자격 증명을 안전하게 보관합니다.
+2. 결제가 필요하면 플랫폼 애플리케이션이 자격 증명 제공자에게 토큰을 요청합니다.
+3. 자격 증명 제공자는 `binding` 리소스에 바인딩되고 (핸들러 선언에 있는) 비즈니스의 `identity`에 발급되는 토큰을 생성합니다.
+4. 자격 증명 제공자가 플랫폼 애플리케이션에 토큰을 반환합니다.
+5. 플랫폼 애플리케이션은 체크아웃을 제출할 때 이 토큰을 포함합니다.
 
-This separation ensures the platform application itself never handles or has
-access to sensitive instrument details.
+이렇게 분리하면 플랫폼 애플리케이션 자체는 민감한 결제 수단 정보를 다루거나 접근할 일이
+전혀 없습니다.
 
-### Submitting Checkout { #submitting-checkout }
+### 체크아웃 제출 { #submitting-checkout }
 
-The platform application submits the checkout with the token (received from its
-payment credential provider):
+플랫폼 애플리케이션은 (자체 결제 자격 증명 제공자에게서 받은) 토큰과 함께 체크아웃을
+제출합니다.
 
 <!-- ucp:example schema=shopping/checkout op=complete direction=request -->
 ```json
@@ -411,60 +402,59 @@ Content-Type: application/json
 
 ---
 
-## Runtime Payment Authentication Actions { #runtime-payment-authentication-actions }
+## 런타임 결제 인증 액션 { #runtime-payment-authentication-actions }
 
-This handler supports both Action types from the negotiated
-[Payment Authentication extension](../extensions/authentication.md):
+이 핸들러는 협상된 [결제 인증 확장](../extensions/authentication.md)의 두 가지 액션
+유형을 모두 지원합니다.
 
-| Action type | Use |
+| 액션 유형 | 용도 |
 | :---------- | :-- |
-| `dev.ucp.common.payment.device_data_collection` | Collect device/browser data for the selected tokenized instrument. |
-| `dev.ucp.common.payment.three_ds_challenge` | Present a buyer-facing 3DS challenge during payment completion. |
+| `dev.ucp.common.payment.device_data_collection` | 선택된 토큰화 결제 수단의 기기/브라우저 데이터를 수집합니다. |
+| `dev.ucp.common.payment.three_ds_challenge` | 결제 완료 중 구매자에게 3DS 챌린지를 표시합니다. |
 
-When either step is needed, the Business returns the corresponding Action while
-processing the selected instrument. Its `config.payment_instrument_id` identifies
-that instrument, from which the Platform resolves this handler and its trust
-policy. The Platform processes the Action according to the extension and
-retrieves Checkout after `action.done`. The submitted token and instrument remain
-unchanged; the Business determines the payment outcome from its provider state.
+두 단계 중 하나가 필요하면 비즈니스는 선택된 결제 수단을 처리하는 도중 해당 액션을
+반환합니다. 액션의 `config.payment_instrument_id`가 그 결제 수단을 식별하며, 플랫폼은 이 값으로
+이 핸들러와 핸들러의 신뢰 정책을 확인합니다. 플랫폼은 확장에 따라 액션을 처리하고
+`action.done` 이후 체크아웃을 조회합니다. 제출된 토큰과 결제 수단은 바뀌지 않으며, 비즈니스는
+자신의 제공자 상태를 바탕으로 결제 결과를 결정합니다.
 
 ---
 
-## PSP Integration { #psp-integration }
+## PSP 연동 { #psp-integration }
 
-### Prerequisites { #prerequisites_2 }
+### 사전 요건 { #prerequisites_2 }
 
-#### CRITICAL: Security & Compliance Required { #critical-security-compliance-required_1 }
+#### 중요: 보안 및 규정 준수 필수 { #critical-security-compliance-required_1 }
 
-Before detokenizing on behalf of businesses, PSPs must register with the
-platform, providing the list of businesses they process for.
+비즈니스를 대신해 역토큰화하기 전에 PSP는 자신이 처리를 맡은 비즈니스 목록을 제출하고
+플랫폼에 등록해야 합니다.
 
-As the party receiving sensitive instrument details via the `/detokenize`
-endpoint, PSPs **MUST** be **compliant** with relevant security standards
-for the credential type being handled (e.g., PCI DSS for cards). This includes:
+PSP는 `/detokenize` 엔드포인트로 민감한 결제 수단 정보를 받는 당사자이므로, 반드시
+취급하는 자격 증명 유형에 해당하는 보안 표준을 **준수해야** 합니다(**MUST**)(예: 카드의 경우
+PCI DSS). 여기에는 다음이 포함됩니다.
 
-* Secure transmission (HTTPS/TLS with strong cipher suites)
-* Secure handling of sensitive data during payment processing
-* Compliance with all regulations regarding the storage and processing of
-  financial instruments
+* 안전한 전송(강력한 암호 스위트를 사용하는 HTTPS/TLS)
+* 결제 처리 중 민감한 데이터의 안전한 취급
+* 금융 결제 수단의 저장 및 처리에 관한
+  모든 규정 준수
 
-**Prerequisites Output:**
+**사전 요건 산출물:**
 
-| Field                      | Description                                                   |
+| 필드                       | 설명                                                          |
 | :------------------------- | :------------------------------------------------------------ |
-| Authentication credentials | API key or OAuth token for authenticating `/detokenize` calls |
-| Business associations      | List of business identities this PSP can detokenize for       |
+| 인증 자격 증명             | `/detokenize` 호출 인증용 API 키 또는 OAuth 토큰              |
+| 비즈니스 연결              | 이 PSP가 대신 역토큰화할 수 있는 비즈니스 신원 목록           |
 
-### Detokenization Flow { #detokenization-flow }
+### 역토큰화 흐름 { #detokenization-flow }
 
-When the business forwards a token to the PSP:
+비즈니스가 PSP에 토큰을 전달하면 PSP는 다음을 수행합니다.
 
-1. Extract the token from the payment instrument.
-2. Call the platform's **payment credential provider** `/detokenize` endpoint
-   with the business's `identity` alongside the `binding`.
-3. Process the payment with the returned credential.
+1. 결제 수단에서 토큰을 추출합니다.
+2. `binding`과 함께 비즈니스의 `identity`를 담아 플랫폼 **결제 자격 증명 제공자**의
+   `/detokenize` 엔드포인트를 호출합니다.
+3. 반환된 자격 증명으로 결제를 처리합니다.
 
-#### Detokenize Request Example (PSP) { #detokenize-request-example-psp }
+#### 역토큰화 요청 예시(PSP) { #detokenize-request-example-psp }
 
 <!-- ucp:example skip reason="tokenization API, not UCP payload" -->
 ```json
@@ -484,39 +474,39 @@ Authorization: Bearer {psp_api_key}
 }
 ```
 
-Note: `identity` IS required here—the PSP is calling on behalf of a
-business, so they must specify which businesses' token they are retrieving.
+참고: 여기서는 `identity`가 **필수입니다**. PSP는 비즈니스를 대신해 호출하므로 어느
+비즈니스의 토큰을 조회하는지 명시해야 합니다.
 
-The platform's payment credential provider verifies that:
+플랫폼의 결제 자격 증명 제공자는 다음을 검증합니다.
 
-* The PSP is authorized to act for the business named by `identity`.
-* The `binding` matches the original tokenization, and `identity` resolves to
-  the participant the token was issued to.
-* The token has not expired or been used.
+* PSP가 `identity`로 지정된 비즈니스를 대신할 권한이 있는지
+* `binding`이 최초 토큰화 시점과 일치하고, `identity`가 토큰을 발급받은 참여자로
+  확인되는지
+* 토큰이 만료되거나 이미 사용되지 않았는지
 
 ---
 
-## Security Considerations { #security-considerations }
+## 보안 고려 사항 { #security-considerations }
 
-| Requirement | Description |
+| 요건 | 설명 |
 | :---------- | :---------- |
-| **Compliance (credential provider)** | Platform's credential provider **MUST** be compliant with relevant standards for the credential type (e.g., PCI DSS for cards) when handling and storing sensitive instrument details. |
-| **Compliance (Receivers)** | Businesses/PSPs calling `/detokenize` **MUST** be compliant with relevant standards for the credential type when receiving sensitive data payloads. |
-| **Secure transmission** | Data transmission via `/detokenize` **MUST** use HTTPS/TLS with strong cipher suites. |
-| **No Platform App access** | Platform applications **MUST NOT** handle sensitive data—only the compliant payment credential provider does. |
-| **Endpoint isolation** | `/detokenize` endpoint **MUST** be exposed by the payment credential provider, not the platform application. |
-| **Participant authentication** | Platform's credential provider **MUST** authenticate businesses/PSPs before accepting `/detokenize` calls. |
-| **Issued to participant** | Tokens **MUST** be issued to the business's `identity` from the handler declaration. |
-| **Resource-bound** | Tokens **MUST** be bound to the specific `binding` resource. |
-| **Caller verification** | Platform **MUST** verify the authenticated caller is the participant the token was issued to (or is an authorized PSP). |
-| **Single-use** | Tokens **SHOULD** be invalidated after detokenization. |
-| **Short TTL** | Tokens **SHOULD** expire shortly. |
-| **HTTPS required** | All `/detokenize` calls must use TLS. |
+| **규정 준수(자격 증명 제공자)** | 플랫폼의 자격 증명 제공자는 민감한 결제 수단 정보를 취급·저장할 때 반드시 해당 자격 증명 유형의 관련 표준(예: 카드의 경우 PCI DSS)을 준수해야 합니다(**MUST**). |
+| **규정 준수(수신자)** | `/detokenize`를 호출하는 비즈니스/PSP는 민감한 데이터 페이로드를 받을 때 반드시 해당 자격 증명 유형의 관련 표준을 준수해야 합니다(**MUST**). |
+| **안전한 전송** | `/detokenize`로 데이터를 전송할 때는 반드시 강력한 암호 스위트를 사용하는 HTTPS/TLS를 써야 합니다(**MUST**). |
+| **플랫폼 앱 접근 금지** | 플랫폼 애플리케이션은 민감한 데이터를 다뤄서는 안 됩니다(**MUST NOT**). 민감한 데이터는 규정을 준수하는 결제 자격 증명 제공자만 다룹니다. |
+| **엔드포인트 분리** | `/detokenize` 엔드포인트는 반드시 플랫폼 애플리케이션이 아닌 결제 자격 증명 제공자가 노출해야 합니다(**MUST**). |
+| **참여자 인증** | 플랫폼의 자격 증명 제공자는 `/detokenize` 호출을 받기 전에 반드시 비즈니스/PSP를 인증해야 합니다(**MUST**). |
+| **참여자에게 발급** | 토큰은 반드시 핸들러 선언에 있는 비즈니스의 `identity`에 발급해야 합니다(**MUST**). |
+| **리소스 바인딩** | 토큰은 반드시 특정 `binding` 리소스에 바인딩해야 합니다(**MUST**). |
+| **호출자 검증** | 플랫폼은 반드시 인증된 호출자가 토큰을 발급받은 참여자(또는 권한 있는 PSP)인지 검증해야 합니다(**MUST**). |
+| **일회용** | 토큰은 역토큰화 후 무효화해야 합니다(**SHOULD**). |
+| **짧은 TTL** | 토큰은 짧은 시간 안에 만료되어야 합니다(**SHOULD**). |
+| **HTTPS 필수** | 모든 `/detokenize` 호출은 TLS를 사용해야 합니다. |
 
 ---
 
-## References { #references }
+## 참고 자료 { #references }
 
-* **Pattern:** [Tokenization Payment Handler](../guide.md)
-* **API Pattern:** [handlers/tokenization/openapi.json](site:handlers/tokenization/openapi.json)
-* **Identity Schema:** [schemas/common/types/payment_identity.json](site:schemas/common/types/payment_identity.json)
+* **패턴:** [토큰화 결제 핸들러](../guide.md)
+* **API 패턴:** [handlers/tokenization/openapi.json](site:handlers/tokenization/openapi.json)
+* **신원 스키마:** [schemas/common/types/payment_identity.json](site:schemas/common/types/payment_identity.json)
