@@ -14,16 +14,16 @@
    limitations under the License.
 -->
 
-# 주문 기능 - REST 바인딩 { #order-capability-rest-binding }
+# Order Capability - REST Binding { #order-capability-rest-binding }
 
-이 문서는 [주문 기능(Order Capability)](index.md)의 REST 바인딩을 정의합니다.
+This document specifies the REST binding for the [Order Capability](index.md).
 
-## 프로토콜 기본 사항 { #protocol-fundamentals }
+## Protocol Fundamentals { #protocol-fundamentals }
 
-### 디스커버리 { #discovery }
+### Discovery { #discovery }
 
-비즈니스는 `/.well-known/ucp`의 UCP 프로필에서 REST 전송 방식 지원 여부를
-알립니다.
+Businesses advertise REST transport availability through their UCP profile at
+`/.well-known/ucp`.
 
 <!-- ucp:example schema=profile def=business_schema -->
 ```json
@@ -55,47 +55,47 @@
 }
 ```
 
-### 기본 URL { #base-url }
+### Base URL { #base-url }
 
-모든 UCP REST 엔드포인트는 비즈니스의 기본 URL을 기준으로 하며, 기본 URL은
-`/.well-known/ucp`의 UCP 프로필에서 찾을 수 있습니다. 주문 기능의 엔드포인트는
-비즈니스 프로필의 `rest.endpoint` 필드에 정의합니다.
+All UCP REST endpoints are relative to the business's base URL, which is
+discovered through the UCP profile at `/.well-known/ucp`. The endpoint for the
+order capability is defined in the `rest.endpoint` field of the business profile.
 
-### 콘텐츠 타입 { #content-types }
+### Content Types { #content-types }
 
-* **응답**: `application/json`
+* **Response**: `application/json`
 
-모든 응답 본문은 반드시
-[RFC 8259](https://tools.ietf.org/html/rfc8259){ target="_blank" }에 명시된 유효한 JSON이어야 합니다(**MUST**).
+All response bodies **MUST** be valid JSON as specified in
+[RFC 8259](https://tools.ietf.org/html/rfc8259){ target="_blank" }.
 
-### 전송 보안 { #transport-security }
+### Transport Security { #transport-security }
 
-모든 REST 엔드포인트는 반드시 TLS 1.3 이상의 HTTPS로 제공해야 합니다(**MUST**).
+All REST endpoints **MUST** be served over HTTPS with minimum TLS version 1.3.
 
-## 작업 { #operations }
+## Operations { #operations }
 
-| 작업 | 메서드 | 엔드포인트 | 설명 |
+| Operation | Method | Endpoint | Description |
 | :---- | :---- | :---- | :---- |
-| [주문 조회](#get-order) | `GET` | `/orders/{id}` | 주문의 현재 상태를 조회합니다. |
+| [Get Order](#get-order) | `GET` | `/orders/{id}` | Get the current state of an order. |
 
-주문 이벤트 웹훅(비즈니스 -> 플랫폼 푸시)은
-[주문 기능 개요](index.md#order-event-webhook)를 참고하세요.
+For the Order Event Webhook (business -> platform push), see the
+[Order Capability overview](index.md#order-event-webhook).
 
-### 주문 조회 { #get-order }
+### Get Order { #get-order }
 
-주문의 현재 상태 스냅숏을 반환합니다.
+Returns the current-state snapshot of an order.
 
-#### 입력 스키마 { #input-schema }
+#### Input Schema { #input-schema }
 
-* `id` (String, 필수): 주문 ID(경로 파라미터).
+* `id` (String, required): The order ID (path parameter).
 
-#### 출력 스키마 { #output-schema }
+#### Output Schema { #output-schema }
 
 {{ schema_fields('order', 'shopping/order') }}
 
-#### 예시 { #example }
+#### Example { #example }
 
-=== "요청"
+=== "Request"
 
     ```http
     GET /orders/order_abc123 HTTP/1.1
@@ -105,7 +105,7 @@
     Signature: sig1=:6G4i8TS6oUkGrx8KnCFUpsSPwd74...:
     ```
 
-=== "응답"
+=== "Response"
 
     <!-- ucp:example schema=shopping/order op=read -->
     ```json
@@ -173,7 +173,7 @@
     }
     ```
 
-=== "찾을 수 없음"
+=== "Not Found"
 
     <!-- ucp:example schema=common/types/error_response op=read -->
     ```json
@@ -199,7 +199,7 @@
     }
     ```
 
-=== "권한 없음"
+=== "Not Authorized"
 
     <!-- ucp:example schema=common/types/error_response op=read -->
     ```json
@@ -225,37 +225,46 @@
     }
     ```
 
-## HTTP 헤더 { #http-headers }
+## HTTP Headers { #http-headers }
 
 {{ header_fields('get_order', 'shopping/rest.openapi.json') }}
 
-### 헤더별 요구 사항 { #specific-header-requirements }
+### Specific Header Requirements { #specific-header-requirements }
 
-{{ header_requirements('ucp_agent') }}
+**UCP-Agent** (required on all requests):
 
-## 메시지 서명 { #message-signing }
+Platform identification using
+[RFC 8941 Dictionary](https://www.rfc-editor.org/rfc/rfc8941#name-dictionaries){ target="_blank" }
+syntax:
 
-요청과 응답 서명은 RFC 9421 HTTP Message Signatures 기반의
-[메시지 서명](../../signatures.md) 명세를 따릅니다. 전체 알고리즘은
-[REST 요청 서명](../../signatures.md#rest-request-signing)과
-[REST 요청 검증](../../signatures.md#rest-request-verification)을
-참고하세요.
+```http
+UCP-Agent: profile="https://platform.example/.well-known/ucp"
+```
 
-## 적합성 { #conformance }
+## Message Signing { #message-signing }
 
-REST 바인딩을 구현하는 플랫폼은 다음을 지켜야 합니다.
+Request and response signatures follow the
+[Message Signatures](../../signatures.md) specification using RFC 9421 HTTP Message
+Signatures. See
+[REST Request Signing](../../signatures.md#rest-request-signing) and
+[REST Request Verification](../../signatures.md#rest-request-verification) for
+the complete algorithm.
 
-* 모든 요청에 프로필 URL이 담긴 `UCP-Agent` 헤더를 반드시 포함해야 합니다(**MUST**).
-* 주문 데이터에 접근하기 전에 응답의 `messages` 배열을 반드시 확인해야 합니다(**MUST**).
-* 권위 있는 주문 경험은 `permalink_url`로 비즈니스에 맡겨야
-  합니다(**SHOULD**). 주문 상세 정보와 구매 후 작업의 기준 출처는 비즈니스
-  사이트입니다.
+## Conformance { #conformance }
 
-REST 바인딩을 구현하는 비즈니스는 다음을 지켜야 합니다.
+Platforms implementing the REST binding:
 
-* 모든 엔드포인트를 반드시 TLS 1.3 이상의 HTTPS로 제공해야 합니다(**MUST**).
-* [메시지 서명](../../signatures.md) 명세에 따라 응답에
-  서명해야 합니다(**SHOULD**).
+* **MUST** include `UCP-Agent` header with profile URL on all requests
+* **MUST** check the `messages` array in responses before accessing order data
+* **SHOULD** delegate to the business via `permalink_url` for the authoritative
+  order experience - the business site is the source of truth for order details
+  and post-purchase operations
 
-모든 전송 방식에 공통으로 적용되는 기능 수준의 요구 사항은
-[주문 기능 - 가이드라인](index.md#operations-guidelines)을 참고하세요.
+Businesses implementing the REST binding:
+
+* **MUST** serve all endpoints over HTTPS with TLS 1.3+
+* **SHOULD** sign responses per the
+  [Message Signatures](../../signatures.md) specification
+
+See [Order Capability - Guidelines](index.md#operations-guidelines) for
+capability-level requirements that apply across all transports.

@@ -1096,14 +1096,3 @@ p.hero-description {
 .custom-banner-close:hover {
   background-color: #e9ecef;
 }
-
-/* --- Korean port --- */
-.md-typeset {
-  word-break: keep-all;
-  overflow-wrap: anywhere;
-}
-
-.md-typeset .ko-notice {
-  margin-top: 0;
-  font-size: 0.7rem;
-}

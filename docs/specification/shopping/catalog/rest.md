@@ -14,15 +14,17 @@
    limitations under the License.
 -->
 
-# 카탈로그 - REST 바인딩 { #catalog-rest-binding }
+# Catalog - REST Binding { #catalog-rest-binding }
 
-이 문서는 [카탈로그 기능](index.md)의 HTTP/REST 바인딩을 정의합니다.
+This document specifies the HTTP/REST binding for the
+[Catalog Capability](index.md).
 
-## 프로토콜 기본 사항 { #protocol-fundamentals }
+## Protocol Fundamentals { #protocol-fundamentals }
 
-### 디스커버리 { #discovery }
+### Discovery { #discovery }
 
-비즈니스는 `/.well-known/ucp`의 UCP 프로필에서 REST 전송 방식 지원 여부를 선언합니다.
+Businesses advertise REST transport availability through their UCP profile at
+`/.well-known/ucp`.
 
 <!-- ucp:example schema=profile def=business_schema -->
 ```json
@@ -57,23 +59,23 @@
 }
 ```
 
-## 엔드포인트 { #endpoints }
+## Endpoints { #endpoints }
 
-| 엔드포인트 | 메서드 | 기능 | 설명 |
+| Endpoint | Method | Capability | Description |
 | :--- | :--- | :--- | :--- |
-| `/catalog/search` | POST | [검색](search.md) | 상품을 검색합니다. |
-| `/catalog/lookup` | POST | [조회](lookup.md) | ID로 하나 이상의 상품을 조회합니다. |
-| `/catalog/product` | POST | [조회](lookup.md#get-product-get_product) | 식별자로 상품의 전체 상세 정보를 가져옵니다. |
+| `/catalog/search` | POST | [Search](search.md) | Search for products. |
+| `/catalog/lookup` | POST | [Lookup](lookup.md) | Lookup one or more products by ID. |
+| `/catalog/product` | POST | [Lookup](lookup.md#get-product-get_product) | Get full product detail by identifier. |
 
 ### `POST /catalog/search` { #post-catalogsearch }
 
-[카탈로그 검색](search.md) 기능에 대응합니다.
+Maps to the [Catalog Search](search.md) capability.
 
 {{ method_fields('search_catalog', 'shopping/rest.openapi.json', 'shopping/catalog/rest') }}
 
-#### 예시 { #example }
+#### Example { #example }
 
-=== "요청"
+=== "Request"
 
     <!-- ucp:example schema=shopping/catalog_search op=search direction=request -->
     ```json
@@ -96,7 +98,7 @@
     }
     ```
 
-=== "응답"
+=== "Response"
 
     <!-- ucp:example schema=shopping/catalog_search op=search -->
     ```json
@@ -193,16 +195,17 @@
 
 ### `POST /catalog/lookup` { #post-cataloglookup }
 
-[카탈로그 조회](lookup.md) 기능에 대응합니다. 지원하는 식별자, 해석 동작, 클라이언트 대응
-요건은 기능 문서를 참고하세요.
+Maps to the [Catalog Lookup](lookup.md) capability. See capability documentation
+for supported identifiers, resolution behavior, and client correlation requirements.
 
-요청 본문에는 식별자 배열과, 배치 안의 모든 조회에 적용되는 선택적 컨텍스트가 담깁니다.
+The request body contains an array of identifiers and optional context that
+applies to all lookups in the batch.
 
 {{ method_fields('lookup_catalog', 'shopping/rest.openapi.json', 'shopping/catalog/rest') }}
 
-#### 예시: 컨텍스트를 포함한 일괄 조회 { #example-batch-lookup-with-context }
+#### Example: Batch Lookup with Context { #example-batch-lookup-with-context }
 
-=== "요청"
+=== "Request"
 
     <!-- ucp:example schema=shopping/catalog_lookup op=lookup direction=request -->
     ```json
@@ -219,7 +222,7 @@
     }
     ```
 
-=== "응답"
+=== "Response"
 
     <!-- ucp:example schema=shopping/catalog_lookup op=lookup -->
     ```json
@@ -285,12 +288,13 @@
     }
     ```
 
-#### 예시: 부분 성공 (일부 식별자를 찾을 수 없음) { #example-partial-success-some-identifiers-not-found }
+#### Example: Partial Success (Some Identifiers Not Found) { #example-partial-success-some-identifiers-not-found }
 
-배치의 식별자 중 일부를 찾을 수 없으면, 응답의 `products` 배열에는 찾은 상품만 들어
-있습니다. 응답에 찾지 못한 식별자를 알리는 정보성 메시지를 포함할 수 있습니다(MAY).
+When some identifiers in the batch are not found, the response includes the
+found products in the `products` array. The response MAY include informational
+messages indicating which identifiers were not found.
 
-=== "요청"
+=== "Request"
 
     <!-- ucp:example schema=shopping/catalog_lookup op=lookup direction=request -->
     ```json
@@ -299,7 +303,7 @@
     }
     ```
 
-=== "응답"
+=== "Response"
 
     <!-- ucp:example schema=shopping/catalog_lookup op=lookup -->
     ```json
@@ -346,17 +350,17 @@
 
 ### `POST /catalog/product` { #post-catalogproduct }
 
-[카탈로그 조회](lookup.md#get-product-get_product) 기능에 대응합니다. 상품 상세 페이지
-전체를 렌더링할 수 있도록 (배열이 아닌) 단일 `product` 객체를 반환합니다.
+Maps to the [Catalog Lookup](lookup.md#get-product-get_product) capability. Returns a singular
+`product` object (not an array) for full product detail page rendering.
 
 {{ method_fields('get_product', 'shopping/rest.openapi.json', 'shopping/catalog/rest') }}
 
-#### 예시: 옵션 선택 포함 { #example-with-option-selection }
+#### Example: With Option Selection { #example-with-option-selection }
 
-사용자가 Color=Blue를 선택한 상황입니다. 응답의 옵션 값에는 재고 상태 신호가 포함되며,
-선택과 일치하는 변형이 반환됩니다.
+The user selected Color=Blue. The response includes availability signals
+on option values and returns variants matching the selection.
 
-=== "요청"
+=== "Request"
 
     <!-- ucp:example schema=shopping/catalog_lookup op=get_product direction=request -->
     ```json
@@ -376,7 +380,7 @@
     }
     ```
 
-=== "응답"
+=== "Response"
 
     <!-- ucp:example schema=shopping/catalog_lookup op=get_product -->
     ```json
@@ -405,94 +409,7 @@
           {
             "type": "image",
             "url": "https://cdn.example.com/products/runner-pro-blue.jpg",
-            "alt_text": "Runner Pro in Blue",
-            "width": 1600,
-            "height": 1600,
-            "sources": [
-              {
-                "url": "https://cdn.example.com/products/runner-pro-blue.avif",
-                "mime_type": "image/avif",
-                "format": "avif",
-                "width": 1600,
-                "height": 1600
-              },
-              {
-                "url": "https://cdn.example.com/products/runner-pro-blue.jpg",
-                "mime_type": "image/jpeg",
-                "format": "jpg",
-                "width": 1600,
-                "height": 1600
-              }
-            ]
-          },
-          {
-            "type": "video",
-            "url": "https://cdn.example.com/products/runner-pro-demo-720p.mp4",
-            "name": "Runner Pro flex demo",
-            "alt_text": "Runner Pro shoe flexing to show sole cushioning",
-            "duration": 24,
-            "preview": {
-              "url": "https://cdn.example.com/products/runner-pro-demo-poster.jpg",
-              "width": 1280,
-              "height": 720
-            },
-            "sources": [
-              {
-                "url": "https://cdn.example.com/products/runner-pro-demo-720p.mp4",
-                "mime_type": "video/mp4",
-                "format": "mp4",
-                "width": 1280,
-                "height": 720,
-                "filesize": 4200000
-              },
-              {
-                "url": "https://cdn.example.com/products/runner-pro-demo-1080p.mp4",
-                "mime_type": "video/mp4",
-                "format": "mp4",
-                "width": 1920,
-                "height": 1080,
-                "filesize": 8480000
-              },
-              {
-                "url": "https://cdn.example.com/products/runner-pro-demo.m3u8",
-                "mime_type": "application/vnd.apple.mpegurl",
-                "format": "m3u8"
-              }
-            ]
-          },
-          {
-            "type": "model_3d",
-            "url": "https://cdn.example.com/products/runner-pro.glb",
-            "alt_text": "Runner Pro 3D model",
-            "preview": {
-              "url": "https://cdn.example.com/products/runner-pro-3d-thumb.jpg"
-            },
-            "sources": [
-              {
-                "url": "https://cdn.example.com/products/runner-pro.glb",
-                "mime_type": "model/gltf-binary",
-                "format": "glb",
-                "filesize": 4200000
-              },
-              {
-                "url": "https://cdn.example.com/products/runner-pro.usdz",
-                "mime_type": "model/vnd.usdz+zip",
-                "format": "usdz",
-                "filesize": 5100000
-              }
-            ]
-          },
-          {
-            "type": "external_video",
-            "url": "https://videos.example.com/embed/123",
-            "name": "Runner Pro trail review",
-            "alt_text": "Reviewer running a trail in the Runner Pro",
-            "duration": 212,
-            "preview": {
-              "url": "https://cdn.example.com/products/runner-pro-review-poster.jpg",
-              "width": 1280,
-              "height": 720
-            }
+            "alt_text": "Runner Pro in Blue"
           }
         ],
         "options": [
@@ -553,14 +470,16 @@
     }
     ```
 
-Green은 품절입니다(`available: false, exists: true`). Blue에는 사이즈 11이 존재하지
-않습니다(`exists: false`). 반환된 변형은 Color=Blue 선택과 일치합니다.
+Green is out of stock (`available: false, exists: true`). Size 11 doesn't
+exist in Blue (`exists: false`). Variants returned match the Color=Blue
+selection.
 
-#### 상품을 찾을 수 없음 { #product-not-found }
+#### Product Not Found { #product-not-found }
 
-식별자가 상품으로 해석되지 않으면, 서버는 `ucp.status: "error"`와 설명 메시지를 담아
-HTTP 200을 반환합니다. 이는 전송 에러가 아니라 애플리케이션 처리 결과입니다. 핸들러가
-실행되었고, 그 결과를 UCP 봉투(envelope)로 보고한 것입니다.
+When the identifier does not resolve to a product, the server returns HTTP 200
+with `ucp.status: "error"` and a descriptive message. This is an application
+outcome, not a transport error — the handler executed and reports its result
+via the UCP envelope.
 
 <!-- ucp:example schema=common/types/error_response op=read -->
 ```json
@@ -585,45 +504,50 @@ HTTP 200을 반환합니다. 이는 전송 에러가 아니라 애플리케이�
 }
 ```
 
-(배치 요청에 부분 결과를 반환하는) `/catalog/lookup`과 달리 `/catalog/product`는 단일
-리소스 작업입니다. 상품이 없으면 `unrecoverable` 심각도의 애플리케이션 에러이며,
-에이전트는 같은 식별자로 재시도하지 않는 것이 좋습니다.
+Unlike `/catalog/lookup` (which returns partial results for batch requests),
+`/catalog/product` is a single-resource operation. A missing product is an
+application error with `unrecoverable` severity — the agent should not retry
+with the same identifier.
 
-## HTTP 헤더 { #http-headers }
+## HTTP Headers { #http-headers }
 
-다음 헤더는 HTTP 바인딩에서 정의하며, 별도 언급이 없으면 모든 작업에 적용됩니다.
+The following headers are defined for the HTTP binding and apply to all
+operations unless otherwise noted.
 
 {{ header_fields('search_catalog', 'shopping/rest.openapi.json') }}
 
-### 헤더별 요건 { #specific-header-requirements }
+### Specific Header Requirements { #specific-header-requirements }
 
-{{ header_requirements('ucp_agent') }}
+* **UCP-Agent**: All requests **MUST** include the `UCP-Agent` header
+    containing the platform profile URI using Dictionary Structured Field syntax
+    ([RFC 8941](https://datatracker.ietf.org/doc/html/rfc8941){target="_blank"}).
+    Format: `profile="https://platform.example/profile"`.
 
-## 에러 처리 { #error-handling }
+## Error Handling { #error-handling }
 
-UCP는 전송 에러와 비즈니스 처리 결과를 분리하는 2계층 에러 모델을 사용합니다.
+UCP uses a two-layer error model separating transport errors from business outcomes.
 
-### 전송 에러 { #transport-errors }
+### Transport Errors { #transport-errors }
 
-요청 처리를 가로막는 프로토콜 수준 문제에는 HTTP 상태 코드를 사용합니다.
+Use HTTP status codes for protocol-level issues that prevent request processing:
 
-| 상태 | 의미 |
+| Status | Meaning |
 | :--- | :--- |
-| 400 | Bad Request - 잘못된 형식의 JSON 또는 필수 파라미터 누락 |
-| 401 | Unauthorized - 인증 정보가 없거나 유효하지 않음 |
-| 429 | Too Many Requests - 요청 속도 제한 |
+| 400 | Bad Request - Malformed JSON or missing required parameters |
+| 401 | Unauthorized - Missing or invalid authentication |
+| 429 | Too Many Requests - Rate limited |
 | 500 | Internal Server Error |
 
-### 비즈니스 처리 결과 { #business-outcomes }
+### Business Outcomes { #business-outcomes }
 
-애플리케이션 수준의 처리 결과는 모두 UCP 봉투와 선택적 `messages` 배열을 담아 HTTP 200으로
-반환합니다. 메시지 의미와 일반적인 시나리오는
-[카탈로그 개요](index.md#messages-and-error-handling)를 참고하세요.
+All application-level outcomes return HTTP 200 with the UCP envelope and optional
+`messages` array. See [Catalog Overview](index.md#messages-and-error-handling)
+for message semantics and common scenarios.
 
-#### 예시: 모든 상품을 찾을 수 없음 { #example-all-products-not-found }
+#### Example: All Products Not Found { #example-all-products-not-found }
 
-요청한 식별자를 하나도 찾지 못하면 `products` 배열은 비어 있습니다. 응답에 찾지 못한
-식별자를 알리는 정보성 메시지를 포함할 수 있습니다(MAY).
+When all requested identifiers fail lookup, the `products` array is empty. The response
+MAY include informational messages indicating which identifiers were not found.
 
 <!-- ucp:example schema=shopping/catalog_lookup op=lookup -->
 ```json
@@ -652,33 +576,33 @@ UCP는 전송 에러와 비즈니스 처리 결과를 분리하는 2계층 에�
 }
 ```
 
-비즈니스 처리 결과에는 표준 HTTP 200 상태를 사용하고, 메시지는 응답 본문에 담습니다.
+Business outcomes use the standard HTTP 200 status with messages in the response body.
 
-## 엔터티 { #entities }
+## Entities { #entities }
 
-### UCP 응답 카탈로그 {: #ucp-response-catalog-schema }
+### UCP Response Catalog {: #ucp-response-catalog-schema }
 
 {{ extension_schema_fields('ucp.json#/$defs/response_catalog_schema', 'shopping/catalog/rest') }}
 
-### 상세 상품 {: #detail-product }
+### Detail Product {: #detail-product }
 
 {{ extension_schema_fields('catalog_lookup.json#/$defs/detail_product', 'shopping/catalog/rest') }}
 
-### Get Product 응답 {: #catalog-lookup-get-product-response }
+### Get Product Response {: #catalog-lookup-get-product-response }
 
 {{ extension_schema_fields('catalog_lookup.json#/$defs/get_product_response', 'shopping/catalog/rest') }}
 
-### 에러 응답 {: #error-response }
+### Error Response {: #error-response }
 
 {{ schema_fields('types/error_response', 'shopping/catalog/rest') }}
 
-## 적합성 { #conformance }
+## Conformance { #conformance }
 
-적합한 REST 전송 방식 구현은 반드시 다음을 충족해야 합니다(**MUST**).
+A conforming REST transport implementation **MUST**:
 
-1. 비즈니스의 UCP 프로필에 선언된 각 카탈로그 기능에 대해, 해당 기능의 요건([검색](search.md), [조회](lookup.md))에 따라 엔드포인트를 구현합니다. 각 기능은 독립적으로 채택할 수 있습니다. 조회 기능을 선언했다면 `/catalog/lookup`과 `/catalog/product`를 반드시 모두 제공해야 합니다(MUST).
-2. 유효한 `Price` 객체(금액 + 통화)가 포함된 상품을 반환합니다.
-3. 공통 페이지네이션 계약에 따라 검색에서 커서 기반 페이지네이션을 지원합니다
-    ([페이지네이션](search.md#pagination) 참고).
-4. 조회 요청에는 HTTP 200을 반환합니다. 알 수 없는 식별자가 있으면 반환되는 상품 수가 줄어듭니다(정보성 `not_found` 메시지를 포함할 수 있습니다(MAY)).
-5. 배치 크기 제한을 넘는 요청에는 `request_too_large` 에러와 함께 HTTP 400을 반환합니다.
+1. Implement endpoints for each catalog capability advertised in the business's UCP profile, per their respective capability requirements ([Search](search.md), [Lookup](lookup.md)). Each capability may be adopted independently. When the Lookup capability is advertised, both `/catalog/lookup` and `/catalog/product` MUST be available.
+2. Return products with valid `Price` objects (amount + currency).
+3. Support cursor-based pagination for Search according to the shared
+    pagination contract (see [Pagination](search.md#pagination)).
+4. Return HTTP 200 for lookup requests; unknown identifiers result in fewer products returned (MAY include informational `not_found` messages).
+5. Return HTTP 400 with `request_too_large` error for requests exceeding batch size limits.

@@ -14,16 +14,17 @@
    limitations under the License.
 -->
 
-# 카탈로그 - MCP 바인딩 { #catalog-mcp-binding }
+# Catalog - MCP Binding { #catalog-mcp-binding }
 
-이 문서는 [카탈로그 기능](index.md)의 Model Context Protocol(MCP) 바인딩을 설명합니다.
+This document specifies the Model Context Protocol (MCP) binding for the
+[Catalog Capability](index.md).
 
-## 프로토콜 기본 사항 { #protocol-fundamentals }
+## Protocol Fundamentals { #protocol-fundamentals }
 
-### 디스커버리 { #discovery }
+### Discovery { #discovery }
 
-비즈니스는 `/.well-known/ucp`에 있는 UCP 프로필로 MCP 전송 방식 지원 여부를
-알립니다.
+Businesses advertise MCP transport availability through their UCP profile at
+`/.well-known/ucp`.
 
 <!-- ucp:example schema=profile def=business_schema -->
 ```json
@@ -58,10 +59,10 @@
 }
 ```
 
-### 요청 메타데이터 { #request-metadata }
+### Request Metadata { #request-metadata }
 
-MCP 클라이언트는 모든 요청에 프로토콜 메타데이터를 담은 `meta` 객체를 반드시 포함해야
-합니다(**MUST**).
+MCP clients **MUST** include a `meta` object in every request containing
+protocol metadata:
 
 <!-- ucp:example schema=shopping/catalog_search op=search direction=request extract=$.params.arguments.catalog -->
 ```json
@@ -89,36 +90,36 @@ MCP 클라이언트는 모든 요청에 프로토콜 메타데이터를 담은 `
 }
 ```
 
-버전 호환성 확인과 기능 협상에 쓰이므로 모든 요청에 `meta["ucp-agent"]` 필드가
-**필수(required)**입니다.
+The `meta["ucp-agent"]` field is **required** on all requests to enable
+version compatibility checking and capability negotiation.
 
-## 도구 { #tools }
+## Tools { #tools }
 
-| 도구 | 기능 | 설명 |
+| Tool | Capability | Description |
 | :--- | :--- | :--- |
-| `search_catalog` | [검색](search.md) | 상품을 검색합니다. |
-| `lookup_catalog` | [조회](lookup.md) | 식별자로 하나 이상의 상품 또는 변형(variant)을 조회합니다. |
-| `get_product` | [조회](lookup.md#get-product-get_product) | 식별자로 상품의 전체 상세 정보를 가져옵니다. |
+| `search_catalog` | [Search](search.md) | Search for products. |
+| `lookup_catalog` | [Lookup](lookup.md) | Lookup one or more products or variants by identifier. |
+| `get_product` | [Lookup](lookup.md#get-product-get_product) | Get full product detail by identifier. |
 
 ### `search_catalog` { #search_catalog }
 
-[카탈로그 검색](search.md) 기능에 대응합니다.
+Maps to the [Catalog Search](search.md) capability.
 
-#### 검색 요청 { #search-request }
+#### Search Request { #search-request }
 
 {{ extension_schema_fields(
   'catalog_search.json#/$defs/search_request', 'shopping/catalog/mcp'
 ) }}
 
-### 검색 응답 { #search-response }
+### Search Response { #search-response }
 
 {{ extension_schema_fields(
   'catalog_search.json#/$defs/search_response', 'shopping/catalog/mcp'
 ) }}
 
-#### 검색 예시 { #search-example }
+#### Search Example { #search-example }
 
-=== "요청"
+=== "Request"
 
     <!-- ucp:example schema=shopping/catalog_search op=search direction=request extract=$.params.arguments.catalog -->
     ```json
@@ -156,7 +157,7 @@ MCP 클라이언트는 모든 요청에 프로토콜 메타데이터를 담은 `
     }
     ```
 
-=== "응답"
+=== "Response"
 
     <!-- ucp:example schema=shopping/catalog_search op=search direction=response extract=$.result.structuredContent -->
     ```json
@@ -259,26 +260,26 @@ MCP 클라이언트는 모든 요청에 프로토콜 메타데이터를 담은 `
 
 ### `lookup_catalog` { #lookup_catalog }
 
-[카탈로그 조회](lookup.md) 기능에 대응합니다. 지원되는 식별자, 해석 동작, 클라이언트
-대응 관계 요구 사항은 해당 기능 문서를 참고하세요.
+Maps to the [Catalog Lookup](lookup.md) capability. See capability documentation
+for supported identifiers, resolution behavior, and client correlation requirements.
 
-`catalog.ids` 매개변수는 식별자 배열과 선택적 컨텍스트를 받습니다.
+The `catalog.ids` parameter accepts an array of identifiers and optional context.
 
-#### 조회 요청 { #lookup-request }
+#### Lookup Request { #lookup-request }
 
 {{ extension_schema_fields(
   'catalog_lookup.json#/$defs/lookup_request', 'shopping/catalog/mcp'
 ) }}
 
-### 조회 응답 { #lookup-response }
+### Lookup Response { #lookup-response }
 
 {{ extension_schema_fields(
   'catalog_lookup.json#/$defs/lookup_response', 'shopping/catalog/mcp'
 ) }}
 
-#### 조회 예시 { #lookup-example }
+#### Lookup Example { #lookup-example }
 
-=== "요청"
+=== "Request"
 
     <!-- ucp:example schema=shopping/catalog_lookup op=lookup direction=request extract=$.params.arguments.catalog -->
     ```json
@@ -305,7 +306,7 @@ MCP 클라이언트는 모든 요청에 프로토콜 메타데이터를 담은 `
     }
     ```
 
-=== "응답"
+=== "Response"
 
     <!-- ucp:example schema=shopping/catalog_lookup op=lookup direction=response extract=$.result.structuredContent -->
     ```json
@@ -398,10 +399,10 @@ MCP 클라이언트는 모든 요청에 프로토콜 메타데이터를 담은 `
     }
     ```
 
-#### 부분 성공 { #partial-success }
+#### Partial Success { #partial-success }
 
-일부 식별자를 찾지 못하면 응답에는 찾은 상품만 담깁니다. 어떤 식별자를 찾지 못했는지
-알려 주는 정보성 메시지를 응답에 포함할 수 있습니다(MAY).
+When some identifiers are not found, the response includes the found products. The
+response MAY include informational messages indicating which identifiers were not found.
 
 <!-- ucp:example schema=shopping/catalog_lookup op=lookup extract=$.result.structuredContent -->
 ```json
@@ -451,24 +452,24 @@ MCP 클라이언트는 모든 요청에 프로토콜 메타데이터를 담은 `
 
 ### `get_product` { #get_product }
 
-[카탈로그 조회](lookup.md#get-product-get_product) 기능에 대응합니다. 대화형 옵션 선택을
-지원하는 전체 상품 상세 정보를 담아 `product` 객체 하나를 반환합니다.
+Maps to the [Catalog Lookup](lookup.md#get-product-get_product) capability. Returns a singular
+`product` object for full product detail with interactive option selection.
 
-#### 상품 조회 요청 { #get-product-request }
+#### Get Product Request { #get-product-request }
 
 {{ extension_schema_fields(
   'catalog_lookup.json#/$defs/get_product_request', 'shopping/catalog/mcp'
 ) }}
 
-#### 상품 조회 응답 { #get-product-response }
+#### Get Product Response { #get-product-response }
 
 {{ extension_schema_fields(
   'catalog_lookup.json#/$defs/get_product_response', 'shopping/catalog/mcp'
 ) }}
 
-#### 상품 조회 예시 { #get-product-example }
+#### Get Product Example { #get-product-example }
 
-=== "요청"
+=== "Request"
 
     <!-- ucp:example schema=shopping/catalog_lookup op=get_product direction=request extract=$.params.arguments.catalog -->
     ```json
@@ -499,7 +500,7 @@ MCP 클라이언트는 모든 요청에 프로토콜 메타데이터를 담은 `
     }
     ```
 
-=== "응답"
+=== "Response"
 
     <!-- ucp:example schema=shopping/catalog_lookup op=get_product direction=response extract=$.result.structuredContent -->
     ```json
@@ -532,94 +533,7 @@ MCP 클라이언트는 모든 요청에 프로토콜 메타데이터를 담은 `
               {
                 "type": "image",
                 "url": "https://cdn.example.com/products/runner-pro-blue.jpg",
-                "alt_text": "Runner Pro in Blue",
-                "width": 1600,
-                "height": 1600,
-                "sources": [
-                  {
-                    "url": "https://cdn.example.com/products/runner-pro-blue.avif",
-                    "mime_type": "image/avif",
-                    "format": "avif",
-                    "width": 1600,
-                    "height": 1600
-                  },
-                  {
-                    "url": "https://cdn.example.com/products/runner-pro-blue.jpg",
-                    "mime_type": "image/jpeg",
-                    "format": "jpg",
-                    "width": 1600,
-                    "height": 1600
-                  }
-                ]
-              },
-              {
-                "type": "video",
-                "url": "https://cdn.example.com/products/runner-pro-demo-720p.mp4",
-                "name": "Runner Pro flex demo",
-                "alt_text": "Runner Pro shoe flexing to show sole cushioning",
-                "duration": 24,
-                "preview": {
-                  "url": "https://cdn.example.com/products/runner-pro-demo-poster.jpg",
-                  "width": 1280,
-                  "height": 720
-                },
-                "sources": [
-                  {
-                    "url": "https://cdn.example.com/products/runner-pro-demo-720p.mp4",
-                    "mime_type": "video/mp4",
-                    "format": "mp4",
-                    "width": 1280,
-                    "height": 720,
-                    "filesize": 4200000
-                  },
-                  {
-                    "url": "https://cdn.example.com/products/runner-pro-demo-1080p.mp4",
-                    "mime_type": "video/mp4",
-                    "format": "mp4",
-                    "width": 1920,
-                    "height": 1080,
-                    "filesize": 8480000
-                  },
-                  {
-                    "url": "https://cdn.example.com/products/runner-pro-demo.m3u8",
-                    "mime_type": "application/vnd.apple.mpegurl",
-                    "format": "m3u8"
-                  }
-                ]
-              },
-              {
-                "type": "model_3d",
-                "url": "https://cdn.example.com/products/runner-pro.glb",
-                "alt_text": "Runner Pro 3D model",
-                "preview": {
-                  "url": "https://cdn.example.com/products/runner-pro-3d-thumb.jpg"
-                },
-                "sources": [
-                  {
-                    "url": "https://cdn.example.com/products/runner-pro.glb",
-                    "mime_type": "model/gltf-binary",
-                    "format": "glb",
-                    "filesize": 4200000
-                  },
-                  {
-                    "url": "https://cdn.example.com/products/runner-pro.usdz",
-                    "mime_type": "model/vnd.usdz+zip",
-                    "format": "usdz",
-                    "filesize": 5100000
-                  }
-                ]
-              },
-              {
-                "type": "external_video",
-                "url": "https://videos.example.com/embed/123",
-                "name": "Runner Pro trail review",
-                "alt_text": "Reviewer running a trail in the Runner Pro",
-                "duration": 212,
-                "preview": {
-                  "url": "https://cdn.example.com/products/runner-pro-review-poster.jpg",
-                  "width": 1280,
-                  "height": 720
-                }
+                "alt_text": "Runner Pro in Blue"
               }
             ],
             "options": [
@@ -682,10 +596,11 @@ MCP 클라이언트는 모든 요청에 프로토콜 메타데이터를 담은 `
     }
     ```
 
-#### 상품을 찾을 수 없음 { #product-not-found }
+#### Product Not Found { #product-not-found }
 
-식별자가 어떤 상품으로도 해석되지 않으면, 서버는 `ucp.status: "error"`와 설명 메시지를
-담은 성공 JSON-RPC 결과를 반환합니다. 전송 오류가 아니라 애플리케이션 수준의 결과입니다.
+When the identifier does not resolve to a product, the server returns a
+successful JSON-RPC result with `ucp.status: "error"` and a descriptive
+message. This is an application outcome, not a transport error.
 
 <!-- ucp:example schema=common/types/error_response op=read direction=response extract=$.result.structuredContent -->
 ```json
@@ -716,26 +631,28 @@ MCP 클라이언트는 모든 요청에 프로토콜 메타데이터를 담은 `
 }
 ```
 
-## 오류 처리 { #error-handling }
+## Error Handling { #error-handling }
 
-UCP는 전송 오류와 비즈니스 결과를 나누는 2계층 오류 모델을 사용합니다.
+UCP uses a two-layer error model separating transport errors from business outcomes.
 
-### 전송 오류 { #transport-errors }
+### Transport Errors { #transport-errors }
 
-요청 처리를 가로막는 전송 수준의 실패(인증, 속도 제한, 서비스 불가)는 JSON-RPC `error`로
-반환됩니다. 전체 오류 코드 레지스트리와 JSON-RPC 오류 코드 매핑은
-[핵심 명세](../../overview/index.md#error-codes)를 참고하세요.
+Transport-level failures (authentication, rate limiting, unavailability) that
+prevent request processing are returned as JSON-RPC `error`. See the
+[Core Specification](../../overview/index.md#error-codes) for the complete error code
+registry and JSON-RPC error code mappings.
 
-### 비즈니스 결과 { #business-outcomes }
+### Business Outcomes { #business-outcomes }
 
-모든 애플리케이션 수준의 결과는 UCP 엔벌로프와 선택적 `messages` 배열을 담은 성공
-JSON-RPC 결과로 반환됩니다. 메시지 의미와 일반적인 시나리오는
-[카탈로그 개요](index.md#messages-and-error-handling)를 참고하세요.
+All application-level outcomes return a successful JSON-RPC result with the UCP
+envelope and optional `messages` array. See [Catalog Overview](index.md#messages-and-error-handling)
+for message semantics and common scenarios.
 
-#### 예시: 모든 상품을 찾을 수 없음 { #example-all-products-not-found }
+#### Example: All Products Not Found { #example-all-products-not-found }
 
-요청한 식별자를 하나도 해석하지 못하면 응답에는 빈 `products` 배열이 담깁니다. 어떤
-식별자를 찾지 못했는지 알려 주는 정보성 메시지를 응답에 포함할 수 있습니다(MAY).
+When all requested identifiers fail to resolve, the response contains an empty `products`
+array. The response MAY include informational messages indicating which identifiers were
+not found.
 
 <!-- ucp:example schema=shopping/catalog_lookup op=lookup direction=response extract=$.result.structuredContent -->
 ```json
@@ -765,33 +682,34 @@ JSON-RPC 결과로 반환됩니다. 메시지 의미와 일반적인 시나리�
 }
 ```
 
-비즈니스 결과는 JSON-RPC `result` 필드를 사용하고, 메시지는 응답 페이로드에 담습니다.
-성공과 실패가 섞인 결과를 처리하는 방법은 [부분 성공](#partial-success) 섹션을 참고하세요.
+Business outcomes use the JSON-RPC `result` field with messages in the response
+payload. See the [Partial Success](#partial-success) section for handling mixed
+results.
 
-## 엔티티 { #entities }
+## Entities { #entities }
 
-### 상세 상품 {: #detail-product }
+### Detail Product {: #detail-product }
 
 {{ extension_schema_fields('catalog_lookup.json#/$defs/detail_product', 'shopping/catalog/mcp') }}
 
-### 상품 조회 응답 {: #catalog-lookup-get-product-response }
+### Get Product Response {: #catalog-lookup-get-product-response }
 
 {{ extension_schema_fields('catalog_lookup.json#/$defs/get_product_response', 'shopping/catalog/mcp') }}
 
-### 에러 응답 {: #error-response }
+### Error Response {: #error-response }
 
 {{ schema_fields('types/error_response', 'shopping/catalog/mcp') }}
 
-## 적합성 { #conformance }
+## Conformance { #conformance }
 
-적합한 MCP 전송 방식 구현은 반드시 다음 요건을 충족해야 합니다(**MUST**).
+A conforming MCP transport implementation **MUST**:
 
-1. JSON-RPC 2.0 프로토콜을 올바르게 구현합니다.
-2. 비즈니스의 UCP 프로필에 선언된 카탈로그 기능마다 해당 기능의 요구 사항([검색](search.md), [조회](lookup.md))에 따라 도구를 구현합니다. 각 기능은 따로따로 채택할 수 있습니다. 조회 기능을 선언했다면 `lookup_catalog`와 `get_product` 도구를 반드시 모두 제공해야 합니다(MUST).
-3. 전송 문제에는 JSON-RPC 오류를, 비즈니스 결과에는 `messages` 배열을 사용합니다.
-4. 조회 요청에는 성공 결과를 반환합니다. 알 수 없는 식별자가 있으면 그만큼 반환되는 상품 수가 줄어듭니다(정보성 `not_found` 메시지를 포함할 수 있습니다(MAY)).
-5. 도구 입력을 UCP 스키마로 검증합니다.
-6. 유효한 `Price` 객체(금액 + 통화)가 있는 상품을 반환합니다.
-7. 공통 페이지네이션 규약에 따라 검색에 커서 기반 페이지네이션을
-    지원합니다([페이지네이션](search.md#pagination) 참고).
-8. 배치 크기 제한을 넘는 요청에는 `-32602`(Invalid params)를 반환합니다.
+1. Implement JSON-RPC 2.0 protocol correctly.
+2. Implement tools for each catalog capability advertised in the business's UCP profile, per their respective capability requirements ([Search](search.md), [Lookup](lookup.md)). Each capability may be adopted independently. When the Lookup capability is advertised, both `lookup_catalog` and `get_product` tools MUST be available.
+3. Use JSON-RPC errors for transport issues; use `messages` array for business outcomes.
+4. Return successful result for lookup requests; unknown identifiers result in fewer products returned (MAY include informational `not_found` messages).
+5. Validate tool inputs against UCP schemas.
+6. Return products with valid `Price` objects (amount + currency).
+7. Support cursor-based pagination for Search according to the shared
+    pagination contract (see [Pagination](search.md#pagination)).
+8. Return `-32602` (Invalid params) for requests exceeding batch size limits.

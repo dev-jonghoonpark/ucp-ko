@@ -14,125 +14,135 @@
    limitations under the License.
 -->
 
-# 카탈로그 기능 { #catalog-capability }
+# Catalog Capability { #catalog-capability }
 
-## 개요 { #overview }
+## Overview { #overview }
 
-카탈로그 기능(Capability)을 사용하면 플랫폼이 비즈니스의 상품 카탈로그를 검색하고
-탐색할 수 있습니다. 체크아웃 전에 상품을 찾는 단계로, 다음과 같은 사용 사례를
-지원합니다.
+The Catalog capability allows platforms to search and browse business product catalogs.
+This enables product discovery before checkout, supporting use cases like:
 
-* 자유 텍스트 상품 검색
-* 카테고리 및 필터 기반 탐색
-* 식별자로 상품/변형 일괄 조회
-* 변형 간 가격 비교
+* Free-text product search
+* Category and filter-based browsing
+* Batch product/variant retrieval by identifier
+* Price comparison across variants
 
-## 기능 { #capabilities }
+## Capabilities { #capabilities }
 
-| 기능 | 설명 |
+| Capability | Description |
 | :--- | :--- |
-| [`dev.ucp.shopping.catalog.search`](search.md) | 쿼리 텍스트와 필터로 상품을 검색합니다. |
-| [`dev.ucp.shopping.catalog.lookup`](lookup.md) | 식별자로 상품 또는 변형을 조회합니다. |
+| [`dev.ucp.shopping.catalog.search`](search.md) | Search for products using query text and filters. |
+| [`dev.ucp.shopping.catalog.lookup`](lookup.md) | Retrieve products or variants by identifier. |
 
-## 핵심 개념 { #key-concepts }
+## Key Concepts { #key-concepts }
 
-* **상품(Product)**: 제목, 설명, 미디어와 하나 이상의 변형으로 구성된 카탈로그
-  항목입니다.
-* **변형(Variant)**: 특정 옵션 선택(예: "Blue / Large"), 가격, 재고 상태가 정해진
-  구매 가능한 항목입니다.
-* **가격(Price)**: 가격 값에는 금액(통화의 최소 단위)과 통화 코드가 모두 들어 있어
-  다중 통화 카탈로그를 지원합니다.
-* **판매 기준(Sale basis)**: 수량을 표시하는 방식입니다. 개수 단위(`each`, 기본값)이거나
-  무게, 길이, 면적, 부피, 시간 같은 측정 단위입니다.
-  [수량과 단위](../../overview/index.md#quantities-and-units)를 참고하세요.
+* **Product**: A catalog item with title, description, media, and one or more
+  variants.
+* **Variant**: A purchasable item with specific option selections (e.g., "Blue /
+  Large"), price, and availability.
+* **Price**: Price values include both amount (in minor currency units) and
+  currency code, enabling multi-currency catalogs.
+* **Sale basis**: How quantity is denominated—as whole items (`each`, the
+  default) or in a unit of measure such as weight, length, area, volume, or
+  time. See [Quantities and units](../../overview/index.md#quantities-and-units).
 
-### 체크아웃과의 관계 { #relationship-to-checkout }
+### Relationship to Checkout { #relationship-to-checkout }
 
-카탈로그 작업은 체크아웃의 `line_items[].item.id`에 바로 쓸 수 있는 상품 ID와 변형
-ID를 반환합니다. 카탈로그 조회로 얻은 변형 ID는 체크아웃이 기대하는 아이템 ID와
-일치해야 합니다.
+Catalog operations return product and variant IDs that can be used directly in
+checkout `line_items[].item.id`. The variant ID from catalog retrieval should match
+the item ID expected by checkout.
 
-카탈로그 응답(가격, 재고 상태 등)은 해당 요청 시점의 비즈니스 조건을 반영하지만
-거래상의 확약은 아닙니다. 권위는 체크아웃에 있습니다. 응답은 세션마다 다를 수 있으므로,
-재검증 없이 다른 세션에서 재사용하지 않는 것이 좋습니다(**SHOULD NOT**).
+Catalog responses (pricing, availability, etc.) reflect the Business's current
+terms for the given request but are not transactional commitments — checkout
+is authoritative. Responses can be session-specific and **SHOULD NOT** be
+reused across sessions without re-validation.
 
-## 판매 기준과 수량 단위 { #sale-basis-and-quantity-units }
+## Sale basis and quantity units { #sale-basis-and-quantity-units }
 
-`variants[].quantity_unit`은 거래 전에 변형의 판매 기준을 알려 줍니다. 이 서술자는 공통
-[수량과 단위](../../overview/index.md#quantities-and-units) 계약을 따릅니다. 서술자가
-없으면 기본값인 `each` 기준이라는 뜻이며, `each`가 아닌 기준은 비즈니스가 서술자를
-포함해 알립니다.
+`variants[].quantity_unit` advertises a variant's sale basis before a
+transaction. The descriptor follows the shared
+[quantities and units](../../overview/index.md#quantities-and-units) contract. Its
+absence advertises the default `each` basis; the Business advertises a
+non-`each` basis by including the descriptor.
 
-플랫폼은 거래 전에 카탈로그에서 판매 기준을 파악합니다. `unit`과 `scale`은 수량을
-표시하는 방식을 정의하고, 선택 사항인
-[`increment`](../../overview/index.md#ordering-increment)는 비즈니스가 판매하는 주문
-단위를 알려 줍니다. 플랫폼은 이를 바탕으로 수량 조절 UI를 만들고 제출 전에 입력을
-검증할 수 있습니다. 바나나를 파운드 단위로, 1/4파운드 배수로 판매하는 비즈니스라면
-`{ "unit": "LBR", "scale": 2, "display_text": "lb", "increment": 25 }`를 알립니다.
+The catalog is where the Platform learns the sale basis before transacting:
+`unit` and `scale` define how quantities are denominated, and an optional
+[`increment`](../../overview/index.md#ordering-increment) advertises the ordering
+granularity the Business sells in, letting the Platform build quantity
+steppers and validate input before submission. A Business selling bananas by
+the pound in quarter-pound multiples advertises
+`{ "unit": "LBR", "scale": 2, "display_text": "lb", "increment": 25 }`.
 
-판매 기준이 물리적 측정에만 국한되지는 않습니다. 분 단위 주차, 시간 단위 인건비 같은
-계량형 상품도 같은 계약에 따라 같은 서술자(`MIN`, `HUR`)를 사용합니다.
+The sale basis is not limited to physical measure: metered offerings —
+parking by the minute, labor by the hour — use the same descriptor (`MIN`,
+`HUR`) with the same contract.
 
-`variants[].id`는 구매 가능한 변형을 식별하고, `quantity_unit`은 그 변형을 주문할 때
-쓰는 단위와 세분성을 정의합니다. `quantity_unit`이
-`{ "unit": "LBR", "scale": 2, "display_text": "lb" }`인 바나나는 1/100파운드 단위로
-판매되므로, `quantity`가 `150`이면 1.50 lb입니다.
+`variants[].id` identifies the purchasable variant; `quantity_unit` defines the
+denomination and granularity used to order it.
+Bananas whose `quantity_unit` is
+`{ "unit": "LBR", "scale": 2, "display_text": "lb" }` are sold in
+hundredth-of-a-pound steps, so a `quantity` of `150` represents 1.50 lb.
 
-### 단가와의 구분 { #distinction-from-unit-price }
+### Distinction from unit price { #distinction-from-unit-price }
 
-`quantity_unit`과 변형의 [`unit_price`](#variant)는 서로 다른 질문에 답하며, 각각
-독립적으로 설정합니다.
+`quantity_unit` and a variant's [`unit_price`](#variant) answer different
+questions and are set independently:
 
-* `quantity_unit`은 **판매 기준**입니다. `quantity`를 세는 단위이자 `price`를 매기는
-  단위입니다.
-* `unit_price`는 **표시용 비교 지표**입니다. 매대에서처럼 비교할 수 있도록 파생한
-  "표준 측정량당 가격"(예: 100 mL당)입니다. `measure`는 변형의 포장 또는 내용량이고,
-  `reference`는 비교 기준이 되는 분모입니다.
+* `quantity_unit` is the **sale basis** — the unit `quantity` is counted in and
+  `price` is quoted in.
+* `unit_price` is a **display comparator** — a derived "price per standard
+  measure" (for example, per 100 mL) for shelf-style comparison. Its `measure`
+  is the packaging or content quantity of the variant and its `reference` is the
+  comparison denominator.
 
-`quantity_unit`, `unit_price.measure`, `unit_price.reference`의 단위 필드는 공통
-[수량과 단위](../../overview/index.md#quantities-and-units) 계약을 따릅니다. 두 단가
-필드는 공통 측정 타입을 사용하므로 정수 `value` 필드는 단계 수입니다. 비즈니스는 변형에
-`quantity_unit`이나 `unit_price` 중 하나만 제공하거나, 둘 다 제공하거나, 둘 다 제공하지
-않을 수 있습니다(**MAY**).
+The unit fields in `quantity_unit`, `unit_price.measure`, and
+`unit_price.reference` follow the shared
+[quantities and units](../../overview/index.md#quantities-and-units) contract. The two
+unit-price fields use the shared measure type, so their integer `value` fields
+are step counts. The Business **MAY** provide `quantity_unit`, `unit_price`,
+both, or neither on a variant.
 
-표시용 비교 지표가 의미를 잃지 않도록, 비즈니스는 반드시
-`unit_price.measure.value`와 `unit_price.reference.value` 모두에 양의 정수를 사용해야
-합니다(**MUST**). 비즈니스는 반드시 `unit_price.currency`를 `price.currency`와 같게
-설정해야 합니다(**MUST**). `unit_price` 안에서 비즈니스는 반드시 `measure.unit`과
-`reference.unit`에 같은 값을 사용해야 합니다(**MUST**). 두 측정값의 `scale` 값은 서로
-달라도 됩니다(**MAY**). 비즈니스는 단가를 계산하면서 단위 간 변환이나 통화 변환을 해서는
-안 됩니다(**MUST NOT**). 각 측정값은 공통 단위 기준으로 정수 `value × 10^-scale`를
-나타냅니다. 비즈니스는 반드시 `price.amount`와 이 스케일 적용 값으로 비교 지표를
-계산해야 합니다(**MUST**).
+To keep the display comparator defined, the Business **MUST** use a positive
+integer for both `unit_price.measure.value` and `unit_price.reference.value`.
+The Business **MUST** set `unit_price.currency` equal to `price.currency`.
+Within `unit_price`, the Business **MUST** use identical values for
+`measure.unit` and `reference.unit`. The Business **MAY** use different `scale`
+values for those measures. The Business **MUST NOT** perform cross-unit or
+currency conversion as part of the unit-price calculation. Each measure
+represents its integer `value × 10^-scale` in the common unit. The Business
+**MUST** compute the comparator from `price.amount` and those scaled values:
 
 ```text
 (price.amount / (measure.value × 10^-measure.scale)) × (reference.value × 10^-reference.scale)
 ```
 
-비즈니스는 반드시 가격 규칙에 따라 결과를 통화의 최소 단위로 한 번 반올림해
-`unit_price.amount`로 반환해야 합니다(**MUST**). 반환된 `unit_price.amount`가 권위를
-가집니다. 플랫폼은 이 값을 다시 계산하거나 자체 결과로 대체해서는 안 됩니다(**MUST NOT**).
+The Business **MUST** round the result once to the currency's minor units
+according to its pricing rules and return it as `unit_price.amount`. The
+returned `unit_price.amount` is authoritative. The Platform **MUST NOT**
+recompute it or substitute its own result.
 
-동일 단위·동일 통화 규칙은 의미상의 불변 조건입니다. JSON Schema는 해당 필드를 각각
-독립적으로 검증할 뿐, 두 동일성 중 어느 것도 강제하지 않습니다.
+The same-unit and same-currency rules are semantic invariants. JSON Schema
+validates the corresponding fields independently and does not enforce either
+equality.
 
-예를 들어 `each`로 판매하는 50 m 케이블 스풀은 `quantity_unit`을 생략하고 미터당
-`unit_price`를 둘 수 있습니다. 이때 `measure`는
-`{ "value": 5000, "unit": "MTR", "scale": 2, "display_text": "m" }`, `reference`는
-`{ "value": 1, "unit": "MTR", "display_text": "m" }`가 될 수 있습니다. 두 측정값 모두 `MTR`을
-사용하며, 단위 간 변환 없이 각각 50 m와 1 m를 나타냅니다.
+For example, a 50 m cable spool sold by `each` can omit `quantity_unit` while
+carrying a `unit_price` per metre. Its `measure` can be
+`{ "value": 5000, "unit": "MTR", "scale": 2, "display_text": "m" }` and its
+`reference` can be
+`{ "value": 1, "unit": "MTR", "display_text": "m" }`. Both measures use
+`MTR`; they represent 50 m and 1 m respectively without cross-unit conversion.
 
-거래 라인에서는 필드가 있느냐 없느냐로 역할이 드러납니다. 가격 기준이 판매 기준과 다른
-라인에는 비즈니스가 반드시 `unit_price`를 빠짐없이 담아 보내야 합니다(**MUST**)([체크아웃 — 가격
-기준](../checkout/index.md#quantity-and-sale-basis) 참고). 이 스풀의 미터당 가격처럼
-카탈로그에만 있는 `unit_price`는 표시용 비교 지표이고, 라인 수준의 `unit_price`에는
-청구 금액을 계산하는 기준 요율이 담깁니다.
+On transaction lines, presence marks the role: the Business **MUST** echo
+`unit_price` on any line whose pricing basis differs from its sale basis (see
+[Checkout — pricing basis](../checkout/index.md#quantity-and-sale-basis)). A
+catalog-only `unit_price`, like this spool's per-metre figure, is a display
+comparator; a line-level one carries the rate the charge is computed from.
 
-### 예시: 무게 단위로 판매하는 상품 { #example-a-good-sold-by-weight }
+### Example: a good sold by weight { #example-a-good-sold-by-weight }
 
-파운드 단위로 판매하는 바나나의 `get_product` 응답입니다. 변형은 `quantity_unit`으로
-`{ "unit": "LBR", "scale": 2, "display_text": "lb", "increment": 25 }`를, `price`로
-`79`를 알립니다. 즉 1파운드당 $0.79이며 0.25 lb 배수로 판매합니다.
+A `get_product` response for bananas sold by the pound. The variant advertises
+`quantity_unit`
+`{ "unit": "LBR", "scale": 2, "display_text": "lb", "increment": 25 }` and a
+`price` of `79` — $0.79 per whole pound, sold in 0.25-lb multiples:
 
 <!-- ucp:example schema=shopping/catalog_lookup op=get_product -->
 ```json
@@ -160,198 +170,138 @@ ID를 반환합니다. 카탈로그 조회로 얻은 변형 ID는 체크아웃�
 }
 ```
 
-## 공통 엔터티 { #shared-entities }
+## Shared Entities { #shared-entities }
 
-### 컨텍스트 { #context }
+### Context { #context }
 
-카탈로그 작업에 쓰는 위치 및 시장 컨텍스트입니다. 모든 필드는 관련성과 현지화를 위한
-선택적 힌트입니다. 플랫폼은 요청 헤더로 컨텍스트를 지리적으로 감지할 수 있습니다(MAY).
+Location and market context for catalog operations. All fields are optional
+hints for relevance and localization. Platforms MAY geo-detect context from
+request headers.
 
-컨텍스트 신호는 잠정적인 값일 뿐 권위 있는 데이터가 아닙니다. 비즈니스는 검증된
-입력(예: 배송 주소)이 없을 때 이 값을 사용해야 하며(SHOULD), 더 신뢰도 높은
-신호(인증된 계정, 위험 탐지)나 규제상 제약(수출 통제)과 맞지 않으면 무시하거나 순위를
-낮출 수 있습니다(MAY). 자격 판단과 정책 적용은 반드시 체크아웃 시점에 구속력 있는 거래
-데이터로 이루어져야 합니다(MUST).
+Context signals are provisional—not authoritative data. Businesses SHOULD use
+these values when verified inputs (e.g., shipping address) are absent, and MAY
+ignore or down-rank them if inconsistent with higher-confidence signals
+(authenticated account, risk detection) or regulatory constraints (export
+controls). Eligibility and policy enforcement MUST occur at checkout time using
+binding transaction data.
 
-비즈니스는 컨텍스트 신호를 바탕으로 통화를 포함한 시장 배정을 결정합니다. 가격 필터 값은
-`context.currency` 기준이며, 표시 통화가 다르면 비즈니스는 적용 전에 변환해야
-합니다(SHOULD)([가격 필터](search.md#price-filter) 참고). 응답 가격에는 결정 결과를
-확인할 수 있도록 통화 코드가 명시됩니다.
+Businesses determine market assignment—including currency—based on context
+signals. Price filter values are denominated in `context.currency`; when
+the presentment currency differs, businesses SHOULD convert before applying
+(see [Price Filter](search.md#price-filter)). Response prices include
+explicit currency codes confirming the resolution.
 
-`context.eligibility` 주장이 있고 비즈니스가 이를 수락했다면, 취소선 표시를 위해
-`price` / `list_price`를 직접 조정할 수 있으며(**MAY**), `code: "eligibility_benefit"`이
-담긴 `messages`로 조정 내용이 어떤 주장에 따른 것인지 밝힐 수 있습니다(**MAY**).
+When `context.eligibility` claims are present, Businesses that accept them
+**MAY** adjust `price` / `list_price` directly for strikethrough display and
+**MAY** use `messages` with `code: "eligibility_benefit"` to attribute the
+adjustment to a specific claim.
 
 {{ schema_fields('types/context', 'shopping/catalog') }}
 
-### 신호 { #signals }
+### Signals { #signals }
 
-인가와 악용 방지에 도움이 되도록 플랫폼이 제공하는 환경 데이터입니다. 신호 값은 구매자가
-주장한 내용이어서는 안 됩니다(MUST NOT). 자세한 내용과 개인정보 보호 요건은
-[신호](../../overview/index.md#signals)를 참고하세요.
+Environment data provided by the platform to support authorization
+and abuse prevention. Signal values MUST NOT be buyer-asserted claims. See
+[Signals](../../overview/index.md#signals) for details and privacy requirements.
 
 {{ schema_fields('types/signals', 'shopping/catalog') }}
 
-### 어트리뷰션 { #attribution }
+### Attribution { #attribution }
 
-플랫폼이 제공하는 유입 및 전환 이벤트 컨텍스트로, 플랫폼이 전달하는 캠페인 ID, 클릭
-식별자, 소스/매체 표식 등이 해당합니다. 자세한 내용과 동의 요건은
-[어트리뷰션](../../overview/index.md#attribution)을 참고하세요.
+Platform-provided referral and conversion-event context — campaign IDs,
+click identifiers, and source/medium markers communicated by the platform.
+See [Attribution](../../overview/index.md#attribution) for details and consent
+requirements.
 
 {{ schema_fields('types/attribution', 'shopping/catalog') }}
 
-### 상품 { #product }
+### Product { #product }
 
-판매 가능한 항목을 나타내는 카탈로그 항목으로, 구매 가능한 변형이 하나 이상 있습니다.
+A catalog item representing a sellable item with one or more purchasable variants.
 
-`media`와 `variants`는 순서가 있는 배열입니다. 비즈니스는 가장 관련성 높은 변형과 미디어
-항목을 맨 앞에 반환해야 합니다(**SHOULD**). 조회에서는 기본값을, 검색에서는 쿼리와
-컨텍스트에 가장 잘 맞는 항목을 앞에 둡니다. 플랫폼은 자신이 표시하는 첫 번째 미디어
-항목을 대표 항목으로 취급해야 합니다(**SHOULD**).
+`media` and `variants` are ordered arrays. Businesses SHOULD return the most
+relevant variant and image first—default for lookups, best match based on query
+and context for search. Platforms SHOULD treat the first element as featured.
 
 {{ schema_fields('types/product', 'shopping/catalog') }}
 
-### 변형 { #variant }
+### Variant { #variant }
 
-특정 옵션 선택, 가격, 재고 상태가 정해진 구매 가능한 항목입니다.
+A purchasable item with specific option selections, price, and availability.
 
-조회 응답의 각 변형에는 대응 관계를 파악할 수 있도록 `inputs` 배열이 있습니다. 어떤
-요청 식별자가 이 변형으로 해석되었는지, 일치 방식이 `exact`였는지 `featured`(서버가
-선택)였는지가 담깁니다. 자세한 내용은 [클라이언트 대응](lookup.md#client-correlation)을
-참고하세요.
+In lookup responses, each variant carries an `inputs` array for correlation:
+which request identifiers resolved to this variant, and whether the match
+was `exact` or `featured` (server-selected). See
+[Client Correlation](lookup.md#client-correlation) for details.
 
-`media`는 순서가 있는 배열입니다. 비즈니스는 변형의 대표 미디어 항목을 첫 번째 요소로
-반환해야 합니다(**SHOULD**). 플랫폼은 자신이 표시하는 첫 번째 미디어 항목을 대표 항목으로
-취급해야 합니다(**SHOULD**).
+`media` is an ordered array. Businesses SHOULD return the featured variant image
+as the first element. Platforms SHOULD treat the first element as featured.
 
 {{ schema_fields('types/variant', 'shopping/catalog') }}
 
-### 가격 { #price }
+### Price { #price }
 
 {{ schema_fields('types/price', 'shopping/catalog') }}
 
-### 가격 범위 { #price-range }
+### Price Range { #price-range }
 
 {{ schema_fields('types/price_range', 'shopping/catalog') }}
 
-### 미디어 { #media }
-
-상품이나 변형에 속한 하나의 논리적 미디어 항목으로, 이미지, 동영상, 3D 모델 등이
-있습니다. 미디어 항목은 플랫폼이 렌더링하는 리소스입니다. `url`은 항목을 식별하고,
-`sources`는 대체 렌디션을 나열합니다. `preview`는 플랫폼이 항목 대신 또는 항목보다 먼저
-보여 줄 수 있는 정지 이미지이고, `width`와 `height`는 고유 픽셀 크기입니다. `preview`와
-각 `sources` 항목의 `width`와 `height`는 해당 정지 이미지나 렌디션의 픽셀 크기입니다.
-
-`type`은 개방형 문자열이며, 잘 알려진 값으로 `image`, `video`, `external_video`,
-`model_3d` 네 가지가 있습니다. 플랫폼은 미디어 항목의 `type`을 인식하지 못한다는 이유로
-상품이나 응답을 거부해서는 안 됩니다(**MUST NOT**). 그런 항목은 `preview`와 `name`으로
-표시하거나 생략할 수 있습니다(**MAY**). `type`을 인식하면 타입에 맞게 표시할 수 있다는
-점이 다를 뿐입니다.
-
-플랫폼은 `https` 스킴을 사용하지 않는 미디어 URL의 로드나 임베드를 거부할 수
-있습니다(**MAY**).
-
-플랫폼은 `mime_type`과 크기를 기준으로 `sources`에서 렌디션을 고릅니다. `sources`를
-제공하는 비즈니스는 `url`에 해당하는 렌디션도 포함해야 합니다(**SHOULD**).
+### Media { #media }
 
 {{ schema_fields('types/media', 'shopping/catalog') }}
 
-#### 이미지 { #image }
-
-`url`은 바로 표시할 수 있는 이미지입니다. `sources`가 있으면 해당 이미지의 대체 인코딩과
-크기를 나열합니다. 예를 들면 `image/avif`, `image/webp`, `image/jpeg`이나 반응형
-레이아웃을 위한 너비별 변형입니다. `sources`에서 고르지 않는 플랫폼은 `url`을 바로
-로드하므로, 비즈니스는 `url`을 가장 폭넓게 디코딩할 수 있는 렌디션으로 지정해야
-합니다(**SHOULD**).
-
-{{ schema_fields('types/media_image', 'shopping/catalog') }}
-
-#### 동영상 { #video }
-
-`url`은 동영상의 재생 가능한 렌디션으로, 프로그레시브 파일이거나 적응형 스트리밍
-매니페스트입니다. `sources`가 있으면 대체 렌디션과 매니페스트를 나열합니다.
-
-{{ schema_fields('types/media_video', 'shopping/catalog') }}
-
-#### 외부 동영상 { #external-video }
-
-서드파티 플레이어로 표시하는 동영상입니다. `url`은 플랫폼이 임베드하는 플레이어입니다.
-비즈니스가 CDN을 포함한 임의의 오리진에서 파일로 제공하는 동영상은 `video`에 해당합니다.
-서드파티 플레이어를 임베드하지 않는 플랫폼은 `preview`를 표시하거나 항목을 생략합니다.
-
-플레이어를 임베드하는 플랫폼은 반드시 플레이어를 플랫폼의 권한과 격리해야
-합니다(**MUST**). 플랫폼 자격 증명, 플랫폼 API나 에이전트 도구 접근, 프로토콜 메시징
-권한, 호스트 애플리케이션 내비게이션 권한 중 어느 것도 주지 않습니다. 임베드하기 전에
-`url`이 userinfo가 없고 플랫폼과 same-site가 아닌 절대 `https` URL이 아니라면, 반드시
-항목을 거부해야 합니다(**MUST**). 웹에서 플레이어는 `src`가 `url`인 iframe 하나이며,
-샌드박스와 credentialless를 적용하고 플레이어에 필요한 권한만 부여합니다.
-
-```html
-<iframe sandbox="allow-scripts allow-same-origin" allow="fullscreen" credentialless src="https://videos.example.com/embed/123"></iframe>
-```
-
-[Iframe 샌드박스 속성](../../embedded-protocol.md#iframe-sandbox-attributes)과
-[Credentialless Iframe](../../embedded-protocol.md#credentialless-iframes)을
-참고하세요.
-
-{{ schema_fields('types/media_external_video', 'shopping/catalog') }}
-
-#### 3D 모델 { #3d-model }
-
-`url`은 GLB 같은 기본 모델 파일입니다. `sources`가 있으면 glTF, USDZ 같은 대체 형식을
-나열합니다.
-
-{{ schema_fields('types/media_model_3d', 'shopping/catalog') }}
-
-### 상품 옵션 { #product-option }
+### Product Option { #product-option }
 
 {{ schema_fields('types/product_option', 'shopping/catalog') }}
 
-### 옵션 값 { #option-value }
+### Option Value { #option-value }
 
 {{ schema_fields('types/option_value', 'shopping/catalog') }}
 
-### 선택된 옵션 { #selected-option }
+### Selected Option { #selected-option }
 
 {{ schema_fields('types/selected_option', 'shopping/catalog') }}
 
-### 평점 { #rating }
+### Rating { #rating }
 
 {{ schema_fields('types/rating', 'shopping/catalog') }}
 
-### 정책 { #policy }
+### Policy { #policy }
 
-카탈로그 응답의 상품에 적용되는 정책(반품·환불 조건, 보증 등)입니다. `applies_to`의
-JSONPath 대상은 응답 루트를 기준으로 합니다. 검색과 일괄 조회에서는 `$.products[N]`,
-get_product에서는 `$.product`입니다. 전체 모델은 [정책](../../overview/index.md#policies)을 참고하세요.
+Policies (return/refund terms, warranty, and the like) that apply to the
+products in a catalog response. JSONPath targets in `applies_to` are
+relative to the response root — `$.products[N]` for search and batch lookup,
+`$.product` for get_product. See [Policies](../../overview/index.md#policies) for the full model.
 
 {{ schema_fields('types/policy', 'shopping/catalog') }}
 
-## 액션 { #actions }
+## Actions { #actions }
 
-카탈로그 검색, 일괄 조회, 성공한 Get Product 응답에는 확장이 정의한 액션(Action)이
-포함될 수 있습니다. 카탈로그에서 액션은 해당 타입이 정의하는 효과를 막고 있는 미처리
-작업으로, 비즈니스가 어떤 상품을 반환하는지나 플랫폼이 상품을 어떻게 다루는지에 영향을
-줄 수 있습니다.
+Catalog Search, batch Lookup, and successful Get Product responses can include
+extension-defined Actions. In Catalog, an Action is outstanding work that gates
+the effect its type defines, which may affect which products the Business
+returns or how the Platform handles them.
 
-검색, 일괄 조회, 성공한 Get Product는 서로 독립된 카탈로그 작업이며, 각 응답이 상위
-리소스의 수명을 공유하지 않습니다. 비즈니스는 서로 다른 응답에서 같은 액션 `id`를 사용할
-수 있으며(**MAY**), 값이 같다고 해서 같은 작업을 가리키지는 않습니다. 구체적인 액션 타입
-계약에서 자신의 인스턴스에 대해 더 강한 대응 관계를 정의할 수는 있습니다(**MAY**).
+Search, batch Lookup, and successful Get Product are independent Catalog
+operations; their responses do not share a containing-resource lifetime. The
+Business **MAY** use the same Action `id` in separate responses; that equality
+does not identify the same work. A concrete Action-type contract **MAY** define
+stronger correlation for its instances.
 
-검색과 일괄 조회에서 비즈니스는 액션 타입 계약과 자체 정책에 따라, 원래라면 관련
-있었을 상품을 하나도 반환하지 않을지, 일부만 반환할지, 모두 반환할지 결정합니다.
-메시지에서 액션을 가리켜 응답을 설명할 수 있습니다. 성공한 Get Product에는 여전히
-`product`가 포함되며, 기존 에러 응답은 바뀌지 않습니다.
+For Search and batch Lookup, the Business decides whether to return zero, some,
+or all otherwise relevant products under the Action-type contract and its own
+policy. A Message can point to the Action to explain the response. Successful
+Get Product still includes `product`; its existing error response is unchanged.
 
-액션을 처리한 뒤 플랫폼은 카탈로그 작업을 새로 수행하며, 그 뒤의 비즈니스 응답이
-권위를 가집니다. 카탈로그는 액션의 수명 주기, 폴링, 재개 동작을 정의하지 않습니다.
-구체적인 액션 타입 계약에서 자신의 인스턴스 처리에 관한 그런 동작을 정의할 수
-있습니다(**MAY**). 공통 형태와 규칙은 [개요 — 액션](../../overview/index.md#actions)에
-정의되어 있습니다.
+After processing an Action, the Platform performs a fresh Catalog operation and
+the later Business response is authoritative. Catalog defines no Action
+lifecycle, polling, or resume behavior; a concrete Action-type contract **MAY**
+define those behaviors for processing its instances. The common shape and rules
+are defined in [Overview — Actions](../../overview/index.md#actions).
 
-예를 들어 다음 검색 응답은 상품을 반환하지 않고, 연령 확인이 결과에 영향을 줄 수
-있다고 설명합니다.
+For example, this Search response returns no products and explains that age
+verification may affect the results:
 
 <!-- ucp:example schema=shopping/catalog_search op=search -->
 ```json
@@ -376,52 +326,54 @@ get_product에서는 `$.product`입니다. 전체 모델은 [정책](../../overv
 }
 ```
 
-상품을 하나도 반환하지 않는 것은 비즈니스가 고를 수 있는 방법 중 하나일 뿐이며, 일부
-또는 전체 결과를 반환해도 명세에 부합합니다. 액션 타입과 메시지 코드는 예시이며,
-카탈로그는 둘 다 정의하지 않습니다.
+Returning zero products is one Business choice; returning a subset or the full
+result set is also conformant. The Action type and Message code are illustrative;
+Catalog defines neither.
 
-## 메시지와 에러 처리 { #messages-and-error-handling }
+## Messages and Error Handling { #messages-and-error-handling }
 
-모든 카탈로그 응답에는 선택 사항인 `messages` 배열이 있어, 비즈니스가 에러, 경고, 정보성
-알림의 맥락을 전달할 수 있습니다.
+All catalog responses include an optional `messages` array that allows businesses
+to provide context about errors, warnings, or informational notices.
 
-### 메시지 타입 { #message-types }
+### Message Types { #message-types }
 
-메시지는 비즈니스의 처리 결과를 전달하고 맥락을 제공합니다.
+Messages communicate business outcomes and provide context:
 
-| 타입 | 사용 시점 | 예시 코드 |
+| Type | When to Use | Example Codes |
 | :--- | :--- | :--- |
-| `error` | 비즈니스 수준 에러 | `NOT_FOUND`, `OUT_OF_STOCK`, `REGION_RESTRICTED` |
-| `warning` | 구매에 영향을 주는 중요한 조건 | `DELAYED_FULFILLMENT`, `FINAL_SALE` |
-| `info` | 문제없이 덧붙이는 추가 맥락 | `PROMOTIONAL_PRICING`, `LIMITED_AVAILABILITY` |
+| `error` | Business-level errors | `NOT_FOUND`, `OUT_OF_STOCK`, `REGION_RESTRICTED` |
+| `warning` | Important conditions affecting purchase | `DELAYED_FULFILLMENT`, `FINAL_SALE` |
+| `info` | Additional context without issues | `PROMOTIONAL_PRICING`, `LIMITED_AVAILABILITY` |
 
-`presentation: "disclosure"`가 있는 경고에는 플랫폼이 숨기거나 닫아서는 안 되는 고지(예:
-알레르기 유발 성분 표시, 안전 경고)가 담깁니다. 전체 렌더링 계약은
-[경고 표시](../checkout/index.md#warning-presentation)를 참고하세요.
+Warnings with `presentation: "disclosure"` carry notices (e.g., allergen
+declarations, safety warnings) that platforms must not hide or dismiss. See
+[Warning Presentation](../checkout/index.md#warning-presentation) for the full
+rendering contract.
 
-**참고**: 대부분의 카탈로그 에러는 `severity: "recoverable"`을 사용하며, 에이전트가 이를
-프로그램으로 처리합니다(재시도, 사용자에게 알림, 대안 제시). `get_product`는 식별자를
-해석할 수 없으면 `severity: "unrecoverable"`을 반환하며, 이때 에이전트는 같은 `id`로
-재시도해서는 안 됩니다(MUST NOT)([REST](rest.md#product-not-found)와
-[MCP](mcp.md#product-not-found) 예시 참고).
+**Note**: Most catalog errors use `severity: "recoverable"` - agents
+handle them programmatically (retry, inform user, show alternatives).
+`get_product` returns `severity: "unrecoverable"` when an identifier
+doesn't resolve; agents MUST NOT retry the same `id` (see the
+[REST](rest.md#product-not-found) and [MCP](mcp.md#product-not-found)
+examples).
 
-#### 메시지 (에러) { #message-error }
+#### Message (Error) { #message-error }
 
 {{ schema_fields('types/message_error', 'shopping/catalog') }}
 
-#### 메시지 (경고) { #message-warning }
+#### Message (Warning) { #message-warning }
 
 {{ schema_fields('types/message_warning', 'shopping/catalog') }}
 
-#### 메시지 (정보) { #message-info }
+#### Message (Info) { #message-info }
 
 {{ schema_fields('types/message_info', 'shopping/catalog') }}
 
-### 일반적인 시나리오 { #common-scenarios }
+### Common Scenarios { #common-scenarios }
 
-#### 빈 검색 결과 { #empty-search }
+#### Empty Search { #empty-search }
 
-검색 결과가 없으면 메시지 없이 빈 배열을 반환합니다.
+When search finds no matches, return an empty array without messages.
 
 <!-- ucp:example schema=shopping/catalog_search op=search -->
 ```json
@@ -431,12 +383,12 @@ get_product에서는 `$.product`입니다. 전체 모델은 [정책](../../overv
 }
 ```
 
-이는 에러가 아닙니다. 쿼리는 유효했지만 결과가 없었을 뿐입니다.
+This is not an error - the query was valid but returned no results.
 
-#### 이월 주문 경고 { #backorder-warning }
+#### Backorder Warning { #backorder-warning }
 
-상품은 구매할 수 있지만 풀필먼트가 지연되는 경우, 경고 메시지와 함께 상품을 반환합니다.
-특정 변형을 가리키려면 `path` 필드를 사용합니다.
+When a product is available but has delayed fulfillment, return the product with
+a warning message. Use the `path` field to target specific variants.
 
 <!-- ucp:example schema=shopping/catalog_search op=search -->
 ```json
@@ -473,13 +425,14 @@ get_product에서는 `$.product`입니다. 전체 모델은 [정책](../../overv
 }
 ```
 
-에이전트는 해당 옵션을 보여 주면서 사용자에게 지연 사실을 알릴 수 있습니다. `path` 필드는
-RFC 9535 JSONPath로 특정 구성 요소를 가리킵니다.
+Agents can present the option and inform the user about the delay. The `path`
+field uses RFC 9535 JSONPath to target specific components.
 
-#### 식별자를 찾을 수 없음 { #identifiers-not-found }
+#### Identifiers Not Found { #identifiers-not-found }
 
-요청한 식별자가 존재하지 않아도, 찾은 상품(있다면)과 함께 성공으로 반환합니다. 응답에
-찾지 못한 식별자를 알리는 정보성 메시지를 포함할 수 있습니다(MAY).
+When requested identifiers don't exist, return success with the found products
+(if any). The response MAY include informational messages indicating which
+identifiers were not found.
 
 <!-- ucp:example schema=shopping/catalog_lookup op=lookup -->
 ```json
@@ -496,14 +449,15 @@ RFC 9535 JSONPath로 특정 구성 요소를 가리킵니다.
 }
 ```
 
-에이전트는 각 변형의 `inputs` 배열로 결과의 대응 관계를 파악합니다.
-[클라이언트 대응](lookup.md#client-correlation)을 참고하세요.
+Agents correlate results using the `inputs` array on each variant. See
+[Client Correlation](lookup.md#client-correlation).
 
-#### 상품 고지 { #product-disclosure }
+#### Product Disclosure { #product-disclosure }
 
-상품에 고지(예: 알레르기 유발 성분 안내, 안전 경고)가 필요하면
-`presentation: "disclosure"`가 있는 경고로 반환합니다. `path` 필드는 응답에서 관련 구성
-요소를 가리키며, 상품을 가리키면 고지가 그 상품의 모든 변형에 적용됩니다.
+When a product requires a disclosure (e.g., allergen notice, safety warning),
+return it as a warning with `presentation: "disclosure"`. The `path` field targets the
+relevant component in the response — when it targets a product, the
+disclosure applies to all of its variants.
 
 <!-- ucp:example schema=shopping/catalog_search op=search -->
 ```json
@@ -551,24 +505,25 @@ RFC 9535 JSONPath로 특정 구성 요소를 가리킵니다.
 }
 ```
 
-전체 렌더링 계약은 [경고 표시](../checkout/index.md#warning-presentation)를 참고하세요.
+See [Warning Presentation](../checkout/index.md#warning-presentation) for the
+full rendering contract.
 
-## 스코프 { #scopes }
+## Scopes { #scopes }
 
-카탈로그 검색과 카탈로그 조회 기능은 사용자 인증 접근을 위해 다음과 같은 잘 알려진
-스코프를 정의합니다.
+The Catalog Search and Catalog Lookup capabilities define the following
+well-known scopes for user-authenticated access:
 
-| 스코프 | 설명 |
+| Scope | Description |
 | :--- | :--- |
-| `dev.ucp.shopping.catalog.search:read` | 인증된 사용자를 대신해 검색합니다. 개인화된 결과, 회원 가격, 접근이 제한된 재고 등이 해당합니다. |
-| `dev.ucp.shopping.catalog.lookup:read` | 인증된 사용자를 대신해 조회합니다. 특정 상품의 개인화된 가격이나 재고 상태 등이 해당합니다. |
+| `dev.ucp.shopping.catalog.search:read` | Search on behalf of the authenticated user — personalized results, member pricing, gated inventory. |
+| `dev.ucp.shopping.catalog.lookup:read` | Lookup on behalf of the authenticated user — personalized pricing or availability for specific products. |
 
-스코프 선언과 도출, 사용자 정의 스코프로 이 집합을 확장하는 규칙은
-[신원 연결 — 스코프](../../common/identity-linking/index.md#scopes)에 정의되어 있습니다.
+Scope declaration, derivation, and rules for extending this set with
+custom scopes are defined in [Identity Linking — Scopes](../../common/identity-linking/index.md#scopes).
 
-## 전송 바인딩 { #transport-bindings }
+## Transport Bindings { #transport-bindings }
 
-위 기능은 다음 전송 프로토콜에 바인딩됩니다.
+The capabilities above are bound to specific transport protocols:
 
-* [REST 바인딩](rest.md): RESTful API 매핑
-* [MCP 바인딩](mcp.md): JSON-RPC 기반 Model Context Protocol 매핑
+* [REST Binding](rest.md): RESTful API mapping.
+* [MCP Binding](mcp.md): Model Context Protocol mapping via JSON-RPC.
