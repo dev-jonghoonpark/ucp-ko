@@ -14,149 +14,130 @@
    limitations under the License.
 -->
 
-# Core Concepts { #core-concepts }
+# 핵심 개념 { #core-concepts }
 
-The Universal Commerce Protocol (UCP) is an open standard for interoperability
-between commerce entities. It defines a common language and functional
-primitives so that platforms and businesses can interoperate securely and
-reliably across commercial verticals.
+Universal Commerce Protocol(UCP)은 커머스 주체 사이의 상호운용성을 위한 개방형
+표준입니다. 공통 언어와 기능 단위의 기본 요소(primitive)를 정의해, 플랫폼과
+비즈니스가 여러 상거래 분야에서 안전하고 안정적으로 함께 동작할 수 있게 합니다.
 
-This document provides the detailed technical specification for UCP.
-For a complete definition of all data models and schemas, see the
-[Schema Reference](../specification/reference.md).
+이 문서에서는 UCP의 상세 기술 명세를 다룹니다. 모든 데이터 모델과 스키마의 전체
+정의는 [스키마 레퍼런스](../specification/reference.md)를 참고하세요.
 
-!!! note "Terminology"
-    Throughout this documentation, **Platform** refers to any entity that
-    *consumes* capabilities — an app, an AI agent, a procurement system, or
-    another business. **Business** refers to any entity that *exposes*
-    capabilities — a retailer, a supplier, a service provider, or any other
-    participant offering commerce functionality. These roles are defined by
-    direction of capability flow, not by industry vertical, making UCP equally
-    applicable to B2C, B2B, and agent-to-agent commerce.
+!!! note "용어"
+    이 문서에서 **플랫폼**은 기능(Capability)을 *사용하는* 모든 주체를 가리킵니다.
+    앱, AI 에이전트, 구매 조달 시스템, 또는 다른 비즈니스일 수 있습니다. **비즈니스**는
+    기능을 *노출하는* 모든 주체를 가리키며, 소매업체, 공급업체, 서비스 제공자 등
+    커머스 기능을 제공하는 모든 참여자가 여기에 해당합니다. 이 역할은 산업 분야가 아니라
+    기능이 흐르는 방향으로 정해지므로, UCP는 B2C, B2B, 에이전트 간 커머스에 똑같이
+    적용됩니다.
 
-Its primary goal is to enable:
+UCP의 주된 목표는 다음과 같습니다.
 
-* **Platforms:** To dynamically discover and consume the capabilities a
-    business exposes.
-* **Businesses:** To declare what they offer and how they operate — once —
-    and have any compatible platform discover and use it without bespoke
-    integrations.
-* **Payment & Credential Providers:** To expose their services —
-    tokenization, vaulting, credential issuance — once, and power secure
-    commerce for users across any compatible platform and business.
+* **플랫폼:** 비즈니스가 노출하는 기능을 동적으로 발견하고 사용합니다.
+* **비즈니스:** 무엇을 제공하고 어떻게 운영하는지 한 번만 선언하면, 호환되는 모든
+    플랫폼이 맞춤 연동 없이 이를 발견하고 사용할 수 있습니다.
+* **결제 및 자격 증명 제공자:** 토큰화, 보관(vaulting), 자격 증명 발급 같은
+    서비스를 한 번만 노출하면, 호환되는 모든 플랫폼과 비즈니스에서 사용자가 안전하게
+    거래하도록 뒷받침할 수 있습니다.
 
-## High level architecture { #high-level-architecture }
+## 상위 수준 아키텍처 { #high-level-architecture }
 
 <!-- Responsive image: shows ucp-diagram-mobile.jpg on small screens (<=600px)
      and ucp-diagram.jpg on larger screens. -->
 <picture>
   <source media="(max-width: 600px)" srcset="../assets/ucp-diagram-mobile.jpg">
-  <img alt="UCP Diagram" src="../assets/ucp-diagram.jpg">
+  <img alt="UCP 다이어그램" src="../assets/ucp-diagram.jpg">
 </picture>
 
-## Key Goals of UCP { #key-goals-of-ucp }
+## UCP의 핵심 목표 { #key-goals-of-ucp }
 
-* **Interoperability:** Bridge the gap between platforms, businesses,
-    and payment ecosystems.
-* **Discovery:** Allow platforms to dynamically discover what
-    capabilities a business supports (e.g., "Do they support checkout?",
-    "Do they support fulfillment options or identity linking?").
-* **Security:** Facilitate secure, standards-based (OAuth 2.0, PCI-DSS
-    compliant patterns) exchanges of sensitive user and payment data.
-* **Agentic Commerce:** Enable AI agents to act on behalf of varied principals
-    (an individual, organization, or another agent) and support different
-    modalities (human-in-the-loop, fully autonomous).
+* **상호운용성:** 플랫폼, 비즈니스, 결제 생태계 사이의 간극을 메웁니다.
+* **디스커버리:** 플랫폼이 비즈니스가 지원하는 기능을 동적으로 발견할 수 있게
+    합니다(예: "체크아웃을 지원하는가?", "풀필먼트 옵션이나 신원 연결을 지원하는가?").
+* **보안:** 표준(OAuth 2.0, PCI-DSS 준수 패턴)에 기반해 민감한 사용자 데이터와 결제
+    데이터를 안전하게 교환할 수 있게 돕습니다.
+* **에이전트 커머스:** AI 에이전트가 다양한 주체(개인, 조직, 또는 다른 에이전트)를
+    대신해 행동할 수 있게 하고, 사람 개입형(human-in-the-loop)부터 완전 자율형까지
+    여러 운용 방식을 지원합니다.
 
-## Roles & Participants { #roles-participants }
+## 역할과 참여자 { #roles-participants }
 
-UCP defines the interactions between four distinct actors, each playing
-a specific role in the interaction lifecycle.
+UCP는 서로 다른 네 행위자 사이의 상호작용을 정의합니다. 각 행위자는 상호작용
+생명주기에서 저마다 특정한 역할을 맡습니다.
 
-### Platform (Application/Agent) { #platform-applicationagent }
+### 플랫폼(애플리케이션/에이전트) { #platform-applicationagent }
 
-The platform is any entity that consumes capabilities exposed by a business —
-an AI agent, a mobile app, a procurement system, or another business acting
-as a capability consumer. It orchestrates the interaction by discovering what
-the business supports and invoking the appropriate capabilities on behalf of
-its principal (a user, an automated process, or another system).
+플랫폼은 비즈니스가 노출한 기능을 사용하는 모든 주체입니다. AI 에이전트, 모바일 앱,
+구매 조달 시스템, 또는 기능 사용자로 행동하는 다른 비즈니스일 수 있습니다. 플랫폼은
+비즈니스가 무엇을 지원하는지 알아낸 뒤, 자신의 주체(사용자, 자동화된 프로세스, 또는
+다른 시스템)를 대신해 알맞은 기능을 호출하며 상호작용을 조율합니다.
 
-* **Responsibilities:** Discovering business capabilities via profiles,
-    initiating and managing capability sessions, and acting on behalf of its
-    principal within the bounds of negotiated capabilities.
-* **Examples:** AI Shopping Assistants, Super Apps, Search Engines,
-    B2B Procurement Systems.
+* **책임:** 프로필로 비즈니스 기능을 발견하고, 기능 세션을 시작·관리하며,
+    협상된 기능의 범위 안에서 자신의 주체를 대신해 행동합니다.
+* **예시:** AI 쇼핑 어시스턴트, 슈퍼 앱, 검색 엔진, B2B 구매 조달 시스템
 
-### Business { #business }
+### 비즈니스 { #business }
 
-The entity exposing capabilities. In transactional contexts, the business
-typically acts as the **Merchant of Record (MoR)**, retaining financial
-liability and ownership of the transaction — though UCP's capability model
-is not limited to transactional use cases.
+기능을 노출하는 주체입니다. 거래 맥락에서 비즈니스는 보통 **판매 책임 주체(Merchant of
+Record, MoR)** 역할을 맡아 거래의 재무적 책임과 소유권을 집니다. 다만 UCP의 기능
+모델이 거래 사용 사례에만 한정되지는 않습니다.
 
-* **Responsibilities:** Publishing a UCP profile, declaring supported
-    services, capabilities and extensions, processing capability invocations
-    which may be stateful or stateless.
-* **Examples:** Retailers, Airlines, Hotel Chains, Service Providers,
-    Suppliers, Distributors.
+* **책임:** UCP 프로필을 게시하고, 지원하는 서비스·기능·확장을 선언하며, 상태가
+    있거나 없는 기능 호출을 처리합니다.
+* **예시:** 소매업체, 항공사, 호텔 체인, 서비스 제공자, 공급업체, 유통업체
 
-### Credential Provider (CP) { #credential-provider-cp }
+### 자격 증명 제공자(CP) { #credential-provider-cp }
 
-A trusted entity responsible for securely managing and sharing sensitive user
-data, particularly payment instruments and shipping addresses.
+민감한 사용자 데이터, 특히 결제 수단과 배송 주소를 안전하게 관리하고 공유하는 신뢰할
+수 있는 주체입니다.
 
-* **Responsibilities:** Authenticating the user, issuing payment tokens (to
-    keep raw card data off the platform), and holding PII securely to minimize
-    compliance scope for other parties.
-* **Examples:** Digital Wallets (e.g., Google Wallet, Apple Pay), Identity
-    Providers.
+* **책임:** 사용자를 인증하고, 결제 토큰을 발급하며(원본 카드 데이터가 플랫폼에
+    닿지 않도록), 다른 당사자의 컴플라이언스 범위가 최소화되도록 PII를 안전하게
+    보관합니다.
+* **예시:** 디지털 지갑(예: Google Wallet, Apple Pay), 신원 제공자(Identity
+    Provider)
 
-### Payment Service Provider (PSP) { #payment-service-provider-psp }
+### 결제 서비스 제공자(PSP) { #payment-service-provider-psp }
 
-The financial infrastructure provider that processes payments on behalf of
-businesses.
+비즈니스를 대신해 결제를 처리하는 금융 인프라 제공자입니다.
 
-* **Responsibilities:** Authorizing and capturing transactions, handling
-    settlements, and communicating with card networks. The PSP often interacts
-    directly with tokens provided by the Credential Provider.
-* **Examples:** Stripe, Adyen, PayPal, Braintree, Chase Paymentech.
+* **책임:** 거래를 승인(authorize)하고 매입(capture)하며, 정산을 처리하고, 카드
+    네트워크와 통신합니다. PSP는 자격 증명 제공자가 발급한 토큰을 직접 다루는 경우가
+    많습니다.
+* **예시:** Stripe, Adyen, PayPal, Braintree, Chase Paymentech
 
-## Core Concepts Summary { #core-concepts-summary }
+## 핵심 개념 요약 { #core-concepts-summary }
 
-UCP revolves around three fundamental constructs that define how entities
-interact.
+UCP는 주체 간 상호작용 방식을 정의하는 세 가지 기본 구성 요소를 중심으로 동작합니다.
 
-### Capabilities { #capabilities }
+### 기능 { #capabilities }
 
-Capabilities are standalone, independently versioned features that
-a business declares it supports. They are the "verbs" of the protocol —
-discrete units of functionality that platforms can discover, negotiate, and
-invoke.
+기능(Capability)은 비즈니스가 지원한다고 선언하는, 독립적이며 각자 따로 버전이
+매겨지는 기능입니다. 프로토콜의 "동사"에 해당하며, 플랫폼이 발견하고 협상하고 호출할 수
+있는 개별 기능 단위입니다.
 
-Each capability is identified by a reverse-domain name (e.g.,
-`dev.ucp.shopping.checkout`) and carries a date-based version. Capabilities
-are declared in the business's UCP profile at `/.well-known/ucp` and
-negotiated and confirmed in every response so that the platform always knows
-the active feature set for a given interaction.
+각 기능은 역도메인 이름(예: `dev.ucp.shopping.checkout`)으로 식별하며 날짜 기반
+버전이 붙습니다. 기능은 `/.well-known/ucp`에 있는 비즈니스의 UCP 프로필에 선언하고,
+협상을 거쳐 모든 응답에서 다시 확인됩니다. 덕분에 플랫폼은 특정 상호작용에서 어떤
+기능이 활성화되어 있는지 항상 알 수 있습니다.
 
-The following are examples of capabilities defined in UCP — see the
-[Specification](../specification/overview.md) for the authoritative and
-up-to-date list.
+다음은 UCP에 정의된 기능의 예시입니다. 공식 최신 목록은
+[명세](../specification/overview.md)를 참고하세요.
 
-| Capability | Description |
+| 기능 | 설명 |
 | :--- | :--- |
-| `dev.ucp.shopping.checkout` | Initiates and completes purchase sessions |
-| `dev.ucp.shopping.cart` | Pre-checkout cart management |
-| `dev.ucp.shopping.catalog.search` | Search across a business catalog |
-| `dev.ucp.shopping.catalog.lookup` | Retrieve a specific product by ID |
-| `dev.ucp.shopping.order` | Order lifecycle events |
-| `dev.ucp.common.identity_linking` | OAuth-based account linking |
+| `dev.ucp.shopping.checkout` | 구매 세션 시작과 완료 |
+| `dev.ucp.shopping.cart` | 체크아웃 전 장바구니 관리 |
+| `dev.ucp.shopping.catalog.search` | 비즈니스 카탈로그 전체 검색 |
+| `dev.ucp.shopping.catalog.lookup` | ID로 특정 상품 조회 |
+| `dev.ucp.shopping.order` | 주문 생명주기 이벤트 |
+| `dev.ucp.common.identity_linking` | OAuth 기반 계정 연결 |
 
-### Extensions { #extensions }
+### 확장 { #extensions }
 
-Extensions optionally augment a base capability. They use the
-`extends` field to declare their parent(s) and compose onto the base schema
-using JSON Schema `allOf`. Extensions appear in `ucp.capabilities[]` alongside
-core capabilities.
+확장은 기본 기능을 선택적으로 보강합니다. 확장은 `extends` 필드로 상위 기능을
+선언하고, JSON Schema `allOf`로 기본 스키마 위에 합성됩니다. 확장은 코어 기능과
+함께 `ucp.capabilities[]`에 나타납니다.
 
 ```json
 {
@@ -171,92 +152,83 @@ core capabilities.
 }
 ```
 
-An extension that declares `extends` without its parent in the negotiated
-intersection is automatically pruned. This ensures extension coherence —
-you never activate a discount extension without the checkout it extends.
+`extends`를 선언했는데 상위 기능이 협상된 교집합에 없으면 그 확장은 자동으로
+제거됩니다. 그래서 확장이 항상 일관되게 유지됩니다. 예를 들어 확장 대상인 체크아웃 없이
+할인 확장만 활성화되는 일은 없습니다.
 
-The following are examples of extensions defined in UCP — see the
-[Specification](../specification/overview.md) for the authoritative and
-up-to-date list.
+다음은 UCP에 정의된 확장의 예시입니다. 공식 최신 목록은
+[명세](../specification/overview.md)를 참고하세요.
 
-| Extension | Extends | Description |
+| 확장 | 확장 대상 | 설명 |
 | :--- | :--- | :--- |
-| `dev.ucp.shopping.discount` | checkout, cart | Discount codes and promotions |
-| `dev.ucp.shopping.fulfillment` | checkout | Shipping and delivery options |
-| `dev.ucp.shopping.ap2_mandate` | checkout | Non-repudiable authorization for autonomous commerce |
-| `dev.ucp.shopping.buyer_consent` | checkout | Explicit consent capture |
+| `dev.ucp.shopping.discount` | checkout, cart | 할인 코드와 프로모션 |
+| `dev.ucp.shopping.fulfillment` | checkout | 배송 및 배달 옵션 |
+| `dev.ucp.shopping.ap2_mandate` | checkout | 자율 커머스를 위한 부인 방지 승인 |
+| `dev.ucp.shopping.buyer_consent` | checkout | 명시적 동의 수집 |
 
-### Services { #services }
+### 서비스 { #services }
 
-**Services** group the operations and events for a vertical under a
-reverse-domain namespace (e.g., `dev.ucp.shopping`).
-A service declares *what* functionality exists for that vertical; transport
-bindings declare *how* it is accessed on the wire.
+**서비스**는 특정 분야의 작업과 이벤트를 역도메인 네임스페이스(예:
+`dev.ucp.shopping`) 아래에 묶은 것입니다. 서비스는 해당 분야에 *어떤* 기능이 있는지
+선언하고, 전송 방식 바인딩은 통신 수준에서 *어떻게* 접근하는지 선언합니다.
 
-A single service can be accessed via multiple transport bindings:
+하나의 서비스에 여러 전송 방식 바인딩으로 접근할 수 있습니다.
 
-| Transport | Format | Best For |
+| 전송 방식 | 형식 | 적합한 용도 |
 | :--- | :--- | :--- |
-| **REST** | OpenAPI 3.1.0 | Standard server-to-server integrations |
-| **MCP** | OpenRPC | AI agents via Model Context Protocol |
-| **A2A** | Agent Card | Agent-to-Agent protocol integrations |
-| **Embedded** | OpenRPC | Embedded integrations |
+| **REST** | OpenAPI 3.1.0 | 표준 서버 간 연동 |
+| **MCP** | OpenRPC | Model Context Protocol을 쓰는 AI 에이전트 |
+| **A2A** | Agent Card | Agent-to-Agent 프로토콜 연동 |
+| **임베디드** | OpenRPC | 임베디드 연동 |
 
-A business declares which transport bindings it supports within each service;
-platforms pick whichever fits their context — an AI agent may prefer MCP, a
-traditional web app may use REST.
+비즈니스는 서비스마다 지원하는 전송 방식 바인딩을 선언하고, 플랫폼은 자기 맥락에
+맞는 것을 고릅니다. AI 에이전트라면 MCP를, 전통적인 웹 앱이라면 REST를 쓸 수
+있습니다.
 
-Service namespaces are also UCP's extensibility mechanism for new
-verticals — e.g., `dev.ucp.hotels` may be introduced in the future.
-Businesses opt in by declaring which services they support.
+서비스 네임스페이스는 UCP가 새로운 분야로 확장해 나가는 메커니즘이기도 합니다.
+예를 들어 앞으로 `dev.ucp.hotels`가 도입될 수 있습니다.
+비즈니스는 지원하는 서비스를 선언하는 것만으로 참여할 수 있습니다.
 
-## Discovery & Capability Negotiation { #discovery-capability-negotiation }
+## 디스커버리와 기능 협상 { #discovery-capability-negotiation }
 
-UCP uses a profile-based discovery model. Every business publishes a
-machine-readable profile at `/.well-known/ucp` that declares which services,
-capabilities, and payment handlers they support. Platforms advertise their
-own profile URL on each request via the `UCP-Agent` header.
+UCP는 프로필 기반 디스커버리 모델을 사용합니다. 모든 비즈니스는 지원하는 서비스,
+기능, 결제 핸들러를 선언한 기계 판독 가능한 프로필을 `/.well-known/ucp`에 게시합니다.
+플랫폼은 요청할 때마다 `UCP-Agent` 헤더로 자기 프로필 URL을 알립니다.
 
 ```text
 POST /checkout-sessions HTTP/1.1
 UCP-Agent: profile="https://agent.example/profiles/shopping-agent.json"
 ```
 
-This design enables **permissionless onboarding** — any platform with a
-discoverable profile can interact with any business without prior registration.
-Businesses may additionally establish trust with known platforms through
-out-of-band onboarding & verification mechanisms (API keys, OAuth
-credentials, mTLS certificates).
+이 설계 덕분에 **허가 없는 온보딩**(permissionless onboarding)이 가능합니다. 발견
+가능한 프로필만 있으면 어떤 플랫폼이든 사전 등록 없이 어떤 비즈니스와도 상호작용할 수
+있습니다. 여기에 더해 비즈니스는 대역 외(out-of-band) 온보딩 및 검증 메커니즘(API 키,
+OAuth 자격 증명, mTLS 인증서)으로 이미 알고 있는 플랫폼과 신뢰를 쌓을 수도 있습니다.
 
-### Capability Intersection { #capability-intersection }
+### 기능 교집합 { #capability-intersection }
 
-Capability negotiation follows a **server-selects** architecture. The business
-determines the active capabilities by computing the intersection of its own
-declared capabilities with those in the platform's profile:
+기능 협상은 **서버 선택(server-selects)** 아키텍처를 따릅니다. 비즈니스는 자신이
+선언한 기능과 플랫폼 프로필에 있는 기능의 교집합을 계산해 활성 기능을 정합니다.
 
-1. **Intersect by name** — Only capabilities both parties declare are
-   candidates.
-2. **Select version** — For each matched capability, compute the set of
-   versions present in both the business and platform arrays. Select the
-   highest (latest date). If no mutual version exists, exclude the capability.
-3. **Prune orphaned extensions** — Extensions are removed if **none** of their
-   parent capabilities are in the intersection. Pruning repeats until stable
-   (handles chains).
+1. **이름으로 교집합** — 양쪽이 모두 선언한 기능만 후보가 됩니다.
+2. **버전 선택** — 이름이 일치한 기능마다 비즈니스와 플랫폼 배열 양쪽에 있는 버전
+   집합을 구하고, 그중 가장 높은 버전(가장 최근 날짜)을 선택합니다. 공통 버전이
+   없으면 그 기능은 제외합니다.
+3. **고아 확장 제거** — 상위 기능이 교집합에 **하나도** 없는 확장을 제거합니다.
+   더 이상 바뀌지 않을 때까지 제거를 반복합니다(연쇄 관계 처리).
 
-The result is a minimal, mutually compatible capability set. Businesses
-include the active capabilities in every response so platforms always know
-which features apply to a given interaction.
+그 결과 서로 호환되는 최소한의 기능 집합이 남습니다. 비즈니스가 모든 응답에 활성
+기능을 포함하므로, 플랫폼은 특정 상호작용에 어떤 기능이 적용되는지 항상 알 수 있습니다.
 
-### Profile Structure { #profile-structure }
+### 프로필 구조 { #profile-structure }
 
-Both business and platform profiles share a common base structure — a `ucp`
-object declaring protocol version, services, capabilities, and payment handlers,
-alongside a `signing_keys` array of JWK public keys. The `ucp` object differs
-between the two: the business profile uses a business-specific schema (hosted at
-`/.well-known/ucp`), while the platform profile uses a platform-specific schema
-(hosted at a URI the platform advertises per-request). This dual-purpose profile
-— capabilities *and* keys in a single document — means discovery and
-authentication are resolved together.
+비즈니스 프로필과 플랫폼 프로필은 같은 기본 구조를 공유합니다. 프로토콜 버전, 서비스,
+기능, 결제 핸들러를 선언하는 `ucp` 객체와, JWK 공개 키 배열인 `signing_keys`로
+이루어집니다. 둘은 `ucp` 객체에서 차이가 납니다.
+비즈니스 프로필은 비즈니스 전용 스키마를 쓰고(`/.well-known/ucp`에 호스팅),
+플랫폼 프로필은 플랫폼 전용 스키마를 씁니다(플랫폼이 요청마다 알리는 URI에 호스팅).
+프로필 하나에 기능*과* 키를 함께 담으므로 디스커버리와 인증을 한 번에
+해결할 수 있습니다.
 
 ```json
 {
@@ -299,143 +271,130 @@ authentication are resolved together.
 }
 ```
 
-## Namespace Governance { #namespace-governance }
+## 네임스페이스 거버넌스 { #namespace-governance }
 
-UCP uses reverse-domain naming to embed governance authority directly into
-capability and service identifiers. This eliminates the need for a central
-registry — domain owners control their own namespace.
+UCP는 역도메인 명명 방식을 써서 거버넌스 권한을 기능과 서비스 식별자에 직접 담습니다.
+그래서 중앙 레지스트리가 필요 없고, 도메인 소유자가 자신의 네임스페이스를 직접
+관리합니다.
 
 ```text
 {reverse-domain}.{service}.{capability}
 ```
 
-| Name | Authority | Who governs |
+| 이름 | 권한 기관 | 관리 주체 |
 | :--- | :--- | :--- |
-| `dev.ucp.shopping.checkout` | ucp.dev | UCP governing body |
+| `dev.ucp.shopping.checkout` | ucp.dev | UCP 관리 기구 |
 | `dev.shopify.catalog` | shopify.dev | Shopify |
 | `com.example.payments.installments` | example.com | example.com |
 
-The `spec` and `schema` URLs declared in a capability must originate from the
-namespace authority domain. Platforms **MUST** validate this binding to prevent
-spoofed capabilities.
+기능에 선언된 `spec`과 `schema` URL은 반드시 네임스페이스 권한 도메인에 있어야
+합니다. 플랫폼은 위조된 기능을 막기 위해 이 바인딩을 반드시 검증해야 합니다(**MUST**).
 
-The `dev.ucp.*` namespace is reserved exclusively for capabilities governed by
-the UCP Tech Council. Any vendor can define and publish capabilities under their
-own domain — `org.acme.*` — without UCP maintainer approval. Vendor
-capabilities follow the same extension model, meaning they can extend UCP base
-capabilities (e.g., `org.acme.loyalty` extending `dev.ucp.shopping.checkout`)
-or define entirely new ones. Because negotiation is always opt-in, vendor
-capabilities only activate when both parties declare them, keeping the protocol
-decentralized by design.
+`dev.ucp.*` 네임스페이스는 UCP Tech Council이 관리하는
+기능 전용으로 예약되어 있습니다. 벤더라면 누구나 UCP 메인테이너의 승인 없이 자기
+도메인(`org.acme.*`) 아래에 기능을 정의하고 게시할 수 있습니다. 벤더 기능도 같은 확장
+모델을 따르므로 UCP 기본 기능을 확장할 수도 있고(예: `dev.ucp.shopping.checkout`을
+확장하는 `org.acme.loyalty`), 완전히 새로운 기능을 정의할 수도 있습니다. 협상은 항상
+옵트인 방식이라 벤더 기능은 양쪽이 모두 선언했을 때만 활성화됩니다. 이렇게 해서
+프로토콜은 설계 단계부터 탈중앙화된 상태를 유지합니다.
 
-## Payment Architecture { #payment-architecture }
+## 결제 아키텍처 { #payment-architecture }
 
-UCP decouples payment instrument acceptance from payment processing to solve
-the N-to-N complexity problem between platforms, businesses, and payment
-processors.
+UCP는 결제 수단 수락과 결제 처리를 분리해, 플랫폼·비즈니스·결제 처리업체 사이의
+N 대 N 복잡도 문제를 해결합니다.
 
-### The Trust Triangle { #the-trust-triangle }
+### 신뢰 삼각형 { #the-trust-triangle }
 
-In this section, "Payment Credential Provider" refers to the CP and/or PSP
-roles defined above; depending on the payment handler, they may be the same
-entity or distinct.
+이 절에서 "결제 자격 증명 제공자"는 앞서 정의한 CP 및/또는 PSP 역할을 가리킵니다.
+결제 핸들러에 따라 둘은 같은 주체일 수도, 서로 다른 주체일 수도 있습니다.
 
-The payment model is built on three bilateral trust relationships:
+결제 모델은 세 가지 양자 간 신뢰 관계를 바탕으로 합니다.
 
-1. **Business ↔ Payment Credential Provider** — A pre-existing legal and
-   technical relationship; the business holds API keys and a contract with
-   the payment credential provider.
-2. **Platform ↔ Payment Credential Provider** — The platform interacts with
-   the payment credential provider's interface (e.g., an iframe or API) to
-   tokenize data, but is not the "owner" of the funds.
-3. **Platform ↔ Business** — The platform passes the result (a token or
-   mandate) to the business to finalize the order.
+1. **비즈니스 ↔ 결제 자격 증명 제공자** — 이미 맺어져 있는 법적·기술적 관계입니다.
+   비즈니스는 결제 자격 증명 제공자의 API 키를 보유하고 계약을 맺고 있습니다.
+2. **플랫폼 ↔ 결제 자격 증명 제공자** — 플랫폼은 결제 자격 증명 제공자의
+   인터페이스(예: iframe 또는 API)와 상호작용해 데이터를 토큰화하지만, 자금의
+   "소유자"는 아닙니다.
+3. **플랫폼 ↔ 비즈니스** — 플랫폼은 결과(토큰 또는 위임(Mandate))를 비즈니스에
+   전달해 주문을 확정합니다.
 
-Credentials flow **platform → business** only; businesses **MUST NOT** echo
-credentials back in responses.
+자격 증명은 **플랫폼 → 비즈니스** 방향으로만 흐릅니다. 비즈니스는 응답에 자격 증명을
+되돌려 보내서는 안 됩니다(**MUST NOT**).
 
-### Payment Handlers { #payment-handlers }
+### 결제 핸들러 { #payment-handlers }
 
-Payment Handlers are **specifications**, not entities. They define how a
-particular payment instrument is acquired and processed. The distinction:
+결제 핸들러는 엔티티가 아니라 **명세**입니다. 특정 결제 수단을 어떻게 획득하고
+처리하는지 정의합니다. 둘의 차이는 다음과 같습니다.
 
-* **Credential Provider (CP) / PSP** — The participant(s) that issue tokens
-  and process payments. Depending on the handler, these may be the same
-  entity or separate ones (e.g., Google Pay tokenizes; the business's PSP
-  processes).
-* **Payment Handler** — The specification that defines the protocol
-  (e.g., `com.google.pay`, `dev.shopify.shop_pay`)
+* **자격 증명 제공자(CP) / PSP** — 토큰을 발급하고 결제를 처리하는 참여자입니다.
+  핸들러에 따라 같은 주체일 수도, 별개의 주체일 수도 있습니다(예: Google Pay가
+  토큰화하고 비즈니스의 PSP가 처리).
+* **결제 핸들러** — 프로토콜을 정의하는 명세입니다(예: `com.google.pay`,
+  `dev.shopify.shop_pay`).
 
-The 3-step payment lifecycle:
+결제 생명주기는 다음 3단계로 이루어집니다.
 
-1. **Negotiation** — The business advertises available payment handlers in its
-   profile and checkout response based on contents and negotiated
-   properties of the checkout.
-2. **Acquisition** — The platform executes the handler's logic to acquire a
-   payment instrument (token or encrypted payload) directly from the CP.
-3. **Completion** — The platform submits the instrument to the business, which
-   charges funds via its PSP integration.
+1. **협상** — 비즈니스는 체크아웃 내용과 협상된 속성에 따라 사용할 수 있는 결제
+   핸들러를 프로필과 체크아웃 응답으로 알립니다.
+2. **획득** — 플랫폼은 핸들러 로직을 실행해 CP에서 결제 수단(토큰 또는 암호화된
+   페이로드)을 직접 받아 옵니다.
+3. **완료** — 플랫폼이 결제 수단을 비즈니스에 제출하면, 비즈니스는 자신의 PSP 연동으로
+   대금을 청구합니다.
 
-## Security & Authentication { #security-authentication }
+## 보안과 인증 { #security-authentication }
 
-### Identity & Key Discovery { #identity-key-discovery }
+### 신원과 키 디스커버리 { #identity-key-discovery }
 
-UCP profiles serve a dual purpose: declaring capabilities **and** publishing
-signing keys. Both parties resolve keys from the same profile document used for
-capability negotiation, eliminating a separate key management step.
+UCP 프로필은 기능 선언**과** 서명 키 게시라는 두 가지 역할을 함께 합니다. 양쪽 모두
+기능 협상에 쓰는 바로 그 프로필 문서에서 키를 찾으므로, 키 관리 단계를 따로 둘
+필요가 없습니다.
 
-Key lookup:
+키 조회 절차는 다음과 같습니다.
 
-1. Obtain the signer's profile URL (from `UCP-Agent` header or
-   `/.well-known/ucp`).
-2. Fetch and cache the profile.
-3. Match the `keyid` from `Signature-Input` to a `kid` in `signing_keys[]`.
-4. Verify the signature using the corresponding public key.
+1. 서명자의 프로필 URL을 얻습니다(`UCP-Agent` 헤더 또는 `/.well-known/ucp`에서).
+2. 프로필을 가져와 캐시합니다.
+3. `Signature-Input`의 `keyid`와 `signing_keys[]`의 `kid`를 대조합니다.
+4. 대응하는 공개 키로 서명을 검증합니다.
 
-### Authentication Mechanisms { #authentication-mechanisms }
+### 인증 메커니즘 { #authentication-mechanisms }
 
-UCP supports multiple authentication models:
+UCP는 여러 인증 모델을 지원합니다.
 
-| Mechanism | Onboarding | Notes |
+| 메커니즘 | 온보딩 | 비고 |
 | :--- | :--- | :--- |
-| **HTTP Message Signatures** ([RFC 9421](https://www.rfc-editor.org/rfc/rfc9421)) | Permissionless | Keys discovered from profile; no prior exchange needed |
-| **OAuth 2.0** | Pre-established | Client credentials or authorization code |
-| **API Keys** | Pre-established | Pre-shared secrets exchanged out-of-band |
-| **mTLS** | Pre-established | Mutual TLS with client certificates |
+| **HTTP 메시지 서명** ([RFC 9421](https://www.rfc-editor.org/rfc/rfc9421)) | 허가 불필요 | 키를 프로필에서 발견하므로 사전 교환이 필요 없음 |
+| **OAuth 2.0** | 사전 구성 | 클라이언트 자격 증명 또는 인가 코드 |
+| **API 키** | 사전 구성 | 대역 외로 교환한 사전 공유 비밀 |
+| **mTLS** | 사전 구성 | 클라이언트 인증서를 사용하는 상호 TLS |
 
-HTTP Message Signatures are the only mechanism that enables permissionless
-interaction — public keys are discovered from each party's profile, with no
-prior credential exchange.
+허가 없는 상호작용을 가능하게 하는 메커니즘은 HTTP 메시지 서명뿐입니다. 공개 키를
+각 당사자의 프로필에서 찾을 수 있으므로 자격 증명을 미리 교환할 필요가 없습니다.
 
-When a business emits updates via webhook, its identity is asserted the same
-way: the request carries a `UCP-Agent` header pointing to the business's
-profile, and the platform verifies the signature against the signing keys
-published there.
+비즈니스가 웹훅으로 업데이트를 보낼 때도 같은 방식으로 신원을 증명합니다. 요청에는
+비즈니스의 프로필을 가리키는 `UCP-Agent` 헤더가 실려 있고, 플랫폼은 그 프로필에
+게시된 서명 키로 서명을 검증합니다.
 
-### Identity Linking { #identity-linking }
+### 신원 연결 { #identity-linking }
 
-The `dev.ucp.common.identity_linking` capability enables a platform to obtain
-OAuth 2.0 authorization to act on behalf of a user at a business — unlocking
-loyalty benefits, personalized offers, wishlists, and authenticated checkouts.
-Businesses publish their OAuth 2.0 server metadata at
-`/.well-known/oauth-authorization-server`.
+`dev.ucp.common.identity_linking` 기능을 사용하면 플랫폼이 비즈니스에서 사용자를
+대신해 행동할 수 있는 OAuth 2.0 인가를 받을 수 있습니다. 이를 통해 로열티 혜택, 맞춤형
+혜택, 위시리스트, 인증된 체크아웃을 이용할 수 있습니다. 비즈니스는 자신의 OAuth 2.0
+서버 메타데이터를 `/.well-known/oauth-authorization-server`에 게시합니다.
 
-## Versioning { #versioning }
+## 버전 관리 { #versioning }
 
-UCP uses date-based version identifiers (`YYYY-MM-DD`). The version represents
-the date of the last backwards-incompatible change.
+UCP는 날짜 기반 버전 식별자(`YYYY-MM-DD`)를 사용합니다. 버전은 하위 호환되지 않는
+변경이 마지막으로 이루어진 날짜를 나타냅니다.
 
-* **Non-breaking additions** do not increment the date.
-* **Breaking changes** require a `!` prefix in the PR title and a 2-week
-  advance notice to the community before merging.
-* Businesses that support older protocol versions **SHOULD** publish
-  version-specific profiles and advertise them via the `supported_versions`
-  field in their profile, enabling platforms to discover the exact capability
-  set for each supported version.
+* **호환성을 유지하는 추가 사항**은 날짜를 올리지 않습니다.
+* **호환성을 깨는 변경**은 PR 제목에 `!` 접두사를 붙여야 하며, 병합하기 2주 전에
+  커뮤니티에 미리 알려야 합니다.
+* 이전 프로토콜 버전을 지원하는 비즈니스는 버전별 프로필을 게시하고, 프로필의
+  `supported_versions` 필드로 이를 알려야 합니다(**SHOULD**). 그러면 플랫폼이 지원되는
+  버전마다 정확한 기능 집합을 찾을 수 있습니다.
 
-Capability schemas carry their version inline, which enables independent
-versioning — a discount extension can version on a different cadence than
-the checkout capability it extends.
+기능 스키마는 버전을 인라인으로 담고 있어 독립적으로 버전을 매길 수 있습니다. 예를 들어
+할인 확장은 자신이 확장하는 체크아웃 기능과 다른 주기로 버전을 올릴 수 있습니다.
 
-See [Versioning](../versioning.md) for the release branch process and the
-full breaking-change procedure.
+릴리스 브랜치 절차와 호환성을 깨는 변경의 전체 절차는 [버전 관리](../versioning.md)를
+참고하세요.

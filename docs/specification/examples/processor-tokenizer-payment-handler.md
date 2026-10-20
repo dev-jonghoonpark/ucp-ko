@@ -14,50 +14,50 @@
    limitations under the License.
 -->
 
-# Processor Tokenizer Payment Handler { #processor-tokenizer-payment-handler }
+# 프로세서 토크나이저 결제 핸들러 { #processor-tokenizer-payment-handler }
 
-* **Handler Name:** `com.example.processor_tokenizer`
-* **Type:** Payment Handler Example
+* **핸들러 이름:** `com.example.processor_tokenizer`
+* **유형:** 결제 핸들러 예시
 
-## Introduction { #introduction }
+## 소개 { #introduction }
 
-This handler implements a **"Tokenize to Process"** flow where the entity
-that generates the token (the Tokenizer) is the same entity that processes
-the final payment (the Processor).
+이 핸들러는 **"Tokenize to Process"** 흐름을 구현합니다. 이 흐름에서는 토큰을
+생성하는 주체(토크나이저)와 최종 결제를 처리하는 주체(프로세서)가
+같습니다.
 
-**Note:** While this example uses card credentials, the pattern applies to
-**any credential type**. Compliance requirements vary by credential type
-(e.g., PCI DSS for cards).
+**참고:** 이 예시는 카드 자격 증명을 사용하지만, 이 패턴은
+**모든 자격 증명 유형**에 적용됩니다. 컴플라이언스 요구 사항은 자격 증명 유형에
+따라 다릅니다(예: 카드는 PCI DSS).
 
-This specification unifies two common implementation scenarios:
+이 명세는 흔히 쓰이는 두 가지 구현 시나리오를 함께 다룹니다.
 
-1. **Business-Hosted:** An enterprise Business hosts their own secure vault.
-    The Business tokenizes and processes.
-2. **PSP-Hosted:** The Business uses a third-party PSP. The PSP tokenizes
-    and processes.
+1. **비즈니스 호스팅:** 엔터프라이즈 비즈니스가 자체 보안 볼트를 호스팅합니다.
+    비즈니스가 토큰화와 처리를 모두 맡습니다.
+2. **PSP 호스팅:** 비즈니스가 서드파티 PSP를 사용합니다. PSP가 토큰화와
+    처리를 모두 맡습니다.
 
-In both cases, **no API detokenization step is required**. The token resolution
-happens internally within the Processor's secure environment.
+두 경우 모두 **API로 역토큰화하는 단계가 필요 없습니다**. 토큰 해석은
+프로세서의 보안 환경 안에서 이루어집니다.
 
-### Comparison of Scenarios { #comparison-of-scenarios }
+### 시나리오 비교 { #comparison-of-scenarios }
 
-| Feature              | Scenario A: PSP-Hosted                       | Scenario B: Business-Hosted          |
+| 항목                 | 시나리오 A: PSP 호스팅                       | 시나리오 B: 비즈니스 호스팅          |
 | :------------------- | :------------------------------------------- | :----------------------------------- |
-| **Tokenizer Host**   | Third-Party PSP                              | The Business                         |
-| **Compliance Scope** | **Low** (Business never sees PAN)            | **High** (Business stores PAN)       |
-| **Identity Binding** | **Required** (PSP needs Merchant Identifier) | **Implicit** (Business knows itself) |
+| **토크나이저 호스트** | 서드파티 PSP                                | 비즈니스                             |
+| **컴플라이언스 범위** | **낮음** (비즈니스가 PAN을 보지 않음)       | **높음** (비즈니스가 PAN을 저장)     |
+| **신원 바인딩**      | **필수** (PSP에 판매자 식별자 필요)          | **암묵적** (비즈니스가 자신을 앎)    |
 
 ---
 
-## Participants { #participants }
+## 참여자 { #participants }
 
-| Participant               | Role                                                                                  | Prerequisites                                             |
+| 참여자                    | 역할                                                                                  | 사전 요구 사항                                            |
 | :------------------------ | :------------------------------------------------------------------------------------ | :-------------------------------------------------------- |
-| **Tokenizer / Processor** | Host `/tokenize` endpoint, store tokens, process payments. (Can be Business or PSP).  | Compliance per credential type (e.g., PCI DSS for cards). |
-| **Platform**              | Collect credentials via secure credential provider, call Tokenizer, submit checkout.  | Secure credential provider.                               |
-| **Business**              | Configures the handler for the checkout.                                              | None (if PSP-hosted).                                     |
+| **토크나이저 / 프로세서** | `/tokenize` 엔드포인트를 호스팅하고, 토큰을 저장하며, 결제를 처리합니다(비즈니스 또는 PSP일 수 있음). | 자격 증명 유형별 컴플라이언스(예: 카드는 PCI DSS). |
+| **플랫폼**                | 보안 자격 증명 제공자로 자격 증명을 수집하고, 토크나이저를 호출하며, 체크아웃을 제출합니다. | 보안 자격 증명 제공자. |
+| **비즈니스**              | 체크아웃에 사용할 핸들러를 구성합니다.                                                | 없음(PSP 호스팅인 경우).                                  |
 
-### Pattern Flow { #pattern-flow }
+### 패턴 흐름 { #pattern-flow }
 
 ```text
 +------------+                         +-----------------------------------+
@@ -88,24 +88,24 @@ happens internally within the Processor's secure environment.
 
 ---
 
-## Configuration { #configuration }
+## 구성 { #configuration }
 
-The Business advertises this handler in their UCP profile's `payment_handlers`
-registry. The configuration determines whether the Platform acts in "PSP Mode"
-(sending identity) or "Direct Mode" (implicit identity).
+비즈니스는 UCP 프로필의 `payment_handlers` 레지스트리에 이 핸들러를 알립니다.
+플랫폼이 "PSP 모드"(신원 전송)로 동작할지 "직접 모드"(암묵적 신원)로 동작할지는
+이 구성에 따라 정해집니다.
 
-### Business Config (Discovery) { #business-config-discovery }
+### 비즈니스 구성(디스커버리) { #business-config-discovery }
 
-The business advertises their tokenization endpoint and identity during discovery.
-The handler's specification (referenced via the `spec` field) documents the
-`/tokenize` endpoint URL.
+비즈니스는 디스커버리 과정에서 토큰화 엔드포인트와 신원을 알립니다.
+`/tokenize` 엔드포인트 URL은 핸들러 명세(`spec` 필드로 참조)에
+나와 있습니다.
 
-| Field         | Type   | Required | Description                                 |
+| 필드          | 타입   | 필수     | 설명                                        |
 | :------------ | :----- | :------- | :------------------------------------------ |
-| `environment` | string | Yes      | API environment (`sandbox` or `production`) |
-| `business_id` | string | Yes      | Business identifier with the processor      |
+| `environment` | string | 예       | API 환경(`sandbox` 또는 `production`)       |
+| `business_id` | string | 예       | 프로세서에 등록된 비즈니스 식별자           |
 
-#### Example Business Handler Declaration { #example-business-handler-declaration }
+#### 비즈니스 핸들러 선언 예시 { #example-business-handler-declaration }
 
 ```json
 {
@@ -137,16 +137,16 @@ The handler's specification (referenced via the `spec` field) documents the
 }
 ```
 
-### Response Config (Checkout) { #response-config-checkout }
+### 응답 구성(체크아웃) { #response-config-checkout }
 
-The response config includes runtime information about what's available for this checkout.
+응답 구성에는 이 체크아웃에서 사용할 수 있는 항목의 런타임 정보가 들어 있습니다.
 
-| Field         | Type   | Required | Description                            |
+| 필드          | 타입   | 필수     | 설명                                   |
 | :------------ | :----- | :------- | :------------------------------------- |
-| `environment` | string | Yes      | API environment used for this checkout |
-| `business_id` | string | Yes      | Business identifier                    |
+| `environment` | string | 예       | 이 체크아웃에 사용되는 API 환경        |
+| `business_id` | string | 예       | 비즈니스 식별자                        |
 
-#### Example Response Config { #example-response-config }
+#### 응답 구성 예시 { #example-response-config }
 
 ```json
 {
@@ -167,31 +167,31 @@ The response config includes runtime information about what's available for this
 }
 ```
 
-## Platform Integration { #platform-integration }
+## 플랫폼 연동 { #platform-integration }
 
-### Prerequisites { #prerequisites }
+### 사전 요구 사항 { #prerequisites }
 
-Before using this handler, platforms must:
+이 핸들러를 사용하기 전에 플랫폼은 다음을 갖춰야 합니다.
 
-1. Have access to a **compliant secure payment credential providers** that
-collects sensitive payment data from users. This service must meet the
-compliance requirements of the instruments being handled (e.g., PCI DSS).
-2. Obtain authentication credentials (e.g., API Key) authorized to call
-the specific `endpoint` defined in the handler configuration.
+1. 사용자로부터 민감한 결제 데이터를 수집하는 **컴플라이언스를 준수하는 보안 결제
+자격 증명 제공자**에 접근할 수 있어야 합니다. 이 서비스는 처리하는 결제 수단의
+컴플라이언스 요구 사항(예: PCI DSS)을 충족해야 합니다.
+2. 핸들러 구성에 정의된 특정 `endpoint`를 호출할 권한이 있는 인증 자격
+증명(예: API 키)을 발급받아야 합니다.
 
-**Prerequisites Output:**
+**사전 요구 사항 결과물:**
 
-| Field                        | Description                                                                   |
+| 항목                         | 설명                                                                          |
 | :--------------------------- | :---------------------------------------------------------------------------- |
-| payment credential providers | **Compliant** secure service for collecting sensitive payment data from users |
-| Authentication credentials   | API key or OAuth token for authenticating `/tokenize` calls                   |
+| 결제 자격 증명 제공자         | 사용자로부터 민감한 결제 데이터를 수집하는, **컴플라이언스를 준수하는** 보안 서비스 |
+| 인증 자격 증명               | `/tokenize` 호출을 인증하기 위한 API 키 또는 OAuth 토큰                       |
 
-### Payment Protocol { #payment-protocol }
+### 결제 프로토콜 { #payment-protocol }
 
-#### Step 1: Discover Handler { #step-1-discover-handler }
+#### 1단계: 핸들러 디스커버리 { #step-1-discover-handler }
 
-Platform identifies the processor tokenizer handler and retrieves the
-business's configuration.
+플랫폼은 프로세서 토크나이저 핸들러를 식별하고 비즈니스의 구성을
+가져옵니다.
 
 ```json
 {
@@ -215,20 +215,20 @@ business's configuration.
 }
 ```
 
-#### Step 2: Collect Sensitive Data { #step-2-collect-sensitive-data }
+#### 2단계: 민감한 데이터 수집 { #step-2-collect-sensitive-data }
 
-Platform's **compliant secure payment credential providers** collects the
-sensitive payment data from the user (e.g., via a compliant payment form
-that ensures the sensitive instrument details never touch the platform).
+플랫폼의 **컴플라이언스를 준수하는 보안 결제 자격 증명 제공자**가 사용자로부터
+민감한 결제 데이터를 수집합니다. 예를 들어 민감한 결제 수단 정보가 플랫폼을 절대 거치지
+않도록 보장하는, 컴플라이언스를 준수하는 결제 폼을 사용합니다.
 
-#### Step 3: Tokenize Data { #step-3-tokenize-data }
+#### 3단계: 데이터 토큰화 { #step-3-tokenize-data }
 
-Platform's payment credential provider calls the configured `endpoint`.
+플랫폼의 결제 자격 증명 제공자가 구성된 `endpoint`를 호출합니다.
 
-**Note:** If the handler configuration includes an `identity` object, the
-credential provider **MUST** inject it into the `binding` object.
+**참고:** 핸들러 구성에 `identity` 객체가 포함되어 있으면, 자격 증명 제공자는
+반드시 이를 `binding` 객체에 넣어야 합니다(**MUST**).
 
-Response:
+응답:
 
 ```json
 {
@@ -236,9 +236,9 @@ Response:
 }
 ```
 
-### Step 4: Complete Checkout { #step-4-complete-checkout }
+### 4단계: 체크아웃 완료 { #step-4-complete-checkout }
 
-The Platform submits the token.
+플랫폼이 토큰을 제출합니다.
 
 ```json
 POST /checkout-sessions/{checkout_id}/complete
@@ -275,36 +275,36 @@ Content-Type: application/json
 
 ---
 
-## Implementation Guide { #implementation-guide }
+## 구현 가이드 { #implementation-guide }
 
-### Scenario A: Enterprise Implementation (Self-Hosted) { #scenario-a-enterprise-implementation-self-hosted }
+### 시나리오 A: 엔터프라이즈 구현(자체 호스팅) { #scenario-a-enterprise-implementation-self-hosted }
 
-* **Role:** The Business implements this specification.
-* **Requirements:**
-    1. Deploy the `endpoint` on their own infrastructure.
-    2. Internally map tokens to PANs in their own database.
-* **Security:** **CRITICAL.** For card credentials, the Business **MUST** be
-    PCI DSS compliant as they are receiving raw PANs at their endpoint.
-    Other credential types have their own compliance requirements.
+* **역할:** 비즈니스가 이 명세를 구현합니다.
+* **요구 사항:**
+    1. 자체 인프라에 `endpoint`를 배포합니다.
+    2. 자체 데이터베이스에서 토큰과 PAN을 내부적으로 매핑합니다.
+* **보안:** **매우 중요.** 카드 자격 증명의 경우 비즈니스는 엔드포인트에서 원본
+    PAN을 받으므로 반드시 PCI DSS를 준수해야 합니다(**MUST**).
+    다른 자격 증명 유형에는 유형별 컴플라이언스 요구 사항이 있습니다.
 
-### Scenario B: PSP Implementation (Third-Party) { #scenario-b-psp-implementation-third-party }
+### 시나리오 B: PSP 구현(서드파티) { #scenario-b-psp-implementation-third-party }
 
-* **Role:** The PSP implements this specification.
-* **Requirements:**
-    1. Provide the `endpoint` URL to merchants.
-    2. Issue `identity.access_token` (Merchant Secure Identifier) to merchants.
-    3. Validate that the `binding.identity` matches the merchant requesting
-    the final payment charge.
-* **Security:** PSP bears the compliance burden for credential storage
-    (e.g., PCI DSS for cards).
+* **역할:** PSP가 이 명세를 구현합니다.
+* **요구 사항:**
+    1. 판매자에게 `endpoint` URL을 제공합니다.
+    2. 판매자에게 `identity.access_token`(판매자 보안 식별자)을 발급합니다.
+    3. `binding.identity`가 최종 결제 청구를 요청하는 판매자와 일치하는지
+    검증합니다.
+* **보안:** 자격 증명 저장에 따르는 컴플라이언스 부담은 PSP가 집니다
+    (예: 카드는 PCI DSS).
 
 ---
 
-## Security Considerations { #security-considerations }
+## 보안 고려 사항 { #security-considerations }
 
-| Requirement | Description |
+| 요구 사항 | 설명 |
 | :---------- | :---------- |
-| **TLS/HTTPS** | All traffic to `config.endpoint` **MUST** be encrypted. |
-| **Compliance** | The entity hosting `config.endpoint` **MUST** be compliant with relevant data standards for the credential type (e.g., PCI DSS for cards, GDPR for PII, etc.). |
-| **Scope Isolation** | The Platform's main application **MUST NOT** see the raw credential; only the Platform's Secure credential provider and the Tokenizer Host may see it. |
-| **Binding Validation** | The Tokenizer/Processor **MUST** verify that the `checkout_id` submitted during final payment matches the `checkout_id` provided during tokenization. |
+| **TLS/HTTPS** | `config.endpoint`로 가는 모든 트래픽은 반드시 암호화해야 합니다(**MUST**). |
+| **컴플라이언스** | `config.endpoint`를 호스팅하는 주체는 반드시 자격 증명 유형에 해당하는 데이터 표준(예: 카드는 PCI DSS, 개인 식별 정보는 GDPR 등)을 준수해야 합니다(**MUST**). |
+| **범위 격리** | 플랫폼의 주 애플리케이션은 원본 자격 증명을 보아서는 안 됩니다(**MUST NOT**). 원본 자격 증명은 플랫폼의 보안 자격 증명 제공자와 토크나이저 호스트만 볼 수 있습니다. |
+| **바인딩 검증** | 토크나이저/프로세서는 반드시 최종 결제 시 제출된 `checkout_id`가 토큰화 시 제공된 `checkout_id`와 일치하는지 검증해야 합니다(**MUST**). |

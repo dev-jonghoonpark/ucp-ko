@@ -14,47 +14,47 @@
    limitations under the License.
 -->
 
-# Cart Capability { #cart-capability }
+# 장바구니 기능 { #cart-capability }
 
-* **Capability Name:** `dev.ucp.shopping.cart`
+* **기능 이름:** `dev.ucp.shopping.cart`
 
-## Overview { #overview }
+## 개요 { #overview }
 
-The Cart capability enables basket building without the complexity of checkout.
-While [Checkout](checkout.md) manages payment handlers, status lifecycle, and
-order finalization, cart provides a lightweight CRUD interface for item
-collection before purchase intent is established.
+장바구니(Cart) 기능을 사용하면 체크아웃처럼 복잡한 절차 없이 장바구니를 구성할 수 있습니다.
+[체크아웃](checkout.md)이 결제 핸들러, 상태 수명 주기, 주문 확정을 관리한다면,
+장바구니는 구매 의사가 확정되기 전에 상품을 모아 두는 가벼운 CRUD 인터페이스를
+제공합니다.
 
-**When to use Cart vs Checkout:**
+**장바구니와 체크아웃 중 무엇을 쓸까:**
 
-* **Cart**: User is exploring, comparing, saving items for later. No payment
-  configuration needed. Platform/agent can freely add, remove, update items.
-* **Checkout**: User has expressed purchase intent. Payment handlers are
-  configured, status lifecycle begins, session moves toward completion.
+* **장바구니**: 사용자가 상품을 둘러보고, 비교하고, 나중을 위해 저장하는 단계입니다. 결제
+  설정이 필요 없습니다. 플랫폼/에이전트가 상품을 자유롭게 추가, 삭제, 수정할 수 있습니다.
+* **체크아웃**: 사용자가 구매 의사를 밝힌 단계입니다. 결제 핸들러가 설정되고 상태 수명
+  주기가 시작되며, 세션이 완료를 향해 진행됩니다.
 
-The typical flow: `cart session` &#8594; `checkout session` &#8594; `order`
+일반적인 흐름: `cart session` &#8594; `checkout session` &#8594; `order`
 
-Carts support:
+장바구니가 지원하는 기능:
 
-* **Incremental building**: Add/remove items across sessions
-* **Localized estimates**: Context-aware pricing without full checkout overhead
-* **Sharing**: `continue_url` enables cart sharing and recovery
+* **점진적 구성**: 여러 세션에 걸쳐 상품 추가/삭제
+* **현지화된 예상 금액**: 전체 체크아웃 부담 없이 컨텍스트를 반영한 가격 책정
+* **공유**: `continue_url`로 장바구니 공유와 복구 가능
 
-## Cart vs Checkout { #cart-vs-checkout }
+## 장바구니와 체크아웃 비교 { #cart-vs-checkout }
 
-| Aspect | Cart | Checkout |
+| 항목 | 장바구니 | 체크아웃 |
 | ------ | ---- | -------- |
-| **Purpose** | Pre-purchase exploration | Purchase finalization |
-| **Payment** | None | Required (handlers, instruments) |
-| **Status** | Binary (exists/not found) | Lifecycle (`incomplete` → `completed`) |
-| **Complete Operation** | No | Yes |
-| **Totals** | Estimates (may be partial) | Final pricing |
+| **목적** | 구매 전 탐색 | 구매 확정 |
+| **결제** | 없음 | 필수(핸들러, 결제 수단) |
+| **상태** | 이진(존재/찾을 수 없음) | 수명 주기(`incomplete` → `completed`) |
+| **완료 작업** | 없음 | 있음 |
+| **합계** | 예상치(일부만 있을 수 있음) | 최종 가격 |
 
-## Cart-to-Checkout Conversion { #cart-to-checkout-conversion }
+## 장바구니에서 체크아웃으로 전환 { #cart-to-checkout-conversion }
 
-When the cart capability is negotiated, platforms can convert a cart to checkout
-by providing `cart_id` in the Create Checkout request. The cart contents
-(`line_items`, `context`, `buyer`) initialize the checkout session.
+장바구니 기능이 협상되었다면, 플랫폼은 체크아웃 생성(Create Checkout) 요청에 `cart_id`를
+넣어 장바구니를 체크아웃으로 전환할 수 있습니다. 체크아웃 세션은 장바구니 내용(`line_items`,
+`context`, `buyer`)으로 초기화됩니다.
 
 ```json
 {
@@ -63,87 +63,83 @@ by providing `cart_id` in the Create Checkout request. The cart contents
 }
 ```
 
-Business MUST use cart contents and MUST ignore overlapping fields in checkout payload.
-The `cart_id` parameter is only available when the cart capability is advertised
-in the business profile.
+비즈니스는 반드시 장바구니 내용을 사용해야 하며(MUST), 체크아웃 페이로드에서 겹치는 필드는
+반드시 무시해야 합니다(MUST). `cart_id` 매개변수는 비즈니스 프로필에 장바구니 기능이
+선언된 경우에만 사용할 수 있습니다.
 
-**Idempotent conversion:**
+**멱등 전환:**
 
-If an incomplete checkout already exists for the given `cart_id`, the business
-MUST return the existing checkout session rather than creating a new one. This
-ensures a single active checkout per cart and prevents conflicting sessions.
+해당 `cart_id`에 완료되지 않은 체크아웃이 이미 있으면, 비즈니스는 새로 만들지 말고
+반드시 기존 체크아웃 세션을 반환해야 합니다(MUST). 이렇게 하면 장바구니마다 활성 체크아웃이
+하나만 유지되어 세션 충돌을 막을 수 있습니다.
 
-**Cart lifecycle after conversion:**
+**전환 후 장바구니 수명 주기:**
 
-When checkout is initialized via `cart_id`, the cart and checkout sessions
-SHOULD be linked for the duration of the checkout.
+`cart_id`로 체크아웃을 초기화했다면, 장바구니와 체크아웃 세션은 체크아웃이 진행되는
+동안 연결된 상태여야 합니다(SHOULD).
 
-* **During active checkout** — Business SHOULD maintain the cart and reflect
-    relevant checkout modifications (quantity changes, item removals) back to
-    the cart. This supports back-to-storefront flows when buyers transition
-    between checkout and storefront.
+* **체크아웃 진행 중** — 비즈니스는 장바구니를 유지하고, 관련된 체크아웃 수정 사항(수량
+    변경, 상품 삭제)을 장바구니에 다시 반영해야 합니다(SHOULD). 그래야 구매자가
+    체크아웃과 스토어프런트를 오가는 스토어프런트 복귀 흐름을 지원할 수 있습니다.
 
-* **After checkout completion** — Business MAY clear the cart based on TTL,
-    completion of the checkout, or other business logic. Subsequent operations
-    on a cleared cart ID return `not_found`; the platform can start a new
-    session with `create_cart`.
+* **체크아웃 완료 후** — 비즈니스는 TTL, 체크아웃 완료, 기타 비즈니스 로직에 따라
+    장바구니를 비울 수 있습니다(MAY). 비워진 장바구니 ID로 이후 작업을 하면 `not_found`가
+    반환되며, 플랫폼은 `create_cart`로 새 세션을 시작할 수 있습니다.
 
-## Scopes { #scopes }
+## 스코프 { #scopes }
 
-The Cart capability defines the following well-known scopes for
-user-authenticated access:
+장바구니 기능은 사용자 인증 접근용으로 다음과 같은 잘 알려진 스코프를 정의합니다.
 
-| Scope | Description |
+| 스코프 | 설명 |
 | :--- | :--- |
-| `dev.ucp.shopping.cart:manage` | All cart operations on behalf of the authenticated user — create, read, update, persist. |
+| `dev.ucp.shopping.cart:manage` | 인증된 사용자를 대신하는 모든 장바구니 작업 — 생성, 조회, 수정, 저장. |
 
-Scope declaration, derivation, and rules for extending this set with
-custom scopes are defined in [Identity Linking — Scopes](identity-linking.md#scopes).
+스코프 선언과 도출, 사용자 정의 스코프로 이 집합을 확장하는 규칙은
+[신원 연결 — 스코프](identity-linking.md#scopes)에 정의되어 있습니다.
 
-## Guidelines { #guidelines }
+## 지침 { #guidelines }
 
-### Platform { #platform }
+### 플랫폼 { #platform }
 
-* **MAY** use carts for pre-purchase exploration and session persistence.
-* **SHOULD** convert cart to checkout when user expresses purchase intent.
-* **MAY** display `continue_url` for handoff to business UI.
-* **SHOULD** handle `not_found` gracefully when cart expires or is canceled.
+* 구매 전 탐색과 세션 유지에 장바구니를 사용할 수 있습니다(**MAY**).
+* 사용자가 구매 의사를 밝히면 장바구니를 체크아웃으로 전환해야 합니다(**SHOULD**).
+* 비즈니스 UI로 넘기기 위해 `continue_url`을 표시할 수 있습니다(**MAY**).
+* 장바구니가 만료되거나 취소되었을 때 반환되는 `not_found`를 적절히 처리해야 합니다(**SHOULD**).
 
-### Business { #business }
+### 비즈니스 { #business }
 
-* **SHOULD** provide `continue_url` for cart handoff and session recovery.
-* TODO: discuss `continue_url` destination - cart vs checkout.
-* **SHOULD** provide estimated totals when calculable.
-* **MAY** omit fulfillment totals until checkout when address is unknown.
-* **SHOULD** return informational messages for validation warnings.
-* **MAY** set cart expiry via `expires_at`.
-* **SHOULD** follow [cart lifecycle requirements](#cart-to-checkout-conversion)
-    when checkout is initialized via `cart_id`.
+* 장바구니 인계와 세션 복구를 위해 `continue_url`을 제공해야 합니다(**SHOULD**).
+* TODO: `continue_url` 목적지 논의 필요 - 장바구니 vs 체크아웃.
+* 계산할 수 있으면 예상 합계를 제공해야 합니다(**SHOULD**).
+* 주소를 모르면 체크아웃 전까지 풀필먼트 합계를 생략할 수 있습니다(**MAY**).
+* 유효성 검사 경고가 있으면 정보성 메시지를 반환해야 합니다(**SHOULD**).
+* `expires_at`으로 장바구니 만료 시점을 설정할 수 있습니다(**MAY**).
+* `cart_id`로 체크아웃을 초기화한 경우 [장바구니 수명 주기 요구 사항](#cart-to-checkout-conversion)을
+    따라야 합니다(**SHOULD**).
 
-## Cart Schema Definition { #cart-schema-definition }
+## 장바구니 스키마 정의 { #cart-schema-definition }
 
 {{ schema_fields('cart_resp', 'cart') }}
 
-## Operations { #operations }
+## 작업 { #operations }
 
-The Cart capability defines the following logical operations.
+장바구니 기능에서 정의하는 논리적 작업은 다음과 같습니다.
 
-| Operation | Description |
+| 작업 | 설명 |
 | :--- | :--- |
-| **Create Cart** | Creates a new cart session. |
-| **Get Cart** | Retrieves the current state of a cart session. |
-| **Update Cart** | Updates a cart session. |
-| **Cancel Cart** | Cancels a cart session. |
+| **장바구니 생성(Create Cart)** | 새 장바구니 세션을 만듭니다. |
+| **장바구니 조회(Get Cart)** | 장바구니 세션의 현재 상태를 가져옵니다. |
+| **장바구니 수정(Update Cart)** | 장바구니 세션을 수정합니다. |
+| **장바구니 취소(Cancel Cart)** | 장바구니 세션을 취소합니다. |
 
-### Create Cart { #create-cart }
+### 장바구니 생성 { #create-cart }
 
-Creates a new cart session with line items and optional buyer/context
-information for localized pricing estimates.
+라인 아이템과 선택적 구매자/컨텍스트 정보로 새 장바구니 세션을 만듭니다. 구매자/컨텍스트
+정보는 현지화된 예상 가격을 계산하는 데 쓰입니다.
 
-When **all** requested items are unavailable, the business MAY return an
-error response instead of creating a cart resource. `ucp.status` is the
-primary discriminator; the absence of `id` is a consistent secondary
-indicator:
+요청한 상품을 **하나도** 구매할 수 없으면, 비즈니스는 장바구니 리소스를 만드는 대신 오류
+응답을 반환할 수 있습니다(MAY). 주 판별 기준은 `ucp.status`이며, `id`가 없다는 점도 일관된
+보조 지표가 됩니다.
 
 ```json
 {
@@ -160,114 +156,110 @@ indicator:
 }
 ```
 
-* [REST Binding](cart-rest.md#create-cart)
-* [MCP Binding](cart-mcp.md#create_cart)
+* [REST 바인딩](cart-rest.md#create-cart)
+* [MCP 바인딩](cart-mcp.md#create_cart)
 
-### Get Cart { #get-cart }
+### 장바구니 조회 { #get-cart }
 
-Retrieves the latest state of a cart session. Returns `not_found` if the cart
-does not exist, has expired, or was canceled.
+장바구니 세션의 최신 상태를 가져옵니다. 장바구니가 없거나, 만료되었거나, 취소되었으면
+`not_found`를 반환합니다.
 
-* [REST Binding](cart-rest.md#get-cart)
-* [MCP Binding](cart-mcp.md#get_cart)
+* [REST 바인딩](cart-rest.md#get-cart)
+* [MCP 바인딩](cart-mcp.md#get_cart)
 
-### Update Cart { #update-cart }
+### 장바구니 수정 { #update-cart }
 
-Performs a full replacement of the cart session. The platform **MUST** send
-the entire cart resource. The provided resource replaces the existing cart
-state on the business side.
+장바구니 세션을 통째로 교체합니다. 플랫폼은 반드시 장바구니 리소스 전체를 보내야
+합니다(**MUST**). 보낸 리소스가 비즈니스 측의 기존 장바구니 상태를 대체합니다.
 
-* [REST Binding](cart-rest.md#update-cart)
-* [MCP Binding](cart-mcp.md#update_cart)
+* [REST 바인딩](cart-rest.md#update-cart)
+* [MCP 바인딩](cart-mcp.md#update_cart)
 
-### Cancel Cart { #cancel-cart }
+### 장바구니 취소 { #cancel-cart }
 
-Cancels a cart session. Business MUST return the cart state before deletion.
-Subsequent operations for this cart ID SHOULD return `not_found`.
+장바구니 세션을 취소합니다. 비즈니스는 반드시 삭제 전의 장바구니 상태를 반환해야 합니다(MUST).
+이후 이 장바구니 ID로 들어오는 작업에는 `not_found`를 반환해야 합니다(SHOULD).
 
-* [REST Binding](cart-rest.md#cancel-cart)
-* [MCP Binding](cart-mcp.md#cancel_cart)
+* [REST 바인딩](cart-rest.md#cancel-cart)
+* [MCP 바인딩](cart-mcp.md#cancel_cart)
 
-## Entities { #entities }
+## 엔티티 { #entities }
 
-Cart reuses the same entity schemas as [Checkout](checkout.md). This ensures
-consistent data structures when converting a cart to a checkout session.
+장바구니는 [체크아웃](checkout.md)과 같은 엔티티 스키마를 재사용합니다. 덕분에
+장바구니를 체크아웃 세션으로 전환해도 데이터 구조가 일관되게 유지됩니다.
 
-### UCP Response Cart {: #ucp-response-cart-schema }
+### UCP 응답 장바구니 {: #ucp-response-cart-schema }
 
 {{ extension_schema_fields('ucp.json#/$defs/response_cart_schema', 'cart') }}
 
-### Line Item { #line-item }
+### 라인 아이템 { #line-item }
 
-#### Line Item Create Request { #line-item-create-request }
+#### 라인 아이템 생성 요청 { #line-item-create-request }
 
 {{ schema_fields('types/line_item_create_req', 'checkout') }}
 
-#### Line Item Update Request { #line-item-update-request }
+#### 라인 아이템 수정 요청 { #line-item-update-request }
 
 {{ schema_fields('types/line_item_update_req', 'checkout') }}
 
-#### Line Item { #line-item_1 }
+#### 라인 아이템 { #line-item_1 }
 
 {{ schema_fields('types/line_item_resp', 'cart') }}
 
-#### Item { #item }
+#### 상품 { #item }
 
 {{ schema_fields('types/item_resp', 'cart') }}
 
-### Buyer { #buyer }
+### 구매자 { #buyer }
 
 {{ schema_fields('buyer', 'checkout') }}
 
-### Context { #context }
+### 컨텍스트 { #context }
 
 {{ schema_fields('context', 'checkout') }}
 
-### Signals { #signals }
+### 신호 { #signals }
 
-Environment data provided by the platform to support authorization
-and abuse prevention. Signal values MUST NOT be buyer-asserted claims. See
-[Signals](overview.md#signals) for details and privacy
-requirements.
+인가와 악용 방지를 돕기 위해 플랫폼이 제공하는 환경 데이터입니다. 신호 값은 구매자가 스스로
+주장한 내용이어서는 안 됩니다(MUST NOT). 자세한 내용과 개인정보 보호 요구 사항은
+[신호](overview.md#signals)를 참고하세요.
 
 {{ schema_fields('types/signals', 'checkout') }}
 
-### Attribution { #attribution }
+### 어트리뷰션 { #attribution }
 
-Platform-provided referral and conversion-event context — campaign IDs,
-click identifiers, and source/medium markers communicated by the platform.
-See [Attribution](overview.md#attribution) for details and consent
-requirements.
+플랫폼이 제공하는 유입 경로와 전환 이벤트 컨텍스트입니다. 플랫폼이 전달하는 캠페인 ID, 클릭
+식별자, 소스/매체 표식이 여기에 해당합니다. 자세한 내용과 동의 요구 사항은
+[어트리뷰션](overview.md#attribution)을 참고하세요.
 
 {{ schema_fields('types/attribution', 'checkout') }}
 
-### Total { #total }
+### 합계 { #total }
 
-The same totals contract applies to cart and checkout. See
-[Checkout Totals](checkout.md#totals) for the rendering contract, accounting
-identity, well-known types, repeating types, and sub-line semantics.
+장바구니와 체크아웃에는 같은 합계 규약이 적용됩니다. 렌더링 규약, 회계 항등식, 잘 알려진
+유형, 반복 유형, 하위 라인 의미론은 [체크아웃 합계](checkout.md#totals)를 참고하세요.
 
 {{ schema_fields('types/total_resp', 'checkout') }}
 
-Taxes MAY be included where calculable. Platforms SHOULD assume cart totals
-are estimates; accurate taxes are computed at checkout.
+세금은 계산할 수 있으면 포함할 수 있습니다(MAY). 플랫폼은 장바구니 합계를 예상치로 보아야
+하며(SHOULD), 정확한 세금은 체크아웃에서 계산됩니다.
 
-### Message { #message }
+### 메시지 { #message }
 
 {{ schema_fields('message', 'checkout') }}
 
-#### Message Error { #message-error }
+#### 메시지 오류 { #message-error }
 
 {{ schema_fields('types/message_error', 'checkout') }}
 
-#### Message Info { #message-info }
+#### 메시지 정보 { #message-info }
 
 {{ schema_fields('types/message_info', 'checkout') }}
 
-#### Message Warning { #message-warning }
+#### 메시지 경고 { #message-warning }
 
 {{ schema_fields('types/message_warning', 'checkout') }}
 
-### Link { #link }
+### 링크 { #link }
 
 {{ schema_fields('types/link', 'checkout') }}

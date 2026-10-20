@@ -14,25 +14,23 @@
    limitations under the License.
 -->
 
-# Buyer Consent Extension { #buyer-consent-extension }
+# 구매자 동의 확장 { #buyer-consent-extension }
 
-## Overview { #overview }
+## 개요 { #overview }
 
-The Buyer Consent extension enables platforms to transmit buyer consent choices
-to businesses regarding data usage and communication preferences. It allows
-buyers to communicate their consent status for various categories, such as
-analytics, marketing, and data sales, helping businesses comply with privacy
-regulations like CCPA and GDPR.
+구매자 동의(Buyer Consent) 확장을 사용하면 플랫폼이 데이터 사용과 커뮤니케이션 선호에
+관한 구매자의 동의 결정을 비즈니스에 전달할 수 있습니다. 구매자는 분석, 마케팅, 데이터
+판매 같은 여러 범주에 대한 동의 상태를 전달할 수 있고, 비즈니스는 이를 바탕으로 CCPA,
+GDPR 같은 개인정보 보호 규정을 준수할 수 있습니다.
 
-When this extension is supported, the `buyer` object in checkout is extended
-with a `consent` field containing boolean consent states.
+이 확장을 지원하면 체크아웃의 `buyer` 객체가 확장되어, boolean 동의 상태를 담은
+`consent` 필드가 추가됩니다.
 
-This extension can be included in `create_checkout` and `update_checkout`
-operations.
+이 확장은 `create_checkout`과 `update_checkout` 작업에 포함할 수 있습니다.
 
-## Discovery { #discovery }
+## 디스커버리 { #discovery }
 
-Businesses advertise consent support in their profile:
+비즈니스는 프로필에서 동의 지원 여부를 알립니다.
 
 ```json
 {
@@ -47,25 +45,25 @@ Businesses advertise consent support in their profile:
 }
 ```
 
-## Schema Composition { #schema-composition }
+## 스키마 구성 { #schema-composition }
 
-The consent extension extends the **buyer object** within checkout:
+동의 확장은 체크아웃 안의 **buyer 객체**를 확장합니다.
 
-- **Base schema extended**: `checkout` via `buyer` object
-- **Path**: `checkout.buyer.consent`
-- **Schema reference**: `buyer_consent.json`
+- **확장 대상 기본 스키마**: `buyer` 객체를 통한 `checkout`
+- **경로**: `checkout.buyer.consent`
+- **스키마 참조**: `buyer_consent.json`
 
-## Schema Definition { #schema-definition }
+## 스키마 정의 { #schema-definition }
 
-### Consent Object { #consent-object }
+### Consent 객체 { #consent-object }
 
 {{ extension_schema_fields('buyer_consent.json#/$defs/consent', 'buyer-consent') }}
 
-## Usage { #usage }
+## 사용법 { #usage }
 
-The platform includes consent within the `buyer` object in checkout operations:
+플랫폼은 체크아웃 작업에서 `buyer` 객체 안에 동의 정보를 담아 보냅니다.
 
-### Example: Create Checkout with Consent { #example-create-checkout-with-consent }
+### 예시: 동의 정보를 포함한 체크아웃 생성 { #example-create-checkout-with-consent }
 
 ```json
 POST /checkouts
@@ -96,7 +94,7 @@ POST /checkouts
 }
 ```
 
-### Example: Checkout Response with Consent { #example-checkout-response-with-consent }
+### 예시: 동의 정보가 포함된 체크아웃 응답 { #example-checkout-response-with-consent }
 
 ```json
 {
@@ -125,9 +123,9 @@ POST /checkouts
 }
 ```
 
-## Security & Privacy Considerations { #security-privacy-considerations }
+## 보안 및 개인정보 보호 고려 사항 { #security-privacy-considerations }
 
-1. **Consent is declarative** - The protocol communicates consent, it does not enforce it
-2. **Legal compliance** remains the business's responsibility
-3. **Platforms should not** assume consent without explicit user action
-4. **Default behavior** when consent is not provided is business-specific
+1. **동의는 선언적입니다** - 프로토콜은 동의를 전달할 뿐 강제하지 않습니다.
+2. **법규 준수**는 여전히 비즈니스의 책임입니다.
+3. **플랫폼은** 사용자의 명시적인 행동 없이 동의를 **가정하지 않아야 합니다**.
+4. 동의 정보가 제공되지 않았을 때의 **기본 동작**은 비즈니스마다 다릅니다.

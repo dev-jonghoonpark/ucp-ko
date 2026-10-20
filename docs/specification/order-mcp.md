@@ -14,17 +14,17 @@
    limitations under the License.
 -->
 
-# Order Capability - MCP Binding { #order-capability-mcp-binding }
+# 주문 기능 - MCP 바인딩 { #order-capability-mcp-binding }
 
-This document specifies the Model Context Protocol (MCP) binding for the
-[Order Capability](order.md).
+이 문서는 [주문 기능(Order Capability)](order.md)의 Model Context Protocol(MCP)
+바인딩을 정의합니다.
 
-## Protocol Fundamentals { #protocol-fundamentals }
+## 프로토콜 기본 사항 { #protocol-fundamentals }
 
-### Discovery { #discovery }
+### 디스커버리 { #discovery }
 
-Businesses advertise MCP transport availability through their UCP profile at
-`/.well-known/ucp`.
+비즈니스는 `/.well-known/ucp`에 있는 UCP 프로필로 MCP 전송 방식 지원 여부를
+알립니다.
 
 ```json
 {
@@ -54,10 +54,10 @@ Businesses advertise MCP transport availability through their UCP profile at
 }
 ```
 
-### Request Metadata { #request-metadata }
+### 요청 메타데이터 { #request-metadata }
 
-MCP clients **MUST** include a `meta` object in every request containing
-protocol metadata:
+MCP 클라이언트는 모든 요청에 프로토콜 메타데이터를 담은 `meta` 객체를 반드시
+포함해야 합니다(**MUST**).
 
 ```json
 {
@@ -78,35 +78,35 @@ protocol metadata:
 }
 ```
 
-The `meta["ucp-agent"]` field is **required** on all requests to enable
-[capability negotiation](overview.md#negotiation-protocol). Platforms **MAY**
-include additional metadata fields.
+[기능 협상](overview.md#negotiation-protocol)에 쓰이므로 모든 요청에
+`meta["ucp-agent"]` 필드가 **필수**입니다. 플랫폼은 추가 메타데이터 필드를 포함할 수
+있습니다(**MAY**).
 
-## Tools { #tools }
+## 도구 { #tools }
 
-UCP Capabilities map 1:1 to MCP Tools.
+UCP 기능은 MCP 도구(Tool)와 1:1로 대응합니다.
 
-| Tool | Operation | Description |
+| 도구 | 작업 | 설명 |
 | :---- | :---- | :---- |
-| `get_order` | [Get Order](order.md#get-order) | Get the current state of an order. |
+| `get_order` | [주문 조회](order.md#get-order) | 주문의 현재 상태를 조회합니다. |
 
 ### `get_order` { #get_order }
 
-Maps to the [Get Order](order.md#get-order) operation. Returns the
-current-state snapshot of an order.
+[주문 조회](order.md#get-order) 작업에 대응합니다. 주문의 현재 상태 스냅숏을
+반환합니다.
 
-#### Input Schema { #input-schema }
+#### 입력 스키마 { #input-schema }
 
-* `meta` (Object, required): Request metadata with `ucp-agent.profile`.
-* `id` (String, required): The ID of the order.
+* `meta` (Object, 필수): `ucp-agent.profile`을 포함한 요청 메타데이터.
+* `id` (String, 필수): 주문 ID.
 
-#### Output Schema { #output-schema }
+#### 출력 스키마 { #output-schema }
 
 {{ schema_fields('order', 'order') }}
 
-#### Example { #example }
+#### 예시 { #example }
 
-=== "Request"
+=== "요청"
 
     ```json
     {
@@ -127,7 +127,7 @@ current-state snapshot of an order.
     }
     ```
 
-=== "Response"
+=== "응답"
 
     ```json
     {
@@ -203,7 +203,7 @@ current-state snapshot of an order.
     }
     ```
 
-=== "Not Found"
+=== "찾을 수 없음"
 
     ```json
     {
@@ -237,7 +237,7 @@ current-state snapshot of an order.
     }
     ```
 
-=== "Not Authorized"
+=== "권한 없음"
 
     ```json
     {
@@ -271,26 +271,25 @@ current-state snapshot of an order.
     }
     ```
 
-## Error Handling { #error-handling }
+## 오류 처리 { #error-handling }
 
-When the business cannot return an order, the response includes a `messages`
-array describing the outcome. Platforms **MUST** check `messages` before
-accessing order fields.
+비즈니스가 주문을 반환할 수 없으면 응답의 `messages` 배열에 그 결과가 설명되어
+있습니다. 플랫폼은 주문 필드에 접근하기 전에 반드시 `messages`를 확인해야
+합니다(**MUST**).
 
-## Conformance { #conformance }
+## 준수 요건 { #conformance }
 
-Platforms implementing the MCP binding:
+MCP 바인딩을 구현하는 플랫폼의 요건은 다음과 같습니다.
 
-* **MUST** include `meta.ucp-agent.profile` on all requests
-* **MUST** check the `messages` array in responses before accessing order data
-* **SHOULD** delegate to the business via `permalink_url` for the authoritative
-  order experience - the business site is the source of truth for order details
-  and post-purchase operations
+* 모든 요청에 `meta.ucp-agent.profile`을 반드시 포함해야 합니다(**MUST**).
+* 주문 데이터에 접근하기 전에 응답의 `messages` 배열을 반드시 확인해야 합니다(**MUST**).
+* 공식 주문 경험은 `permalink_url`로 비즈니스에 넘겨야 합니다(**SHOULD**).
+  주문 세부 정보와 구매 후 작업의 기준(source of truth)은 비즈니스 사이트입니다.
 
-Businesses implementing the MCP binding:
+MCP 바인딩을 구현하는 비즈니스의 요건은 다음과 같습니다.
 
-* **MUST** implement the `get_order` tool per the
-  [OpenRPC schema](https://ucp.dev/services/shopping/mcp.openrpc.json)
+* [OpenRPC 스키마](https://ucp.dev/services/shopping/mcp.openrpc.json)에 따라 `get_order`
+  도구를 반드시 구현해야 합니다(**MUST**).
 
-See [Order Capability - Guidelines](order.md#operations-guidelines) for
-capability-level requirements that apply across all transports.
+모든 전송 방식에 공통으로 적용되는 기능 수준 요구 사항은
+[주문 기능 - 가이드라인](order.md#operations-guidelines)을 참고하세요.

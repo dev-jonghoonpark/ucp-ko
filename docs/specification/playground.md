@@ -178,10 +178,10 @@ select, input {
 
 <div class="container">
   <div class="sectionDescription">
-    <h1>UCP Playground</h1>
-    <p>Walk through a complete UCP checkout flow step-by-step. This interactive
-    demo runs entirely in the browser, simulating payloads and validating
-    against real UCP schemas at each stage.</p>
+    <h1>UCP 플레이그라운드</h1>
+    <p>UCP 체크아웃 흐름 전체를 단계별로 따라가 봅니다. 이 인터랙티브 데모는
+    브라우저에서만 실행되며, 각 단계에서 페이로드를 시뮬레이션하고 실제
+    UCP 스키마로 검증합니다.</p>
   </div>
 
   <!-- Stepper Navigation -->
@@ -189,136 +189,136 @@ select, input {
 
   <!-- VIEW: Profiles -->
   <div id="view-profiles" class="section active">
-    <h2 class="title">1. Platform Profile</h2>
-    <p class="desc">Select the capability profile for the Platform. This determines which extensions (e.g., fulfillment, discounts) are negotiated.</p>
+    <h2 class="title">1. 플랫폼 프로필</h2>
+    <p class="desc">플랫폼의 기능 프로필을 선택합니다. 어떤 확장(예: 풀필먼트, 할인)을 협상할지는 이 선택에 따라 정해집니다.</p>
     <div class="grid">
       <div class="card">
-        <h3>Configuration</h3>
+        <h3>구성</h3>
         <label style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 500;">
-          Platform Type
+          플랫폼 유형
           <select id="input-agent-type">
-            <option value="basic">Standard (Core Only)</option>
-            <option value="full">Advanced (All Extensions)</option>
+            <option value="basic">표준(핵심 기능만)</option>
+            <option value="full">고급(모든 확장)</option>
           </select>
         </label>
         <p id="agent-desc" style="margin-top: 12px; color: var(--text-secondary); font-size: 0.85rem;">
-          Supports basic checkout and order retrieval.
+          기본 체크아웃과 주문 조회를 지원합니다.
         </p>
       </div>
       <div class="json-panel">
         <div class="json-header">
-          <span class="json-title">Capabilities</span>
-          <button class="btn btn-ghost btn-sm" data-copy="json-profiles">Copy</button>
+          <span class="json-title">기능</span>
+          <button class="btn btn-ghost btn-sm" data-copy="json-profiles">복사</button>
         </div>
         <pre id="json-profiles" class="json-body"></pre>
       </div>
     </div>
     <div class="actions">
-      <button class="btn btn-primary" data-nav="discovery">Continue &rarr;</button>
+      <button class="btn btn-primary" data-nav="discovery">계속 &rarr;</button>
     </div>
   </div>
 
   <!-- VIEW: Discovery -->
   <div id="view-discovery" class="section">
-    <h2 class="title">2. Discovery</h2>
-    <p class="desc">The Platform fetches <code>/.well-known/ucp</code> from the Business.</p>
+    <h2 class="title">2. 디스커버리</h2>
+    <p class="desc">플랫폼이 비즈니스에서 <code>/.well-known/ucp</code>를 가져옵니다.</p>
     <div class="grid">
       <div class="json-panel">
-        <div class="json-header"><span class="json-title">GET Request</span></div>
+        <div class="json-header"><span class="json-title">GET 요청</span></div>
         <pre id="json-disc-req" class="json-body">GET /.well-known/ucp HTTP/1.1
 Host: business.example.com
 Accept: application/json</pre>
       </div>
       <div class="json-panel">
-        <div class="json-header"><span class="json-title">Response</span></div>
+        <div class="json-header"><span class="json-title">응답</span></div>
         <pre id="json-disc-res" class="json-body"></pre>
       </div>
     </div>
     <div class="actions">
-      <button class="btn btn-ghost" data-nav="profiles">&larr; Back</button>
-      <button class="btn btn-primary" data-nav="negotiation">Continue &rarr;</button>
+      <button class="btn btn-ghost" data-nav="profiles">&larr; 뒤로</button>
+      <button class="btn btn-primary" data-nav="negotiation">계속 &rarr;</button>
     </div>
   </div>
 
   <!-- VIEW: Negotiation -->
   <div id="view-negotiation" class="section">
-    <h2 class="title">3. Capability Negotiation</h2>
-    <p class="desc">Intersection of Platform and Business capabilities. Orphaned extensions are pruned.</p>
+    <h2 class="title">3. 기능 협상</h2>
+    <p class="desc">플랫폼 기능과 비즈니스 기능의 교집합을 구합니다. 부모 기능이 없는 확장은 제거됩니다.</p>
     <div class="grid">
       <div class="json-panel">
-        <div class="json-header"><span class="json-title">Business Capabilities</span></div>
+        <div class="json-header"><span class="json-title">비즈니스 기능</span></div>
         <pre id="json-neg-biz" class="json-body"></pre>
       </div>
       <div class="json-panel">
-        <div class="json-header"><span class="json-title">Resulting Intersection</span></div>
+        <div class="json-header"><span class="json-title">교집합 결과</span></div>
         <pre id="json-neg-active" class="json-body"></pre>
       </div>
     </div>
     <div class="actions">
-      <button class="btn btn-ghost" data-nav="discovery">&larr; Back</button>
-      <button class="btn btn-primary" data-nav="createCheckout">Continue &rarr;</button>
+      <button class="btn btn-ghost" data-nav="discovery">&larr; 뒤로</button>
+      <button class="btn btn-primary" data-nav="createCheckout">계속 &rarr;</button>
     </div>
   </div>
 
   <!-- VIEW: Create Checkout -->
   <div id="view-createCheckout" class="section">
-    <h2 class="title">4. Create Checkout</h2>
-    <p class="desc">The Platform initiates a session. The error response below follows the strict <code>message.json</code> schema.</p>
+    <h2 class="title">4. 체크아웃 생성</h2>
+    <p class="desc">플랫폼이 세션을 시작합니다. 아래 오류 응답은 엄격한 <code>message.json</code> 스키마를 따릅니다.</p>
     <div class="grid">
       <div class="json-panel">
-        <div class="json-header"><span class="json-title">Request Payload</span></div>
+        <div class="json-header"><span class="json-title">요청 페이로드</span></div>
         <pre id="json-create-req" class="json-body"></pre>
       </div>
       <div class="json-panel">
-        <div class="json-header"><span class="json-title">Response</span></div>
+        <div class="json-header"><span class="json-title">응답</span></div>
         <pre id="json-create-res" class="json-body"></pre>
       </div>
     </div>
     <!-- MOVED: Scenario Selector to Bottom, Smaller -->
     <div class="scenario-toolbar">
-      <span class="scenario-label">Simulation Scenario:</span>
+      <span class="scenario-label">시뮬레이션 시나리오:</span>
       <select id="input-create-scenario" style="width: 220px; height: 32px; font-size: 0.85rem; margin: 0;">
-        <option value="missing_buyer">Missing Buyer Email</option>
-        <option value="missing_shipping">Missing Shipping Destination</option>
+        <option value="missing_buyer">구매자 이메일 누락</option>
+        <option value="missing_shipping">배송지 누락</option>
       </select>
-      <button class="btn btn-primary btn-sm" id="btn-run-create">Run Request</button>
+      <button class="btn btn-primary btn-sm" id="btn-run-create">요청 실행</button>
     </div>
     <div class="actions">
-      <button class="btn btn-ghost" data-nav="negotiation">&larr; Back</button>
-      <button class="btn btn-primary" id="nav-to-update" disabled data-nav="updateCheckout">Next Step &rarr;</button>
+      <button class="btn btn-ghost" data-nav="negotiation">&larr; 뒤로</button>
+      <button class="btn btn-primary" id="nav-to-update" disabled data-nav="updateCheckout">다음 단계 &rarr;</button>
     </div>
   </div>
 
   <!-- VIEW: Update Checkout -->
   <div id="view-updateCheckout" class="section">
-    <h2 class="title">5. Update Checkout</h2>
-    <p class="desc">Patch the checkout with missing information to resolve validation errors.</p>
+    <h2 class="title">5. 체크아웃 업데이트</h2>
+    <p class="desc">누락된 정보로 체크아웃을 패치해 검증 오류를 해결합니다.</p>
     <div class="grid">
       <div class="json-panel">
         <div class="json-header">
-          <span class="json-title">PATCH Request</span>
-          <button class="btn btn-primary btn-sm" id="btn-run-update">Run Update</button>
+          <span class="json-title">PATCH 요청</span>
+          <button class="btn btn-primary btn-sm" id="btn-run-update">업데이트 실행</button>
         </div>
         <pre id="json-update-req" class="json-body"></pre>
       </div>
       <div class="json-panel">
-        <div class="json-header"><span class="json-title">Response</span></div>
+        <div class="json-header"><span class="json-title">응답</span></div>
         <pre id="json-update-res" class="json-body"></pre>
       </div>
     </div>
     <div class="actions">
-      <button class="btn btn-ghost" data-nav="createCheckout">&larr; Back</button>
-      <button class="btn btn-primary" id="nav-to-mint" disabled data-nav="mintInstrument">Next Step &rarr;</button>
+      <button class="btn btn-ghost" data-nav="createCheckout">&larr; 뒤로</button>
+      <button class="btn btn-primary" id="nav-to-mint" disabled data-nav="mintInstrument">다음 단계 &rarr;</button>
     </div>
   </div>
 
   <!-- VIEW: Mint Instrument -->
   <div id="view-mintInstrument" class="section">
-    <h2 class="title">6. Mint Instrument</h2>
-    <p class="desc">Simulate the payment handler flow to acquire a payment credential.</p>
+    <h2 class="title">6. 결제 수단 발급</h2>
+    <p class="desc">결제 핸들러 흐름을 시뮬레이션해 결제 자격 증명을 받습니다.</p>
     <div class="grid">
       <div class="card">
-        <h3>Select Handler</h3>
+        <h3>핸들러 선택</h3>
         <div class="handler-opt selected" data-handler="shop_pay">
           <strong>Shop Pay</strong><br>
           <small>com.shopify.shop_pay</small>
@@ -327,72 +327,72 @@ Accept: application/json</pre>
           <strong>Google Pay</strong><br>
           <small>com.google.pay</small>
         </div>
-        <button class="btn btn-primary" style="margin-top: 12px; width: 100%;" id="btn-run-mint">Mint Credential</button>
+        <button class="btn btn-primary" style="margin-top: 12px; width: 100%;" id="btn-run-mint">자격 증명 발급</button>
       </div>
       <div class="json-panel">
-        <div class="json-header"><span class="json-title">Minted Instrument</span></div>
+        <div class="json-header"><span class="json-title">발급된 결제 수단</span></div>
         <pre id="json-mint-res" class="json-body"></pre>
       </div>
     </div>
     <div class="actions">
-      <button class="btn btn-ghost" data-nav="updateCheckout">&larr; Back</button>
-      <button class="btn btn-primary" id="nav-to-complete" disabled data-nav="completeCheckout">Next Step &rarr;</button>
+      <button class="btn btn-ghost" data-nav="updateCheckout">&larr; 뒤로</button>
+      <button class="btn btn-primary" id="nav-to-complete" disabled data-nav="completeCheckout">다음 단계 &rarr;</button>
     </div>
   </div>
 
   <!-- VIEW: Complete Checkout -->
   <div id="view-completeCheckout" class="section">
-    <h2 class="title">7. Complete Checkout</h2>
-    <p class="desc">Submit the minted instrument to finalize the transaction and create an order.</p>
+    <h2 class="title">7. 체크아웃 완료</h2>
+    <p class="desc">발급된 결제 수단을 제출해 거래를 마무리하고 주문을 생성합니다.</p>
     <div class="grid">
       <div class="json-panel">
         <div class="json-header">
-          <span class="json-title">Request</span>
-          <button class="btn btn-primary btn-sm" id="btn-run-complete">Finalize</button>
+          <span class="json-title">요청</span>
+          <button class="btn btn-primary btn-sm" id="btn-run-complete">완료하기</button>
         </div>
         <pre id="json-complete-req" class="json-body"></pre>
       </div>
       <div class="json-panel">
-        <div class="json-header"><span class="json-title">Response (Order Created)</span></div>
+        <div class="json-header"><span class="json-title">응답(주문 생성됨)</span></div>
         <pre id="json-complete-res" class="json-body"></pre>
       </div>
     </div>
     <div class="callout hidden" id="order-success-msg" style="margin-bottom: 24px;">
-      <strong>Success!</strong> Order ID: <span id="display-order-id"></span> created.
+      <strong>성공!</strong> 주문 ID <span id="display-order-id"></span>이(가) 생성되었습니다.
     </div>
     <div class="actions">
-      <button class="btn btn-ghost" data-nav="mintInstrument">&larr; Back</button>
-      <button class="btn btn-primary hidden" id="nav-to-webhook" data-nav="webhookSimulation">Next Step &rarr;</button>
+      <button class="btn btn-ghost" data-nav="mintInstrument">&larr; 뒤로</button>
+      <button class="btn btn-primary hidden" id="nav-to-webhook" data-nav="webhookSimulation">다음 단계 &rarr;</button>
     </div>
   </div>
 
   <!-- VIEW: Webhook Simulation (Step 8) -->
   <div id="view-webhookSimulation" class="section">
-    <h2 class="title">8. Webhook Simulation</h2>
-    <p class="desc">Simulate a backend event (e.g., shipping center update) triggering a webhook push to the Agent.</p>
+    <h2 class="title">8. 웹훅 시뮬레이션</h2>
+    <p class="desc">백엔드 이벤트(예: 배송 센터 업데이트)가 발생해 에이전트에 웹훅을 푸시하는 상황을 시뮬레이션합니다.</p>
     <div class="grid">
       <div class="card">
-        <h3>Trigger Event</h3>
-        <p style="color:var(--text-secondary); margin-bottom: 12px; font-size: 0.85rem;">This action runs on the Business server and pushes data to the Platform's webhook URL.</p>
-        <button class="btn btn-primary" id="btn-run-webhook">Simulate "Shipped" Event</button>
+        <h3>이벤트 트리거</h3>
+        <p style="color:var(--text-secondary); margin-bottom: 12px; font-size: 0.85rem;">이 작업은 비즈니스 서버에서 실행되며 플랫폼의 웹훅 URL로 데이터를 푸시합니다.</p>
+        <button class="btn btn-primary" id="btn-run-webhook">"배송됨" 이벤트 시뮬레이션</button>
       </div>
       <div class="json-panel">
         <div class="json-header">
-          <span class="json-title">Webhook Payload (POST)</span>
-          <span class="badge">Push Notification</span>
+          <span class="json-title">웹훅 페이로드(POST)</span>
+          <span class="badge">푸시 알림</span>
         </div>
-        <pre id="json-webhook-req" class="json-body">// Waiting for event trigger...</pre>
+        <pre id="json-webhook-req" class="json-body">// 이벤트 트리거 대기 중...</pre>
       </div>
     </div>
     <div class="actions">
-      <button class="btn btn-ghost" data-nav="completeCheckout">&larr; Back</button>
+      <button class="btn btn-ghost" data-nav="completeCheckout">&larr; 뒤로</button>
     </div>
   </div>
 
   <!-- About callout footer -->
   <div class="callout" style="margin-top: 48px;">
-    <div class="calloutTitle">About this demo</div>
-    <div class="calloutBody">This playground is a simulation running entirely in your browser. It uses mocked logic to demonstrate the UCP protocol flow and isn't intended as a reference for production code. For real-world implementation examples and best practices, please check out our <a href="https://github.com/Universal-Commerce-Protocol/samples" target="_blank">samples on GitHub</a>.</div>
+    <div class="calloutTitle">이 데모에 관하여</div>
+    <div class="calloutBody">이 플레이그라운드는 브라우저에서만 실행되는 시뮬레이션입니다. UCP 프로토콜 흐름을 보여 주려고 모의 로직을 사용하며, 프로덕션 코드의 참고 자료로 만든 것은 아닙니다. 실제 구현 예시와 모범 사례는 <a href="https://github.com/Universal-Commerce-Protocol/samples" target="_blank">GitHub의 샘플</a>을 확인하세요.</div>
   </div>
 
 </div>
@@ -548,12 +548,12 @@ const UcpData = {
   agents: {
     basic: {
       label: "Standard",
-      description: "Supports core Checkout and Order capabilities.",
+      description: "핵심 체크아웃 및 주문 기능을 지원합니다.",
       caps: ["dev.ucp.shopping.checkout", "dev.ucp.shopping.order"]
     },
     full: {
       label: "Full",
-      description: "Supports core + Fulfillment and Discount extensions.",
+      description: "핵심 기능과 풀필먼트·할인 확장을 지원합니다.",
       caps: ["dev.ucp.shopping.checkout", "dev.ucp.shopping.order", "dev.ucp.shopping.fulfillment", "dev.ucp.shopping.discount", "dev.ucp.shopping.buyer_consent", "dev.ucp.shopping.ap2_mandates"]
     }
   },
@@ -928,8 +928,8 @@ class UcpApp {
     const scenarioSelect = document.getElementById('input-create-scenario');
     const isFull = this.state.agent === 'full';
     scenarioSelect.innerHTML = `
-      <option value="missing_buyer">Missing Buyer Email</option>
-      ${isFull ? '<option value="missing_shipping">Missing Shipping Destination</option>' : ''}
+      <option value="missing_buyer">구매자 이메일 누락</option>
+      ${isFull ? '<option value="missing_shipping">배송지 누락</option>' : ''}
     `;
     if (!isFull && this.state.scenario === 'missing_shipping') {
         this.state.scenario = 'missing_buyer';
@@ -950,7 +950,7 @@ class UcpApp {
 
     this.state.lastRequests.create = payload;
     this.setJson('json-create-req', payload);
-    this.setJson('json-create-res', { hint: "Click 'Run Request' to send..." });
+    this.setJson('json-create-res', { hint: "'요청 실행'을 클릭해 전송하세요..." });
     document.getElementById('nav-to-update').disabled = true;
   }
 
@@ -1008,7 +1008,7 @@ class UcpApp {
 
     this.state.lastRequests.update = patch;
     this.setJson('json-update-req', patch);
-    this.setJson('json-update-res', { hint: "Click 'Run Update'..." });
+    this.setJson('json-update-res', { hint: "'업데이트 실행'을 클릭하세요..." });
     document.getElementById('nav-to-mint').disabled = true;
   }
 

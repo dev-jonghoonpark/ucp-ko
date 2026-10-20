@@ -16,45 +16,44 @@
 
 # {Handler Name} Payment Handler
 
-* **Handler Name:** `{reverse-dns.name}`
-* **Version:** `{YYYY-MM-DD}`
+* **핸들러 이름:** `{reverse-dns.name}`
+* **버전:** `{YYYY-MM-DD}`
 
-## Introduction { #introduction }
+## 소개 { #introduction }
 
-{Brief description of what this handler enables and the payment flow it
-supports.}
+{이 핸들러로 할 수 있는 일과 지원하는 결제 흐름을 간단히 설명}
 
-### Key Benefits { #key-benefits }
+### 주요 이점 { #key-benefits }
 
-* {Benefit 1}
-* {Benefit 2}
-* {Benefit 3}
+* {이점 1}
+* {이점 2}
+* {이점 3}
 
-### Integration Guide { #integration-guide }
+### 통합 가이드 { #integration-guide }
 
-| Participant  | Integration Section                           |
+| 참여자  | 통합 섹션                           |
 | :----------- | :-------------------------------------------- |
-| **Business** | [Business Integration](#business-integration) |
-| **Platform** | [Platform Integration](#platform-integration) |
+| **비즈니스** | [비즈니스 통합](#business-integration) |
+| **플랫폼** | [플랫폼 통합](#platform-integration) |
 
 ---
 
-## Participants { #participants }
+## 참여자 { #participants }
 
-{Describe all participants in this handler and their roles.}
+{이 핸들러의 모든 참여자와 각 역할을 설명합니다.}
 
-> **Note on Terminology:**
-> While this specification refers to the participant as the **"business,"**
-> technical schema fields may retain the standard industry nomenclature
-> **`merchant_*`** (e.g., `merchant_id`). Mappings are documented below.
+> **용어 참고:**
+> 이 명세에서는 참여자를 **"비즈니스"**라고 부르지만, 기술적인 스키마 필드에는
+> 업계 표준 명칭인 **`merchant_*`**(예: `merchant_id`)가 남아 있을 수 있습니다.
+> 대응 관계는 아래에 정리합니다.
 
-| Participant             | Role               | Prerequisites                |
+| 참여자             | 역할               | 사전 요구 사항                |
 | :---------------------- | :----------------- | :--------------------------- |
-| **Business**            | {role description} | {Yes/No — brief description} |
-| **Platform**            | {role description} | {Yes/No — brief description} |
-| **{Other Participant}** | {role description} | {Yes/No — brief description} |
+| **비즈니스**            | {역할 설명} | {예/아니요 — 간단한 설명} |
+| **플랫폼**            | {역할 설명} | {예/아니요 — 간단한 설명} |
+| **{Other Participant}** | {역할 설명} | {예/아니요 — 간단한 설명} |
 
-{Optional: ASCII diagram showing participant relationships}
+{선택 사항: 참여자 간 관계를 보여 주는 ASCII 다이어그램}
 
 ```text
 +---------+     +---------------+     +------------+
@@ -84,54 +83,53 @@ supports.}
   Number sections starting from 3. Add more sections as needed for additional participants.
 -->
 
-## Business Integration { #business-integration }
+## 비즈니스 통합 { #business-integration }
 
-### Prerequisites { #prerequisites }
+### 사전 요구 사항 { #prerequisites }
 
-Before advertising this handler, businesses **MUST** complete:
+이 핸들러를 알리기 전에 비즈니스는 반드시 다음을 완료해야 합니다(**MUST**).
 
-1. {Prerequisite 1, e.g., "Register with {provider} to obtain a business identifier"}
-2. {Prerequisite 2}
+1. {사전 요구 사항 1, 예: "{provider}에 등록해 비즈니스 식별자를 발급받습니다"}
+2. {사전 요구 사항 2}
 
-**Prerequisites Output:**
+**사전 요구 사항 결과물:**
 
-| Field                   | Description                                      |
+| 필드                   | 설명                                      |
 | :---------------------- | :----------------------------------------------- |
-| `identity.access_token` | {what identifier is assigned, e.g., business_id} |
-| {additional config}     | {any additional configuration from onboarding}   |
+| `identity.access_token` | {할당되는 식별자, 예: business_id} |
+| {추가 설정}     | {온보딩에서 받은 추가 설정}   |
 
-### Handler Configuration { #handler-configuration }
+### 핸들러 설정 { #handler-configuration }
 
-Businesses advertise support for this handler in their UCP profile's
-`payment_handlers` registry.
+비즈니스는 UCP 프로필의 `payment_handlers` 레지스트리에서 이 핸들러 지원 여부를
+알립니다.
 
-#### Handler Schema { #handler-schema }
+#### 핸들러 스키마 { #handler-schema }
 
-**Schema URL:** `{schema_url}`
+**스키마 URL:** `{schema_url}`
 
-The handler schema defines three config variants for different contexts. See
-[Payment Handler Guide: Defining the Schema](payment-handler-guide.md#defining-the-schema)
-for the full pattern.
+핸들러 스키마는 맥락별로 세 가지 설정 변형을 정의합니다. 전체 패턴은
+[결제 핸들러 가이드: 스키마 정의](payment-handler-guide.md#defining-the-schema)를 참고하세요.
 
-| Config Variant | Context | Purpose |
+| 설정 변형 | 맥락 | 목적 |
 | :------------- | :------ | :------ |
-| `business_config` | Business discovery | {describe business-specific fields} |
-| `platform_config` | Platform discovery | {describe platform-specific fields} |
-| `response_config` | Checkout responses | {describe runtime fields} |
+| `business_config` | 비즈니스 디스커버리 | {비즈니스별 필드 설명} |
+| `platform_config` | 플랫폼 디스커버리 | {플랫폼별 필드 설명} |
+| `response_config` | 체크아웃 응답 | {런타임 필드 설명} |
 
-#### Business Config Fields { #business-config-fields }
+#### 비즈니스 설정 필드 { #business-config-fields }
 
-| Field   | Type   | Required | Description   |
+| 필드   | 유형   | 필수 | 설명   |
 | :------ | :----- | :------- | :------------ |
-| {field} | {type} | {Yes/No} | {description} |
+| {필드} | {유형} | {예/아니요} | {설명} |
 
-#### Response Config Fields { #response-config-fields }
+#### 응답 설정 필드 { #response-config-fields }
 
-| Field   | Type   | Required | Description   |
+| 필드   | 유형   | 필수 | 설명   |
 | :------ | :----- | :------- | :------------ |
-| {field} | {type} | {Yes/No} | {description} |
+| {필드} | {유형} | {예/아니요} | {설명} |
 
-#### Example Handler Declaration { #example-handler-declaration }
+#### 핸들러 선언 예시 { #example-handler-declaration }
 
 ```json
 {
@@ -162,50 +160,50 @@ for the full pattern.
 }
 ```
 
-### Processing Payments { #processing-payments }
+### 결제 처리 { #processing-payments }
 
-Upon receiving a payment with this handler's instrument, businesses **MUST**:
+이 핸들러의 결제 수단으로 결제를 받으면 비즈니스는 반드시 다음을 수행해야
+합니다(**MUST**).
 
-1. **Validate Handler:** Confirm `instrument.handler_id` matches an advertised handler.
-2. **Ensure Idempotency:** If the request is a retry (matches a previous
-  `checkout_id` or idempotency key), return the previous result immediately
-  without re-processing funds.
-3. **{Step 3}:** {description}
-4. **{Step 4}:** {description}
-5. **Return Response:** Respond with the finalized checkout state.
+1. **핸들러 검증:** `instrument.handler_id`가 알린 핸들러와 일치하는지 확인합니다.
+2. **멱등성 보장:** 요청이 재시도라면(이전 `checkout_id` 또는 멱등성 키와
+  일치하면) 자금을 다시 처리하지 않고 이전 결과를 즉시 반환합니다.
+3. **{Step 3}:** {설명}
+4. **{Step 4}:** {설명}
+5. **응답 반환:** 최종 확정된 체크아웃 상태로 응답합니다.
 
-{Include example request/response if the business calls an external service}
+{비즈니스가 외부 서비스를 호출한다면 요청/응답 예시를 포함합니다}
 
 ---
 
-## Platform Integration { #platform-integration }
+## 플랫폼 통합 { #platform-integration }
 
-### Prerequisites { #prerequisites_1 }
+### 사전 요구 사항 { #prerequisites_1 }
 
-Before using this handler, Platforms **MUST** complete:
+이 핸들러를 사용하기 전에 플랫폼은 반드시 다음을 완료해야 합니다(**MUST**).
 
-1. {Prerequisite 1, e.g., "Register with {provider} to obtain a Platform identifier"}
-2. {Prerequisite 2}
+1. {사전 요구 사항 1, 예: "{provider}에 등록해 플랫폼 식별자를 발급받습니다"}
+2. {사전 요구 사항 2}
 
-**Prerequisites Output:**
+**사전 요구 사항 결과물:**
 
-| Field                   | Description                                    |
+| 필드                   | 설명                                    |
 | :---------------------- | :--------------------------------------------- |
-| `identity.access_token` | {what identifier is assigned}                  |
-| {additional config}     | {any additional configuration from onboarding} |
+| `identity.access_token` | {할당되는 식별자}                  |
+| {추가 설정}     | {온보딩에서 받은 추가 설정} |
 
-### Handler Configuration { #handler-configuration_1 }
+### 핸들러 설정 { #handler-configuration_1 }
 
-Platforms advertise support for this handler in their UCP profile's
-`payment_handlers` registry using `platform_config`.
+플랫폼은 `platform_config`를 사용해 UCP 프로필의 `payment_handlers`
+레지스트리에서 이 핸들러 지원 여부를 알립니다.
 
-#### Platform Config Fields { #platform-config-fields }
+#### 플랫폼 설정 필드 { #platform-config-fields }
 
-| Field   | Type   | Required | Description   |
+| 필드   | 유형   | 필수 | 설명   |
 | :------ | :----- | :------- | :------------ |
-| {field} | {type} | {Yes/No} | {description} |
+| {필드} | {유형} | {예/아니요} | {설명} |
 
-#### Example Platform Handler Declaration { #example-platform-handler-declaration }
+#### 플랫폼 핸들러 선언 예시 { #example-platform-handler-declaration }
 
 ```json
 {
@@ -236,14 +234,14 @@ Platforms advertise support for this handler in their UCP profile's
 }
 ```
 
-### Payment Protocol { #payment-protocol }
+### 결제 프로토콜 { #payment-protocol }
 
-Platforms **MUST** follow this flow to acquire a payment instrument:
+플랫폼은 결제 수단을 획득하기 위해 반드시 다음 흐름을 따라야 합니다(**MUST**).
 
-#### Step 1: Discover Handler { #step-1-discover-handler }
+#### 1단계: 핸들러 디스커버리 { #step-1-discover-handler }
 
-The Platform identifies `{handler_name}` in the business's UCP profile
-`payment_handlers` registry (from `/.well-known/ucp`).
+플랫폼은 비즈니스 UCP 프로필(`/.well-known/ucp`)의 `payment_handlers`
+레지스트리에서 `{handler_name}`을 찾습니다.
 
 ```json
 {
@@ -268,9 +266,9 @@ The Platform identifies `{handler_name}` in the business's UCP profile
 
 #### Step 2: {Action Name}
 
-{Description of what the Platform does in this step.}
+{이 단계에서 플랫폼이 하는 일 설명}
 
-{Code example if applicable:}
+{해당하는 경우 코드 예시:}
 
 ```javascript
 // Example SDK usage or API call
@@ -278,11 +276,11 @@ The Platform identifies `{handler_name}` in the business's UCP profile
 
 #### Step 3: {Action Name}
 
-{Continue for all steps...}
+{나머지 단계도 같은 방식으로 계속...}
 
-#### Step N: Complete Checkout { #step-n-complete-checkout }
+#### N단계: 체크아웃 완료 { #step-n-complete-checkout }
 
-The Platform submits the checkout with the constructed payment instrument.
+플랫폼은 구성한 결제 수단과 함께 체크아웃을 제출합니다.
 
 ```json
 POST /checkout-sessions/{checkout_id}/complete
@@ -320,42 +318,43 @@ Content-Type: application/json
 
 ## {Participant} Integration
 
-### Prerequisites { #prerequisites_2 }
+### 사전 요구 사항 { #prerequisites_2 }
 
-Before participating in this handler's flow, {participants} **MUST** complete:
+이 핸들러의 흐름에 참여하기 전에 {participants}는 반드시 다음을 완료해야
+합니다(**MUST**).
 
-1. {Prerequisite 1}
-2. {Prerequisite 2}
+1. {사전 요구 사항 1}
+2. {사전 요구 사항 2}
 
-**Prerequisites Output:**
+**사전 요구 사항 결과물:**
 
-| Field                   | Description                                    |
+| 필드                   | 설명                                    |
 | :---------------------- | :--------------------------------------------- |
-| `identity.access_token` | {what identifier is assigned}                  |
-| {additional config}     | {any additional configuration from onboarding} |
+| `identity.access_token` | {할당되는 식별자}                  |
+| {추가 설정}     | {온보딩에서 받은 추가 설정} |
 
 ### {Action or Configuration}
 
-{Describe what this participant needs to do.}
+{이 참여자가 해야 할 일을 설명합니다.}
 
-{Include examples as appropriate.}
+{필요하면 예시를 포함합니다.}
 
 ---
 
-## Security Considerations { #security-considerations }
+## 보안 고려 사항 { #security-considerations }
 
-| Requirement                  | Description                                                                                                                                                           |
+| 요구 사항                  | 설명                                                                                                                                                           |
 | :--------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Binding required**         | Credentials **MUST** be bound to `checkout_id` and `identity` to prevent reuse.                                                                                       |
-| **Binding placement**        | Binding data (e.g., `checkout_id`) **SHOULD** be included within the `credential` payload to ensure it is covered by the signature, rather than in transport headers. |
-| **Binding verified**         | The processing participant **MUST** verify binding matches before processing.                                                                                         |
-| **Token Expiry**             | {If using tokens: Tokens **MUST** expire after {duration} or single-use.}                                                                                             |
-| **Data Residency**           | {Specify if PII **MUST** be processed/stored in specific geographic regions (e.g., EU, US) to comply with local laws.}                                                |
-| **{Additional requirement}** | {description}                                                                                                                                                         |
+| **바인딩 필수**         | 재사용을 막기 위해 자격 증명은 반드시 `checkout_id`와 `identity`에 바인딩되어야 합니다(**MUST**).                                                                                       |
+| **바인딩 위치**        | 바인딩 데이터(예: `checkout_id`)는 전송 헤더가 아니라 `credential` 페이로드 안에 포함해 서명 범위에 들어가도록 해야 합니다(**SHOULD**). |
+| **바인딩 검증**         | 처리하는 참여자는 처리 전에 반드시 바인딩이 일치하는지 검증해야 합니다(**MUST**).                                                                                         |
+| **토큰 만료**             | {토큰을 사용하는 경우: 토큰은 반드시 {duration} 후 만료되거나 일회용이어야 합니다(**MUST**).}                                                                                             |
+| **데이터 보관 위치**           | {현지 법률을 준수하기 위해 PII를 반드시 특정 지역(예: EU, US)에서 처리·저장해야 하는지(**MUST**) 명시합니다.}                                                |
+| **{Additional requirement}** | {설명}                                                                                                                                                         |
 
 ---
 
-## References { #references }
+## 참고 자료 { #references }
 
-* **Handler Spec:** `{spec_url}`
-* **Handler Schema:** `{schema_url}` (defines config, instrument, and credential shapes)
+* **핸들러 명세:** `{spec_url}`
+* **핸들러 스키마:** `{schema_url}` (설정, 결제 수단, 자격 증명의 형태를 정의합니다)

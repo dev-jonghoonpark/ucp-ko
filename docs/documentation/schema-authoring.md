@@ -14,146 +14,143 @@
    limitations under the License.
 -->
 
-# Schema Authoring Guide { #schema-authoring-guide }
+# 스키마 작성 가이드 { #schema-authoring-guide }
 
-This guide documents conventions for authoring UCP JSON schemas: metadata fields,
-the registry pattern, schema variants, and versioning.
+이 가이드에서는 UCP JSON 스키마 작성 규칙(메타데이터 필드, 레지스트리 패턴, 스키마 변형,
+버전 관리)을 설명합니다.
 
-## Schema Metadata Fields { #schema-metadata-fields }
+## 스키마 메타데이터 필드 { #schema-metadata-fields }
 
-UCP schemas use standard JSON Schema fields plus UCP-specific metadata:
+UCP 스키마는 표준 JSON Schema 필드와 UCP 전용 메타데이터를 함께 사용합니다.
 
-| Field | Standard | Purpose | Required For |
+| 필드 | 표준 | 용도 | 필수 대상 |
 | ----- | -------- | ------- | ------------ |
-| `$schema` | JSON Schema | Declares JSON Schema draft version (**SHOULD** use `draft/2020-12`) | All schemas |
-| `$id` | JSON Schema | Schema's canonical URI for `$ref` resolution | All schemas |
-| `title` | JSON Schema | Human-readable display name | All schemas |
-| `description` | JSON Schema | Schema purpose and usage | All schemas |
-| `name` | UCP | Reverse-domain identifier; doubles as registry key | Capabilities, services, handlers |
-| `version` | UCP | Entity version (`YYYY-MM-DD` format) | Capabilities, services, payment handlers |
-| `id` | UCP | Instance identifier for multiple configurations | Payment handlers only |
+| `$schema` | JSON Schema | JSON Schema 초안 버전 선언(`draft/2020-12` 사용을 권장(**SHOULD**)) | 모든 스키마 |
+| `$id` | JSON Schema | `$ref` 해석을 위한 스키마의 정식 URI | 모든 스키마 |
+| `title` | JSON Schema | 사람이 읽을 수 있는 표시 이름 | 모든 스키마 |
+| `description` | JSON Schema | 스키마의 목적과 사용법 | 모든 스키마 |
+| `name` | UCP | 역방향 도메인 식별자(레지스트리 키로도 사용) | 기능, 서비스, 핸들러 |
+| `version` | UCP | 엔티티 버전(`YYYY-MM-DD` 형식) | 기능, 서비스, 결제 핸들러 |
+| `id` | UCP | 여러 구성을 구분하기 위한 인스턴스 식별자 | 결제 핸들러 전용 |
 
-### Why Self-Describing? { #why-self-describing }
+### 왜 자기 서술적이어야 하는가? { #why-self-describing }
 
-Capability schemas **must be self-describing**: when a platform fetches a schema,
-it should determine exactly what capability and version it represents without
-cross-referencing other documents. This matters because:
+기능 스키마는 **자기 서술적이어야 합니다**. 플랫폼이 스키마를 가져왔을 때 다른 문서를
+교차 참조하지 않고도 그 스키마가 어떤 기능의 어떤 버전인지 정확히 알 수 있어야 합니다.
+이유는 다음과 같습니다.
 
-1. **Independent versioning**: Capabilities may version independently. The schema
-   must declare its version explicitly—you can't infer it from the URL.
+1. **독립적인 버전 관리**: 기능은 각자 독립적으로 버전을 매길 수 있습니다. 따라서 스키마는
+   버전을 명시적으로 선언해야 하며, 버전을 URL에서 추론할 수는 없습니다.
 
-2. **Validation**: Validators can cross-check that a capability declaration's
-   `schema` URL points to a schema whose embedded `name`/`version` match the
-   declaration. Mismatches are authoring errors caught at build time.
+2. **검증**: 검증기는 기능 선언의 `schema` URL이 가리키는 스키마에 들어 있는
+   `name`/`version`이 선언과 일치하는지 교차 확인할 수 있습니다. 불일치는 빌드 시점에 잡히는
+   작성 오류입니다.
 
-3. **Developer experience**: When reading a schema file, integrators immediately
-   see what capability it defines without reverse-engineering the `$id` URL.
+3. **개발자 경험**: 연동 개발자는 스키마 파일을 읽을 때 `$id` URL을 거꾸로 해석하지
+   않아도 그 파일이 어떤 기능을 정의하는지 바로 알 수 있습니다.
 
-4. **Compact namespace**: The `name` field provides a standardized reverse-domain
-   identifier (e.g., `dev.ucp.shopping.checkout`) that's more compact and semantic
-   than the full `$id` URL.
+4. **간결한 네임스페이스**: `name` 필드는 전체 `$id` URL보다 간결하고 의미가 분명한 표준
+   역방향 도메인 식별자(예: `dev.ucp.shopping.checkout`)를 제공합니다.
 
-### Why Both `$id` and `name`? { #why-both-id-and-name }
+### 왜 `$id`와 `name`이 모두 필요한가? { #why-both-id-and-name }
 
-| Field  | Role                                                    | Format                 |
+| 필드 | 역할 | 형식 |
 | ------ | ------------------------------------------------------- | ---------------------- |
-| `$id`  | JSON Schema primitive for `$ref` resolution and tooling | URI (required by spec) |
-| `name` | Registry key and stable identifier                      | Reverse-domain         |
+| `$id`  | `$ref` 해석과 도구 지원을 위한 JSON Schema 기본 요소 | URI(명세상 필수) |
+| `name` | 레지스트리 키이자 안정적인 식별자 | 역방향 도메인 |
 
-`$id` must be a valid URI per JSON Schema spec. `name` is the **key used in
-registries** (`capabilities`, `services`, `payment_handlers`) and the wire protocol
-identifier used in capability negotiation—decoupled from schema hosting so that
-`schema` URLs can change as infrastructure evolves.
+`$id`는 JSON Schema 명세에 따라 유효한 URI여야 합니다. `name`은 **레지스트리에서 쓰는
+키**(`capabilities`, `services`, `payment_handlers`)이자 기능 협상에 쓰는 와이어
+프로토콜 식별자입니다. 스키마 호스팅과 분리되어 있으므로 인프라가 바뀌면 `schema` URL을
+바꿀 수 있습니다.
 
-The reverse-domain format provides **namespace governance**: domain owners control
-their namespace (`dev.ucp.*`, `com.shopify.*`), avoiding collisions between UCP
-and vendor entities. This stable identity layer allows trust and resolution
-mechanisms to evolve independently—future versions could adopt verifiable
-credentials, content-addressed schemas, or other verification methods without
-breaking capability negotiation.
+역방향 도메인 형식은 **네임스페이스 거버넌스**를 제공합니다. 도메인 소유자가 자신의
+네임스페이스(`dev.ucp.*`, `com.shopify.*`)를 관리하므로 UCP 엔티티와 벤더 엔티티가
+충돌하지 않습니다. 이 안정적인 식별 계층 덕분에 신뢰 및 해석 메커니즘은 독립적으로 발전할
+수 있습니다. 향후 버전에서는 기능 협상을 깨뜨리지 않고도 검증 가능한 자격 증명, 콘텐츠 주소
+기반 스키마, 또는 다른 검증 방식을 도입할 수 있습니다.
 
-### Why `version` Uses Dates? { #why-version-uses-dates }
+### 왜 `version`에 날짜를 쓰는가? { #why-version-uses-dates }
 
-The `version` field uses date-based versioning (`YYYY-MM-DD`) to enable:
+`version` 필드에 날짜 기반 버전(`YYYY-MM-DD`)을 쓰면 다음이 가능합니다.
 
-- **Capability negotiation**: Platforms request specific versions they support
-- **Breaking change management**: New versions get new dates; old versions remain
-  valid and resolvable
-- **Independent lifecycles**: Extensions can release on their own schedule
+- **기능 협상**: 플랫폼이 지원하는 특정 버전을 요청할 수 있습니다
+- **호환성을 깨는 변경 관리**: 새 버전에는 새 날짜가 붙고, 이전 버전은 계속 유효하며
+  해석할 수 있습니다
+- **독립적인 라이프사이클**: 확장은 자체 일정에 따라 릴리스할 수 있습니다
 
-## Schema Categories { #schema-categories }
+## 스키마 분류 { #schema-categories }
 
-UCP schemas fall into six categories based on their role in the protocol.
+UCP 스키마는 프로토콜에서 맡는 역할에 따라 여섯 가지로 나뉩니다.
 
-### Capability Schemas { #capability-schemas }
+### 기능 스키마 { #capability-schemas }
 
-Define negotiated capabilities that appear in `ucp.capabilities{}` registries.
+`ucp.capabilities{}` 레지스트리에 나타나는, 협상 대상 기능을 정의합니다.
 
-- **Top-level fields**: `$schema`, `$id`, `title`, `description`, `name`, `version`
-- **Variants**: `platform_schema`, `business_schema`, `response_schema`
+- **최상위 필드**: `$schema`, `$id`, `title`, `description`, `name`, `version`
+- **변형**: `platform_schema`, `business_schema`, `response_schema`
 
-Examples: `checkout.json`, `fulfillment.json`, `discount.json`, `order.json`
+예: `checkout.json`, `fulfillment.json`, `discount.json`, `order.json`
 
-### Service Schemas { #service-schemas }
+### 서비스 스키마 { #service-schemas }
 
-Define transport bindings that appear in `ucp.services{}` registries. Each transport
-(REST, MCP, A2A, Embedded) is a separate entry.
+`ucp.services{}` 레지스트리에 나타나는 전송 바인딩을 정의합니다. 전송 방식(REST, MCP,
+A2A, Embedded)마다 별도의 항목을 둡니다.
 
-- **Top-level fields**: `$schema`, `$id`, `title`, `description`, `name`, `version`
-- **Variants**: `platform_schema`, `business_schema`
-- **Transport requirements** (additional beyond the common base):
-    - Platform profile (`platform_schema`): REST/MCP/Embedded require `schema` (OpenAPI/OpenRPC URL). A2A has no additional requirements.
-    - Business profile (`business_schema`): REST/MCP/A2A require `endpoint` (Agent Card URL for A2A). Embedded has no additional requirements.
+- **최상위 필드**: `$schema`, `$id`, `title`, `description`, `name`, `version`
+- **변형**: `platform_schema`, `business_schema`
+- **전송 방식 요구 사항**(공통 기반에 추가되는 사항):
+    - 플랫폼 프로필(`platform_schema`): REST/MCP/Embedded에는 `schema`(OpenAPI/OpenRPC URL)가 필요합니다. A2A에는 추가 요구 사항이 없습니다.
+    - 비즈니스 프로필(`business_schema`): REST/MCP/A2A에는 `endpoint`(A2A의 경우 Agent Card URL)가 필요합니다. Embedded에는 추가 요구 사항이 없습니다.
 
-### Payment Handler Schemas { #payment-handler-schemas }
+### 결제 핸들러 스키마 { #payment-handler-schemas }
 
-Define payment handler configurations in `ucp.payment_handlers{}` registries.
+`ucp.payment_handlers{}` 레지스트리의 결제 핸들러 구성을 정의합니다.
 
-- **Top-level fields**: `$schema`, `$id`, `title`, `description`, `name`, `version`, `available_instruments`
-- **Variants**: `platform_schema`, `business_schema`, `response_schema`
-- **Instance `id`**: Required to distinguish multiple configurations of the same handler
-- **`available_instruments`**: Optional. Array of supported instrument types with type-specific constraints (e.g., brands for credit cards). When absent, the handler places no restrictions — it supports the full set of instrument types defined by its handler schema.
+- **최상위 필드**: `$schema`, `$id`, `title`, `description`, `name`, `version`, `available_instruments`
+- **변형**: `platform_schema`, `business_schema`, `response_schema`
+- **인스턴스 `id`**: 같은 핸들러의 여러 구성을 구분하는 데 필요합니다
+- **`available_instruments`**: 선택 사항입니다. 지원하는 결제 수단 유형의 배열이며, 유형별 제약(예: 신용카드의 브랜드)을 함께 둘 수 있습니다. 생략하면 핸들러는 아무 제한도 두지 않으며, 핸들러 스키마가 정의한 모든 결제 수단 유형을 지원합니다.
 
-Examples: `com.google.pay`, `dev.shopify.shop_pay`, `dev.ucp.processor_tokenizer`
+예: `com.google.pay`, `dev.shopify.shop_pay`, `dev.ucp.processor_tokenizer`
 
-**→ See [Payment Handler Guide](../specification/payment-handler-guide.md)** for detailed
-guidance on handler structure, config/instrument/credential schemas, and the full
-specification template.
+핸들러 구조, config/instrument/credential 스키마, 전체 명세 템플릿에 대한 자세한 안내는
+**→ [결제 핸들러 가이드](../specification/payment-handler-guide.md)를 참고하세요**.
 
-### Component Schemas { #component-schemas }
+### 구성 요소 스키마 { #component-schemas }
 
-Data structures embedded within capabilities but not independently negotiated.
-Do **not** appear in registries.
+기능 안에 포함되지만 독립적으로 협상되지 않는 데이터 구조입니다. 레지스트리에 나타나지
+**않습니다**.
 
-- **Top-level fields**: `$schema`, `$id`, `title`, `description`
-- **Omit**: `name`, `version` (not independently versioned)
+- **최상위 필드**: `$schema`, `$id`, `title`, `description`
+- **생략**: `name`, `version`(독립적으로 버전을 관리하지 않음)
 
-Examples:
+예:
 
-- `schemas/shopping/payment.json` — Payment configuration (part of checkout)
+- `schemas/shopping/payment.json` — 결제 구성(체크아웃의 일부)
 
-### Type Schemas { #type-schemas }
+### 타입 스키마 { #type-schemas }
 
-Reusable definitions referenced by other schemas. Do **not** appear in registries.
+다른 스키마가 참조하는 재사용 가능한 정의입니다. 레지스트리에 나타나지 **않습니다**.
 
-- **Top-level fields**: `$schema`, `$id`, `title`, `description`
-- **Omit**: `name`, `version`
+- **최상위 필드**: `$schema`, `$id`, `title`, `description`
+- **생략**: `name`, `version`
 
-Examples: `types/buyer.json`, `types/line_item.json`, `types/postal_address.json`
+예: `types/buyer.json`, `types/line_item.json`, `types/postal_address.json`
 
-### Meta Schemas { #meta-schemas }
+### 메타 스키마 { #meta-schemas }
 
-Define protocol structure rather than entity payloads.
+엔티티 페이로드가 아니라 프로토콜 구조를 정의합니다.
 
-- **Top-level fields**: `$schema`, `$id`, `title`, `description`
-- **Omit**: `name`, `version`
+- **최상위 필드**: `$schema`, `$id`, `title`, `description`
+- **생략**: `name`, `version`
 
-Examples: `ucp.json` (entity base), `capability.json`, `service.json`, `payment_handler.json`
+예: `ucp.json`(엔티티 기반), `capability.json`, `service.json`, `payment_handler.json`
 
-## The Registry Pattern { #the-registry-pattern }
+## 레지스트리 패턴 { #the-registry-pattern }
 
-UCP organizes capabilities, services, and handlers in **registries**—objects keyed
-by `name` rather than arrays of objects with `name` fields.
+UCP는 기능, 서비스, 핸들러를 **레지스트리**로 구성합니다. 레지스트리는 `name` 필드가 있는
+객체의 배열이 아니라 `name`을 키로 하는 객체입니다.
 
 ```json
 {
@@ -173,33 +170,33 @@ by `name` rather than arrays of objects with `name` fields.
 }
 ```
 
-### Registry Contexts { #registry-contexts }
+### 레지스트리 컨텍스트 { #registry-contexts }
 
-The same registry structure appears in three contexts with different field requirements:
+같은 레지스트리 구조가 세 가지 컨텍스트에 나타나며, 컨텍스트마다 필드 요구 사항이 다릅니다.
 
-| Context | Location | Required Fields |
+| 컨텍스트 | 위치 | 필수 필드 |
 | ------- | -------- | --------------- |
-| Platform Profile | Advertised URI | `version`, `spec`, `schema` |
-| Business Profile | `/.well-known/ucp` | `version`; may add `config` |
-| API Responses | Checkout/order payloads | `version` (+ `id` for handlers) |
+| 플랫폼 프로필 | 플랫폼이 알린 URI | `version`, `spec`, `schema` |
+| 비즈니스 프로필 | `/.well-known/ucp` | `version`; `config` 추가 가능 |
+| API 응답 | 체크아웃/주문 페이로드 | `version`(핸들러는 `id` 추가) |
 
-## The Entity Pattern { #the-entity-pattern }
+## 엔티티 패턴 { #the-entity-pattern }
 
-All capabilities, services, and handlers extend a common `entity` base schema:
+모든 기능, 서비스, 핸들러는 공통 `entity` 기반 스키마를 확장합니다.
 
-| Field | Type | Description |
+| 필드 | 타입 | 설명 |
 | ----- | ---- | ----------- |
-| `version` | string | Entity version (`YYYY-MM-DD`) — always required |
-| `spec` | URI | Human-readable specification |
+| `version` | string | 엔티티 버전(`YYYY-MM-DD`) — 항상 필수 |
+| `spec` | URI | 사람이 읽을 수 있는 명세 |
 | `schema` | URI | JSON Schema URL |
-| `id` | string | Instance identifier (handlers only) |
-| `config` | object | Entity-specific configuration |
+| `id` | string | 인스턴스 식별자(핸들러 전용) |
+| `config` | object | 엔티티별 구성 |
 
-### Schema Variants { #schema-variants }
+### 스키마 변형 { #schema-variants }
 
-Each entity type defines **three variants** for different contexts:
+각 엔티티 유형은 컨텍스트에 따라 **세 가지 변형**을 정의합니다.
 
-**`platform_schema`** — Full declarations for discovery
+**`platform_schema`** — 디스커버리를 위한 전체 선언
 
 ```json
 {
@@ -214,7 +211,7 @@ Each entity type defines **three variants** for different contexts:
 }
 ```
 
-**`business_schema`** — Business-specific overrides
+**`business_schema`** — 비즈니스별 재정의
 
 ```json
 {
@@ -227,7 +224,7 @@ Each entity type defines **three variants** for different contexts:
 }
 ```
 
-**`response_schema`** — Minimal references in API responses
+**`response_schema`** — API 응답의 최소 참조
 
 ```json
 {
@@ -239,7 +236,7 @@ Each entity type defines **three variants** for different contexts:
 }
 ```
 
-Define all three in your schema's `$defs`:
+세 가지 모두 스키마의 `$defs`에 정의합니다.
 
 ```json
 "$defs": {
@@ -255,11 +252,11 @@ Define all three in your schema's `$defs`:
 }
 ```
 
-## String Vocabularies vs Enums { #string-vocabularies-vs-enums }
+## 문자열 어휘와 열거형 { #string-vocabularies-vs-enums }
 
-Prefer **open string vocabularies** with documented well-known values over closed
-`enum` arrays. Enums are a one-way door: adding a new value is a breaking change
-for strict validators, and removing one breaks existing producers.
+닫힌 `enum` 배열보다는 잘 알려진 값을 문서화한 **열린 문자열 어휘**를 권합니다. 열거형은
+한번 들어가면 되돌릴 수 없는 문입니다. 새 값을 추가하면 엄격한 검증기에서는 호환성을 깨는 변경이 되고,
+값을 제거하면 기존 생산자가 깨집니다.
 
 ```json
 // PREFER: open vocabulary — extensible without schema changes
@@ -275,21 +272,21 @@ for strict validators, and removing one breaks existing producers.
 }
 ```
 
-**Use `enum` only for provably closed sets** where new values would represent a
-fundamental protocol change (e.g., `checkout.status: open | completed | expired`).
-If the set might grow as new use cases emerge, use an open string with well-known
-values documented in the `description`.
+**`enum`은 닫혀 있다고 확신할 수 있는 집합에만 사용합니다.** 즉, 새 값이 곧 프로토콜의 근본적인
+변경을 뜻하는 경우입니다(예: `checkout.status: open | completed | expired`). 새로운 사용
+사례가 생기면서 집합이 커질 수 있다면, 잘 알려진 값을 `description`에 문서화한 열린
+문자열을 사용합니다.
 
-## Versioning Strategy { #versioning-strategy }
+## 버전 관리 전략 { #versioning-strategy }
 
-### UCP Capabilities (`dev.ucp.*`) { #ucp-capabilities-devucp }
+### UCP 기능(`dev.ucp.*`) { #ucp-capabilities-devucp }
 
-UCP-authored capabilities version with protocol releases by default. Individual
-capabilities **may** version independently when needed.
+UCP가 작성한 기능은 기본적으로 프로토콜 릴리스와 함께 버전이 매겨집니다. 필요하면 개별
+기능이 독립적으로 버전을 매길 수도 있습니다(**may**).
 
-### Vendor Capabilities (`com.{vendor}.*`)
+### 벤더 기능(`com.{vendor}.*`)
 
-Capabilities outside `dev.ucp.*` version fully independently:
+`dev.ucp.*` 밖의 기능은 완전히 독립적으로 버전을 매깁니다.
 
 ```json
 {
@@ -300,26 +297,28 @@ Capabilities outside `dev.ucp.*` version fully independently:
 }
 ```
 
-Vendor schemas follow the same self-describing requirements.
+벤더 스키마도 똑같이 자기 서술적이어야 한다는 요구 사항을 따릅니다.
 
-## Extensibility and Forward Compatibility { #extensibility-and-forward-compatibility }
+## 확장성과 전방 호환성 { #extensibility-and-forward-compatibility }
 
-When designing schemas, you must account for how older clients will validate newer payloads. In serialization formats
-like Protobuf, adding a new field or enum value is generally a safe, forward-compatible change.
+스키마를 설계할 때는 이전 클라이언트가 새 페이로드를 어떻게 검증할지 고려해야 합니다.
+Protobuf 같은 직렬화 형식에서는 새 필드나 enum 값을 추가해도 대체로 안전한 전방 호환
+변경입니다.
 
-Because modern code generators (e.g. [Quicktype](https://quicktype.io/)) translate JSON Schemas into strictly typed
-classes (e.g., Go structs or Java Enums), certain schema constraints will cause deserialization errors on older clients
-as the protocol evolves.  Avoiding such changes helps minimize the need to up-version the protocol.
+그러나 최신 코드 생성기(예: [Quicktype](https://quicktype.io/))는 JSON Schema를 엄격하게
+타입이 지정된 클래스(예: Go 구조체나 Java Enum)로 변환하므로, 프로토콜이 발전하면서 특정
+스키마 제약이 이전 클라이언트에서 역직렬화 오류를 일으킵니다. 이런 변경을 피하면 프로토콜
+버전을 올려야 하는 일을 최소화할 수 있습니다.
 
-### Open Enumerations { #open-enumerations }
+### 열린 열거형 { #open-enumerations }
 
-If a field's list of values might expand in the future (e.g., adding a `"refunded"` status or a new payment method),
-**do not use `enum`**.
+필드의 값 목록이 앞으로 늘어날 수 있다면(예: `"refunded"` 상태나 새 결제 방식 추가)
+**`enum`을 사용하지 않습니다**.
 
-Instead, define a standard `string`, document the requirement to ignore unknown values in the `description`, and use
-`examples` to convey current expected values to code generators. Avoid complex "Open Set" validation patterns
-(e.g., combining `anyOf` with `const`), as they frequently confuse client-side code generators and make schemas
-difficult to read.
+대신 표준 `string`을 정의하고, 알 수 없는 값을 무시해야 한다는 요구 사항을 `description`에
+문서화하며, `examples`로 현재 예상되는 값을 코드 생성기에 알려 줍니다. 복잡한 "열린 집합"
+검증 패턴(예: `anyOf`와 `const`의 조합)은 클라이언트 측 코드 생성기를 자주 혼란스럽게 하고
+스키마를 읽기 어렵게 만들므로 피합니다.
 
 ```json
 "cancellation_reason": {
@@ -329,11 +328,11 @@ difficult to read.
 }
 ```
 
-### Closed Enumerations { #closed-enumerations }
+### 닫힌 열거형 { #closed-enumerations }
 
-Use strict `enum` or `const` only for permanently fixed domains or when unknown values are inherently unsupported.
-Reserve  them for cases where adding a new value inherently requires integrators to update their code (e.g., protocol
-versions, strict type discriminators, or days of the week).
+엄격한 `enum`이나 `const`는 도메인이 영구적으로 고정되어 있거나 알 수 없는 값을 본질적으로
+지원할 수 없는 경우에만 사용합니다. 새 값을 추가하면 연동 개발자가 반드시 코드를 수정해야
+하는 경우(예: 프로토콜 버전, 엄격한 타입 판별자, 요일)를 위해 남겨 둡니다.
 
 ```json
 "status": {
@@ -343,18 +342,18 @@ versions, strict type discriminators, or days of the week).
 }
 ```
 
-### Open Objects (`additionalProperties`) { #open-objects-additionalproperties }
+### 열린 객체(`additionalProperties`) { #open-objects-additionalproperties }
 
-Marking an object as closed preemptively prevents any future non-breaking additions to the schema. In a distributed
-protocol, what would otherwise be a backward-compatible field addition (e.g., adding a "gift_message" field to an order)
-becomes a breaking change for any client validating against a closed schema.
+객체를 미리 닫아 두면 앞으로 스키마에 호환성을 깨지 않는 추가를 할 수 없게 됩니다. 분산
+프로토콜에서는 원래 하위 호환인 필드 추가(예: 주문에 "gift_message" 필드 추가)도
+닫힌 스키마로 검증하는 클라이언트에게는 호환성을 깨는 변경이 됩니다.
 
-By default, JSON Schema is open and ignores unknown properties. Authors should leave this keyword omitted except in rare
-circumstances: polymorphic discriminators (where strictness prevents oneOf validation ambiguity), security-critical
-payloads (where unknown fields may indicate tampering), or protocol envelopes (where strictness is useful to catch
-typos in core metadata like the `ucp` block).
+JSON Schema는 기본적으로 열려 있어 알 수 없는 속성을 무시합니다. 작성자는 드문 경우를 빼고는
+이 키워드를 생략해야 합니다. 드문 경우란 다형성 판별자(엄격함이 oneOf 검증의 모호성을
+막는 경우), 보안이 중요한 페이로드(알 수 없는 필드가 변조를 뜻할 수 있는 경우), 프로토콜
+엔벌로프(`ucp` 블록 같은 핵심 메타데이터의 오타를 잡는 데 엄격함이 유용한 경우)입니다.
 
-**Anti-Pattern (Prevents adding new fields without a reversion):**
+**안티패턴(버전을 되돌리지 않고는 새 필드를 추가할 수 없게 만듭니다):**
 
 ```json
 "totals": {
@@ -366,22 +365,19 @@ typos in core metadata like the `ucp` block).
 }
 ```
 
-### Property-Count Constraints (`minProperties` / `maxProperties`) { #property-count-constraints-minproperties-maxproperties }
+### 속성 개수 제약(`minProperties` / `maxProperties`) { #property-count-constraints-minproperties-maxproperties }
 
-By default, UCP schemas do not set `minProperties` or `maxProperties` on
-object fields:
+UCP 스키마는 기본적으로 객체 필드에 `minProperties`나 `maxProperties`를 설정하지 않습니다.
 
-- **`maxProperties`** — Limits are deferred to implementers. The protocol
-  does not define caps because any specific limit requires judgment calls
-  that inevitably run into exceptions. Implementers are encouraged to
-  impose their own constraints and surface clear error feedback to support
-  debugging and good behavior.
-- **`minProperties`** — Empty objects (`{}`) are well-formed and harmless.
-  Implementers should accept and process them as a no-op.
+- **`maxProperties`** — 한도는 구현자에게 맡깁니다. 특정 한도를 정하려면 판단이 필요하고
+  그 판단은 결국 예외에 부딪히므로, 프로토콜은 상한을 정의하지 않습니다. 구현자는 자체 제약을
+  두되, 디버깅과 올바른 동작을 돕도록 명확한 오류 피드백을 제공하기를 권합니다.
+- **`minProperties`** — 빈 객체(`{}`)는 형식이 올바르며 해가 없습니다. 구현자는 이를 받아들여
+  아무 동작도 하지 않는 것(no-op)으로 처리해야 합니다.
 
-## Complete Example: Capability Schema { #complete-example-capability-schema }
+## 전체 예시: 기능 스키마 { #complete-example-capability-schema }
 
-A capability schema defines both payload structure and declaration variants:
+기능 스키마는 페이로드 구조와 선언 변형을 모두 정의합니다.
 
 ```json
 {
@@ -418,8 +414,8 @@ A capability schema defines both payload structure and declaration variants:
 }
 ```
 
-Key points:
+핵심 사항:
 
-- **Top-level `name` and `version`** make the schema self-describing
-- **`$defs` variants** enable validation in different contexts
-- **Payload properties** define the actual checkout response structure
+- **최상위 `name`과 `version`** 덕분에 스키마가 자기 서술적입니다
+- **`$defs` 변형**으로 서로 다른 컨텍스트에서 검증할 수 있습니다
+- **페이로드 속성**이 실제 체크아웃 응답 구조를 정의합니다

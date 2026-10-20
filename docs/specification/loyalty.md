@@ -14,57 +14,54 @@
    limitations under the License.
 -->
 
-# Loyalty Extension { #loyalty-extension }
+# 로열티 확장 { #loyalty-extension }
 
-## Overview { #overview }
+## 개요 { #overview }
 
-The loyalty extension is designed to facilitate high-fidelity loyalty experiences:
-ensuring existing loyalty members can seamlessly access their benefits during agentic
-Catalog, Cart, and Checkout experiences. By enabling buyers to see their specific tier,
-eligible rewards, and immediately applicable benefits before finalizing a purchase, it
-addresses a foundational expectation for program members and removes friction from the
-checkout funnel.
+로열티 확장은 충실도 높은 로열티 경험을 지원하도록 설계되었습니다. 기존 로열티
+회원은 에이전트 기반 카탈로그·장바구니·체크아웃 경험에서도 자신의 혜택을 매끄럽게
+이용할 수 있습니다. 구매자는 구매를 확정하기 전에 자신의 등급, 받을 수 있는 리워드,
+즉시 적용되는 혜택을 확인할 수 있습니다. 덕분에 프로그램 회원이 당연히 기대하는 수준을
+충족하고 체크아웃 퍼널의 마찰을 없앨 수 있습니다.
 
-Specifically the following core use cases of benefit recognition for known members are
-addressed:
+구체적으로는 알려진 회원이 자신의 혜택을 인식하는 것과 관련된 다음 핵심 사용 사례를
+다룹니다.
 
-* Price-Impacting Benefits: Real-time application of member-only discounts and free
-  shipping offers with clear attribution of benefit sources.
-* Non-Price Benefits: Transparent display of rewards earned or rewards applicable to
-  future purchases.
-* Status Recognition: Verification and display of the buyers’ specific loyalty tier within
-  a program.
+* 가격에 영향을 주는 혜택: 회원 전용 할인과 무료 배송 혜택을 실시간으로 적용하고,
+  혜택의 출처를 명확히 표시합니다.
+* 가격 외 혜택: 적립된 리워드나 향후 구매에 쓸 수 있는 리워드를 투명하게 보여 줍니다.
+* 등급 인식: 프로그램 안에서 구매자의 로열티 등급을 확인하고 표시합니다.
 
-## Key Concepts { #key-concepts }
+## 핵심 개념 { #key-concepts }
 
-Loyalty has four main components:
+로열티는 네 가지 주요 구성 요소로 이루어집니다.
 
-**Memberships**: Distinct enrollment pathways or program categories that a user can join
+**멤버십**: 사용자가 가입할 수 있는 별개의 가입 경로 또는 프로그램 범주
 
-* Independent programs offered by the same brand (e.g., a "Rewards Club" vs. a "Co-branded
-  Credit Card") are modeled as separate, independently verifiable memberships. They are
-  programmatically represented as separate sibling top-level keys in the loyalty extension
-  map, namespaced by reverse-domain naming.
+* 같은 브랜드가 제공하더라도 독립된 프로그램(예: "Rewards Club"과 "제휴 신용카드")은
+  각각 독립적으로 검증할 수 있는 별도 멤버십으로 모델링합니다. 구조상으로는 로열티
+  확장 맵 안에서 역도메인 이름으로 네임스페이스를 구분한, 서로 형제 관계인 별도의
+  최상위 키로 표현합니다.
 
-**Tiers**: Specific achievement ranks or status milestones within a membership that
-unlock escalating value as a member progresses through activity or spend
+**등급(Tier)**: 멤버십 안에서 활동이나 지출이 쌓일수록 더 큰 가치를 열어 주는 특정
+달성 순위 또는 등급 마일스톤
 
-* A member typically holds a single active tier per membership. For programs with parallel
-  status dimensions (e.g., holding both "Gold" and "Lifetime Platinum"), multiple tiers
-  can be active concurrently.
+* 회원의 활성 등급은 보통 멤버십마다 하나입니다. 다만 등급 차원이 병렬로 있는
+  프로그램(예: "Gold"와 "Lifetime Platinum"을 동시에 보유)에서는 여러 등급이 동시에
+  활성화될 수 있습니다.
 
-**Benefits**: Ongoing perks and privileges granted to a customer based on their current
-tier or membership status
+**혜택(Benefit)**: 고객의 현재 등급이나 멤버십 상태에 따라 부여되는 지속적인 특전과
+권한
 
-* Contains both delayed (e.g. “Members have access to dedicated customer service”) and
-  immediate-value (e.g. “Members get 5% off”) benefits.
+* 지연형 혜택(예: "회원은 전용 고객 서비스를 이용할 수 있음")과 즉시 가치형
+  혜택(예: "회원은 5% 할인을 받음")을 모두 포함합니다.
 
-**Rewards**: Quantifiable loyalty value that may be earned from the current transaction.
-Note: Redeemable balances and stored value are modeled by the negotiated payment
-instrument or a future redemption capability, not by this loyalty extension.
+**리워드(Reward)**: 현재 거래에서 적립될 수 있는 정량화 가능한 로열티 가치.
+참고: 사용 가능한 잔액과 충전식 가치(stored value)는 이 로열티 확장이 아니라 협상된
+결제 수단이나 향후 도입될 사용(redemption) 기능에서 모델링합니다.
 
-* One membership can offer multiple types of accumulable/collectable rewards, each having
-  its own usage and redemption rules.
+* 하나의 멤버십에서 여러 종류의 적립·수집형 리워드를 제공할 수 있으며, 리워드마다
+  고유한 사용 및 교환 규칙이 있습니다.
 
 ```json
 {
@@ -92,13 +89,12 @@ instrument or a future redemption capability, not by this loyalty extension.
 }
 ```
 
-## Discovery { #discovery }
+## 디스커버리 { #discovery }
 
-Businesses can follow the standard advertising mechanism to advertise loyalty support in
-the Business profile. Currently the loyalty extension can decorate catalog search,
-catalog lookup, cart, and checkout capabilities. Businesses MAY advertise loyalty
-support for any subset of these capabilities. Platforms SHOULD check which resources are
-extended.
+비즈니스는 표준 공지 메커니즘에 따라 비즈니스 프로필에서 로열티 지원을 알릴 수 있습니다.
+현재 로열티 확장으로 확장할 수 있는 기능은 카탈로그 검색, 카탈로그 조회, 장바구니,
+체크아웃입니다. 비즈니스는 이 중 원하는 기능에만 로열티 지원을 선언할 수
+있습니다(MAY). 플랫폼은 어떤 리소스가 확장되었는지 확인해야 합니다(SHOULD).
 
 ```json
 {
@@ -151,136 +147,133 @@ extended.
 }
 ```
 
-**Dependencies:**
+**의존성:**
 
-* Catalog Search Capability
-* Catalog Lookup Capability
-* Cart Capability
-* Checkout Capability
+* 카탈로그 검색 기능
+* 카탈로그 조회 기능
+* 장바구니 기능
+* 체크아웃 기능
 
-## Schema { #schema }
+## 스키마 { #schema }
 
-### Entities { #entities }
+### 엔터티 { #entities }
 
-#### Loyalty { #loyalty }
+#### 로열티 { #loyalty }
 
 {{ extension_schema_fields('loyalty.json#/$defs/loyalty', 'loyalty') }}
 
-#### Loyalty Membership { #loyalty-membership }
+#### 로열티 멤버십 { #loyalty-membership }
 
 {{ extension_schema_fields('loyalty.json#/$defs/loyalty_membership', 'loyalty') }}
 
-#### Membership Tier { #membership-tier }
+#### 멤버십 등급 { #membership-tier }
 
 {{ extension_schema_fields('loyalty.json#/$defs/membership_tier', 'loyalty') }}
 
-#### Membership Tier Benefit { #membership-tier-benefit }
+#### 멤버십 등급 혜택 { #membership-tier-benefit }
 
 {{ extension_schema_fields('loyalty.json#/$defs/membership_tier_benefit', 'loyalty') }}
 
-#### Membership Reward { #membership-reward }
+#### 멤버십 리워드 { #membership-reward }
 
 {{ extension_schema_fields('loyalty.json#/$defs/membership_reward', 'loyalty') }}
 
-#### Reward Amount { #reward-amount }
+#### 리워드 수량 { #reward-amount }
 
 {{ extension_schema_fields('loyalty.json#/$defs/reward_amount', 'loyalty') }}
 
-#### Reward Currency { #reward-currency }
+#### 리워드 통화 { #reward-currency }
 
 {{ extension_schema_fields('loyalty.json#/$defs/reward_currency', 'loyalty') }}
 
-#### Earning Forecast { #earning-forecast }
+#### 적립 예상 { #earning-forecast }
 
 {{ extension_schema_fields('loyalty.json#/$defs/earning_forecast', 'loyalty') }}
 
-#### Earning Breakdown { #earning-breakdown }
+#### 적립 내역 { #earning-breakdown }
 
 {{ extension_schema_fields('loyalty.json#/$defs/earning_breakdown', 'loyalty') }}
 
-## Loyalty behavior { #loyalty-behavior }
+## 로열티 동작 { #loyalty-behavior }
 
-The loyalty extension holds a key-value map whose keys are reverse-domain identifiers —
-the same convention as services, capabilities, and payment handlers in the business
-profile. The keys represent eligibility claims about loyalty memberships that
-businesses recognize. The values contain membership information corresponding to those
-claims and use the required `provisional` field to indicate the verification state.
+로열티 확장은 역도메인 식별자를 키로 하는 키-값 맵입니다. 비즈니스 프로필의 서비스,
+기능, 결제 핸들러와 같은 규칙을 따릅니다. 키는 비즈니스가 인식하는 로열티 멤버십에
+대한 자격 주장(eligibility claim)을 나타냅니다. 값에는 그 주장에 대응하는 멤버십
+정보가 담기며, 필수 필드인 `provisional`로 검증 상태를 표시합니다.
 
-Programs that can be joined independently MUST be modeled as separate sibling entries
-under the loyalty map, distinguished by their reverse-domain naming.
+독립적으로 가입할 수 있는 프로그램은 반드시 로열티 맵 아래에서 역도메인 이름으로
+구분되는 별도의 형제 항목으로 모델링해야 합니다(MUST).
 
-Platforms MAY send buyer loyalty membership claims via `context.eligibility` in the
-request to activate the loyalty extension and claim loyalty benefits. Alternatively,
-when the buyer is authenticated and the business can determine loyalty membership from
-the authenticated identity, businesses MAY populate the loyalty extension without an
-explicit eligibility claim. In this case, the map key MUST be the same reverse-domain
-identifier the business would accept as a claim value.
+플랫폼은 로열티 확장을 활성화하고 로열티 혜택을 주장하기 위해 요청의
+`context.eligibility`에 구매자의 로열티 멤버십 주장을 담아 보낼 수 있습니다(MAY).
+또는 구매자가 인증되어 있고 비즈니스가 인증된 신원으로 로열티 멤버십을 판단할 수
+있다면, 비즈니스는 명시적인 자격 주장 없이도 로열티 확장을 채울 수 있습니다(MAY).
+이때 맵 키는 반드시 비즈니스가 주장 값으로 받아들이는 역도메인 식별자와 같아야
+합니다(MUST).
 
-* When a business verifies a membership claim or determines membership from
-  authenticated identity, it MUST return `provisional: false`. It MUST populate the
-  active tier(s) the buyer holds within the `tiers` array **when the program has
-  tier structure** — for programs with no tier concept (flat-rate cashback,
-  single-status memberships), businesses MAY omit `tiers`. It also SHOULD set
-  `display_id` as a masked unique identifier for the buyer.
-* When a membership claim in the request is recognized and accepted but not verified by
-  the business, the business MUST return `provisional: true`. It MAY return display-safe
-  tier context for the state accepted during the session, and MUST NOT return
-  `display_id` until the membership is verified.
-* When a membership claim in the request is accepted but cannot be verified, the business
-  MUST communicate the failure via a recoverable `message` with `type: "error"` and
-  `code: "eligibility_invalid"`. Platforms MAY then choose to remove the membership claim
-  and proceed through checkout without loyalty benefits applied.
+* 비즈니스가 멤버십 주장을 검증했거나 인증된 신원으로 멤버십을 판단했다면 반드시
+  `provisional: false`를 반환해야 합니다(MUST). **프로그램에 등급 구조가 있다면**
+  구매자가 보유한 활성 등급을 반드시 `tiers` 배열에 채워야 합니다(MUST). 등급 개념이
+  없는 프로그램(정률 캐시백, 단일 상태 멤버십)에서는 `tiers`를 생략할 수
+  있습니다(MAY). 또한 구매자의 마스킹된 고유 식별자를 `display_id`에 설정해야
+  합니다(SHOULD).
+* 요청의 멤버십 주장을 인식하고 수락했지만 아직 검증하지 않았다면, 비즈니스는
+  반드시 `provisional: true`를 반환해야 합니다(MUST). 세션 중 수락된 상태로 표시해도
+  안전한 등급 정보는 반환할 수 있지만(MAY), 멤버십이 검증되기 전까지 `display_id`를
+  반환해서는 안 됩니다(MUST NOT).
+* 요청의 멤버십 주장을 수락했지만 검증할 수 없다면, 비즈니스는 반드시 `type: "error"`와
+  `code: "eligibility_invalid"`가 담긴 복구 가능한 `message`로 실패를 알려야
+  합니다(MUST). 그러면 플랫폼은 멤버십 주장을 빼고 로열티 혜택 없이 체크아웃을
+  진행할 수 있습니다(MAY).
 
-At checkout completion, all accepted but unverified loyalty claims MUST be resolved per
-the [Eligibility Verification at Completion](checkout.md#eligibility-verification-at-completion)
-contract defined in the checkout capability.
+체크아웃을 완료할 때, 수락되었지만 검증되지 않은 로열티 주장은 모두 반드시 체크아웃
+기능에 정의된 [완료 시 자격 검증](checkout.md#eligibility-verification-at-completion)
+계약에 따라 해소되어야 합니다(MUST).
 
-### Monetary loyalty benefits { #monetary-loyalty-benefits }
+### 금전적 로열티 혜택 { #monetary-loyalty-benefits }
 
-Monetary price-impacting loyalty benefits (e.g. member pricing/shipping) can have
-conditions beyond membership, such as saving $10 only after a $500+ purchase. Businesses
-MUST evaluate those conditions before applying the benefit.
+가격에 영향을 주는 금전적 로열티 혜택(예: 회원 가격·배송)에는 "$500 이상 구매 시에만
+$10 할인"처럼 멤버십 외의 조건이 붙을 수 있습니다. 비즈니스는 혜택을 적용하기 전에
+반드시 그 조건을 평가해야 합니다(MUST).
 
-When the benefit applies, businesses MUST surface the price impact through the base
-capability's price fields. Catalog responses use `price` / `list_price` and
-`price_range` / `list_price_range`; cart and checkout responses use `totals` or
-`line_items[].totals` with `type: "items_discount"` (for member pricing) / `type: "discount"`
-(for member shipping) and `display_text` to attribute the loyalty source when possible.
+혜택을 적용하면 비즈니스는 반드시 기본 기능의 가격 필드로 가격 영향을 드러내야
+합니다(MUST). 카탈로그 응답에서는 `price` / `list_price`와 `price_range` /
+`list_price_range`를 사용합니다. 장바구니와 체크아웃 응답에서는 `totals` 또는
+`line_items[].totals`에 `type: "items_discount"`(회원 가격) / `type: "discount"`(회원
+배송)를 사용하고, 가능하면 `display_text`로 로열티 출처를 표시합니다.
 
-For cart and checkout responses, when the discount extension is active, businesses
-SHOULD also populate `discounts.applied[]` for structured attribution. In that case,
-`eligibility` identifies the claim required for the discount. If the discount still
-requires verification, for example because one or more accepted loyalty claims remain
-unverified, the corresponding applied discount MUST set `provisional: true`.
+장바구니와 체크아웃 응답에서 할인 확장이 활성화되어 있다면, 비즈니스는 출처를
+구조적으로 표시할 수 있도록 `discounts.applied[]`도 채워야 합니다(SHOULD). 이때
+`eligibility`는 해당 할인에 필요한 주장을 가리킵니다. 수락된 로열티 주장 중 하나
+이상이 아직 검증되지 않은 경우처럼 할인에 여전히 검증이 필요하다면, 해당 적용
+할인은 반드시 `provisional: true`로 설정해야 합니다(MUST).
 
-If the benefit does not apply, businesses SHOULD notify the buyer via messages with
-`type: "warning"` and explain the inapplicability of those monetary loyalty benefits.
-Businesses MUST NOT put inapplicable benefits in the discount extension. Instead they
-MAY set them as part of `benefits` within the loyalty extension and set the warning
-message `path` to reference the relevant membership for additional context.
+혜택을 적용하지 않는다면 비즈니스는 `type: "warning"` 메시지로 구매자에게 알리고, 해당
+금전적 로열티 혜택이 적용되지 않는 이유를 설명해야 합니다(SHOULD). 적용되지 않는
+혜택을 할인 확장에 넣어서는 안 됩니다(MUST NOT). 대신 로열티 확장의 `benefits`에
+넣고, 추가 맥락을 주도록 경고 메시지의 `path`가 관련 멤버십을 가리키게 할 수
+있습니다(MAY).
 
-When loyalty membership claims are accepted, businesses MAY use `type: "info"` to
-explain the effects of applied monetary loyalty benefits.
+로열티 멤버십 주장을 수락했다면, 비즈니스는 `type: "info"`로 적용된 금전적 로열티
+혜택의 효과를 설명할 수 있습니다(MAY).
 
-**Loyalty benefits message codes:**
+**로열티 혜택 메시지 코드:**
 
-| Type      | Code                            | When                                                 |
+| 타입      | 코드                            | 시점                                                 |
 | --------- | ------------------------------- | ---------------------------------------------------- |
-| `info`    | `membership_benefit_eligible`   | Specific benefit confirmed applicable to this order  |
-| `warning` | `membership_benefit_ineligible` | Benefit exists but conditions not met for this order |
+| `info`    | `membership_benefit_eligible`   | 특정 혜택을 이 주문에 적용할 수 있다고 확인된 경우  |
+| `warning` | `membership_benefit_ineligible` | 혜택은 있지만 이 주문이 조건을 충족하지 못하는 경우 |
 
-The examples below are abbreviated to focus on loyalty and discount extension fields;
-complete cart and checkout responses also include base required fields such as `ucp`,
-`id`, `currency`, and `totals`.
+아래 예시는 로열티와 할인 확장 필드만 보이도록 축약했습니다. 실제 장바구니·체크아웃
+응답에는 `ucp`, `id`, `currency`, `totals` 같은 기본 필수 필드도 포함됩니다.
 
-Building on the store loyalty card example from
-[Eligibility Verification at Completion](checkout.md#eligibility-verification-at-completion),
-assume the card offers one unconditional product discount and one conditional discount
-that the current checkout cart fails to satisfy. The platform can surface the first
-provisional discount with disclaimers like "verified at purchase" and additionally show
-a warning message to disclose the inapplicability of the second discount.
+[완료 시 자격 검증](checkout.md#eligibility-verification-at-completion)의
+매장 로열티 카드 예시를 이어 가 보겠습니다. 이 카드는 무조건 적용되는 상품 할인 하나와,
+현재 체크아웃 장바구니가 충족하지 못하는 조건부 할인 하나를 제공한다고 가정합니다.
+플랫폼은 첫 번째 잠정 할인을 "구매 시 검증됨" 같은 고지와 함께 보여 주고, 두 번째
+할인이 적용되지 않는다는 경고 메시지도 함께 표시할 수 있습니다.
 
-=== "Request"
+=== "요청"
 
     ```json
     {
@@ -298,7 +291,7 @@ a warning message to disclose the inapplicability of the second discount.
     }
     ```
 
-=== "Response"
+=== "응답"
 
     ```json
     {
@@ -343,11 +336,11 @@ a warning message to disclose the inapplicability of the second discount.
     }
     ```
 
-The buyer can proceed to checkout without any cart update. If the claim is verified
-successfully by the business, the unconditional member-pricing discount becomes
-non-provisional and `display_id` is returned.
+구매자는 장바구니를 업데이트하지 않고 바로 체크아웃으로 진행할 수 있습니다. 비즈니스가
+주장을 검증하면 무조건 적용되는 회원 가격 할인은 더 이상 잠정 상태가 아니며
+`display_id`도 함께 반환됩니다.
 
-=== "Request"
+=== "요청"
 
     ```json
     {
@@ -365,7 +358,7 @@ non-provisional and `display_id` is returned.
     }
     ```
 
-=== "Response"
+=== "응답"
 
     ```json
     {
@@ -403,10 +396,10 @@ non-provisional and `display_id` is returned.
     }
     ```
 
-If the claim cannot be verified, the business MUST return a recoverable error via
-`messages[]`  with `code: "eligibility_invalid"`.
+주장을 검증할 수 없다면, 비즈니스는 반드시 `messages[]`에 `code: "eligibility_invalid"`가
+담긴 복구 가능한 에러를 반환해야 합니다(MUST).
 
-=== "Request"
+=== "요청"
 
     ```json
     {
@@ -424,7 +417,7 @@ If the claim cannot be verified, the business MUST return a recoverable error vi
     }
     ```
 
-=== "Response"
+=== "응답"
 
     ```json
     {
@@ -439,25 +432,23 @@ If the claim cannot be verified, the business MUST return a recoverable error vi
     }
     ```
 
-## Use Cases and Examples { #use-cases-and-examples }
+## 사용 사례와 예시 { #use-cases-and-examples }
 
-With the help of the loyalty extension, the catalog, cart, and checkout capabilities can
-be further decorated to provide full visibility into buyers’ member-exclusive perks and
-allow the platform to render the extra information to facilitate the transaction.
+로열티 확장으로 카탈로그, 장바구니, 체크아웃 기능을 확장하면 구매자의 회원 전용 특전을
+빠짐없이 보여 줄 수 있고, 플랫폼은 이 추가 정보를 렌더링해 거래를 도울 수 있습니다.
 
-### Price-Impacting Benefits { #price-impacting-benefits }
+### 가격에 영향을 주는 혜택 { #price-impacting-benefits }
 
-The loyalty extension can provide buyer status information that helps the platform
-explain member discounts. Price-impacting loyalty benefits are reflected in the base
-capability's price fields. When the discount extension is also active, the platform can
-explain each discount via `discounts.applied[].title` and correlate
-`discounts.applied[].eligibility` back to `loyalty` entries to show which accepted
-membership claims produced the monetary benefit. In the example below, the buyer
-receives a 15% bonus discount and free shipping benefit respectively because they
-hold the Retail Club membership and the Retail Card. The platform can then render
-“Retail Club Gold Member and Retail Card benefits applied,” for example.
+로열티 확장은 플랫폼이 회원 할인을 설명하는 데 필요한 구매자 상태 정보를 제공할 수
+있습니다. 가격에 영향을 주는 로열티 혜택은 기본 기능의 가격 필드에 반영됩니다. 할인
+확장도 활성화되어 있다면, 플랫폼은 `discounts.applied[].title`로 각 할인을 설명하고
+`discounts.applied[].eligibility`를 `loyalty` 항목과 연결해, 수락된 멤버십 주장 중
+어느 것이 금전적 혜택을 만들었는지 보여 줄 수 있습니다. 아래 예시에서 구매자는 Retail
+Club 멤버십과 Retail Card를 보유하고 있어 각각 15% 보너스 할인과 무료 배송 혜택을
+받습니다. 플랫폼은 이를 예컨대 "Retail Club Gold Member 및 Retail Card 혜택 적용됨"처럼
+렌더링할 수 있습니다.
 
-=== "Request"
+=== "요청"
 
     ```json
     {
@@ -478,7 +469,7 @@ hold the Retail Club membership and the Retail Card. The platform can then rende
     }
     ```
 
-=== "Response"
+=== "응답"
 
     ```json
     {
@@ -561,19 +552,17 @@ hold the Retail Club membership and the Retail Card. The platform can then rende
     }
     ```
 
-### Reward Earnings Forecast { #reward-earnings-forecast }
+### 리워드 적립 예상 { #reward-earnings-forecast }
 
-In addition to immediate-value benefits like member pricing/shipping, delayed-value
-collectable reward benefits are another crucial element within the loyalty ecosystem.
-Displaying earnings forecasts of these rewards before the buyer commits complements and
-to some extent helps agents handle price objections: rewards earning becomes additional
-value on top of any pricing discount. In this example, businesses provide the reward
-earning forecast with a breakdown, using `benefit_id` to correlate the specific
-`membership_tier_benefit` that produced the rule and giving platforms a way to explain
-with full transparency into why the buyer is earning rewards and how the earning is
-calculated.
+회원 가격·배송 같은 즉시 가치형 혜택 말고도, 지연 가치형인 수집형 리워드 혜택은
+로열티 생태계의 또 다른 핵심 요소입니다. 구매자가 결정하기 전에 리워드 적립 예상치를
+보여 주면 가격 할인을 보완할 수 있고, 에이전트가 가격 관련 이의를 다루는 데에도 어느
+정도 도움이 됩니다. 리워드 적립이 가격 할인에 더해지는 추가 가치가 되기 때문입니다.
+이 예시에서 비즈니스는 적립 예상치를 내역과 함께 제공하고, `benefit_id`로 해당 규칙을
+만든 `membership_tier_benefit`을 연결합니다. 덕분에 플랫폼은 구매자가 왜 리워드를
+적립하는지, 적립량이 어떻게 계산되는지를 투명하게 설명할 수 있습니다.
 
-=== "Request"
+=== "요청"
 
     ```json
     {
@@ -591,7 +580,7 @@ calculated.
     }
     ```
 
-=== "Response"
+=== "응답"
 
     ```json
     {
@@ -660,11 +649,12 @@ calculated.
     }
     ```
 
-## Implementation guidelines { #implementation-guidelines }
+## 구현 지침 { #implementation-guidelines }
 
-* Loyalty extension response MUST be data-minimized and MUST NOT expose raw stable member
-  identifiers (as this would allow the platform to uniquely identify individual buyers).
-* Loyalty extension response MUST only include `display_id` after verified/authenticated
-  memberships.
-* Loyalty extension response MUST treat all `context.eligibility` values in the request as
-  buyer claims rather than proof.
+* 로열티 확장 응답은 반드시 데이터를 최소화해야 하며(MUST), 변하지 않는 원본 회원
+  식별자를 노출해서는 안 됩니다(MUST NOT). 노출하면 플랫폼이 개별 구매자를 고유하게
+  식별할 수 있게 되기 때문입니다.
+* 로열티 확장 응답은 반드시 멤버십이 검증·인증된 뒤에만 `display_id`를 포함해야
+  합니다(MUST).
+* 로열티 확장 응답은 반드시 요청의 모든 `context.eligibility` 값을 증명이 아닌 구매자의
+  주장으로 취급해야 합니다(MUST).

@@ -1,30 +1,26 @@
-# Versioning { #versioning }
+# 버전 관리 { #versioning }
 
-UCP uses date-based version identifiers following the format `YYYY-MM-DD` to
-indicate the last date backwards incompatible changes were made.
+UCP는 `YYYY-MM-DD` 형식의 날짜 기반 버전 식별자를 사용하며, 이 날짜는 하위
+호환되지 않는 변경이 마지막으로 이루어진 날을 나타냅니다.
 
-New development occurs on the `main` branch. We will maintain long-lived
-branches for all supported releases of the spec.
+새로운 개발은 `main` 브랜치에서 진행합니다. 지원하는 명세 릴리스마다
+장기 브랜치를 유지할 예정입니다.
 
-* When the Tech Council approves a new version of UCP, we will cut a
-  new branch named `release/YYYY-MM-DD` directly from the current state of
-  `main`.
-    * We will implement a code freeze on the release branch the moment a
-      `release/YYYY-MM-DD` branch is cut. Only critical bug fixes should move
-      during this window.
-    * Critical issues discovered after cutting a release branch should be fixed
-      in one of two ways:
-      1. The fix is made on the release branch and merged to `main`.
-      2. The fix is made on `main` and cherry-picked to the release branch.
-* Once finalized, we will merge the release branch into `main` and tag it (e.g.,
-  `git tag -a vYYYY-MM-DD`).  We will use a GitHub Action to detect the new tag
-  and automatically generate a release notes draft and upload artifacts.
-* Unlike temporary feature branches, release/YYYY-MM-DD branches are long-lived
-  and correspond to specific versions of the spec for historical reference and
-  maintenance.
+* Tech Council이 UCP의 새 버전을 승인하면, 현재 `main` 상태에서 바로
+  `release/YYYY-MM-DD`라는 이름의 새 브랜치를 만듭니다.
+    * `release/YYYY-MM-DD` 브랜치를 만드는 즉시 해당 릴리스 브랜치에 코드
+      프리즈를 적용합니다. 이 기간에는 심각한 버그 수정만 반영해야 합니다.
+    * 릴리스 브랜치를 만든 뒤 발견된 심각한 문제는 다음 두 방법 중 하나로
+      수정해야 합니다.
+      1. 릴리스 브랜치에서 수정한 뒤 `main`에 병합합니다.
+      2. `main`에서 수정한 뒤 릴리스 브랜치로 cherry-pick합니다.
+* 릴리스가 확정되면 릴리스 브랜치를 `main`에 병합하고 태그를 붙입니다(예:
+  `git tag -a vYYYY-MM-DD`).  GitHub Action이 새 태그를 감지해 릴리스 노트
+  초안을 자동으로 만들고 산출물을 업로드합니다.
+* 임시 기능 브랜치와 달리 release/YYYY-MM-DD 브랜치는 오래 유지되며,
+  이력 참조와 유지보수를 위해 명세의 특정 버전에 대응합니다.
 
-## Breaking PRs { #breaking-prs }
+## 호환성을 깨는 PR { #breaking-prs }
 
-* Breaking changes should include `!` in the PR title
-* Timing: We will announce the breaking change in Discussions 2 weeks
-  before the change is merged.
+* 호환성을 깨는 변경은 PR 제목에 `!`를 포함해야 합니다.
+* 시기: 호환성을 깨는 변경은 병합 2주 전에 Discussions에 공지합니다.

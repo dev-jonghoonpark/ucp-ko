@@ -14,36 +14,34 @@
    limitations under the License.
 -->
 
-# Tokenization Guide { #tokenization-guide }
+# 토큰화 가이드 { #tokenization-guide }
 
 **OpenAPI:** [Tokenization API](site:handlers/tokenization/openapi.json)
 
-## Overview { #overview }
+## 개요 { #overview }
 
-This guide is for **implementers building tokenization payment handlers**. It
-defines the shared API, security requirements, and conformance criteria that all
-tokenization handlers follow.
+이 가이드는 **토큰화 결제 핸들러를 구축하는 구현자**를 위한 문서입니다. 모든 토큰화
+핸들러가 따르는 공통 API, 보안 요구 사항, 준수 기준을 정의합니다.
 
-**Note:** While the examples in this guide use card credentials, tokenization
-patterns apply to **any sensitive credential type**—bank accounts, digital
-wallets, loyalty accounts, etc. Compliance requirements (e.g., PCI DSS for
-cards) vary by credential type.
+**참고:** 이 가이드의 예시는 카드 자격 증명을 사용하지만, 토큰화 패턴은 은행 계좌,
+디지털 지갑, 로열티 계정 등 **모든 민감한 자격 증명 유형**에 적용됩니다. 규정 준수
+요구 사항(예: 카드의 경우 PCI DSS)은 자격 증명 유형마다 다릅니다.
 
-We offer a range of examples to utilize forms of tokenization in UCP:
+UCP에서 여러 형태의 토큰화를 활용하는 예시는 다음과 같습니다.
 
-| Example | Use Case |
+| 예시 | 사용 사례 |
 | :------ | :------- |
-| [Processor Tokenizer](examples/processor-tokenizer-payment-handler.md) | Business or PSP runs tokenization and processing |
-| [Platform Tokenizer](examples/platform-tokenizer-payment-handler.md) | Platform tokenizes credentials for businesses/PSPs |
-| [Encrypted Credential Handler](examples/encrypted-credential-handler.md) | Platform encrypts credentials instead of tokenizing |
+| [프로세서 토크나이저](examples/processor-tokenizer-payment-handler.md) | 비즈니스 또는 PSP가 토큰화와 처리를 수행 |
+| [플랫폼 토크나이저](examples/platform-tokenizer-payment-handler.md) | 플랫폼이 비즈니스/PSP를 위해 자격 증명을 토큰화 |
+| [암호화된 자격 증명 핸들러](examples/encrypted-credential-handler.md) | 플랫폼이 토큰화 대신 자격 증명을 암호화 |
 
 ---
 
-## Core Concepts { #core-concepts }
+## 핵심 개념 { #core-concepts }
 
-### Credential Flow { #credential-flow }
+### 자격 증명 흐름 { #credential-flow }
 
-Tokenization handlers transform credentials between source and checkout forms:
+토큰화 핸들러는 자격 증명을 소스 형태와 체크아웃 형태 사이에서 변환합니다.
 
 ```text
 +-------------------------------------------------------------------------+
@@ -65,13 +63,13 @@ Tokenization handlers transform credentials between source and checkout forms:
 +-------------------------------------------------------------------------+
 ```
 
-Tokenization handlers accept source credentials (e.g., card with FPAN) and
-produce checkout credentials (e.g., tokens).
+토큰화 핸들러는 소스 자격 증명(예: FPAN이 담긴 카드)을 받아 체크아웃 자격 증명(예: 토큰)을
+생성합니다.
 
-### Token Lifecycle { #token-lifecycle }
+### 토큰 라이프사이클 { #token-lifecycle }
 
-Tokens move through distinct phases. Your handler specification must document
-which lifecycle policy you use:
+토큰은 여러 단계를 거칩니다. 핸들러 명세에는 어떤 라이프사이클 정책을 사용하는지
+문서화해야 합니다.
 
 ```text
 +--------------+    +--------------+    +--------------+    +--------------+
@@ -83,38 +81,36 @@ which lifecycle policy you use:
 +--------------+    +--------------+    +--------------+    +--------------+
 ```
 
-| Policy             | Description                                 | Use Case                                        |
+| 정책 | 설명 | 사용 사례 |
 | :----------------- | :------------------------------------------ | :---------------------------------------------- |
-| **Single-use**     | Invalidated after first detokenization      | Most secure; recommended default                |
-| **TTL-based**      | Expires after fixed duration (e.g., 15 min) | Allows retries on transient failures            |
-| **Session-scoped** | Valid for checkout session duration         | Complex flows with multiple processing attempts |
+| **일회용(Single-use)** | 첫 디토큰화 후 무효화 | 가장 안전한 권장 기본값 |
+| **TTL 기반** | 정해진 시간(예: 15분) 후 만료 | 일시적 실패 시 재시도 허용 |
+| **세션 범위** | 체크아웃 세션 동안 유효 | 여러 번의 처리 시도가 있는 복잡한 흐름 |
 
-### Binding { #binding }
+### 바인딩 { #binding }
 
-All tokenization requests require a `binding` object that ties the token to a
-specific context:
+모든 토큰화 요청에는 토큰을 특정 컨텍스트에 묶는 `binding` 객체가 필요합니다.
 
-| Field         | Required    | Description                                                                                     |
+| 필드 | 필수 | 설명 |
 | :------------ | :---------- | :---------------------------------------------------------------------------------------------- |
-| `checkout_id` | Yes         | The checkout session this token is valid for                                                    |
-| `identity`    | Conditional | The participant identity to bind to; required when caller acts on behalf of another participant |
+| `checkout_id` | 예 | 이 토큰이 유효한 체크아웃 세션 |
+| `identity` | 조건부 | 바인딩할 참여자 신원. 호출자가 다른 참여자를 대신해 동작할 때 필요 |
 
-The tokenizer **MUST** verify binding matches on `/detokenize`. See [Binding Schema](site:schemas/shopping/types/binding.json).
+토크나이저는 `/detokenize`에서 반드시 바인딩 일치 여부를 검증해야 합니다(**MUST**). [바인딩 스키마](site:schemas/shopping/types/binding.json)를 참고하세요.
 
 ---
 
 ## OpenAPI { #openapi }
 
-Tokenization handlers implement two endpoints. Your handler **MAY** implement
-one or both depending on your architecture. Or none, like our encrypted
-payload example, which defines its own mechanism to encrypt.
+토큰화 핸들러가 구현하는 엔드포인트는 두 개입니다. 핸들러는 아키텍처에 따라 하나 또는 둘
+다 구현할 수 있습니다(**MAY**). 자체 암호화 메커니즘을 정의하는 암호화 페이로드 예시처럼
+하나도 구현하지 않을 수도 있습니다.
 
 ### POST /tokenize { #post-tokenize }
 
-Converts a raw credential into a token bound to a checkout and identity.
+원시 자격 증명을 체크아웃과 신원에 바인딩된 토큰으로 변환합니다.
 
-**When to implement:** Always, unless you are an agent generating tokens
-internally.
+**구현 시점:** 내부적으로 토큰을 생성하는 에이전트가 아니라면 항상 구현합니다.
 
 ```json
 POST /tokenize
@@ -138,7 +134,7 @@ Content-Type: application/json
 }
 ```
 
-**Response:**
+**응답:**
 
 ```json
 {
@@ -148,10 +144,9 @@ Content-Type: application/json
 
 ### POST /detokenize { #post-detokenize }
 
-Returns the original credential for a valid token. Binding must match.
+유효한 토큰을 받으면 원래의 자격 증명을 반환합니다. 바인딩이 일치해야 합니다.
 
-**When to implement:** Always, unless you combine detokenization with
-processing (see PSP example).
+**구현 시점:** 디토큰화를 처리와 결합하지 않는 한 항상 구현합니다(PSP 예시 참고).
 
 ```json
 POST /detokenize
@@ -166,7 +161,7 @@ Authorization: Bearer {caller_access_token}
 }
 ```
 
-**Response:**
+**응답:**
 
 ```json
 {
@@ -179,44 +174,43 @@ Authorization: Bearer {caller_access_token}
 }
 ```
 
-**Note:** `binding.identity` is omitted when the authenticated caller is the
-binding target. Include it when acting on behalf of another participant (e.g.,
-PSP detokenizing for business).
+**참고:** 인증된 호출자가 바인딩 대상이라면 `binding.identity`를 생략합니다. 다른
+참여자를 대신해 동작할 때(예: PSP가 비즈니스를 위해 디토큰화하는 경우)는 포함합니다.
 
-See the full [OpenAPI specification](site:handlers/tokenization/openapi.json) for complete request/response schemas.
+전체 요청/응답 스키마는 [OpenAPI 명세](site:handlers/tokenization/openapi.json) 전문을 참고하세요.
 
 ---
 
-## Security Requirements { #security-requirements }
+## 보안 요구 사항 { #security-requirements }
 
-| Requirement                  | Description                                                                                |
+| 요구 사항 | 설명 |
 | :--------------------------- | :----------------------------------------------------------------------------------------- |
-| **Binding required**         | Credentials **MUST** be bound to `checkout_id` and participant `identity` to prevent reuse |
-| **Binding verified**         | Tokenizer **MUST** verify binding matches before returning credentials                     |
-| **Cryptographically random** | Use secure random generators; tokens must be unguessable                                   |
-| **Sufficient length**        | Minimum 128 bits of entropy                                                                |
-| **Non-reversible**           | Cannot derive the credential from the token                                                |
-| **Scoped**                   | Token should only work with your tokenizer                                                 |
-| **Time-limited**             | Enforce TTL appropriate to use case (typically 5-30 minutes)                               |
-| **Single-use preferred**     | Invalidate after first detokenization when possible                                        |
+| **바인딩 필수** | 재사용을 막기 위해 자격 증명은 반드시 `checkout_id`와 참여자 `identity`에 바인딩되어야 합니다(**MUST**) |
+| **바인딩 검증** | 토크나이저는 자격 증명을 반환하기 전에 반드시 바인딩 일치 여부를 검증해야 합니다(**MUST**) |
+| **암호학적 난수** | 안전한 난수 생성기를 사용합니다. 토큰은 추측할 수 없어야 합니다 |
+| **충분한 길이** | 최소 128비트의 엔트로피 |
+| **비가역성** | 토큰에서 자격 증명을 도출할 수 없어야 합니다 |
+| **범위 제한** | 토큰은 해당 토크나이저에서만 동작해야 합니다 |
+| **시간 제한** | 사용 사례에 맞는 TTL을 적용합니다(일반적으로 5~30분) |
+| **일회용 권장** | 가능하면 첫 디토큰화 후 무효화합니다 |
 
 ---
 
-## Handler Specification Requirements { #handler-specification-requirements }
+## 핸들러 명세 요구 사항 { #handler-specification-requirements }
 
-When publishing your handler, your specification document **MUST** include:
+핸들러를 게시할 때 명세 문서에는 반드시 다음 내용을 포함해야 합니다(**MUST**).
 
-| Requirement                     | Example                                                           |
+| 요구 사항 | 예시 |
 | :------------------------------ | :---------------------------------------------------------------- |
-| **Unique handler name**         | `com.example.tokenization_payment` (reverse-DNS format)           |
-| **Endpoint URLs**               | Production and sandbox base URLs                                  |
-| **Authentication requirements** | OAuth 2.0, API keys, etc.                                         |
-| **Onboarding process**          | How participants register and receive identities                  |
-| **Accepted credentials**        | Which credential types are accepted for tokenization              |
-| **Token lifecycle policy**      | Single-use, TTL, or session-scoped                                |
-| **Security acknowledgements**   | Participants receiving raw credentials must accept responsibility |
+| **고유한 핸들러 이름** | `com.example.tokenization_payment` (역 DNS 형식) |
+| **엔드포인트 URL** | 프로덕션 및 샌드박스 기본 URL |
+| **인증 요구 사항** | OAuth 2.0, API 키 등 |
+| **온보딩 절차** | 참여자가 등록하고 신원을 발급받는 방법 |
+| **허용되는 자격 증명** | 토큰화에 허용되는 자격 증명 유형 |
+| **토큰 라이프사이클 정책** | 일회용, TTL, 또는 세션 범위 |
+| **보안 책임 동의** | 원시 자격 증명을 받는 참여자는 책임을 수락해야 합니다 |
 
-### Example Specification Outline { #example-specification-outline }
+### 명세 개요 예시 { #example-specification-outline }
 
 ```markdown
 **Handler Name:** `com.acme.tokenization_payment`
@@ -242,36 +236,36 @@ When publishing your handler, your specification document **MUST** include:
 
 ---
 
-## Conformance Checklist { #conformance-checklist }
+## 준수 체크리스트 { #conformance-checklist }
 
-A tokenizer handler conforms to this pattern if it:
+토크나이저 핸들러가 다음을 모두 충족하면 이 패턴을 준수하는 것입니다.
 
-- [ ] Publishes a handler specification at a stable URL with a unique, reverse-DNS `handler_name`
-- [ ] Implements `/tokenize` and/or `/detokenize` per the OpenAPI
-- [ ] Defines authentication and onboarding requirements
-- [ ] Documents credential transformation between source and checkout forms
-- [ ] Produces tokens compatible with the `TokenCredential` schema
-- [ ] Specifies token lifecycle policy (TTL, single-use, etc.)
-- [ ] Requires `binding` with `checkout_id` on tokenization requests
-- [ ] Uses `PaymentIdentity` for participant identification
-- [ ] Verifies `binding` matches on detokenization requests
-- [ ] Requires security acknowledgements from participants receiving raw credentials
+- [ ] 고유한 역 DNS 형식의 `handler_name`과 함께 안정적인 URL에 핸들러 명세를 게시합니다
+- [ ] OpenAPI에 따라 `/tokenize`와 `/detokenize` 중 하나 또는 둘 다를 구현합니다
+- [ ] 인증 및 온보딩 요구 사항을 정의합니다
+- [ ] 소스 형태와 체크아웃 형태 사이의 자격 증명 변환을 문서화합니다
+- [ ] `TokenCredential` 스키마와 호환되는 토큰을 생성합니다
+- [ ] 토큰 라이프사이클 정책(TTL, 일회용 등)을 명시합니다
+- [ ] 토큰화 요청에 `checkout_id`를 포함한 `binding`을 요구합니다
+- [ ] 참여자 식별에 `PaymentIdentity`를 사용합니다
+- [ ] 디토큰화 요청에서 `binding` 일치 여부를 검증합니다
+- [ ] 원시 자격 증명을 받는 참여자에게 보안 책임 동의를 요구합니다
 
 ---
 
-## References { #references }
+## 참고 자료 { #references }
 
-| Resource                | URL                                                                                                             |
+| 리소스 | URL                                                                                                             |
 | :---------------------- | :-------------------------------------------------------------------------------------------------------------- |
-| Tokenization OpenAPI    | [handlers/tokenization/openapi.json](site:handlers/tokenization/openapi.json)                                   |
-| Identity Schema         | [schemas/shopping/types/payment_identity.json](site:schemas/shopping/types/payment_identity.json)               |
-| Binding Schema          | [schemas/shopping/types/binding.json](site:schemas/shopping/types/binding.json)                                 |
-| Token Credential Schema | [schemas/shopping/types/token_credential.json](site:schemas/shopping/types/token_credential.json)               |
-| Card Instrument Schema  | [schemas/shopping/types/card_payment_instrument.json](site:schemas/shopping/types/card_payment_instrument.json) |
+| 토큰화 OpenAPI | [handlers/tokenization/openapi.json](site:handlers/tokenization/openapi.json)                                   |
+| 신원 스키마 | [schemas/shopping/types/payment_identity.json](site:schemas/shopping/types/payment_identity.json)               |
+| 바인딩 스키마 | [schemas/shopping/types/binding.json](site:schemas/shopping/types/binding.json)                                 |
+| 토큰 자격 증명 스키마 | [schemas/shopping/types/token_credential.json](site:schemas/shopping/types/token_credential.json)               |
+| 카드 결제 수단 스키마 | [schemas/shopping/types/card_payment_instrument.json](site:schemas/shopping/types/card_payment_instrument.json) |
 
 ---
 
-## See Also { #see-also }
+## 함께 보기 { #see-also }
 
-- **[Encrypted Credential Handler](examples/encrypted-credential-handler.md)** — Alternative pattern using encryption instead of tokenize/detokenize round-trips
-- **[AP2 Mandates Extension](ap2-mandates.md)** — Add cryptographic proof of checkout agreement for PSP verification
+- **[암호화된 자격 증명 핸들러](examples/encrypted-credential-handler.md)** — 토큰화/디토큰화 왕복 대신 암호화를 사용하는 대안 패턴
+- **[AP2 위임(Mandate) 확장](ap2-mandates.md)** — PSP가 검증할 수 있도록 체크아웃 합의에 대한 암호학적 증명을 추가합니다
