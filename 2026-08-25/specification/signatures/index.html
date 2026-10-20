@@ -1,0 +1,4887 @@
+
+<!doctype html>
+<html lang="ko" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Universal Commerce Protocol(UCP) 공식 문서의 비공식 한국어 번역입니다. UCP는 AI 에이전트가 사용자를 대신해 상품 탐색부터 결제까지 커머스 작업을 안전하고 프라이버시를 지키며 수행할 수 있도록 하는 개방형 표준입니다.
+">
+      
+      
+      
+        <link rel="canonical" href="https://dev-jonghoonpark.github.io/ucp-ko/2026-08-25/2026-08-25/specification/signatures/">
+      
+      
+        <link rel="prev" href="../payment/examples/encrypted-credential-payment-handler/">
+      
+      
+        <link rel="next" href="../reference/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>서명 - Universal Commerce Protocol (UCP) 한국어</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+  
+  
+    
+      
+      
+    
+  
+    
+      
+      
+    
+  
+    
+      
+      
+    
+  
+    
+      
+      
+    
+  
+    
+      
+      
+    
+  
+    
+      
+      
+    
+  
+    
+      
+      
+    
+  
+    
+      
+      
+    
+  
+    
+      
+      
+    
+  
+    
+      
+      
+    
+  
+    
+      
+      
+    
+  
+    
+      
+      
+    
+  
+  
+  <style>:root{--md-admonition-icon--note:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20448%20512%22%3E%3C%21--%21%20Font%20Awesome%20Free%207.1.0%20by%20%40fontawesome%20-%20https%3A//fontawesome.com%20License%20-%20https%3A//fontawesome.com/license/free%20%28Icons%3A%20CC%20BY%204.0%2C%20Fonts%3A%20SIL%20OFL%201.1%2C%20Code%3A%20MIT%20License%29%20Copyright%202025%20Fonticons%2C%20Inc.--%3E%3Cpath%20d%3D%22M64%20480c-35.3%200-64-28.7-64-64V96c0-35.3%2028.7-64%2064-64h320c35.3%200%2064%2028.7%2064%2064v213.5c0%2017-6.7%2033.3-18.7%2045.3L322.7%20461.3c-12%2012-28.3%2018.7-45.3%2018.7zm325.5-176H296c-13.3%200-24%2010.7-24%2024v93.5z%22/%3E%3C/svg%3E');--md-admonition-icon--abstract:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20448%20512%22%3E%3C%21--%21%20Font%20Awesome%20Free%207.1.0%20by%20%40fontawesome%20-%20https%3A//fontawesome.com%20License%20-%20https%3A//fontawesome.com/license/free%20%28Icons%3A%20CC%20BY%204.0%2C%20Fonts%3A%20SIL%20OFL%201.1%2C%20Code%3A%20MIT%20License%29%20Copyright%202025%20Fonticons%2C%20Inc.--%3E%3Cpath%20d%3D%22M384%20512H96c-53%200-96-43-96-96V96C0%2043%2043%200%2096%200h304c26.5%200%2048%2021.5%2048%2048v288c0%2020.9-13.4%2038.7-32%2045.3V448c17.7%200%2032%2014.3%2032%2032s-14.3%2032-32%2032zM96%20384c-17.7%200-32%2014.3-32%2032s14.3%2032%2032%2032h256v-64zm32-232c0%2013.3%2010.7%2024%2024%2024h176c13.3%200%2024-10.7%2024-24s-10.7-24-24-24H152c-13.3%200-24%2010.7-24%2024m24%2072c-13.3%200-24%2010.7-24%2024s10.7%2024%2024%2024h176c13.3%200%2024-10.7%2024-24s-10.7-24-24-24z%22/%3E%3C/svg%3E');--md-admonition-icon--info:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20512%20512%22%3E%3C%21--%21%20Font%20Awesome%20Free%207.1.0%20by%20%40fontawesome%20-%20https%3A//fontawesome.com%20License%20-%20https%3A//fontawesome.com/license/free%20%28Icons%3A%20CC%20BY%204.0%2C%20Fonts%3A%20SIL%20OFL%201.1%2C%20Code%3A%20MIT%20License%29%20Copyright%202025%20Fonticons%2C%20Inc.--%3E%3Cpath%20d%3D%22M256%20512a256%20256%200%201%200%200-512%20256%20256%200%201%200%200%20512m-32-352a32%2032%200%201%201%2064%200%2032%2032%200%201%201-64%200m-8%2064h48c13.3%200%2024%2010.7%2024%2024v88h8c13.3%200%2024%2010.7%2024%2024s-10.7%2024-24%2024h-80c-13.3%200-24-10.7-24-24s10.7-24%2024-24h24v-64h-24c-13.3%200-24-10.7-24-24s10.7-24%2024-24%22/%3E%3C/svg%3E');--md-admonition-icon--tip:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20512%20512%22%3E%3C%21--%21%20Font%20Awesome%20Free%207.1.0%20by%20%40fontawesome%20-%20https%3A//fontawesome.com%20License%20-%20https%3A//fontawesome.com/license/free%20%28Icons%3A%20CC%20BY%204.0%2C%20Fonts%3A%20SIL%20OFL%201.1%2C%20Code%3A%20MIT%20License%29%20Copyright%202025%20Fonticons%2C%20Inc.--%3E%3Cpath%20d%3D%22M461.2%2018.9C472.7%2024%20480%2035.4%20480%2048v416c0%2012.6-7.3%2024-18.8%2029.1s-24.8%203.2-34.3-5.1l-46.6-40.7c-43.6-38.1-98.7-60.3-156.4-63V480c0%2017.7-14.3%2032-32%2032h-32c-17.7%200-32-14.3-32-32v-96C57.3%20384%200%20326.7%200%20256s57.3-128%20128-128h84.5c61.8-.2%20121.4-22.7%20167.9-63.3L427%2024c9.4-8.3%2022.9-10.2%2034.3-5.1zM224%20320v.2c70.3%202.7%20137.8%2028.5%20192%2073.4V118.3c-54.2%2044.9-121.7%2070.7-192%2073.4z%22/%3E%3C/svg%3E');--md-admonition-icon--success:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20448%20512%22%3E%3C%21--%21%20Font%20Awesome%20Free%207.1.0%20by%20%40fontawesome%20-%20https%3A//fontawesome.com%20License%20-%20https%3A//fontawesome.com/license/free%20%28Icons%3A%20CC%20BY%204.0%2C%20Fonts%3A%20SIL%20OFL%201.1%2C%20Code%3A%20MIT%20License%29%20Copyright%202025%20Fonticons%2C%20Inc.--%3E%3Cpath%20d%3D%22M434.8%2070.1c14.3%2010.4%2017.5%2030.4%207.1%2044.7l-256%20352c-5.5%207.6-14%2012.3-23.4%2013.1s-18.5-2.7-25.1-9.3l-128-128c-12.5-12.5-12.5-32.8%200-45.3s32.8-12.5%2045.3%200l101.5%20101.5%20234-321.7c10.4-14.3%2030.4-17.5%2044.7-7.1z%22/%3E%3C/svg%3E');--md-admonition-icon--question:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20512%20512%22%3E%3C%21--%21%20Font%20Awesome%20Free%207.1.0%20by%20%40fontawesome%20-%20https%3A//fontawesome.com%20License%20-%20https%3A//fontawesome.com/license/free%20%28Icons%3A%20CC%20BY%204.0%2C%20Fonts%3A%20SIL%20OFL%201.1%2C%20Code%3A%20MIT%20License%29%20Copyright%202025%20Fonticons%2C%20Inc.--%3E%3Cpath%20d%3D%22M256%20512a256%20256%200%201%200%200-512%20256%20256%200%201%200%200%20512m0-336c-17.7%200-32%2014.3-32%2032%200%2013.3-10.7%2024-24%2024s-24-10.7-24-24c0-44.2%2035.8-80%2080-80s80%2035.8%2080%2080c0%2047.2-36%2067.2-56%2074.5v3.8c0%2013.3-10.7%2024-24%2024s-24-10.7-24-24v-8.1c0-20.5%2014.8-35.2%2030.1-40.2%206.4-2.1%2013.2-5.5%2018.2-10.3%204.3-4.2%207.7-10%207.7-19.6%200-17.7-14.3-32-32-32zm-32%20192a32%2032%200%201%201%2064%200%2032%2032%200%201%201-64%200%22/%3E%3C/svg%3E');--md-admonition-icon--warning:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20512%20512%22%3E%3C%21--%21%20Font%20Awesome%20Free%207.1.0%20by%20%40fontawesome%20-%20https%3A//fontawesome.com%20License%20-%20https%3A//fontawesome.com/license/free%20%28Icons%3A%20CC%20BY%204.0%2C%20Fonts%3A%20SIL%20OFL%201.1%2C%20Code%3A%20MIT%20License%29%20Copyright%202025%20Fonticons%2C%20Inc.--%3E%3Cpath%20d%3D%22M256%200c14.7%200%2028.2%208.1%2035.2%2021l216%20400c6.7%2012.4%206.4%2027.4-.8%2039.5S486.1%20480%20472%20480H40c-14.1%200-27.2-7.4-34.4-19.5s-7.5-27.1-.8-39.5l216-400c7-12.9%2020.5-21%2035.2-21m0%20352a32%2032%200%201%200%200%2064%2032%2032%200%201%200%200-64m0-192c-18.2%200-32.7%2015.5-31.4%2033.7l7.4%20104c.9%2012.5%2011.4%2022.3%2023.9%2022.3%2012.6%200%2023-9.7%2023.9-22.3l7.4-104c1.3-18.2-13.1-33.7-31.4-33.7z%22/%3E%3C/svg%3E');--md-admonition-icon--failure:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20576%20512%22%3E%3C%21--%21%20Font%20Awesome%20Free%207.1.0%20by%20%40fontawesome%20-%20https%3A//fontawesome.com%20License%20-%20https%3A//fontawesome.com/license/free%20%28Icons%3A%20CC%20BY%204.0%2C%20Fonts%3A%20SIL%20OFL%201.1%2C%20Code%3A%20MIT%20License%29%20Copyright%202025%20Fonticons%2C%20Inc.--%3E%3Cpath%20d%3D%22M480-16c6.9%200%2013%204.4%2015.2%2010.9l13.5%2040.4%2040.4%2013.5C555.6%2051%20560%2057.1%20560%2064s-4.4%2013-10.9%2015.2l-40.4%2013.5-13.5%2040.4c-2.2%206.5-8.3%2010.9-15.2%2010.9s-13-4.4-15.2-10.9l-13.5-40.4-40.4-13.5C404.4%2077%20400%2070.9%20400%2064s4.4-13%2010.9-15.2l40.4-13.5%2013.5-40.4C467-11.6%20473.1-16%20480-16M321.4%2097.4c12.5-12.5%2032.8-12.5%2045.3%200l80%2080c12.5%2012.5%2012.5%2032.8%200%2045.3l-10.9%2010.9c7.9%2022%2012.2%2045.7%2012.2%2070.5%200%20114.9-93.1%20208-208%20208S32%20418.9%2032%20304%20125.1%2096%20240%2096c24.7%200%2048.5%204.3%2070.5%2012.3zM144%20304c0-53%2043-96%2096-96%2013.3%200%2024-10.7%2024-24s-10.7-24-24-24c-79.5%200-144%2064.5-144%20144%200%2013.3%2010.7%2024%2024%2024s24-10.7%2024-24%22/%3E%3C/svg%3E');--md-admonition-icon--danger:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20512%20512%22%3E%3C%21--%21%20Font%20Awesome%20Free%207.1.0%20by%20%40fontawesome%20-%20https%3A//fontawesome.com%20License%20-%20https%3A//fontawesome.com/license/free%20%28Icons%3A%20CC%20BY%204.0%2C%20Fonts%3A%20SIL%20OFL%201.1%2C%20Code%3A%20MIT%20License%29%20Copyright%202025%20Fonticons%2C%20Inc.--%3E%3Cpath%20d%3D%22M416%20427.4c58.5-44%2096-111.6%2096-187.4C512%20107.5%20397.4%200%20256%200S0%20107.5%200%20240c0%2075.8%2037.5%20143.4%2096%20187.4V464c0%2026.5%2021.5%2048%2048%2048h32v-40c0-13.3%2010.7-24%2024-24s24%2010.7%2024%2024v40h64v-40c0-13.3%2010.7-24%2024-24s24%2010.7%2024%2024v40h32c26.5%200%2048-21.5%2048-48zM96%20256a64%2064%200%201%201%20128%200%2064%2064%200%201%201-128%200m256-64a64%2064%200%201%201%200%20128%2064%2064%200%201%201%200-128%22/%3E%3C/svg%3E');--md-admonition-icon--bug:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20640%20512%22%3E%3C%21--%21%20Font%20Awesome%20Free%207.1.0%20by%20%40fontawesome%20-%20https%3A//fontawesome.com%20License%20-%20https%3A//fontawesome.com/license/free%20%28Icons%3A%20CC%20BY%204.0%2C%20Fonts%3A%20SIL%20OFL%201.1%2C%20Code%3A%20MIT%20License%29%20Copyright%202025%20Fonticons%2C%20Inc.--%3E%3Cpath%20d%3D%22M352%200c0-17.7-14.3-32-32-32s-32%2014.3-32%2032v64h-96c-53%200-96%2043-96%2096v224c0%2053%2043%2096%2096%2096h256c53%200%2096-43%2096-96V160c0-53-43-96-96-96h-96zM160%20368c0-13.3%2010.7-24%2024-24h32c13.3%200%2024%2010.7%2024%2024s-10.7%2024-24%2024h-32c-13.3%200-24-10.7-24-24m120%200c0-13.3%2010.7-24%2024-24h32c13.3%200%2024%2010.7%2024%2024s-10.7%2024-24%2024h-32c-13.3%200-24-10.7-24-24m120%200c0-13.3%2010.7-24%2024-24h32c13.3%200%2024%2010.7%2024%2024s-10.7%2024-24%2024h-32c-13.3%200-24-10.7-24-24M224%20176a48%2048%200%201%201%200%2096%2048%2048%200%201%201%200-96m144%2048a48%2048%200%201%201%2096%200%2048%2048%200%201%201-96%200m-304%200c0-17.7-14.3-32-32-32S0%20206.3%200%20224v96c0%2017.7%2014.3%2032%2032%2032s32-14.3%2032-32zm544-32c-17.7%200-32%2014.3-32%2032v96c0%2017.7%2014.3%2032%2032%2032s32-14.3%2032-32v-96c0-17.7-14.3-32-32-32%22/%3E%3C/svg%3E');--md-admonition-icon--example:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20448%20512%22%3E%3C%21--%21%20Font%20Awesome%20Free%207.1.0%20by%20%40fontawesome%20-%20https%3A//fontawesome.com%20License%20-%20https%3A//fontawesome.com/license/free%20%28Icons%3A%20CC%20BY%204.0%2C%20Fonts%3A%20SIL%20OFL%201.1%2C%20Code%3A%20MIT%20License%29%20Copyright%202025%20Fonticons%2C%20Inc.--%3E%3Cpath%20d%3D%22M288%200H128c-17.7%200-32%2014.3-32%2032s14.3%2032%2032%2032v151.5L7.5%20426.3C2.6%20435%200%20444.7%200%20454.7%200%20486.4%2025.6%20512%2057.3%20512h333.4c31.6%200%2057.3-25.6%2057.3-57.3%200-10-2.6-19.8-7.5-28.4L320%20215.5V64c17.7%200%2032-14.3%2032-32S337.7%200%20320%200zm-96%20215.5V64h64v151.5c0%2011.1%202.9%2022.1%208.4%2031.8L306%20320H142l41.6-72.7c5.5-9.7%208.4-20.6%208.4-31.8%22/%3E%3C/svg%3E');--md-admonition-icon--quote:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20448%20512%22%3E%3C%21--%21%20Font%20Awesome%20Free%207.1.0%20by%20%40fontawesome%20-%20https%3A//fontawesome.com%20License%20-%20https%3A//fontawesome.com/license/free%20%28Icons%3A%20CC%20BY%204.0%2C%20Fonts%3A%20SIL%20OFL%201.1%2C%20Code%3A%20MIT%20License%29%20Copyright%202025%20Fonticons%2C%20Inc.--%3E%3Cpath%20d%3D%22M0%20216C0%20149.7%2053.7%2096%20120%2096h8c17.7%200%2032%2014.3%2032%2032s-14.3%2032-32%2032h-8c-30.9%200-56%2025.1-56%2056v8h64c35.3%200%2064%2028.7%2064%2064v64c0%2035.3-28.7%2064-64%2064H64c-35.3%200-64-28.7-64-64zm256%200c0-66.3%2053.7-120%20120-120h8c17.7%200%2032%2014.3%2032%2032s-14.3%2032-32%2032h-8c-30.9%200-56%2025.1-56%2056v8h64c35.3%200%2064%2028.7%2064%2064v64c0%2035.3-28.7%2064-64%2064h-64c-35.3%200-64-28.7-64-64z%22/%3E%3C/svg%3E');}</style>
+
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Google+Sans:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Google Sans";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/custom.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#message-signatures" class="md-skip">
+          콘텐츠로 이동
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+              <button class="md-banner__button md-icon" aria-label="다시 안보기">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+              </button>
+            
+            
+  
+  
+  <strong>비공식 한국어 번역</strong>입니다.
+  
+    문서 버전: 2026-08-25 · 원문 기준: 2026-08-25
+  
+  (<a href="https://github.com/Universal-Commerce-Protocol/ucp/tree/cd78fb38e819de77d9b527d110476eccb876f1bd">cd78fb3</a>)
+  · 다른 버전은 상단 버전 선택기에서 고를 수 있으며, 최신 내용은
+  <a href="https://ucp.dev/">공식 문서(ucp.dev)</a>를 함께 확인하세요.
+
+          </div>
+          
+            <script>var el=document.querySelector("[data-md-component=announce]");if(el){var content=el.querySelector(".md-typeset");__md_hash(content.innerHTML)===__md_get("__announce")&&(el.hidden=!0)}</script>
+          
+        </aside>
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="상단/헤더">
+    <a href="/ucp-ko/2026-08-25/" title="Universal Commerce Protocol (UCP) 한국어" class="md-header__button md-logo" aria-label="Universal Commerce Protocol (UCP) 한국어" data-md-component="logo">
+      
+  <img src="../../assets/UCP-small.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Universal Commerce Protocol (UCP) 한국어
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              서명
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="indigo"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="indigo"  aria-hidden="true"  type="radio" name="__palette" id="__palette_1">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="검색" placeholder="검색" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="검색">
+        
+        <button type="reset" class="md-search__icon md-icon" title="지우기" aria-label="지우기" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            검색 초기화
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/dev-jonghoonpark/ucp-ko" title="저장소로 이동" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ucp-ko (번역 저장소)
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="탭" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../.." class="md-tabs__link">
+          
+  
+  
+  개요
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../overview/" class="md-tabs__link">
+          
+  
+  
+  명세
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="네비게이션" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="/ucp-ko/2026-08-25/" title="Universal Commerce Protocol (UCP) 한국어" class="md-nav__button md-logo" aria-label="Universal Commerce Protocol (UCP) 한국어" data-md-component="logo">
+      
+  <img src="../../assets/UCP-small.svg" alt="logo">
+
+    </a>
+    Universal Commerce Protocol (UCP) 한국어
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/dev-jonghoonpark/ucp-ko" title="저장소로 이동" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ucp-ko (번역 저장소)
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    개요
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    개요
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    홈
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../documentation/core-concepts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    핵심 개념
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../documentation/ucp-and-ap2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UCP와 AP2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../documentation/roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    로드맵
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../documentation/schema-authoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    스키마 작성
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../versioning/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    버전 관리
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../documentation/announcements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    공지
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    명세
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    명세
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    개요
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    공통
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    공통
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../common/identity-linking/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    신원 연결(Identity Linking)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_2" id="__nav_2_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    위치(Location) 기능
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    위치(Location) 기능
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../common/location/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    개요
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../common/location/search/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    검색
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../common/location/lookup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    조회
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_2_4" id="__nav_2_2_2_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    전송 방식
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_2_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    전송 방식
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../common/location/rest/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REST
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../common/location/mcp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_3" id="__nav_2_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    확장
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    확장
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../common/extensions/loyalty/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    로열티
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    쇼핑
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    쇼핑
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3_1" id="__nav_2_3_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    체크아웃(Checkout) 기능
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_3_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    체크아웃(Checkout) 기능
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../shopping/checkout/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    개요
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_1_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3_1_2" id="__nav_2_3_1_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    전송 방식
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_3_1_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3_1_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    전송 방식
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../shopping/checkout/rest/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REST
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../shopping/checkout/mcp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../shopping/checkout/a2a/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    A2A
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../shopping/checkout/embedded/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    임베디드
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3_2" id="__nav_2_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    장바구니(Cart) 기능
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    장바구니(Cart) 기능
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../shopping/cart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    개요
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3_2_2" id="__nav_2_3_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    전송 방식
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_3_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    전송 방식
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../shopping/cart/rest/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REST
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../shopping/cart/mcp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../shopping/cart/embedded/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    임베디드
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../permalink/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    퍼머링크(Permalink) 기능
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3_4" id="__nav_2_3_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    카탈로그(Catalog) 기능
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    카탈로그(Catalog) 기능
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../shopping/catalog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    개요
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../shopping/catalog/search/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    검색
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../shopping/catalog/lookup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    조회
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_4_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3_4_4" id="__nav_2_3_4_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    전송 방식
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_3_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    전송 방식
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../shopping/catalog/rest/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REST
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../shopping/catalog/mcp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3_5" id="__nav_2_3_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    주문(Order) 기능
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_3_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    주문(Order) 기능
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../shopping/order/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    개요
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3_5_2" id="__nav_2_3_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    전송 방식
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_3_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    전송 방식
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../shopping/order/rest/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REST
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../shopping/order/mcp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3_6" id="__nav_2_3_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    확장
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_3_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    확장
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../shopping/extensions/fulfillment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    풀필먼트
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../shopping/extensions/discount/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    할인
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../shopping/extensions/buyer-consent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    구매자 동의
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../shopping/playground/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    플레이그라운드
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    결제
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    결제
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_1" id="__nav_2_4_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    확장
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_4_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    확장
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../payment/extensions/ap2-mandates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AP2 위임(Mandates) 확장
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_1_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_1_2" id="__nav_2_4_1_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    결제 인증
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_4_1_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4_1_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    결제 인증
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../payment/extensions/authentication/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    개요
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../payment/extensions/actions/device-data-collection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    기기 데이터 수집
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../payment/extensions/actions/three-ds-challenge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3DS 챌린지
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../payment/extensions/terms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    결제 조건(Terms) 확장
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../payment/extensions/split-payments/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    분할 결제 확장
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_2" id="__nav_2_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    결제 핸들러
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    결제 핸들러
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../payment/guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    가이드
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../payment/template/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    템플릿
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../payment/tokenization/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    토큰화 가이드
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_2_4" id="__nav_2_4_2_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    예시
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_4_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    예시
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../payment/examples/processor-tokenizer-payment-handler/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    프로세서 토크나이저
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../payment/examples/platform-tokenizer-payment-handler/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    플랫폼 토크나이저
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../payment/examples/encrypted-credential-payment-handler/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    암호화된 자격 증명
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    서명
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    서명
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        개요
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="개요">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        아키텍처
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#shared-foundation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        공통 기반
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="공통 기반">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#signature-algorithms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        서명 알고리즘
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-format-jwk" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        키 형식 (JWK)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-discovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        키 디스커버리
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-rotation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        키 교체
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wba-interop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        WBA 상호 운용
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rest-binding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        REST 바인딩
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="REST 바인딩">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#headers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        헤더
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rest-request-signing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        REST 요청 서명
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rest-response-signing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        REST 응답 서명
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rest-request-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        REST 요청 검증
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rest-response-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        REST 응답 검증
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#replay-protection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        재전송 방지
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-signatures-apply" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        서명 적용 대상
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mcp-transport" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MCP 전송 방식
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        에러 처리
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="에러 처리">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rest-error-response" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        REST 에러 응답
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mcp-error-response" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MCP 에러 응답
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        참고 자료
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    레퍼런스
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        개요
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="개요">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        아키텍처
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#shared-foundation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        공통 기반
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="공통 기반">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#signature-algorithms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        서명 알고리즘
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-format-jwk" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        키 형식 (JWK)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-discovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        키 디스커버리
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-rotation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        키 교체
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wba-interop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        WBA 상호 운용
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rest-binding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        REST 바인딩
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="REST 바인딩">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#headers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        헤더
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rest-request-signing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        REST 요청 서명
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rest-response-signing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        REST 응답 서명
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rest-request-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        REST 요청 검증
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rest-response-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        REST 응답 검증
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#replay-protection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        재전송 방지
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-signatures-apply" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        서명 적용 대상
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mcp-transport" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MCP 전송 방식
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        에러 처리
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="에러 처리">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rest-error-response" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        REST 에러 응답
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mcp-error-response" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MCP 에러 응답
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        참고 자료
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+  
+  
+  
+    
+    
+    
+      
+      
+      
+    
+    <div class="admonition info ko-notice">
+      <p class="admonition-title">한국어 번역 안내</p>
+      <p>
+        이 페이지는 UCP 공식 문서를 한국어로 옮긴 비공식 번역입니다.
+        
+          공식 릴리스 <strong>2026-08-25</strong>(태그
+          <a href="https://github.com/Universal-Commerce-Protocol/ucp/tree/cd78fb38e819de77d9b527d110476eccb876f1bd">v2026-08-25</a>)을
+          기준으로 했습니다. <strong>다른 버전이나 이후 갱신된 공식 문서와는 내용이 다를 수 있습니다.</strong>
+        
+        구현할 때는 반드시 공식 문서를 확인하세요.
+      </p>
+      <p>
+        <a href="https://ucp.dev/2026-08-25/specification/signatures/">공식 원문 보기</a>
+        
+        
+        · <a href="https://github.com/Universal-Commerce-Protocol/ucp">공식 GitHub 저장소</a>
+      </p>
+    </div>
+  
+  
+                  
+
+
+  
+  
+
+
+<!--
+   Copyright 2026 UCP Authors
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+
+<h1 id="message-signatures">메시지 서명<a class="headerlink" href="#message-signatures" title="Permanent link">&para;</a></h1>
+<p>이 명세는 진위성과 무결성을 보장할 수 있도록 UCP 메시지에 암호학적으로 서명하는 방법을
+정의합니다.</p>
+<h2 id="overview">개요<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>이 명세는 <a href="https://www.rfc-editor.org/rfc/rfc9421">RFC 9421</a> HTTP Message
+Signatures로 UCP 메시지에 서명하고 이를 검증하는 방법을 정의합니다. UCP의 신원
+모델, 지원하는 인증 메커니즘, 키 디스커버리 프로토콜은
+<a href="../overview/#identity-authentication">신원과 인증</a>을 참고하세요.</p>
+<p>HTTP Message Signatures는 다음 공격을 막아 줍니다.</p>
+<ul>
+<li><strong>사칭</strong> — 공격자가 정당한 참여자인 척하며 메시지를 보내는 행위</li>
+<li><strong>변조</strong> — 전송 중 메시지 내용을 수정하는 행위</li>
+<li><strong>재전송 공격</strong> — 탈취한 메시지를 다른 엔드포인트나 다른 시점에 다시 보내는 행위</li>
+<li><strong>메서드/엔드포인트 혼동</strong> — 서명된 페이로드를 다른 HTTP 메서드나 다른 경로로
+    재전송하는 행위</li>
+</ul>
+<h3 id="architecture">아키텍처<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h3>
+<p>UCP는 모든 HTTP 기반 전송 방식에서 HTTP Message Signatures(<a href="https://www.rfc-editor.org/rfc/rfc9421">RFC 9421</a>)를
+사용합니다.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>+-----------------------------------------------------------------+
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>|                     SHARED FOUNDATION                           |
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>+-----------------------------------------------------------------+
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>|  Signature Format: RFC 9421 (HTTP Message Signatures)           |
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>|  Body Digest: RFC 9530 (Content-Digest, raw bytes)              |
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>|  Algorithms: must verify ES256 (baseline); other algorithms     |
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>|              optional — open vocabulary, counterparty-driven    |
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>|              (see Signature Algorithms)                         |
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>|  Key Format: JWK (RFC 7517 + RFC 8037 for Ed25519)              |
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>|  Key Discovery: keys[] (RFC 7517 JWK Set) in /.well-known/ucp   |
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>|  Replay Protection: idempotency-key (business layer)            |
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>+-----------------------------------------------------------------+
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>                              |
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>                              v
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>+-----------------------------------------------------------------+
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>|                     HTTP TRANSPORTS                             |
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>+-----------------------------------------------------------------+
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>|  REST API: Standard HTTP requests                               |
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>|  MCP: Streamable HTTP transport (JSON-RPC over HTTP)            |
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>+-----------------------------------------------------------------+
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>|  Headers:                                                       |
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>|    Signature-Input    (describes signed components)             |
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>|    Signature          (contains signature value)                |
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>|    Content-Digest     (body hash, raw bytes)                    |
+</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>+-----------------------------------------------------------------+
+</span></code></pre></div>
+<p><strong>참고:</strong> UCP는 MCP 전송 방식으로 SSE 기반 전송 대신 streamable HTTP를 지정합니다.
+덕분에 같은 RFC 9421 서명 메커니즘을 모든 UCP 전송 방식에 일관되게 적용할 수 있습니다.</p>
+<h2 id="shared-foundation">공통 기반<a class="headerlink" href="#shared-foundation" title="Permanent link">&para;</a></h2>
+<p>다음 암호 기본 요소는 모든 UCP HTTP 전송 방식에서 공통으로 사용합니다.</p>
+<h3 id="signature-algorithms">서명 알고리즘<a class="headerlink" href="#signature-algorithms" title="Permanent link">&para;</a></h3>
+<p>UCP는 ECDSA(NIST P 곡선 기반)와 EdDSA(Ed25519) 두 가지 알고리즘 계열을 인정합니다.
+ECDSA P-256은 보편적인 기본선이고, EdDSA는 Web Bot Auth(WBA)와 상호 운용할 수 있게
+해 주는 추가 선택지입니다.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">계열</th>
+<th style="text-align: left;">JWK <code>kty</code> / <code>crv</code></th>
+<th style="text-align: left;">JWA <code>alg</code></th>
+<th style="text-align: left;">해시</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">ECDSA P-256</td>
+<td style="text-align: left;"><code>EC</code> / <code>P-256</code></td>
+<td style="text-align: left;"><code>ES256</code></td>
+<td style="text-align: left;">SHA-256</td>
+</tr>
+<tr>
+<td style="text-align: left;">ECDSA P-384</td>
+<td style="text-align: left;"><code>EC</code> / <code>P-384</code></td>
+<td style="text-align: left;"><code>ES384</code></td>
+<td style="text-align: left;">SHA-384</td>
+</tr>
+<tr>
+<td style="text-align: left;">EdDSA Ed25519</td>
+<td style="text-align: left;"><code>OKP</code> / <code>Ed25519</code></td>
+<td style="text-align: left;"><code>EdDSA</code></td>
+<td style="text-align: left;">(내장)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>구현 요건:</strong></p>
+<ul>
+<li>모든 구현은 반드시 <code>ES256</code>(ECDSA P-256) 서명 검증을 지원해야 합니다(<strong>MUST</strong>). 이것이
+  UCP의 보편적 기본선입니다.</li>
+<li><code>ES384</code>(ECDSA P-384) 지원은 선택 사항입니다(<strong>OPTIONAL</strong>).</li>
+<li><code>EdDSA</code>(Ed25519) 지원은 선택 사항입니다(<strong>OPTIONAL</strong>). WBA를 인식하는 검증자는 자신의
+  서명자들이 실제로 쓰는 알고리즘을 지원해야 합니다(<strong>SHOULD</strong>)(현재 WBA 서명자 사이에서는
+  Ed25519가 가장 흔합니다). UCP는 보편적인 <code>ES256</code> 기본선 외에는 알고리즘 요건을 두지
+  않습니다.</li>
+<li><code>kty</code>/<code>crv</code>/<code>alg</code> 어휘는 <strong>개방형</strong>입니다. 지원하지 않는 타입, 곡선, 알고리즘의 키를
+  만나더라도 검증자는 공개된 키 집합을 거부해서는 안 됩니다(<strong>MUST NOT</strong>). 지원하지 않는
+  키는 그 검증자가 쓸 수 없는 키로 남을 뿐입니다. 그런 키를 참조하는 서명은
+  <code>algorithm_unsupported</code>로 실패합니다(다중 서명 요청에서는
+  <a href="../overview/#identity-resolution-algorithm">신원 확인 알고리즘</a>에 따라 건너뜁니다).</li>
+</ul>
+<p><strong>사용 지침:</strong></p>
+<ul>
+<li><strong>알고리즘은 상대방에 맞춰 고릅니다.</strong> 서명자는 같은 서명이 충족해야 하는 모든
+  검증자, 즉 수신 측 UCP 검증자와 해당 서명을 적용하기로 한 WBA 검증자나 AP2 계층이
+  모두 수락하는 알고리즘을 사용해야 합니다(<strong>SHOULD</strong>). 알고리즘 하나로 모두를
+  충족할 수 있으면 키도 하나면 됩니다. 어떤 단일 알고리즘으로도 충족할 수 없을 때만
+  알고리즘이 서로 다른 키를 여러 개 공개합니다(서명마다 <code>kid</code>로 선택).</li>
+<li>상대방에게 특별한 제약이 없으면 <strong>기본값은 <code>ES256</code></strong>입니다. UCP의 보편적 기본선이면서
+  Web Bot Auth에서도 유효한 알고리즘입니다. (WBA의 알고리즘 규칙과 현재 배포 현황은
+  <a href="#wba-interop">WBA 상호 운용</a>에서 다룹니다.)</li>
+<li><strong>AP2 위임(Mandate) 서명은 AP2 자체의 알고리즘 규칙을 따릅니다.</strong>
+  <a href="../payment/extensions/ap2-mandates/">AP2 위임</a>을 참고하세요.</li>
+<li>알고리즘은 JWK의 <code>kty</code>/<code>crv</code> 필드로 도출하며, <code>alg</code>는 <code>Signature-Input</code> 파라미터에
+  포함하지 <strong>않습니다(NOT)</strong>.</li>
+</ul>
+<p><strong>서명 키의 개수.</strong> 당사자가 공개할 키의 개수는 UCP 규칙이 아니라 알고리즘 호환성에
+따라 정해집니다. 서명 대상이 모두 수락하는 단일 알고리즘이 있다면 키 하나로
+충분합니다. 대상들의 알고리즘 제약이 서로 양립할 수 없을 때만 (<code>kid</code>로 선택하는) 별도
+키가 필요합니다. 예를 들어 Ed25519만 수락하는 WBA 검증자와 Ed25519를 배제하는 AP2 위임
+알고리즘 요건이 함께 있는 경우입니다(<a href="../payment/extensions/ap2-mandates/">AP2 위임</a> 참고).
+알고리즘 하나로 모든 대상을 충족하면 키 하나로 모두 처리합니다. 키 두 개를 쓰는
+예시는 <a href="../overview/#business-profile">비즈니스 프로필</a>을 참고하세요.</p>
+<p>전송 시 서명 인코딩에 관한 자세한 내용은
+<a href="#rest-request-signing">REST 요청 서명 — 서명 인코딩</a>을 참고하세요.</p>
+<h3 id="key-format-jwk">키 형식 (JWK)<a class="headerlink" href="#key-format-jwk" title="Permanent link">&para;</a></h3>
+<p>공개 키는 반드시 <a href="https://datatracker.ietf.org/doc/html/rfc7517">RFC 7517</a>에 정의된
+<strong>JSON Web Key(JWK)</strong> 형식으로 표현해야 합니다(<strong>MUST</strong>). UCP는 잘 알려진 JWK 형태 두
+가지를 정의합니다. ECDSA 키용 <strong>EC</strong>(RFC 7518 §6.2)와 EdDSA 키용
+<strong>OKP</strong>(<a href="https://datatracker.ietf.org/doc/html/rfc8037">RFC 8037</a>)입니다. JWK 어휘는
+개방형입니다(<a href="#signature-algorithms">서명 알고리즘</a> 참고). 프로필에 다른 타입의 키를
+공개할 수 있고(MAY), 검증자는 사용할 수 없는 키를 건너뜁니다.</p>
+<p><strong>EC 키 구조 (ECDSA P-256, P-384):</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">필드</th>
+<th style="text-align: left;">타입</th>
+<th style="text-align: left;">필수</th>
+<th style="text-align: left;">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>kid</code></td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">예</td>
+<td style="text-align: left;">키 ID(서명에서 참조)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>kty</code></td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">예</td>
+<td style="text-align: left;">키 타입(<code>EC</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>crv</code></td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">예</td>
+<td style="text-align: left;">곡선 이름(<code>P-256</code> 또는 <code>P-384</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>x</code></td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">예</td>
+<td style="text-align: left;">X 좌표(base64url 인코딩)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>y</code></td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">예</td>
+<td style="text-align: left;">Y 좌표(base64url 인코딩)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>use</code></td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">키 용도(서명용은 <code>sig</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>alg</code></td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">알고리즘(<code>ES256</code>, <code>ES384</code>)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>OKP 키 구조 (EdDSA Ed25519):</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">필드</th>
+<th style="text-align: left;">타입</th>
+<th style="text-align: left;">필수</th>
+<th style="text-align: left;">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>kid</code></td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">예</td>
+<td style="text-align: left;">키 ID(서명에서 참조)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>kty</code></td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">예</td>
+<td style="text-align: left;">키 타입(<code>OKP</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>crv</code></td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">예</td>
+<td style="text-align: left;">곡선 이름(<code>Ed25519</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>x</code></td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">예</td>
+<td style="text-align: left;">공개 키 값(RFC 8037 §2에 따른 base64url 인코딩)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>use</code></td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">키 용도(서명용은 <code>sig</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>alg</code></td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">알고리즘(<code>EdDSA</code>)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>EC 예시 (ES256):</strong></p>
+<!-- ucp:example schema=profile extract=$ target=$.keys[0] -->
+<div class="language-json highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">&quot;kid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;key-2024-01-15&quot;</span><span class="p">,</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="nt">&quot;kty&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;EC&quot;</span><span class="p">,</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="nt">&quot;crv&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;P-256&quot;</span><span class="p">,</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="nt">&quot;x&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;WKn-ZIGevcwGIyyrzFoZNBdaq9_TsqzGl96oc0CWuis&quot;</span><span class="p">,</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span><span class="nt">&quot;y&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;y77t-RvAHRKTsSGdIYUfweuOvwrvDD-Q3Hv5J0fSKbE&quot;</span><span class="p">,</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span><span class="nt">&quot;use&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sig&quot;</span><span class="p">,</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span><span class="nt">&quot;alg&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ES256&quot;</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="p">}</span>
+</span></code></pre></div>
+<p><strong>OKP 예시 (Ed25519 / EdDSA):</strong></p>
+<!-- ucp:example schema=profile extract=$ target=$.keys[0] -->
+<div class="language-json highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">&quot;kid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;poqkLGiymh_W0uP6PZFw-dvez3QJT5SolqXBCW38r0U&quot;</span><span class="p">,</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nt">&quot;kty&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;OKP&quot;</span><span class="p">,</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="nt">&quot;crv&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Ed25519&quot;</span><span class="p">,</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="nt">&quot;x&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;JrQLj5P_89iXES9-vFgrIy29clF9CC_oPPsw3c5D0bs&quot;</span><span class="p">,</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="nt">&quot;use&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sig&quot;</span><span class="p">,</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="nt">&quot;alg&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;EdDSA&quot;</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="p">}</span>
+</span></code></pre></div>
+<p><strong>이중 대상(dual-audience)</strong> 서명(<code>tag="web-bot-auth"</code>가 있는 서명)에 쓰는 키는, 그
+키를 나열하는 모든 배열에서 반드시 해당 키의 JWK SHA-256
+Thumbprint(<a href="https://www.rfc-editor.org/rfc/rfc7638">RFC 7638</a>)를 <code>kid</code>로 공개해야 합니다(<strong>MUST</strong>).
+WBA 형태 서명의 <code>keyid</code>가 바로 그 thumbprint이고, UCP 검증자는 <code>keyid</code>를 공개된 <code>kid</code>와
+대조해 키를 찾습니다. 둘 다 thumbprint로 설정하면 <code>UCP-Agent</code> 조회와 <code>Signature-Agent</code>
+조회가 같은 키를 찾게 됩니다. 그 밖의 키에서 <code>kid</code>는 불투명 식별자(RFC 7517)이며, 안정적인
+값이라면 무엇이든 쓸 수 있습니다(MAY).</p>
+<h3 id="key-discovery">키 디스커버리<a class="headerlink" href="#key-discovery" title="Permanent link">&para;</a></h3>
+<p>공개 키는 서명자의 UCP 프로필에 공개됩니다. 공개 계약은
+<a href="../overview/#profile-structure">프로필 구조</a>를, 검증자의 조회 규칙(확인
+메커니즘별로 어떤 키 목록을 읽는지)은 <a href="../overview/#key-discovery">키 디스커버리</a>를
+참고하세요.</p>
+<h3 id="key-rotation">키 교체<a class="headerlink" href="#key-rotation" title="Permanent link">&para;</a></h3>
+<p>서비스 중단 없이 키를 교체하는 절차는 다음과 같습니다.</p>
+<ol>
+<li><strong>새 키 추가</strong> — 프로필의 <code>keys[]</code>에 기존 키와 함께 새 키를 공개합니다</li>
+<li><strong>서명 시작</strong> — 새 키로 서명을 시작합니다</li>
+<li><strong>유예 기간</strong> — 기존 키로 만든 서명도 계속 수락합니다(최소 7일)</li>
+<li><strong>기존 키 제거</strong> — <code>keys[]</code>에서 기존 키를 제거합니다. <code>keys[]</code>에 남아 있는 키는 계속
+   검증에 사용됩니다.</li>
+</ol>
+<p><strong>권장 사항:</strong></p>
+<ul>
+<li>운영자는 90일마다 키를 교체해야 합니다(SHOULD).</li>
+<li>프로필은 전환 기간 동안 여러 활성 키를 지원해야 합니다(SHOULD).</li>
+</ul>
+<p><strong>키 유출 대응:</strong></p>
+<ol>
+<li>유출된 키를 즉시 <code>keys[]</code>에서 제거합니다. 배열에서 사라지기 전까지는 계속 검증에
+   사용됩니다</li>
+<li>다른 <code>kid</code>로 새 키를 추가합니다</li>
+<li>유출된 키로 만든 서명은 모두 거부합니다</li>
+</ol>
+<h3 id="wba-interop">WBA 상호 운용<a class="headerlink" href="#wba-interop" title="Permanent link">&para;</a></h3>
+<p>UCP 통합자는 자신의 기본 서명을 Web Bot Auth 호환 형태로 만들 수 있습니다(MAY). 키
+하나, 서명 작업 한 번, 전송되는 서명 하나로 이루어진 단일 <strong>이중 대상</strong> 서명을 UCP
+검증자(<code>UCP-Agent</code>로 확인)와 WBA 검증자(<code>Signature-Agent</code>로 확인)가 모두 수락하게
+하는 방식입니다. WBA 준수 검증자와 상호 운용하려는 통합자에게 권장하며(RECOMMENDED),
+아래 요건은 <code>tag="web-bot-auth"</code>가 있는 모든 서명에 적용됩니다. WBA 상호 운용은 요청에만
+해당합니다. 응답은 (<code>@status</code>를 포함하는) 표준 UCP 서명으로 서명하며
+<code>tag="web-bot-auth"</code>를 담지 않습니다.</p>
+<p><strong>전송 형태.</strong> 이중 대상 서명은 일반 UCP 서명에 몇 가지를 더한 형태입니다. <code>UCP-Agent</code>와
+<strong>함께</strong> <code>Signature-Agent</code> 헤더를 담고(추가 방식 — <code>Signature-Agent</code>가 <code>UCP-Agent</code>를
+대체하지 않습니다), <code>signature-agent</code> 컴포넌트에 서명하며, 서명 키의 RFC 7638 thumbprint를
+<code>keyid</code>로 쓰고, <code>created</code>, <code>expires</code>, <code>tag="web-bot-auth"</code>를 추가합니다.</p>
+<!-- ucp:example schema=shopping/checkout op=create direction=request -->
+<div class="language-json highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="err">POST</span><span class="w"> </span><span class="err">/checkou</span><span class="kc">t</span><span class="mi">-</span><span class="err">sessio</span><span class="kc">ns</span><span class="w"> </span><span class="err">HTTP/</span><span class="mf">1.1</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="err">Hos</span><span class="kc">t</span><span class="p">:</span><span class="w"> </span><span class="err">mercha</span><span class="kc">nt</span><span class="err">.example.com</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="err">Co</span><span class="kc">ntent</span><span class="mi">-</span><span class="err">Type</span><span class="p">:</span><span class="w"> </span><span class="err">applica</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span><span class="err">/jso</span><span class="kc">n</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="err">UCP</span><span class="mi">-</span><span class="err">Age</span><span class="kc">nt</span><span class="p">:</span><span class="w"> </span><span class="err">pro</span><span class="kc">f</span><span class="err">ile=</span><span class="s2">&quot;https://platform.example/.well-known/ucp&quot;</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="err">Sig</span><span class="kc">nature</span><span class="mi">-</span><span class="err">Age</span><span class="kc">nt</span><span class="p">:</span><span class="w"> </span><span class="err">sig</span><span class="mi">1</span><span class="err">=</span><span class="s2">&quot;https://platform.example/.well-known/ucp&quot;</span><span class="err">;</span><span class="kc">t</span><span class="err">ype=jwks_uri</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="err">Idempo</span><span class="kc">ten</span><span class="err">cy</span><span class="mi">-</span><span class="err">Key</span><span class="p">:</span><span class="w"> </span><span class="mf">550e8400-e29</span><span class="err">b</span><span class="mi">-41</span><span class="err">d</span><span class="mi">4-</span><span class="err">a</span><span class="mi">716-446655440000</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="err">Co</span><span class="kc">ntent</span><span class="mi">-</span><span class="err">Diges</span><span class="kc">t</span><span class="p">:</span><span class="w"> </span><span class="err">sha</span><span class="mi">-256</span><span class="err">=</span><span class="p">:</span><span class="err">X</span><span class="mf">48E9</span><span class="err">q...</span><span class="p">:</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="err">Sig</span><span class="kc">nature</span><span class="mi">-</span><span class="err">I</span><span class="kc">n</span><span class="err">pu</span><span class="kc">t</span><span class="p">:</span><span class="w"> </span><span class="err">sig</span><span class="mi">1</span><span class="err">=(</span><span class="s2">&quot;@method&quot;</span><span class="w"> </span><span class="s2">&quot;@authority&quot;</span><span class="w"> </span><span class="s2">&quot;@path&quot;</span><span class="w"> </span><span class="s2">&quot;signature-agent&quot;</span><span class="err">;key=</span><span class="s2">&quot;sig1&quot;</span><span class="w"> </span><span class="s2">&quot;ucp-agent&quot;</span><span class="w"> </span><span class="s2">&quot;idempotency-key&quot;</span><span class="w"> </span><span class="s2">&quot;content-digest&quot;</span><span class="w"> </span><span class="s2">&quot;content-type&quot;</span><span class="err">);keyid=</span><span class="s2">&quot;poqkLGiymh_W0uP6PZFw-dvez3QJT5SolqXBCW38r0U&quot;</span><span class="err">;crea</span><span class="kc">te</span><span class="err">d=</span><span class="mi">1738617600</span><span class="err">;expires=</span><span class="mi">1738621200</span><span class="err">;</span><span class="kc">ta</span><span class="err">g=</span><span class="s2">&quot;web-bot-auth&quot;</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="err">Sig</span><span class="kc">nature</span><span class="p">:</span><span class="w"> </span><span class="err">sig</span><span class="mi">1</span><span class="err">=</span><span class="p">:</span><span class="err">base</span><span class="mi">64</span><span class="err">_ed</span><span class="mi">25519</span><span class="err">_sig</span><span class="kc">nature</span><span class="err">_value</span><span class="p">:</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="p">{</span>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">  </span><span class="nt">&quot;line_items&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">    </span><span class="p">{</span>
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">      </span><span class="nt">&quot;item&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;item_123&quot;</span><span class="p">},</span>
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">      </span><span class="nt">&quot;quantity&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span>
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">  </span><span class="p">]</span>
+</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>전송되는 서명은 하나, 대상은 둘입니다. UCP 형태 검증자는 <code>UCP-Agent</code>로 확인하고, 자신이
+기대하는 컴포넌트(<code>ucp-agent</code>, <code>idempotency-key</code>)를 찾은 뒤 나머지는 무시합니다. WBA 형태
+검증자는 <code>Signature-Agent</code>로 확인하고 자신의 컴포넌트(<code>@authority</code>, <code>signature-agent</code>,
+<code>tag</code>, <code>created</code>/<code>expires</code>)를 찾습니다. 두 검증자 모두 같은 키로 같은 바이트를 검증합니다.
+이 예시에서는 두 헤더가 같은 <code>/.well-known/ucp</code> URL을 가리키지만(<code>type=jwks_uri</code>이므로 WBA
+검증자는 프로필의 <code>keys[]</code>를 JWK Set으로 읽습니다 —
+<a href="../overview/#deployment-patterns-for-wba-interop">배포 패턴</a> 참고),
+<code>Signature-Agent</code>가 다른 곳을 가리켜도 됩니다(MAY).</p>
+<p>세 개의 <code>sig1</code> 레이블, 즉 <code>Signature-Agent</code> 딕셔너리 멤버 키, 서명된
+<code>signature-agent</code> 컴포넌트의 <code>;key="sig1"</code> 파라미터, <code>Signature-Input</code> 서명 레이블은
+아래 옵트인 목록 3번 항목에 따라 서로 묶여 있습니다.</p>
+<p>옵트인하려면 서명자는 기본 UCP 서명을 다음과 같이 바꿉니다. <strong>MUST</strong> 표시 항목은
+<a href="https://datatracker.ietf.org/doc/draft-meunier-webbotauth-httpsig-protocol/00/">draft-meunier-webbotauth-httpsig-protocol-00</a>
+§4.2가 요구하는 사항입니다. 자세한 내용은 해당 초안을 참고하세요.</p>
+<ol>
+<li><strong>WBA 검증자가 수락하는 알고리즘을 사용합니다.</strong> WBA는 RFC 9421 HTTP Message
+   Signatures Algorithm 레지스트리의 모든 알고리즘(예: <code>ed25519</code>,
+   <code>ecdsa-p256-sha256</code> = <code>ES256</code>, <code>ecdsa-p384-sha384</code>, <code>rsa-pss-sha512</code>)을 허용합니다.
+   대상 검증자가 수락하는지 확인하세요. (비규범: 현재 가장 널리 배포된 알고리즘은 Ed25519입니다.)</li>
+<li><code>UCP-Agent</code>와 함께 <strong>반드시 <code>Signature-Agent</code> 헤더를 보내야 합니다(MUST)</strong>. 이 헤더는
+   RFC 8941 Dictionary Structured Field로, 멤버의 sf-string 값은 HTTPS URL이고 <code>type</code>
+   파라미터로 디스커버리 메커니즘을 고릅니다. 멤버 키는 <code>Signature-Input</code> 서명 레이블과
+   일치합니다. <code>jwks_uri</code>/<code>cimd</code>/<code>directory</code> 변형과, 각 변형에서 UCP 프로필을 재사용하는
+   방법은 <a href="../overview/#deployment-patterns-for-wba-interop">배포 패턴</a>을 참고하세요.
+   (<code>data:</code> URI 인라인 형태는 범위 밖입니다.)</li>
+<li><code>Signature-Agent</code> 딕셔너리 멤버 키(<code>Signature-Input</code> 서명 레이블과 같음)와 일치하는
+   <strong><code>;key="&lt;label&gt;"</code>로 반드시 <code>signature-agent</code> 컴포넌트에 서명해야 합니다(MUST)</strong>.
+   WBA §4.2.1을 따릅니다.</li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc7638">RFC 7638</a>에 따라 <strong>반드시 <code>keyid</code>를 서명
+   키의 JWK SHA-256 Thumbprint로 설정해야 하며(MUST)</strong>, <code>UCP-Agent</code> 조회와 <code>Signature-Agent</code>
+   조회가 같은 키를 찾도록 그 키를 같은 thumbprint 값의 <code>kid</code>로 공개합니다
+   (<a href="#key-format-jwk">키 형식</a> 참고). Ed25519(OKP) 키라면 thumbprint 멤버는
+   <a href="https://www.rfc-editor.org/rfc/rfc8037">RFC 8037</a> §2에 따라 <code>crv</code>, <code>kty</code>, <code>x</code>이며,
+   부록 A.3에 계산 예시가 있습니다.</li>
+<li><strong>반드시 <code>created</code>와 <code>expires</code> 파라미터를 포함해야 합니다(MUST).</strong> <code>expires</code> 간격은
+   최대 24시간이어야 합니다(SHOULD).</li>
+<li>재전송을 막으려면 <strong><code>nonce</code>를 포함해야 합니다(SHOULD)</strong>. <code>nonce</code>는 base64url로 인코딩한
+   무작위 값(권장(RECOMMENDED) 64바이트)이며, <code>created</code>/<code>expires</code> 기간 안에서 고유해야
+   합니다(WBA §4.2.3). UCP의 <code>Idempotency-Key</code>는 비즈니스 계층에서 페이로드 중복을 걸러 내는
+   장치일 뿐 전송에 결합된 nonce가 아니므로 그 역할을 대신하지 못합니다. 검증하는 오리진은
+   <code>nonce</code>를 요구할 수 있으며(<strong>MAY</strong>), nonce가 없거나 재사용된 서명에는 다시 챌린지(HTTP
+   429)할 수 있습니다(WBA §4.3–4.4).</li>
+<li><strong>반드시 <code>tag="web-bot-auth"</code>를 포함해야 합니다(MUST).</strong> WBA 검증자는 이 태그를 보고
+   서명을 고릅니다.</li>
+</ol>
+<p><strong>컴포넌트 요건은 그대로 유지되고 강제됩니다.</strong> WBA 형태 서명에도 반드시 기본 UCP 서명과
+같은 컴포넌트(<a href="#rest-request-signing">서명 컴포넌트</a> 표의 필수 집합)가 포함되어야
+합니다(<strong>MUST</strong>). WBA는
+<a href="https://datatracker.ietf.org/doc/draft-meunier-webbotauth-httpsig-protocol/00/">draft-meunier-webbotauth-httpsig-protocol-00</a>
+§4.2.4에 따라 이를 "추가 컴포넌트"로 수락합니다. 검증자는
+<a href="../overview/#identity-resolution-algorithm">신원 확인 알고리즘</a>에 따라 <code>tag</code>와
+상관없이 이 요건을 강제하므로, Web Bot Auth에 옵트인해도 UCP가 인증하는 범위는 넓어지지
+않습니다.</p>
+<p><strong>상호 운용은 단방향입니다.</strong> UCP 서명자는 Web Bot Auth 검증자의 요건을 충족합니다. WBA
+검증자는 UCP의 더 풍부한 포함 컴포넌트 집합을 허용된 "추가 컴포넌트"로 수락하기
+때문입니다(protocol-00 §4.2.4). 반대 방향은 성립하지 않습니다. (<code>@authority</code>만 포함하는)
+최소한의 WBA 서명은 UCP의 포함 범위 검사를 통과하지 못해 거부됩니다. UCP의 목표는 WBA
+검증자<em>가</em> 검증할 수 있게 하는 것이지, 임의의 WBA 서명자를 수락하는 것이 아닙니다. UCP
+검증자가 수락하는 범위는 WBA 검증자가 수락하는 범위의 진부분집합입니다.</p>
+<p>UCP 검증자는 같은 서명에서 새로운 요소 세 가지를 보게 됩니다.</p>
+<ul>
+<li><code>tag</code> 파라미터는 RFC 9421 §2.3의 서명 파라미터입니다. UCP 전용 검증자는 이 파라미터를
+  알지 못하며, RFC 9421의 관대한 파라미터 처리 규칙에 따라 무시합니다.</li>
+<li><code>signature-agent</code> 컴포넌트는 포함된 HTTP 필드로서 평소처럼 처리됩니다.
+  <code>;key="&lt;label&gt;"</code> 파라미터는 RFC 9421 §2.1.2에 따라 Dictionary 멤버를 선택합니다. WBA
+  형태 서명을 검증하려면 §2.1.2를 지원해야 합니다. UCP 기본 서명은 Dictionary 멤버
+  컴포넌트 선택을 쓰지 않으므로, UCP 기본 서명만 염두에 두고 만든 검증자라면 이 지원을
+  추가해야 할 수도 있습니다.</li>
+<li>WBA 형태 서명에서는 <code>created</code>와 <code>expires</code>가 필수입니다(5번 항목, WBA §4.2). 이를 강제할지는
+  <strong>애플리케이션이 정합니다</strong>(RFC 9421 §3.2.1). RFC 9421을 준수한다고 자동으로 강제되는
+  것도 아니고, UCP가 별도로 요구하지도 않습니다. UCP 자체의 재전송 방지는 비즈니스 계층의
+  <code>Idempotency-Key</code>가 맡습니다. 신선도를 강제하는 WBA 인식 검증자는 유효 기간을 벗어난
+  서명을 거부합니다.</li>
+</ul>
+<p><strong>신원 확인.</strong> WBA에 옵트인해도 기본 UCP 검증은 바뀌지 않습니다.
+<a href="../overview/#identity-resolution-algorithm">신원 확인 알고리즘</a>을 참고하세요.</p>
+<p><strong>태그.</strong> UCP는 자체 <code>tag</code>(RFC 9421 §2.3)를 정의하지 않습니다. UCP 검증자는 <code>UCP-Agent</code>
+헤더, 서명된 컴포넌트 집합, URL 라우팅으로 자신의 서명을 식별합니다.</p>
+<p><strong>다중 서명.</strong> UCP 요청에는
+<a href="https://www.rfc-editor.org/rfc/rfc9421#section-4.3">RFC 9421 §4.3</a> 레이블 메커니즘으로
+여러 서명을 담을 수 있습니다(<strong>MAY</strong>). 이 패턴은 실제로 분리가 필요할 때(대상마다 다른
+키, 여러 당사자의 공동 서명, 대상별 컴포넌트 집합이 서로 충돌하는 경우)만 사용합니다.
+키 하나로 UCP와 WBA를 함께 지원하려면 위에서 설명한 단일 서명 형태를 쓰는 편이 낫습니다.</p>
+<h2 id="rest-binding">REST 바인딩<a class="headerlink" href="#rest-binding" title="Permanent link">&para;</a></h2>
+<p>HTTP REST 전송 방식에서 UCP는
+<a href="https://www.rfc-editor.org/rfc/rfc9421">RFC 9421 (HTTP Message Signatures)</a>를 사용합니다.</p>
+<h3 id="headers">헤더<a class="headerlink" href="#headers" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">헤더</th>
+<th style="text-align: left;">방향</th>
+<th style="text-align: left;">필수</th>
+<th style="text-align: left;">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>Signature-Input</code></td>
+<td style="text-align: left;">요청/응답</td>
+<td style="text-align: left;">예</td>
+<td style="text-align: left;">서명된 컴포넌트 기술</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Signature</code></td>
+<td style="text-align: left;">요청/응답</td>
+<td style="text-align: left;">예</td>
+<td style="text-align: left;">서명 값</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Content-Digest</code></td>
+<td style="text-align: left;">요청/응답</td>
+<td style="text-align: left;">조건부 <code>*</code></td>
+<td style="text-align: left;">요청/응답 본문의 SHA-256 해시</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Signature-Agent</code></td>
+<td style="text-align: left;">요청</td>
+<td style="text-align: left;">조건부 <code>**</code></td>
+<td style="text-align: left;">WBA 키 출처(<a href="#wba-interop">WBA 상호 운용</a>)</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>
+<p><code>*</code> 요청/응답에 본문이 있으면 필수</p>
+</li>
+<li>
+<p><code>**</code> Web Bot Auth 호환 서명 형태에 옵트인하면 필수. 기본 UCP 서명에는 없음(검증자는
+<code>UCP-Agent</code>에서 도출한 신원을 사용)</p>
+</li>
+</ul>
+<p><code>Content-Digest</code>는 <a href="https://www.rfc-editor.org/rfc/rfc9530">RFC 9530</a>을 따르며 원본
+본문 바이트를 해시합니다. 덕분에 JSON 정규화 없이도 메시지 본문을 서명에 결합할 수 있습니다.
+구현은 반드시 <code>sha-256</code>을 사용해야 합니다(<strong>MUST</strong>). 정규화가 필요한 영속적 아티팩트는
+<a href="../payment/extensions/ap2-mandates/#canonicalization">AP2 위임 - 정규화</a>를 참고하세요.</p>
+<p><strong>중개자 경고:</strong> 프록시, API 게이트웨이 같은 중개자는 JSON 본문을 다시 직렬화해서는 안
+됩니다(<strong>MUST NOT</strong>). 다시 직렬화하면 서명이 무효가 됩니다. <code>Content-Digest</code>는 원본
+바이트로 계산하므로 조금이라도 수정하면 검증이 깨집니다.</p>
+<h3 id="rest-request-signing">REST 요청 서명<a class="headerlink" href="#rest-request-signing" title="Permanent link">&para;</a></h3>
+<p><strong>서명 컴포넌트:</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">컴포넌트</th>
+<th style="text-align: left;">필수</th>
+<th style="text-align: left;">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>@method</code></td>
+<td style="text-align: left;">예</td>
+<td style="text-align: left;">HTTP 메서드(GET, POST 등)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>@authority</code></td>
+<td style="text-align: left;">예</td>
+<td style="text-align: left;">대상 호스트(다른 호스트로의 중계 방지)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>@path</code></td>
+<td style="text-align: left;">예</td>
+<td style="text-align: left;">요청 경로</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>@query</code></td>
+<td style="text-align: left;">조건부 <code>*</code></td>
+<td style="text-align: left;">쿼리 문자열(있는 경우)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ucp-agent</code></td>
+<td style="text-align: left;">조건부 <code>**</code></td>
+<td style="text-align: left;">프로필 URL(신원 결합)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>signature-agent</code></td>
+<td style="text-align: left;">조건부 <code>***</code></td>
+<td style="text-align: left;">WBA 키 출처(<a href="#wba-interop">WBA 상호 운용</a>에 옵트인한 경우)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>idempotency-key</code></td>
+<td style="text-align: left;">조건부 <code>****</code></td>
+<td style="text-align: left;">멱등성 헤더(상태 변경 요청)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>content-digest</code></td>
+<td style="text-align: left;">조건부 <code>†</code></td>
+<td style="text-align: left;">본문 다이제스트(본문이 있는 경우)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>content-type</code></td>
+<td style="text-align: left;">조건부 <code>†</code></td>
+<td style="text-align: left;">Content-Type(본문이 있는 경우)</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>
+<p><code>*</code> 요청에 쿼리 파라미터가 있으면 필수</p>
+</li>
+<li>
+<p><code>**</code> <code>UCP-Agent</code> 헤더가 있으면 필수</p>
+</li>
+<li>
+<p><code>***</code> <code>Signature-Agent</code> 헤더가 있으면(즉 WBA 형태 서명이면) 필수</p>
+</li>
+<li>
+<p><code>****</code> POST, PUT, DELETE, PATCH에서 필수</p>
+</li>
+<li>
+<p><code>†</code> 요청에 본문이 있으면 필수</p>
+</li>
+</ul>
+<p><strong>서명 생성:</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>sign_rest_request(method, path, query, body_bytes, idempotency_key, private_key, kid):
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    // 1. Compute body digest (if body present)
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    if body_bytes:
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>        digest = sha256(body_bytes)  // Hash raw bytes, no canonicalization
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>        digest_header = &quot;sha-256=:&quot; + base64(digest) + &quot;:&quot;
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    // 2. Build component list
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    components = [&quot;@method&quot;, &quot;@authority&quot;, &quot;@path&quot;]
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>    if query: components.append(&quot;@query&quot;)
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>    if ucp_agent: components.append(&quot;ucp-agent&quot;)
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>    if idempotency_key: components.append(&quot;idempotency-key&quot;)
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>    if body: components.extend([&quot;content-digest&quot;, &quot;content-type&quot;])
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
+</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>    // 3. Build signature base (RFC 9421)
+</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>    signature_base = build_signature_base(
+</span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>        components=components,
+</span><span id="__span-4-17"><a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>        method=method,
+</span><span id="__span-4-18"><a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>        path=path,
+</span><span id="__span-4-19"><a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>        query=query,
+</span><span id="__span-4-20"><a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>        headers={
+</span><span id="__span-4-21"><a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>            &quot;idempotency-key&quot;: idempotency_key,
+</span><span id="__span-4-22"><a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>            &quot;content-digest&quot;: digest_header,
+</span><span id="__span-4-23"><a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>            &quot;content-type&quot;: &quot;application/json&quot;
+</span><span id="__span-4-24"><a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>        },
+</span><span id="__span-4-25"><a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>        keyid=kid
+</span><span id="__span-4-26"><a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>    )
+</span><span id="__span-4-27"><a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>
+</span><span id="__span-4-28"><a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>    // 4. Sign
+</span><span id="__span-4-29"><a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a>    signature = sign(signature_base, private_key)  // ecdsa for EC, eddsa for OKP
+</span><span id="__span-4-30"><a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a>
+</span><span id="__span-4-31"><a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a>    // 5. Return headers
+</span><span id="__span-4-32"><a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a>    return {
+</span><span id="__span-4-33"><a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a>        &quot;Idempotency-Key&quot;: idempotency_key,
+</span><span id="__span-4-34"><a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a>        &quot;Content-Digest&quot;: digest_header,
+</span><span id="__span-4-35"><a id="__codelineno-4-35" name="__codelineno-4-35" href="#__codelineno-4-35"></a>        &quot;Signature-Input&quot;: format_signature_input(components, kid),
+</span><span id="__span-4-36"><a id="__codelineno-4-36" name="__codelineno-4-36" href="#__codelineno-4-36"></a>        &quot;Signature&quot;: &quot;sig1=:&quot; + base64(signature) + &quot;:&quot;
+</span><span id="__span-4-37"><a id="__codelineno-4-37" name="__codelineno-4-37" href="#__codelineno-4-37"></a>    }
+</span></code></pre></div>
+<p><strong>서명 인코딩:</strong></p>
+<ul>
+<li><strong>ECDSA</strong> 서명은 반드시 ASN.1/DER이 <strong>아니라</strong> RFC 9421 §3.3.1에 따른 고정 길이 원시
+  <code>r||s</code> 인코딩을 사용해야 합니다(<strong>MUST</strong>). 서명 값은 고정 길이 부호 없는 빅엔디언 정수
+  <code>r</code>과 <code>s</code>를 이어 붙인 값으로, P-256은 64바이트(32 + 32), P-384는 96바이트(48 + 48)입니다.
+  많은 암호 라이브러리(OpenSSL, Java, .NET)가 기본으로 DER 인코딩을 사용하므로 명시적으로
+  변환해야 합니다.</li>
+<li><strong>EdDSA (Ed25519)</strong> 서명은 반드시 RFC 8032 §5.1.6에 정의된 인코딩, 즉 인코딩된 <code>R</code>
+  점과 정수 <code>S</code>를 이어 붙인 64바이트를 사용해야 합니다(<strong>MUST</strong>). Ed25519 서명
+  라이브러리의 표준 출력이 이 형태이므로 DER 변환이 필요 없습니다.</li>
+</ul>
+<p><strong>전체 요청 예시:</strong></p>
+<!-- ucp:example schema=shopping/checkout op=create direction=request -->
+<div class="language-json highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="err">POST</span><span class="w"> </span><span class="err">/checkou</span><span class="kc">t</span><span class="mi">-</span><span class="err">sessio</span><span class="kc">ns</span><span class="w"> </span><span class="err">HTTP/</span><span class="mf">1.1</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="err">Hos</span><span class="kc">t</span><span class="p">:</span><span class="w"> </span><span class="err">mercha</span><span class="kc">nt</span><span class="err">.example.com</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="err">Co</span><span class="kc">ntent</span><span class="mi">-</span><span class="err">Type</span><span class="p">:</span><span class="w"> </span><span class="err">applica</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span><span class="err">/jso</span><span class="kc">n</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="err">UCP</span><span class="mi">-</span><span class="err">Age</span><span class="kc">nt</span><span class="p">:</span><span class="w"> </span><span class="err">pro</span><span class="kc">f</span><span class="err">ile=</span><span class="s2">&quot;https://platform.example/.well-known/ucp&quot;</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="err">Idempo</span><span class="kc">ten</span><span class="err">cy</span><span class="mi">-</span><span class="err">Key</span><span class="p">:</span><span class="w"> </span><span class="mf">550e8400-e29</span><span class="err">b</span><span class="mi">-41</span><span class="err">d</span><span class="mi">4-</span><span class="err">a</span><span class="mi">716-446655440000</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="err">Co</span><span class="kc">ntent</span><span class="mi">-</span><span class="err">Diges</span><span class="kc">t</span><span class="p">:</span><span class="w"> </span><span class="err">sha</span><span class="mi">-256</span><span class="err">=</span><span class="p">:</span><span class="err">X</span><span class="mf">48E9</span><span class="err">q...</span><span class="p">:</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="err">Sig</span><span class="kc">nature</span><span class="mi">-</span><span class="err">I</span><span class="kc">n</span><span class="err">pu</span><span class="kc">t</span><span class="p">:</span><span class="w"> </span><span class="err">sig</span><span class="mi">1</span><span class="err">=(</span><span class="s2">&quot;@method&quot;</span><span class="w"> </span><span class="s2">&quot;@authority&quot;</span><span class="w"> </span><span class="s2">&quot;@path&quot;</span><span class="w"> </span><span class="s2">&quot;ucp-agent&quot;</span><span class="w"> </span><span class="s2">&quot;idempotency-key&quot;</span><span class="w"> </span><span class="s2">&quot;content-digest&quot;</span><span class="w"> </span><span class="s2">&quot;content-type&quot;</span><span class="err">);keyid=</span><span class="s2">&quot;platform-2026&quot;</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="err">Sig</span><span class="kc">nature</span><span class="p">:</span><span class="w"> </span><span class="err">sig</span><span class="mi">1</span><span class="err">=</span><span class="p">:</span><span class="mi">6</span><span class="err">G</span><span class="mi">4</span><span class="err">i</span><span class="mi">8</span><span class="err">TS</span><span class="mi">6</span><span class="err">oUkGrx</span><span class="mi">8</span><span class="err">K</span><span class="kc">n</span><span class="err">CFUpsSPwd</span><span class="mf">74...</span><span class="p">:</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="p">{</span>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">  </span><span class="nt">&quot;line_items&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">    </span><span class="p">{</span>
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">      </span><span class="nt">&quot;item&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;item_123&quot;</span><span class="p">},</span>
+</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">      </span><span class="nt">&quot;quantity&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span>
+</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">  </span><span class="p">]</span>
+</span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="p">}</span>
+</span></code></pre></div>
+<p><strong>GET 요청 예시 (본문 없음, 멱등성 키 없음):</strong></p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nf">GET</span> <span class="nn">/checkout-sessions/chk_123</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="na">Host</span><span class="o">:</span> <span class="l">merchant.example.com</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="na">Signature-Input</span><span class="o">:</span> <span class="l">sig1=(&quot;@method&quot; &quot;@authority&quot; &quot;@path&quot;);keyid=&quot;platform-2026&quot;</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="na">Signature</span><span class="o">:</span> <span class="l">sig1=:6G4i8TS6oUkGrx8KnCFUpsSPwd74...:</span>
+</span></code></pre></div>
+<h3 id="rest-response-signing">REST 응답 서명<a class="headerlink" href="#rest-response-signing" title="Permanent link">&para;</a></h3>
+<p>응답 서명에는 <code>@method</code> 대신 <code>@status</code>를 사용합니다.</p>
+<p><strong>서명 컴포넌트:</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">컴포넌트</th>
+<th style="text-align: left;">필수</th>
+<th style="text-align: left;">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>@status</code></td>
+<td style="text-align: left;">예</td>
+<td style="text-align: left;">HTTP 상태 코드(200, 201 등)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>content-digest</code></td>
+<td style="text-align: left;">조건부 <code>*</code></td>
+<td style="text-align: left;">본문 다이제스트(본문이 있는 경우)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>content-type</code></td>
+<td style="text-align: left;">조건부 <code>*</code></td>
+<td style="text-align: left;">Content-Type(본문이 있는 경우)</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><code>*</code> 응답에 본문이 있으면 필수</li>
+</ul>
+<p><strong>전체 응답 예시:</strong></p>
+<p>아래 응답 본문은 이해를 돕기 위해 축약했으며, 서명에 쓰이는 핵심 필드만 보여 줍니다. 실제
+체크아웃 응답에는 추가 필수 필드(<code>ucp</code>, <code>currency</code>, <code>line_items</code>, <code>totals</code>, <code>links</code>)도
+포함됩니다. 전체 형태는 <a href="../shopping/checkout/rest/#create-checkout">체크아웃 생성 응답</a>을
+참고하세요.</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">201</span> <span class="ne">Created</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="na">Content-Digest</span><span class="o">:</span> <span class="l">sha-256=:Y5fK8nLmPqRsT3vWxYzAbCdEfGhIjKlMnO...:</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="na">Signature-Input</span><span class="o">:</span> <span class="l">sig1=(&quot;@status&quot; &quot;content-digest&quot; &quot;content-type&quot;);created=1738617601;keyid=&quot;merchant-2026&quot;</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="na">Signature</span><span class="o">:</span> <span class="l">sig1=:6G4i8TS6oUkGrx8KnCFUpsSPwd74...:</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="p">{</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;chk_123&quot;</span><span class="p">,</span>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ready_for_complete&quot;</span><span class="p">,</span>
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">  </span><span class="nt">&quot;...&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;abbreviated; see linked spec for full shape&quot;</span>
+</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="p">}</span>
+</span></code></pre></div>
+<p><strong>응답 서명 생성:</strong></p>
+<p>응답 서명은 <code>@method</code> 대신 <code>@status</code>를 쓴다는 점만 빼면 요청 서명과 같습니다.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>sign_rest_response(status, body_bytes, private_key, kid):
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>    // 1. Compute body digest (if body present)
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>    if body_bytes:
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>        digest = sha256(body_bytes)  // Hash raw bytes, no canonicalization
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>        digest_header = &quot;sha-256=:&quot; + base64(digest) + &quot;:&quot;
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>    // 2. Build signature base (RFC 9421)
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>    signature_base = build_signature_base(
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>        components=[&quot;@status&quot;, &quot;content-digest&quot;, &quot;content-type&quot;],
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>        status=status,
+</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>        headers={&quot;content-digest&quot;: digest_header, &quot;content-type&quot;: &quot;application/json&quot;},
+</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>        created=current_timestamp(),
+</span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>        keyid=kid
+</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>    )
+</span><span id="__span-8-15"><a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>
+</span><span id="__span-8-16"><a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>    // 3. Sign
+</span><span id="__span-8-17"><a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>    signature = sign(signature_base, private_key)  // ecdsa for EC, eddsa for OKP
+</span><span id="__span-8-18"><a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>
+</span><span id="__span-8-19"><a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>    // 4. Return headers
+</span><span id="__span-8-20"><a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>    return {
+</span><span id="__span-8-21"><a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>        &quot;Content-Digest&quot;: digest_header,
+</span><span id="__span-8-22"><a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>        &quot;Signature-Input&quot;: &#39;sig1=(&quot;@status&quot; &quot;content-digest&quot; &quot;content-type&quot;);created=...;keyid=&quot;...&quot;&#39;,
+</span><span id="__span-8-23"><a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a>        &quot;Signature&quot;: &quot;sig1=:&quot; + base64(signature) + &quot;:&quot;
+</span><span id="__span-8-24"><a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a>    }
+</span></code></pre></div>
+<h3 id="rest-request-verification">REST 요청 검증<a class="headerlink" href="#rest-request-verification" title="Permanent link">&para;</a></h3>
+<p><strong>서명자의 키 확인:</strong></p>
+<p>키 확인 규칙(서명의 <code>tag</code>가 아니라 검증자의 능력과 실제로 있는 헤더로 결정)은
+<a href="../overview/#identity-resolution-algorithm">신원 확인 알고리즘</a>을 참고하세요. 이
+절에서는 헤더 파싱만 다룹니다. 기본 UCP 방식에서는 <code>UCP-Agent</code>를, WBA 형태 방식에서는
+<code>Signature-Agent</code>를 파싱합니다.</p>
+<p><strong><code>UCP-Agent</code> 파싱 규칙</strong> (기본 UCP 방식):</p>
+<ol>
+<li>RFC 8941 Dictionary로 파싱합니다</li>
+<li><code>profile</code> 키를 추출합니다(필수(REQUIRED))</li>
+<li>값은 반드시 HTTPS URL을 담은 따옴표 문자열이어야 합니다(MUST)</li>
+<li>비즈니스 프로필이라면 URL은 반드시 <code>/.well-known/ucp</code>를 가리켜야 합니다(MUST). 플랫폼
+   프로필 URL에는 경로 제약이 없습니다</li>
+<li>HTTPS가 아닌 URL은 거부합니다</li>
+</ol>
+<p><strong><code>Signature-Agent</code> 파싱 규칙</strong> (WBA 형태 방식):</p>
+<ol>
+<li>RFC 8941 Dictionary로 파싱합니다.</li>
+<li>반드시 검증 중인 서명 레이블과 키가 같은 딕셔너리 멤버를 찾아야 합니다(<strong>MUST</strong>)
+   (<code>Signature-Input: sig1=...</code>이면 멤버 <code>sig1</code>을 찾습니다). 일치하는 멤버가 없으면 이
+   서명의 검증은 반드시 실패해야 합니다(<strong>MUST</strong>).</li>
+<li>멤버의 값은 반드시 HTTPS URL을 담은 sf-string이어야 합니다(<strong>MUST</strong>). 확인 방식은 <code>type</code>
+   파라미터로 고르며, <code>jwks_uri</code>(JWK Set URL, 예: UCP 프로필), <code>cimd</code>(Client ID
+   Metadata Document), <code>directory</code>(잘 알려진 디렉터리를 호스팅하는 오리진) 중 하나입니다.
+   <a href="../overview/#deployment-patterns-for-wba-interop">배포 패턴</a>을 참고하세요.
+   <code>data:</code> URI 인라인 형태는 UCP-WBA 상호 운용의 범위 밖입니다.</li>
+<li>URL이 HTTPS가 아니면 이 서명의 검증은 반드시 실패해야 합니다(<strong>MUST</strong>).</li>
+</ol>
+<p><strong>예시 (기본 UCP):</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>// Header
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>UCP-Agent: profile=&quot;https://platform.example/.well-known/ucp&quot;
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>// Parsed
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>profile_url = &quot;https://platform.example/.well-known/ucp&quot;
+</span></code></pre></div>
+<p><strong>예시 (Signature-Agent, WBA 형태):</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>// Headers
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>Signature-Agent: sig1=&quot;https://platform.example/.well-known/ucp&quot;;type=jwks_uri
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>Signature-Input: sig1=(&quot;@method&quot; &quot;@authority&quot; ...);...
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>// Parsed (member key matches sig1)
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>type = jwks_uri
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>jwks_uri = &quot;https://platform.example/.well-known/ucp&quot;
+</span></code></pre></div>
+<p><strong>적용 범위:</strong></p>
+<ul>
+<li><strong>플랫폼 → 비즈니스 요청:</strong> <code>UCP-Agent</code> 헤더의 프로필 URL</li>
+<li><strong>비즈니스 → 플랫폼 웹훅:</strong> <code>UCP-Agent</code> 헤더의 프로필 URL</li>
+</ul>
+<p>아래 두 루틴은 모두 <strong>단일 후보</strong> 서명을 검증합니다. <code>skip_signature(reason)</code>은 해당
+후보로는 메시지를 인증할 수 없다는 뜻입니다. 다중 서명을 처리할 때
+(<a href="https://www.rfc-editor.org/rfc/rfc9421#section-4.3">RFC 9421 §4.3</a>,
+<a href="../overview/#identity-resolution-algorithm">신원 확인 알고리즘</a> 참고)
+검증자는 다음 후보를 시도하며, <strong>모든</strong> 후보를 건너뛴 경우에만 메시지를 거부합니다.
+<code>success()</code>는 메시지를 인증합니다.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>verify_rest_request(request):
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>    // 1. Parse Signature-Input
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>    sig_input = parse_signature_input(request.headers[&quot;Signature-Input&quot;])
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>    keyid = sig_input.keyid
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>    components = sig_input.components
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
+</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>    // 2. Resolve signer&#39;s public key (capability-based; see
+</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>    // overview/index.md#identity-resolution-algorithm).
+</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>    key_set = resolve_signer_key_set(request.headers)
+</span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>    // sig_capable skips keys not usable for verification: use:&quot;enc&quot;, or
+</span><span id="__span-11-11"><a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>    // key_ops present without &quot;verify&quot; (RFC 7517 §4.2, §4.3)
+</span><span id="__span-11-12"><a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>    public_key = find_key_by_kid(sig_capable(key_set), keyid)
+</span><span id="__span-11-13"><a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>    if not public_key:
+</span><span id="__span-11-14"><a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>        return skip_signature(&quot;key_not_found&quot;)
+</span><span id="__span-11-15"><a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>
+</span><span id="__span-11-16"><a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>    // pre-2a. WBA-shape signatures bind key identity to key bytes:
+</span><span id="__span-11-17"><a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>    // keyid MUST equal the matched JWK&#39;s RFC 7638 thumbprint
+</span><span id="__span-11-18"><a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>    // (see IRA step 4 / WBA architecture draft §4.2).
+</span><span id="__span-11-19"><a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>    if sig_input.tag == &quot;web-bot-auth&quot;:
+</span><span id="__span-11-20"><a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>        if keyid != rfc7638_thumbprint(public_key):
+</span><span id="__span-11-21"><a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>            return skip_signature(&quot;signature_invalid&quot;)
+</span><span id="__span-11-22"><a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>    // 2a. Skip keys whose algorithm this verifier does not support.
+</span><span id="__span-11-23"><a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a>    // The kty/crv/alg vocabularies are open (see Signature Algorithms);
+</span><span id="__span-11-24"><a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a>    // an unsupported key never invalidates the whole key set.
+</span><span id="__span-11-25"><a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a>    if not algorithm_supported(public_key):
+</span><span id="__span-11-26"><a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a>        return skip_signature(&quot;algorithm_unsupported&quot;)
+</span><span id="__span-11-27"><a id="__codelineno-11-27" name="__codelineno-11-27" href="#__codelineno-11-27"></a>
+</span><span id="__span-11-28"><a id="__codelineno-11-28" name="__codelineno-11-28" href="#__codelineno-11-28"></a>    // 2b. Enforce covered-component requirements (all regimes/transports).
+</span><span id="__span-11-29"><a id="__codelineno-11-29" name="__codelineno-11-29" href="#__codelineno-11-29"></a>    // Bind the target, the body when present, and every integrity-relevant
+</span><span id="__span-11-30"><a id="__codelineno-11-30" name="__codelineno-11-30" href="#__codelineno-11-30"></a>    // header the request carries. A signature covering only WBA&#39;s minimum
+</span><span id="__span-11-31"><a id="__codelineno-11-31" name="__codelineno-11-31" href="#__codelineno-11-31"></a>    // (@authority, signature-agent) does not authenticate a request whose
+</span><span id="__span-11-32"><a id="__codelineno-11-32" name="__codelineno-11-32" href="#__codelineno-11-32"></a>    // body/method/path is unbound.
+</span><span id="__span-11-33"><a id="__codelineno-11-33" name="__codelineno-11-33" href="#__codelineno-11-33"></a>    // (Which requests must CARRY Idempotency-Key is a binding rule,
+</span><span id="__span-11-34"><a id="__codelineno-11-34" name="__codelineno-11-34" href="#__codelineno-11-34"></a>    // separate from this coverage check.)
+</span><span id="__span-11-35"><a id="__codelineno-11-35" name="__codelineno-11-35" href="#__codelineno-11-35"></a>    required = [&quot;@method&quot;, &quot;@authority&quot;, &quot;@path&quot;]
+</span><span id="__span-11-36"><a id="__codelineno-11-36" name="__codelineno-11-36" href="#__codelineno-11-36"></a>    if request.query:                        required += [&quot;@query&quot;]
+</span><span id="__span-11-37"><a id="__codelineno-11-37" name="__codelineno-11-37" href="#__codelineno-11-37"></a>    if request.has_body:                     required += [&quot;content-digest&quot;, &quot;content-type&quot;]
+</span><span id="__span-11-38"><a id="__codelineno-11-38" name="__codelineno-11-38" href="#__codelineno-11-38"></a>    if &quot;Idempotency-Key&quot; in request.headers: required += [&quot;idempotency-key&quot;]
+</span><span id="__span-11-39"><a id="__codelineno-11-39" name="__codelineno-11-39" href="#__codelineno-11-39"></a>    if &quot;UCP-Agent&quot; in request.headers:       required += [&quot;ucp-agent&quot;]
+</span><span id="__span-11-40"><a id="__codelineno-11-40" name="__codelineno-11-40" href="#__codelineno-11-40"></a>    if &quot;Signature-Agent&quot; in request.headers: required += [&quot;signature-agent&quot;]
+</span><span id="__span-11-41"><a id="__codelineno-11-41" name="__codelineno-11-41" href="#__codelineno-11-41"></a>    for component in required:
+</span><span id="__span-11-42"><a id="__codelineno-11-42" name="__codelineno-11-42" href="#__codelineno-11-42"></a>        if component not in components:
+</span><span id="__span-11-43"><a id="__codelineno-11-43" name="__codelineno-11-43" href="#__codelineno-11-43"></a>            // coverage failure, a target/body/header the signature does not
+</span><span id="__span-11-44"><a id="__codelineno-11-44" name="__codelineno-11-44" href="#__codelineno-11-44"></a>            // cover is treated as unsigned (see IRA step 5)
+</span><span id="__span-11-45"><a id="__codelineno-11-45" name="__codelineno-11-45" href="#__codelineno-11-45"></a>            return skip_signature(&quot;coverage_insufficient&quot;)
+</span><span id="__span-11-46"><a id="__codelineno-11-46" name="__codelineno-11-46" href="#__codelineno-11-46"></a>
+</span><span id="__span-11-47"><a id="__codelineno-11-47" name="__codelineno-11-47" href="#__codelineno-11-47"></a>    // 3. Verify body digest (if body present)
+</span><span id="__span-11-48"><a id="__codelineno-11-48" name="__codelineno-11-48" href="#__codelineno-11-48"></a>    if &quot;content-digest&quot; in components:
+</span><span id="__span-11-49"><a id="__codelineno-11-49" name="__codelineno-11-49" href="#__codelineno-11-49"></a>        expected = &quot;sha-256=:&quot; + base64(sha256(request.body_bytes)) + &quot;:&quot;
+</span><span id="__span-11-50"><a id="__codelineno-11-50" name="__codelineno-11-50" href="#__codelineno-11-50"></a>        if request.headers[&quot;Content-Digest&quot;] != expected:
+</span><span id="__span-11-51"><a id="__codelineno-11-51" name="__codelineno-11-51" href="#__codelineno-11-51"></a>            return skip_signature(&quot;digest_mismatch&quot;)
+</span><span id="__span-11-52"><a id="__codelineno-11-52" name="__codelineno-11-52" href="#__codelineno-11-52"></a>
+</span><span id="__span-11-53"><a id="__codelineno-11-53" name="__codelineno-11-53" href="#__codelineno-11-53"></a>    // 4. Reconstruct signature base
+</span><span id="__span-11-54"><a id="__codelineno-11-54" name="__codelineno-11-54" href="#__codelineno-11-54"></a>    signature_base = build_signature_base(
+</span><span id="__span-11-55"><a id="__codelineno-11-55" name="__codelineno-11-55" href="#__codelineno-11-55"></a>        components, request.method, request.path, request.query,
+</span><span id="__span-11-56"><a id="__codelineno-11-56" name="__codelineno-11-56" href="#__codelineno-11-56"></a>        request.headers, keyid
+</span><span id="__span-11-57"><a id="__codelineno-11-57" name="__codelineno-11-57" href="#__codelineno-11-57"></a>    )
+</span><span id="__span-11-58"><a id="__codelineno-11-58" name="__codelineno-11-58" href="#__codelineno-11-58"></a>
+</span><span id="__span-11-59"><a id="__codelineno-11-59" name="__codelineno-11-59" href="#__codelineno-11-59"></a>    // 5. Verify signature
+</span><span id="__span-11-60"><a id="__codelineno-11-60" name="__codelineno-11-60" href="#__codelineno-11-60"></a>    signature = parse_signature(request.headers[&quot;Signature&quot;])
+</span><span id="__span-11-61"><a id="__codelineno-11-61" name="__codelineno-11-61" href="#__codelineno-11-61"></a>    if not verify(signature_base, signature, public_key):
+</span><span id="__span-11-62"><a id="__codelineno-11-62" name="__codelineno-11-62" href="#__codelineno-11-62"></a>        return skip_signature(&quot;signature_invalid&quot;)
+</span><span id="__span-11-63"><a id="__codelineno-11-63" name="__codelineno-11-63" href="#__codelineno-11-63"></a>
+</span><span id="__span-11-64"><a id="__codelineno-11-64" name="__codelineno-11-64" href="#__codelineno-11-64"></a>    return success()
+</span><span id="__span-11-65"><a id="__codelineno-11-65" name="__codelineno-11-65" href="#__codelineno-11-65"></a>
+</span><span id="__span-11-66"><a id="__codelineno-11-66" name="__codelineno-11-66" href="#__codelineno-11-66"></a>    // Note: Replay protection handled by the signed idempotency-key header
+</span></code></pre></div>
+<h3 id="rest-response-verification">REST 응답 검증<a class="headerlink" href="#rest-response-verification" title="Permanent link">&para;</a></h3>
+<p>응답 검증은 <code>@method</code> 대신 <code>@status</code>를 쓴다는 점만 빼면 요청 검증과 같습니다.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>verify_rest_response(response, signer_profile_url):
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>    // 1. Parse Signature-Input
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>    sig_input = parse_signature_input(response.headers[&quot;Signature-Input&quot;])
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>    keyid = sig_input.keyid
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>    components = sig_input.components
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
+</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>    // 2. Resolve signer&#39;s public key from the signer&#39;s profile.
+</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>    profile = fetch_profile(signer_profile_url)
+</span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>    // signature-capable keys only (see request path; RFC 7517 §4.2, §4.3)
+</span><span id="__span-12-10"><a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>    public_key = find_key_by_kid(sig_capable(profile.keys), keyid)
+</span><span id="__span-12-11"><a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>    if not public_key:
+</span><span id="__span-12-12"><a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>        return skip_signature(&quot;key_not_found&quot;)
+</span><span id="__span-12-13"><a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>
+</span><span id="__span-12-14"><a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>    // 2a. Skip keys whose algorithm this verifier does not support.
+</span><span id="__span-12-15"><a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>    // The kty/crv/alg vocabularies are open (see Signature Algorithms);
+</span><span id="__span-12-16"><a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>    // an unsupported key never invalidates the whole key set.
+</span><span id="__span-12-17"><a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>    if not algorithm_supported(public_key):
+</span><span id="__span-12-18"><a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>        return skip_signature(&quot;algorithm_unsupported&quot;)
+</span><span id="__span-12-19"><a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>
+</span><span id="__span-12-20"><a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a>    // 2b. Enforce covered-component requirements for responses (all regimes).
+</span><span id="__span-12-21"><a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a>    // No method/idempotency to bind, but the body still MUST be covered.
+</span><span id="__span-12-22"><a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a>    required = [&quot;@status&quot;]
+</span><span id="__span-12-23"><a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a>    if response.has_body: required += [&quot;content-digest&quot;, &quot;content-type&quot;]
+</span><span id="__span-12-24"><a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a>    for component in required:
+</span><span id="__span-12-25"><a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a>        if component not in components:
+</span><span id="__span-12-26"><a id="__codelineno-12-26" name="__codelineno-12-26" href="#__codelineno-12-26"></a>            return skip_signature(&quot;signature_invalid&quot;)
+</span><span id="__span-12-27"><a id="__codelineno-12-27" name="__codelineno-12-27" href="#__codelineno-12-27"></a>
+</span><span id="__span-12-28"><a id="__codelineno-12-28" name="__codelineno-12-28" href="#__codelineno-12-28"></a>    // 3. Verify body digest (if body present)
+</span><span id="__span-12-29"><a id="__codelineno-12-29" name="__codelineno-12-29" href="#__codelineno-12-29"></a>    if &quot;content-digest&quot; in components:
+</span><span id="__span-12-30"><a id="__codelineno-12-30" name="__codelineno-12-30" href="#__codelineno-12-30"></a>        expected = &quot;sha-256=:&quot; + base64(sha256(response.body_bytes)) + &quot;:&quot;
+</span><span id="__span-12-31"><a id="__codelineno-12-31" name="__codelineno-12-31" href="#__codelineno-12-31"></a>        if response.headers[&quot;Content-Digest&quot;] != expected:
+</span><span id="__span-12-32"><a id="__codelineno-12-32" name="__codelineno-12-32" href="#__codelineno-12-32"></a>            return skip_signature(&quot;digest_mismatch&quot;)
+</span><span id="__span-12-33"><a id="__codelineno-12-33" name="__codelineno-12-33" href="#__codelineno-12-33"></a>
+</span><span id="__span-12-34"><a id="__codelineno-12-34" name="__codelineno-12-34" href="#__codelineno-12-34"></a>    // 4. Reconstruct signature base
+</span><span id="__span-12-35"><a id="__codelineno-12-35" name="__codelineno-12-35" href="#__codelineno-12-35"></a>    signature_base = build_signature_base(
+</span><span id="__span-12-36"><a id="__codelineno-12-36" name="__codelineno-12-36" href="#__codelineno-12-36"></a>        components, response.status,
+</span><span id="__span-12-37"><a id="__codelineno-12-37" name="__codelineno-12-37" href="#__codelineno-12-37"></a>        response.headers, keyid
+</span><span id="__span-12-38"><a id="__codelineno-12-38" name="__codelineno-12-38" href="#__codelineno-12-38"></a>    )
+</span><span id="__span-12-39"><a id="__codelineno-12-39" name="__codelineno-12-39" href="#__codelineno-12-39"></a>
+</span><span id="__span-12-40"><a id="__codelineno-12-40" name="__codelineno-12-40" href="#__codelineno-12-40"></a>    // 5. Verify signature
+</span><span id="__span-12-41"><a id="__codelineno-12-41" name="__codelineno-12-41" href="#__codelineno-12-41"></a>    signature = parse_signature(response.headers[&quot;Signature&quot;])
+</span><span id="__span-12-42"><a id="__codelineno-12-42" name="__codelineno-12-42" href="#__codelineno-12-42"></a>    if not verify(signature_base, signature, public_key):
+</span><span id="__span-12-43"><a id="__codelineno-12-43" name="__codelineno-12-43" href="#__codelineno-12-43"></a>        return skip_signature(&quot;signature_invalid&quot;)
+</span><span id="__span-12-44"><a id="__codelineno-12-44" name="__codelineno-12-44" href="#__codelineno-12-44"></a>
+</span><span id="__span-12-45"><a id="__codelineno-12-45" name="__codelineno-12-45" href="#__codelineno-12-45"></a>    return success()
+</span></code></pre></div>
+<h3 id="replay-protection">재전송 방지<a class="headerlink" href="#replay-protection" title="Permanent link">&para;</a></h3>
+<p>UCP는 재전송 방지를 서명 계층이 아니라 <strong>비즈니스 계층</strong>에서 멱등성 키로 처리합니다.
+관심사는 다음과 같이 나뉩니다.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">계층</th>
+<th style="text-align: left;">책임</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>서명</strong></td>
+<td style="text-align: left;">인증(누가), 무결성(무엇을)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>멱등성</strong></td>
+<td style="text-align: left;">안전한 재시도, 재전송 방지</td>
+</tr>
+</tbody>
+</table>
+<p><strong>동작 방식:</strong></p>
+<ol>
+<li>상태를 변경하는 작업은 요청에 <code>idempotency-key</code>를 포함합니다</li>
+<li>멱등성 키는 서명된 페이로드의 일부입니다</li>
+<li>공격자는 서명을 무효화하지 않고서는 키를 수정할 수 없습니다</li>
+<li>중복 요청에는 캐시된 응답을 반환합니다(새로운 부수 효과 없음)</li>
+</ol>
+<p><strong>멱등성 키 위치:</strong></p>
+<p><code>Idempotency-Key</code> 헤더는 서명 컴포넌트에 포함됩니다.</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="nf">POST</span> <span class="nn">/checkout-sessions</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="na">Idempotency-Key</span><span class="o">:</span> <span class="l">550e8400-e29b-41d4-a716-446655440000</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="na">Signature-Input</span><span class="o">:</span> <span class="l">sig1=(&quot;@method&quot; &quot;@authority&quot; &quot;@path&quot; &quot;idempotency-key&quot; ...);keyid=&quot;platform-2026&quot;</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="na">Signature</span><span class="o">:</span> <span class="l">sig1=:6G4i8TS6oUkGrx8KnCFUpsSPwd74...:</span>
+</span></code></pre></div>
+<p><strong>멱등성 키 요건:</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">요건</th>
+<th style="text-align: left;">값</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>엔트로피</strong></td>
+<td style="text-align: left;">최소 128비트(예: UUID v4, 22자 이상의 영숫자)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>고유성</strong></td>
+<td style="text-align: left;">클라이언트별, 작업 유형별</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>서버 저장 기간</strong></td>
+<td style="text-align: left;">최소 24시간, 권장 48시간</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>중복 시 (페이로드 일치)</strong></td>
+<td style="text-align: left;">캐시된 응답 반환(다시 실행하지 않음)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>중복 시 (페이로드 불일치)</strong></td>
+<td style="text-align: left;"><code>409 Conflict</code>(REST) / <code>-32000</code>(MCP)으로 거부(실행하지 않음)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>저장소 장애 시</strong></td>
+<td style="text-align: left;">실패 시 차단(fail closed)(503으로 요청 거부)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>페이로드 대조:</strong> 비즈니스는 반드시 원본 본문 바이트의 SHA-256 해시, 즉 RFC 9530이
+<code>Content-Digest</code>로 규정하는 것과 같은 다이제스트를 비교해, 중복 키 요청의 페이로드가 원래
+요청의 페이로드와 일치하는지 판별해야 합니다(<strong>MUST</strong>). 서명을 사용하면 이 값이
+<code>Content-Digest</code> 헤더로 제공되며, 앞의 중개자 경고 덕분에 종단 간 바이트 동일성이
+보장됩니다. 비즈니스는 이 값을 멱등성 키와 함께 저장합니다. 서명되지 않은 요청이라면
+비즈니스가 받은 본문 바이트로 같은 다이제스트를 계산합니다. 따라서 플랫폼은 요청
+페이로드를 수정할 때마다 반드시 새 멱등성 키를 생성해야 합니다(<strong>MUST</strong>). 결제 수단을
+바꾼 재시도, 배송 주소 변경, 라인 아이템 교체 등 요청 본문이 조금이라도 바뀌면 모두
+해당합니다.</p>
+<p><strong>참고:</strong> <strong>기본 UCP</strong> 서명에서 RFC 9421 <code>created</code> 파라미터는 선택 사항이며(<strong>OPTIONAL</strong>),
+재전송 방지는 서명 타임스탬프가 아니라 비즈니스 계층의 멱등성 키로 처리합니다. <strong>WBA 형태</strong>
+서명은 WBA 검증자를 위해 <code>created</code>/<code>expires</code>를 추가로 담으며 <code>nonce</code>도 담아야
+합니다(SHOULD). 그 신선도 기간을 강제할지는 애플리케이션이 정합니다(RFC 9421 §3.2.1).
+<a href="#wba-interop">WBA 상호 운용</a>을 참고하세요. 오래된 서명을 무효화하려면 키를
+교체합니다(프로필에 공개된 키 집합에서 유출된 키를 제거).</p>
+<h3 id="when-signatures-apply">서명 적용 대상<a class="headerlink" href="#when-signatures-apply" title="Permanent link">&para;</a></h3>
+<p><strong>요청:</strong> HTTP Message Signatures를 사용한다면 플랫폼은 모든 요청에 서명해야
+합니다(<strong>SHOULD</strong>). 다른 인증 메커니즘(API 키, OAuth, mTLS)을 대신 사용할 수도 있습니다.</p>
+<p><strong>웹훅:</strong> 웹훅 알림에는 반드시 서명해야 합니다(<strong>MUST</strong>). 그러지 않으면 수신자가 서버에서
+시작된 푸시 메시지의 진위를 검증할 수 없습니다.</p>
+<p><strong>그 밖의 응답:</strong> 다음 응답에는 서명을 권장합니다(<strong>RECOMMENDED</strong>).</p>
+<ul>
+<li>결제 승인 응답</li>
+<li>체크아웃 완료 응답</li>
+</ul>
+<p>다음 응답에는 서명이 선택 사항입니다(<strong>OPTIONAL</strong>).</p>
+<ul>
+<li>장바구니 작업(저가치, 동기식)</li>
+<li>카탈로그 쿼리(읽기 전용)</li>
+<li>에러 응답(4xx, 5xx)</li>
+</ul>
+<h2 id="mcp-transport">MCP 전송 방식<a class="headerlink" href="#mcp-transport" title="Permanent link">&para;</a></h2>
+<p>UCP는 MCP 전송 방식으로 SSE 기반 전송 대신 <strong>streamable HTTP</strong>를 지정합니다. MCP 요청은
+JSON-RPC 본문을 담은 표준 HTTP 요청이므로 같은 RFC 9421 서명 메커니즘이 적용됩니다.</p>
+<ul>
+<li><code>Content-Digest</code> 헤더가 JSON-RPC 메시지 본문을 대상으로 합니다</li>
+<li><code>Signature-Input</code>과 <code>Signature</code> 헤더로 인증합니다</li>
+<li><code>UCP-Agent</code> 헤더는 REST와 똑같이 동작합니다. <code>Idempotency-Key</code>는 있으면 서명되지만, MCP
+  요청은 모두 POST이므로 필요 여부는 HTTP 메서드가 아니라 JSON-RPC 작업(상태 변경
+  여부)에 따라 정해집니다</li>
+</ul>
+<p><strong>서명이 포함된 MCP 요청 예시:</strong></p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nf">POST</span> <span class="nn">/mcp</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="na">Host</span><span class="o">:</span> <span class="l">business.example.com</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="na">UCP-Agent</span><span class="o">:</span> <span class="l">profile=&quot;https://platform.example/.well-known/ucp&quot;</span>
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="na">Idempotency-Key</span><span class="o">:</span> <span class="l">550e8400-e29b-41d4-a716-446655440000</span>
+</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="na">Content-Digest</span><span class="o">:</span> <span class="l">sha-256=:RK/0qy18MlBSVnWgjwz6lZEWjP/lF5HF9bvEF8FabDg=:</span>
+</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="na">Signature-Input</span><span class="o">:</span> <span class="l">sig1=(&quot;@method&quot; &quot;@authority&quot; &quot;@path&quot; &quot;content-digest&quot; &quot;content-type&quot; &quot;ucp-agent&quot; &quot;idempotency-key&quot;);keyid=&quot;platform-2026&quot;</span>
+</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="na">Signature</span><span class="o">:</span> <span class="l">sig1=:6G4i8TS6oUkGrx8KnCFUpsSPwd74...:</span>
+</span><span id="__span-14-9"><a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>
+</span><span id="__span-14-10"><a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="p">{</span><span class="nt">&quot;jsonrpc&quot;</span><span class="p">:</span><span class="s2">&quot;2.0&quot;</span><span class="p">,</span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="s2">&quot;tools/call&quot;</span><span class="p">,</span><span class="nt">&quot;params&quot;</span><span class="p">:{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;complete_checkout&quot;</span><span class="p">,</span><span class="nt">&quot;arguments&quot;</span><span class="p">:{</span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="s2">&quot;chk_123&quot;</span><span class="p">,</span><span class="nt">&quot;checkout&quot;</span><span class="p">:{</span><span class="err">...</span><span class="p">}}}}</span>
+</span></code></pre></div>
+<p>JSON-RPC 메시지가 곧 HTTP 본문입니다. <code>Content-Digest</code>가 이 본문을 서명에 결합하므로 JSON
+정규화는 필요 없습니다.</p>
+<h2 id="error-handling">에러 처리<a class="headerlink" href="#error-handling" title="Permanent link">&para;</a></h2>
+<p>서명 검증 에러에는 표준 UCP 에러 코드를 사용합니다. 전체 에러 코드 레지스트리와 전송 바인딩은
+명세 개요의 <a href="../overview/#error-handling">에러 처리</a>를 참고하세요.</p>
+<p><strong>서명 관련 에러:</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">코드</th>
+<th style="text-align: left;">HTTP</th>
+<th style="text-align: left;">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>signature_missing</code></td>
+<td style="text-align: left;">401</td>
+<td style="text-align: left;">필수 서명 헤더/필드가 없음</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>signature_invalid</code></td>
+<td style="text-align: left;">401</td>
+<td style="text-align: left;">서명 검증 실패</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>key_not_found</code></td>
+<td style="text-align: left;">401</td>
+<td style="text-align: left;">서명자가 공개한 키 집합에서 키 ID를 찾을 수 없음</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>digest_mismatch</code></td>
+<td style="text-align: left;">400</td>
+<td style="text-align: left;">본문 다이제스트가 <code>Content-Digest</code> 헤더와 일치하지 않음</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>algorithm_unsupported</code></td>
+<td style="text-align: left;">400</td>
+<td style="text-align: left;">지원하지 않는 서명 알고리즘</td>
+</tr>
+</tbody>
+</table>
+<p><strong>프로필 관련 에러</strong> (기능 협상에도 사용):</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">코드</th>
+<th style="text-align: left;">HTTP</th>
+<th style="text-align: left;">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>invalid_profile_url</code></td>
+<td style="text-align: left;">400</td>
+<td style="text-align: left;">프로필 URL의 형식이 잘못되었거나 스킴이 유효하지 않음</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>profile_unreachable</code></td>
+<td style="text-align: left;">424</td>
+<td style="text-align: left;">서명자의 프로필을 가져올 수 없음</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>profile_not_trusted</code></td>
+<td style="text-align: left;">403</td>
+<td style="text-align: left;">프로필 URL이 사전 승인된 플랫폼 레지스트리에 없음</td>
+</tr>
+</tbody>
+</table>
+<p><strong>참고:</strong> 재전송 방지는 서명 계층이 아니라 비즈니스 계층의 멱등성 키로 처리합니다. 중복
+요청에는 서명 에러가 아니라 캐시된 응답이 반환됩니다.</p>
+<h3 id="rest-error-response">REST 에러 응답<a class="headerlink" href="#rest-error-response" title="Permanent link">&para;</a></h3>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">401</span> <span class="ne">Unauthorized</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="p">{</span>
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="w">  </span><span class="nt">&quot;code&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;signature_invalid&quot;</span><span class="p">,</span>
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="w">  </span><span class="nt">&quot;content&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Request signature verification failed for key kid=platform-2026&quot;</span>
+</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="p">}</span>
+</span></code></pre></div>
+<h3 id="mcp-error-response">MCP 에러 응답<a class="headerlink" href="#mcp-error-response" title="Permanent link">&para;</a></h3>
+<!-- ucp:example schema=transports/jsonrpc def=error_response -->
+<div class="language-json highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="p">{</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="w">  </span><span class="nt">&quot;jsonrpc&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2.0&quot;</span><span class="p">,</span>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span><span class="p">,</span>
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="w">    </span><span class="nt">&quot;code&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">-32000</span><span class="p">,</span>
+</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="w">    </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Signature verification failed&quot;</span><span class="p">,</span>
+</span><span id="__span-16-7"><a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="w">    </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-16-8"><a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="w">      </span><span class="nt">&quot;code&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;signature_invalid&quot;</span><span class="p">,</span>
+</span><span id="__span-16-9"><a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="w">      </span><span class="nt">&quot;content&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Signature verification failed for key kid=platform-2026&quot;</span>
+</span><span id="__span-16-10"><a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-16-11"><a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-16-12"><a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a><span class="p">}</span>
+</span></code></pre></div>
+<h2 id="references">참고 자료<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://datatracker.ietf.org/doc/html/rfc7517">RFC 7517</a> — JSON Web Key (JWK)</li>
+<li><a href="https://datatracker.ietf.org/doc/html/rfc7518">RFC 7518</a> — JSON Web Algorithms (JWA), §6.2 (EC 공개 키)</li>
+<li><a href="https://datatracker.ietf.org/doc/html/rfc8032">RFC 8032</a> — Edwards-Curve Digital Signature Algorithm (EdDSA)</li>
+<li><a href="https://datatracker.ietf.org/doc/html/rfc8037">RFC 8037</a> — CFRG Elliptic Curve Diffie-Hellman (ECDH) and Signatures in JOSE</li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc9421">RFC 9421</a> — HTTP Message Signatures</li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc9530">RFC 9530</a> — Digest Fields (Content-Digest)</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  맨위로
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="하단/푸터" >
+        
+          
+          <a href="../payment/examples/encrypted-credential-payment-handler/" class="md-footer__link md-footer__link--prev" aria-label="이전: 암호화된 자격 증명">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                이전
+              </span>
+              <div class="md-ellipsis">
+                암호화된 자격 증명
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../reference/" class="md-footer__link md-footer__link--next" aria-label="다음: 레퍼런스">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                다음
+              </span>
+              <div class="md-ellipsis">
+                레퍼런스
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright 2026 UCP Authors. Licensed under the <a href="https://github.com/Universal-Commerce-Protocol/ucp/blob/main/LICENSE" >Apache License, Version 2.0</a>. 한국어 번역은 비공식이며, 정확한 내용은 <a href="https://ucp.dev/">공식 문서</a>를 확인하세요.
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["announce.dismiss", "content.code.annotate", "content.code.copy", "content.code.select", "content.tabs.link", "content.tooltips", "navigation.footer", "navigation.top", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "toc.follow"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\ud074\ub9bd\ubcf4\ub4dc\uc5d0 \ubcf5\uc0ac\ub428", "clipboard.copy": "\ud074\ub9bd\ubcf4\ub4dc\ub85c \ubcf5\uc0ac", "search.result.more.one": "\uc774 \ubb38\uc11c\uc5d0\uc11c 1\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.more.other": "\uc774 \ubb38\uc11c\uc5d0\uc11c #\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.none": "\uac80\uc0c9\uc5b4\uc640 \uc77c\uce58\ud558\ub294 \ubb38\uc11c\uac00 \uc5c6\uc2b5\ub2c8\ub2e4", "search.result.one": "1\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.other": "#\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.placeholder": "\uac80\uc0c9\uc5b4\ub97c \uc785\ub825\ud558\uc138\uc694", "search.result.term.missing": "\ud3ec\ud568\ub418\uc9c0 \uc54a\uc740 \uac80\uc0c9\uc5b4", "select.version": "\ubc84\uc804 \uc120\ud0dd"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
