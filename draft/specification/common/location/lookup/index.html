@@ -4260,7 +4260,7 @@
 해석되지 않은 위치 식별자에 정보성 <code>not_found</code> 메시지를 첨부할 수
 있지만(<strong>MAY</strong>), 결과 좁히기에서 제외된 경우에는 식별자별 설명이 보장되지 않습니다.</p>
 <h3 id="request">요청<a class="headerlink" href="#request" title="Permanent link">&para;</a></h3>
-<p>Request body for batch location lookup. The Business resolves and deduplicates <code>ids</code> before applying <code>distance</code>, <code>serves</code>, and every supplied <code>filters</code> predicate; all structured predicates combine with AND.</p>
+<p>일괄 위치 조회 요청 본문입니다. 비즈니스는 <code>distance</code>, <code>serves</code>와 제공된 모든 <code>filters</code> 조건을 적용하기 전에 <code>ids</code>를 해석하고 중복을 제거합니다. 모든 구조화된 조건은 AND로 결합됩니다.</p>
 <table>
 <thead>
 <tr>
@@ -4274,38 +4274,38 @@
 <tr>
 <td style="text-align: left;">ids</td>
 <td style="text-align: left;">Array[string]</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Identifiers of the Locations to look up. The Business MUST support canonical <code>Location.id</code> values and MAY support secondary or alias identifiers.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">조회할 위치의 식별자. 비즈니스는 반드시 정규 <code>Location.id</code> 값을 지원해야 하며(MUST), 보조 식별자나 별칭 식별자를 지원할 수 있습니다(MAY).</td>
 </tr>
 <tr>
 <td style="text-align: left;">distance</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#location-distance">Location Distance</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Optional explicit-center radius predicate applied after ID resolution. It combines with <code>serves</code> and every supplied <code>filters</code> predicate using AND.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">ID 확인 후에 적용되는 명시적 중심점 반경 조건(선택 사항). <code>serves</code> 및 제공된 모든 <code>filters</code> 조건과 AND로 결합됩니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">serves</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#location-serves">Location Serves</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Optional authoritative service-target predicate applied after ID resolution. It combines with <code>distance</code> and every supplied <code>filters</code> predicate using AND.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">ID 확인 후에 적용되는 권위 있는 서비스 대상 조건(선택 사항). <code>distance</code> 및 제공된 모든 <code>filters</code> 조건과 AND로 결합됩니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">filters</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#location-filter">Location Filter</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Filter criteria to narrow Location Search and Lookup results. All supplied filters combine with AND.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">위치 검색과 조회 결과를 좁히는 필터 조건. 제공된 모든 필터는 AND로 결합됩니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">context</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#context">Context</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Provisional buyer signals for relevance and localization—not authoritative data. Businesses SHOULD use these values when verified inputs (e.g., shipping address) are absent, and MAY ignore or down-rank them if inconsistent with higher-confidence signals (authenticated account, risk detection) or regulatory constraints (export controls). Eligibility and policy enforcement MUST occur at checkout time using binding transaction data. Context SHOULD be non-identifying and can be disclosed progressively—coarse signals early, finer resolution as the session progresses. Higher-resolution data (shipping address, billing address) supersedes context.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">관련성 판단과 현지화를 위한 잠정적 구매자 신호로, 권위 있는 데이터가 아닙니다. 검증된 입력(예: 배송 주소)이 없으면 비즈니스는 이 값을 사용해야 하며(SHOULD), 더 신뢰도 높은 신호(인증된 계정, 위험 탐지)나 규제 제약(수출 통제)과 맞지 않으면 무시하거나 우선순위를 낮출 수 있습니다(MAY). 자격 판단과 정책 적용은 반드시 체크아웃 시점에 구속력 있는 거래 데이터로 수행해야 합니다(MUST). 컨텍스트는 개인을 식별할 수 없어야 하며(SHOULD), 단계적으로 공개할 수 있습니다. 초기에는 대략적인 신호를, 세션이 진행되면서 더 세밀한 정보를 제공합니다. 더 세밀한 데이터(배송 주소, 청구 주소)가 컨텍스트보다 우선합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">signals</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#signals">Signals</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Environment data provided by the platform to support authorization and abuse prevention. Values MUST NOT be buyer-asserted claims — platforms provide signals based on direct observation or independently verifiable third-party attestations. All signal keys MUST use reverse-domain naming to ensure provenance and prevent collisions when multiple extensions contribute to the shared namespace.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">승인과 악용 방지를 돕기 위해 플랫폼이 제공하는 환경 데이터. 값은 구매자가 주장한 내용이어서는 안 됩니다(MUST NOT). 플랫폼은 직접 관찰했거나 독립적으로 검증 가능한 제3자 증명에 근거한 신호를 제공합니다. 여러 확장이 공유 네임스페이스에 값을 추가할 때 출처를 보장하고 충돌을 막기 위해, 모든 신호 키는 반드시 역도메인 이름을 사용해야 합니다(MUST).</td>
 </tr>
 </tbody>
 </table>
@@ -4323,20 +4323,20 @@
 <tr>
 <td style="text-align: left;">ucp</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#ucp-response-location-schema">UCP Location Response Schema</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">UCP metadata for location responses.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">위치 응답용 UCP 메타데이터.</td>
 </tr>
 <tr>
 <td style="text-align: left;">locations</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#location">Location</a>]</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Locations matching the requested identifiers and refinements. May contain fewer Locations if some identifiers do not resolve or their resolved Locations are filtered out, or more if one identifier resolves to multiple Locations. When multiple identifiers resolve to the same Location, one returned Location carries all corresponding <code>inputs</code> entries.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">요청한 식별자와 세부 조건에 맞는 위치. 일부 식별자가 해석되지 않거나 해석된 위치가 필터링되면 더 적을 수 있고, 하나의 식별자가 여러 위치로 해석되면 더 많을 수 있습니다. 여러 식별자가 같은 위치로 해석되면 반환되는 위치 하나에 해당하는 <code>inputs</code> 항목이 모두 담깁니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">messages</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#message">Message</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Errors, warnings, or informational messages about the requested Locations, including <code>batch_limit_applied</code> when the Business processes only its configured maximum number of identifiers.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">요청된 위치에 관한 오류, 경고, 정보 메시지. 비즈니스가 설정된 최대 개수만큼만 식별자를 처리할 때의 <code>batch_limit_applied</code>도 포함합니다.</td>
 </tr>
 </tbody>
 </table>

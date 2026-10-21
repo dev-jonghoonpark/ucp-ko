@@ -5839,68 +5839,68 @@ JSON이어야 합니다(<strong>MUST</strong>).</p>
 <tbody>
 <tr>
 <td style="text-align: left;"><code>Authorization</code></td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Should contain oauth token representing the following 2 schemes: 1. Platform self authenticating (client_credentials). 2. Platform authenticating on behalf of end user (authorization_code).</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">다음 두 방식을 나타내는 OAuth 토큰을 담아야 합니다. 1. 플랫폼 자체 인증(client_credentials). 2. 최종 사용자를 대신한 플랫폼 인증(authorization_code).</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>X-API-Key</code></td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Authenticates the platform with a reusable api key allocated to the platform by the business.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">비즈니스가 플랫폼에 할당한 재사용 가능한 API 키로 플랫폼을 인증합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>Signature</code></td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">RFC 9421 HTTP Message Signature. Required when using HTTP Message Signatures for authentication. Format: <code>sig1=:&lt;base64-signature&gt;:</code>.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">RFC 9421 HTTP Message Signature입니다. 인증에 HTTP Message Signatures를 사용할 때 필수입니다. 형식: <code>sig1=:&lt;base64-signature&gt;:</code>.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>Signature-Input</code></td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">RFC 9421 Signature-Input header. Required when using HTTP Message Signatures for authentication. Format: <code>sig1=("@method" "@path" ...);created=&lt;timestamp&gt;;keyid="&lt;key-id&gt;"</code>.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">RFC 9421 Signature-Input 헤더입니다. 인증에 HTTP Message Signatures를 사용할 때 필수입니다. 형식: <code>sig1=("@method" "@path" ...);created=&lt;timestamp&gt;;keyid="&lt;key-id&gt;"</code>.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>Content-Digest</code></td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Body digest per RFC 9530. Required for requests/responses with a body. Format: <code>sha-256=:&lt;base64-digest&gt;:</code>.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">RFC 9530 본문 다이제스트. 본문이 있는 요청/응답에는 필수입니다. 형식: <code>sha-256=:&lt;base64-digest&gt;:</code>.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>Idempotency-Key</code></td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">Ensures duplicate operations don't happen during retries.</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">재시도 중에 같은 작업이 중복 실행되지 않도록 보장합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>Request-Id</code></td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">For tracing the requests across network layers and components.</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">네트워크 계층과 구성 요소 전반에서 요청을 추적하기 위한 값.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>User-Agent</code></td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Identifies the user agent string making the call.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">호출하는 사용자 에이전트 문자열을 식별합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>UCP-Agent</code></td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">Identifies the UCP agent making the call. All requests MUST include the UCP-Agent header containing the signer's profile URI using RFC 8941 Dictionary syntax. The URL MUST point to /.well-known/ucp. Format: profile="https://example.com/.well-known/ucp".</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">호출하는 UCP 에이전트를 식별합니다. 모든 요청은 반드시 RFC 8941 Dictionary 구문으로 서명자의 프로필 URI를 담은 UCP-Agent 헤더를 포함해야 합니다(MUST). URL은 반드시 /.well-known/ucp를 가리켜야 합니다(MUST). 형식: profile="https://example.com/.well-known/ucp".</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>Content-Type</code></td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Representation Metadata. Tells the receiver what the data in the message body actually is.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">표현 메타데이터(Representation Metadata)입니다. 메시지 본문의 데이터가 실제로 무엇인지 수신자에게 알려 줍니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>Accept</code></td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Content Negotiation. The client tells the server what data formats it is capable of understanding.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">콘텐츠 협상. 클라이언트가 이해할 수 있는 데이터 형식을 서버에 알립니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>Accept-Language</code></td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Localization. Tells the receiver the user's preferred natural languages, often with "weights" or priorities.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">현지화. 사용자가 선호하는 자연어를 수신자에게 알리며, 흔히 "가중치"나 우선순위가 함께 붙습니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>Accept-Encoding</code></td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Compression. The client tells the server which content-codings it supports, usually for compression.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">압축. 클라이언트가 지원하는 콘텐츠 인코딩(주로 압축)을 서버에 알립니다.</td>
 </tr>
 </tbody>
 </table>

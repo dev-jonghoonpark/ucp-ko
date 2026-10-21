@@ -113,17 +113,17 @@ UCP는 역도메인(reverse-domain) 명명 방식으로 거버넌스 권한을 �
 
 #### 서비스 정의
 
-Full service declaration for platform-level discovery. All transports require `version`, `spec`, and `transport`. REST, MCP, and embedded additionally require `schema`.
+플랫폼 수준 디스커버리를 위한 전체 서비스 선언. 모든 전송 방식에는 `version`, `spec`, `transport`가 필요합니다. REST, MCP, 임베디드는 `schema`도 추가로 필요합니다.
 
-| 이름      | 타입   | 필수 여부    | 설명                                                                                            |
-| --------- | ------ | ------------ | ----------------------------------------------------------------------------------------------- |
-| version   | string | **Required** | Entity version in YYYY-MM-DD format.                                                            |
-| spec      | string | **Required** | URL to human-readable specification document.                                                   |
-| schema    | string | Optional     | URL to JSON Schema defining this entity's structure and payloads.                               |
-| id        | string | Optional     | Unique identifier for this entity instance. Used to disambiguate when multiple instances exist. |
-| config    | object | Optional     | Entity-specific configuration. Structure defined by each entity's schema.                       |
-| transport | string | **Required** | Transport protocol for this service binding. **Enum:** `rest`, `mcp`, `a2a`, `embedded`         |
-| endpoint  | string | Optional     | Endpoint URL for this transport binding.                                                        |
+| 이름      | 타입   | 필수 여부 | 설명                                                                              |
+| --------- | ------ | --------- | --------------------------------------------------------------------------------- |
+| version   | string | **필수**  | YYYY-MM-DD 형식의 엔티티 버전.                                                    |
+| spec      | string | **필수**  | 사람이 읽을 수 있는 명세 문서의 URL.                                              |
+| schema    | string | 선택      | 이 엔터티의 구조와 페이로드를 정의하는 JSON Schema의 URL.                         |
+| id        | string | 선택      | 이 엔터티 인스턴스의 고유 식별자. 인스턴스가 여러 개일 때 구분하는 데 사용합니다. |
+| config    | object | 선택      | 엔티티별 구성. 구조는 각 엔티티의 스키마가 정의합니다.                            |
+| transport | string | **필수**  | 이 서비스 바인딩의 전송 프로토콜. **허용 값:** `rest`, `mcp`, `a2a`, `embedded`   |
+| endpoint  | string | 선택      | 이 전송 바인딩의 엔드포인트 URL.                                                  |
 
 전송 방식 정의는 반드시 얇아야 합니다(**MUST**). 즉 메서드 이름을 선언하고 기본 스키마를 참조하기만 합니다. 자세한 내용은 [요구 사항](#requirements)을 참고하세요.
 
@@ -162,16 +162,16 @@ POST https://business.example.com/api/v2/checkout-sessions
 
 #### 기능 정의
 
-Full capability declaration for platform-level discovery. Includes spec/schema URLs for agent fetching.
+플랫폼 수준 디스커버리를 위한 전체 기능 선언. 에이전트가 가져갈 spec/schema URL을 포함합니다.
 
-| 이름    | 타입                       | 필수 여부    | 설명                                                                                                                            |
-| ------- | -------------------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------- |
-| version | string                     | **Required** | Entity version in YYYY-MM-DD format.                                                                                            |
-| spec    | string                     | **Required** | URL to human-readable specification document.                                                                                   |
-| schema  | string                     | **Required** | URL to JSON Schema defining this entity's structure and payloads.                                                               |
-| id      | string                     | Optional     | Unique identifier for this entity instance. Used to disambiguate when multiple instances exist.                                 |
-| config  | object                     | Optional     | Entity-specific configuration. Structure defined by each entity's schema.                                                       |
-| extends | OneOf\[`string`, `array`\] | Optional     | Parent capability(s) this extends. Present for extensions, absent for root capabilities. Use array for multi-parent extensions. |
+| 이름    | 타입                       | 필수 여부 | 설명                                                                                                        |
+| ------- | -------------------------- | --------- | ----------------------------------------------------------------------------------------------------------- |
+| version | string                     | **필수**  | YYYY-MM-DD 형식의 엔티티 버전.                                                                              |
+| spec    | string                     | **필수**  | 사람이 읽을 수 있는 명세 문서의 URL.                                                                        |
+| schema  | string                     | **필수**  | 이 엔터티의 구조와 페이로드를 정의하는 JSON Schema의 URL.                                                   |
+| id      | string                     | 선택      | 이 엔터티 인스턴스의 고유 식별자. 인스턴스가 여러 개일 때 구분하는 데 사용합니다.                           |
+| config  | object                     | 선택      | 엔티티별 구성. 구조는 각 엔티티의 스키마가 정의합니다.                                                      |
+| extends | OneOf\[`string`, `array`\] | 선택      | 이 항목이 확장하는 상위 기능. 확장에는 있고 루트 기능에는 없습니다. 상위가 여럿인 확장은 배열을 사용합니다. |
 
 #### 확장
 

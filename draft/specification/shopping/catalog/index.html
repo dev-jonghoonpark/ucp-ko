@@ -4962,56 +4962,56 @@ ID를 반환합니다. 카탈로그 조회로 얻은 변형 ID는 체크아웃�
 <tr>
 <td style="text-align: left;">address_country</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">The country, as a 2-letter ISO 3166-1 alpha-2 code (e.g. "US"). A 3-letter alpha-3 code or full country name MAY also be used.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">2자리 ISO 3166-1 alpha-2 코드로 표기한 국가(예: "US"). 3자리 alpha-3 코드나 전체 국가명을 사용할 수도 있습니다(MAY).</td>
 </tr>
 <tr>
 <td style="text-align: left;">address_region</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">The first-level administrative region within the country (e.g. a state or province such as California).</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">국가 안의 1차 행정 구역(예: California 같은 주 또는 도).</td>
 </tr>
 <tr>
 <td style="text-align: left;">postal_code</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">The postal code (e.g. "94043").</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">우편번호(예: "94043").</td>
 </tr>
 <tr>
 <td style="text-align: left;">location</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Stable, opaque identifier for a Location in the Business's namespace. This provisional, non-binding hint is distinct from the Buyer's locality. The operation specification or an active capability/extension defines its effects. A common example in retail shopping is the default home store ID selected and saved by the user when purchasing groceries.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">비즈니스 네임스페이스 안에서 위치(Location)를 가리키는 안정적이고 불투명한 식별자. 이 값은 잠정적이고 구속력 없는 힌트이며 구매자의 지역 정보와는 별개입니다. 효과는 작업 명세나 활성화된 기능/확장이 정의합니다. 소매 쇼핑의 흔한 예로, 사용자가 식료품을 구매할 때 선택해 저장한 기본 단골 매장 ID가 있습니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">intent</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Background context describing buyer's intent (e.g., 'looking for a gift under $50', 'need something durable for outdoor use'). Informs relevance, recommendations, and personalization.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">구매자의 의도를 설명하는 배경 맥락(예: 'looking for a gift under $50', 'need something durable for outdoor use'). 관련성, 추천, 개인화에 활용됩니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">language</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Preferred language for content. Use IETF BCP 47 language tags (e.g., 'en', 'fr-CA', 'zh-Hans'). For REST, equivalent to Accept-Language header—platforms SHOULD fall back to Accept-Language when this field is absent; when provided, overrides Accept-Language. Businesses MAY return content in a different language if unavailable.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">콘텐츠의 선호 언어입니다. IETF BCP 47 언어 태그(예: 'en', 'fr-CA', 'zh-Hans')를 사용합니다. REST에서는 Accept-Language 헤더에 해당합니다. 이 필드가 없으면 플랫폼은 Accept-Language로 대체해야 하며(SHOULD), 값이 있으면 Accept-Language보다 우선합니다. 해당 언어를 제공할 수 없으면 비즈니스는 다른 언어로 콘텐츠를 반환할 수 있습니다(MAY).</td>
 </tr>
 <tr>
 <td style="text-align: left;">currency</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Preferred currency (ISO 4217, e.g., 'EUR', 'USD'). Businesses determine presentment currency from context and authoritative signals; this hint MAY inform selection in multi-currency markets. Also serves as the denomination for price filter values — platforms SHOULD include this field when sending price filters. Response prices include explicit currency confirming the resolution.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">선호 통화(ISO 4217, 예: 'EUR', 'USD'). 비즈니스는 맥락과 신뢰할 수 있는 신호로 표시 통화를 결정하며, 다중 통화 시장에서는 이 힌트를 선택에 참고할 수 있습니다(MAY). 가격 필터 값의 통화 단위로도 쓰이므로, 플랫폼은 가격 필터를 보낼 때 이 필드를 포함해야 합니다(SHOULD). 응답 가격에는 결정된 통화를 확인할 수 있도록 통화가 명시됩니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">eligibility</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#reverse-domain-name">Reverse Domain Name</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Buyer claims about eligible benefits such as loyalty membership, payment instrument perks, and similar. Recognized claims MAY inform the Business response (e.g., member-only product availability, adjusted pricing in catalog, provisional discounts at cart or checkout). Businesses MUST ignore unrecognized values without error. Values MUST use reverse-domain naming (e.g., 'com.example.loyalty_gold', 'org.school.student') and MUST be non-identifying.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">로열티 멤버십, 결제 수단 혜택 등 적격 혜택에 대한 구매자 주장. 인식된 주장은 비즈니스 응답에 반영될 수 있습니다(MAY)(예: 회원 전용 상품 구매 가능 여부, 카탈로그의 조정 가격, 장바구니나 체크아웃의 잠정 할인). 비즈니스는 인식하지 못한 값을 오류 없이 반드시 무시해야 합니다(MUST). 값은 반드시 역 도메인 이름 규칙을 사용해야 하며(MUST)(예: 'com.example.loyalty_gold', 'org.school.student'), 반드시 개인을 식별할 수 없어야 합니다(MUST).</td>
 </tr>
 <tr>
 <td style="text-align: left;">payment</td>
 <td style="text-align: left;">Array[object]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Buyer-preferred payment handlers in priority order (most preferred first). Each entry names a handler advertised in the Business profile's <code>ucp.payment_handlers</code>, optionally narrowed to preferred instrument types. The Business SHOULD use it to preselect or prioritize the handler (and type, when given) and MAY ignore unavailable or ineligible entries; unrecognized values MUST be ignored without error.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">구매자가 선호하는 결제 핸들러를 우선순위 순서(가장 선호하는 것이 먼저)로 나열합니다. 각 항목은 비즈니스 프로필의 <code>ucp.payment_handlers</code>에 공개된 핸들러를 가리키며, 선호하는 결제 수단 유형으로 범위를 좁힐 수도 있습니다. 비즈니스는 이를 사용해 핸들러(유형이 주어지면 유형까지)를 미리 선택하거나 우선순위를 정해야 하며(SHOULD), 사용할 수 없거나 자격이 없는 항목은 무시할 수 있습니다(MAY). 인식하지 못하는 값은 오류 없이 반드시 무시해야 합니다(MUST).</td>
 </tr>
 </tbody>
 </table>
@@ -5032,14 +5032,14 @@ ID를 반환합니다. 카탈로그 조회로 얻은 변형 ID는 체크아웃�
 <tr>
 <td style="text-align: left;">dev.ucp.buyer_ip</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Client's IP address (IPv4 or IPv6).</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">클라이언트의 IP 주소(IPv4 또는 IPv6).</td>
 </tr>
 <tr>
 <td style="text-align: left;">dev.ucp.user_agent</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Client's HTTP User-Agent header or equivalent.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">클라이언트의 HTTP User-Agent 헤더 또는 그에 상응하는 값.</td>
 </tr>
 </tbody>
 </table>
@@ -5047,7 +5047,7 @@ ID를 반환합니다. 카탈로그 조회로 얻은 변형 ID는 체크아웃�
 <p>플랫폼이 제공하는 유입 및 전환 이벤트 컨텍스트로, 플랫폼이 전달하는 캠페인 ID, 클릭
 식별자, 소스/매체 표식 등이 해당합니다. 자세한 내용과 동의 요건은
 <a href="../../overview/#attribution">어트리뷰션</a>을 참고하세요.</p>
-<p>Platform-emitted referral and conversion-event context — campaign identifiers, click IDs, source/medium markers, etc. The same parameters platforms communicate via URL query parameters in browser-based flows.</p>
+<p>플랫폼이 내보내는 추천 및 전환 이벤트 맥락: 캠페인 식별자, 클릭 ID, source/medium 마커 등. 브라우저 기반 흐름에서 플랫폼이 URL 쿼리 매개변수로 전달하는 것과 같은 매개변수입니다.</p>
 <h3 id="product">상품<a class="headerlink" href="#product" title="Permanent link">&para;</a></h3>
 <p>판매 가능한 항목을 나타내는 카탈로그 항목으로, 구매 가능한 변형이 하나 이상 있습니다.</p>
 <p><code>media</code>와 <code>variants</code>는 순서가 있는 배열입니다. 비즈니스는 가장 관련성 높은 변형과 미디어
@@ -5067,86 +5067,86 @@ ID를 반환합니다. 카탈로그 조회로 얻은 변형 ID는 체크아웃�
 <tr>
 <td style="text-align: left;">id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Global ID (GID) uniquely identifying this product.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">이 상품을 고유하게 식별하는 전역 ID(GID).</td>
 </tr>
 <tr>
 <td style="text-align: left;">handle</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">URL-safe slug for SEO-friendly URLs (e.g., 'blue-runner-pro'). Use id for stable API references.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">SEO 친화적인 URL을 위한 URL 안전 슬러그(예: 'blue-runner-pro'). 안정적인 API 참조에는 id를 사용하세요.</td>
 </tr>
 <tr>
 <td style="text-align: left;">title</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Product title.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">상품 제목.</td>
 </tr>
 <tr>
 <td style="text-align: left;">description</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#description">Description</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Product description in one or more formats.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">하나 이상의 형식으로 작성된 상품 설명.</td>
 </tr>
 <tr>
 <td style="text-align: left;">url</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Canonical product page URL.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">표준 상품 페이지 URL.</td>
 </tr>
 <tr>
 <td style="text-align: left;">categories</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#category">Category</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Product categories with optional taxonomy identifiers.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">선택적 분류 체계 식별자가 포함된 상품 카테고리.</td>
 </tr>
 <tr>
 <td style="text-align: left;">price_range</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#price-range">Price Range</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Price range across all variants.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">모든 변형에 걸친 가격 범위.</td>
 </tr>
 <tr>
 <td style="text-align: left;">list_price_range</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#price-range">Price Range</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">List price range before discounts (for strikethrough display).</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">할인 전 정가 범위(취소선 표시용).</td>
 </tr>
 <tr>
 <td style="text-align: left;">media</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#media">Media</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Product media (images, videos, 3D models). First item is the featured media for listings.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">상품 미디어(이미지, 동영상, 3D 모델). 첫 번째 항목은 목록에 표시되는 대표 미디어입니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">options</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#product-option">Product Option</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Product options (Size, Color, etc.).</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">상품 옵션(Size, Color 등).</td>
 </tr>
 <tr>
 <td style="text-align: left;">variants</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#variant">Variant</a>]</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Purchasable variants of this product. First item is the featured variant for listings.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">이 상품의 구매 가능한 변형입니다. 첫 번째 항목은 목록에 표시되는 대표 변형입니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">rating</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#rating">Rating</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Aggregate product rating.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">상품 종합 평점.</td>
 </tr>
 <tr>
 <td style="text-align: left;">tags</td>
 <td style="text-align: left;">Array[string]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Product tags for categorization and search.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">분류와 검색에 쓰는 상품 태그.</td>
 </tr>
 <tr>
 <td style="text-align: left;">metadata</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Business-defined custom data extending the standard product model.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">표준 상품 모델을 확장하는 비즈니스 정의 사용자 데이터.</td>
 </tr>
 </tbody>
 </table>
@@ -5172,116 +5172,116 @@ ID를 반환합니다. 카탈로그 조회로 얻은 변형 ID는 체크아웃�
 <tr>
 <td style="text-align: left;">id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Global ID (GID) uniquely identifying this variant. Used as item.id in checkout.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">이 변형을 고유하게 식별하는 전역 ID(GID). 체크아웃에서 item.id로 사용합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">sku</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Business-assigned identifier for inventory and fulfillment.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">재고와 풀필먼트를 위해 비즈니스가 할당한 식별자.</td>
 </tr>
 <tr>
 <td style="text-align: left;">barcodes</td>
 <td style="text-align: left;">Array[object]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Industry-standard product identifiers for cross-reference and correlation.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">상호 참조와 연계를 위한 업계 표준 상품 식별자.</td>
 </tr>
 <tr>
 <td style="text-align: left;">handle</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">URL-safe variant handle/slug.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">URL 안전 변형 핸들/슬러그.</td>
 </tr>
 <tr>
 <td style="text-align: left;">title</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Variant display title (e.g., 'Blue / Large').</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">변형 표시 제목(예: 'Blue / Large').</td>
 </tr>
 <tr>
 <td style="text-align: left;">description</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#description">Description</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Variant description in one or more formats.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">하나 이상의 형식으로 된 변형 설명.</td>
 </tr>
 <tr>
 <td style="text-align: left;">url</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Canonical variant page URL.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">표준 변형(variant) 페이지 URL.</td>
 </tr>
 <tr>
 <td style="text-align: left;">categories</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#category">Category</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Variant categories with optional taxonomy identifiers.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">선택적 분류 체계 식별자가 포함된 변형 카테고리.</td>
 </tr>
 <tr>
 <td style="text-align: left;">price</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#price">Price</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Current selling price. Price is the amount per one whole <code>quantity_unit.unit</code> (for example, per lb or per hour); when <code>quantity_unit</code> is absent, it is per <code>each</code>. Line total is <code>price × quantity × 10^-scale</code>, computed and rounded once by the Business; <code>totals</code> remain authoritative.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">현재 판매 가격. 가격은 <code>quantity_unit.unit</code> 한 단위(예: lb당, 시간당) 기준 금액이며, <code>quantity_unit</code>이 없으면 <code>each</code> 기준입니다. 라인 합계는 <code>price × quantity × 10^-scale</code>이며 비즈니스가 한 번 계산하고 반올림합니다. 권위 있는 값은 여전히 <code>totals</code>입니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">quantity_unit</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#quantity-unit">Quantity Unit</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Sale basis this variant's <code>quantity</code> is denominated in. The default sale basis is <code>each</code>, whose machine identity is (<code>C62</code>, 0); <code>C62</code> is the UN/CEFACT Rec20 code for one/each. An absent catalog descriptor encodes that default. An <code>increment</code> advertises the ordering granularity in steps (for example, <code>scale</code> 2 with <code>increment</code> 25 sells in 0.25-unit multiples).</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 변형의 <code>quantity</code>가 표시되는 판매 기준입니다. 기본 판매 기준은 <code>each</code>이며, 기계적 정체성은 (<code>C62</code>, 0)입니다. <code>C62</code>는 one/each를 뜻하는 UN/CEFACT Rec20 코드입니다. 카탈로그 기술자가 없으면 이 기본값을 뜻합니다. <code>increment</code>는 스텝 단위의 주문 단위를 알립니다(예: <code>scale</code> 2에 <code>increment</code> 25이면 0.25 단위의 배수로 판매).</td>
 </tr>
 <tr>
 <td style="text-align: left;">list_price</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#price">Price</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">List price before discounts (for strikethrough display).</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">할인 전 정가(취소선 표시용).</td>
 </tr>
 <tr>
 <td style="text-align: left;">unit_price</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#unit-price">Unit Price</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Price per standard unit of measurement, for shelf-style comparison display. MAY be omitted when unit pricing does not apply.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">선반 표시 방식의 가격 비교에 쓰는 표준 측정 단위당 가격입니다. 단위 가격이 적용되지 않으면 생략할 수 있습니다(MAY).</td>
 </tr>
 <tr>
 <td style="text-align: left;">availability</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#availability">Availability</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Variant availability for purchase.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">변형의 구매 가능 여부.</td>
 </tr>
 <tr>
 <td style="text-align: left;">options</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#selected-option">Selected Option</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Option values that define this variant (e.g., Color: Blue, Size: Large).</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 변형을 정의하는 옵션 값(예: Color: Blue, Size: Large).</td>
 </tr>
 <tr>
 <td style="text-align: left;">media</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#media">Media</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Variant media (images, videos, 3D models). First item is the featured media for listings.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">변형 미디어(이미지, 동영상, 3D 모델). 첫 번째 항목이 목록에 노출되는 대표 미디어입니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">rating</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#rating">Rating</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Variant rating.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">변형 평점.</td>
 </tr>
 <tr>
 <td style="text-align: left;">tags</td>
 <td style="text-align: left;">Array[string]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Variant tags for categorization and search.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">분류와 검색을 위한 변형 태그.</td>
 </tr>
 <tr>
 <td style="text-align: left;">metadata</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Business-defined custom data extending the standard variant model.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">표준 변형 모델을 확장하는 비즈니스 정의 사용자 데이터.</td>
 </tr>
 <tr>
 <td style="text-align: left;">seller</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Optional seller context for this variant.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 변형의 판매자 맥락(선택 사항).</td>
 </tr>
 </tbody>
 </table>
@@ -5299,14 +5299,14 @@ ID를 반환합니다. 카탈로그 조회로 얻은 변형 ID는 체크아웃�
 <tr>
 <td style="text-align: left;">amount</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#amount">Amount</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Amount in ISO 4217 minor units. Use 0 for free items.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">ISO 4217 최소 통화 단위의 금액. 무료 항목은 0을 사용합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">currency</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">ISO 4217 currency code (e.g., 'USD', 'EUR', 'GBP').</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">ISO 4217 통화 코드(예: 'USD', 'EUR', 'GBP').</td>
 </tr>
 </tbody>
 </table>
@@ -5324,14 +5324,14 @@ ID를 반환합니다. 카탈로그 조회로 얻은 변형 ID는 체크아웃�
 <tr>
 <td style="text-align: left;">min</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#price">Price</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Minimum price in the range.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">범위의 최저 가격.</td>
 </tr>
 <tr>
 <td style="text-align: left;">max</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#price">Price</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Maximum price in the range.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">범위의 최고 가격.</td>
 </tr>
 </tbody>
 </table>
@@ -5363,56 +5363,56 @@ ID를 반환합니다. 카탈로그 조회로 얻은 변형 ID는 체크아웃�
 <tr>
 <td style="text-align: left;">type</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Media type. Well-known values: <code>image</code>, <code>video</code>, <code>external_video</code>, <code>model_3d</code>. A Platform MUST NOT reject the containing object for an unrecognized value; it MAY present the item from <code>preview</code> and <code>name</code>, or omit it.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">미디어 유형. 잘 알려진 값: <code>image</code>, <code>video</code>, <code>external_video</code>, <code>model_3d</code>. 플랫폼은 인식하지 못한 값이 있다고 해서 이를 포함한 객체를 거부해서는 안 됩니다(MUST NOT). 대신 <code>preview</code>와 <code>name</code>으로 항목을 표시하거나 생략할 수 있습니다(MAY).</td>
 </tr>
 <tr>
 <td style="text-align: left;">url</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">URL of the media resource the Platform renders; interpretation is specialized per <code>type</code>.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">플랫폼이 렌더링하는 미디어 리소스의 URL. 해석 방식은 <code>type</code>에 따라 달라집니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">name</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Human-readable title or label for the media, distinct from <code>alt_text</code> (accessibility text). Often present for <code>video</code> and <code>model_3d</code>.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">미디어의 사람이 읽을 수 있는 제목 또는 라벨로, <code>alt_text</code>(접근성 텍스트)와는 별개입니다. <code>video</code>와 <code>model_3d</code>에 자주 있습니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">alt_text</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Accessibility text describing the media.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">미디어를 설명하는 접근성 텍스트.</td>
 </tr>
 <tr>
 <td style="text-align: left;">width</td>
 <td style="text-align: left;">integer</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Intrinsic pixel width of the media item, for image and video types; a rendition's own dimensions are on its <code>sources</code> entry.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">미디어 항목의 고유 픽셀 너비로, 이미지·동영상 유형용입니다. 각 렌디션의 실제 크기는 해당 <code>sources</code> 항목에 있습니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">height</td>
 <td style="text-align: left;">integer</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Intrinsic pixel height of the media item, for image and video types; a rendition's own dimensions are on its <code>sources</code> entry.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">미디어 항목의 고유 픽셀 높이로, 이미지·동영상 유형용입니다. 각 렌디션의 실제 크기는 해당 <code>sources</code> 항목에 있습니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">duration</td>
 <td style="text-align: left;">integer</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Duration in seconds, for time-based media such as <code>video</code> and <code>external_video</code>.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;"><code>video</code>, <code>external_video</code> 같은 시간 기반 미디어의 재생 시간(초).</td>
 </tr>
 <tr>
 <td style="text-align: left;">preview</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Poster/thumbnail still the Platform renders before or instead of the primary resource. A Business SHOULD provide it for <code>video</code>, <code>external_video</code>, and <code>model_3d</code> unless no suitable still exists, and MAY provide it for <code>image</code> as a low-resolution placeholder.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">플랫폼이 기본 리소스보다 먼저 또는 그 대신 렌더링하는 포스터/썸네일 정지 이미지. 비즈니스는 적절한 정지 이미지가 없는 경우가 아니면 <code>video</code>, <code>external_video</code>, <code>model_3d</code>에 이를 제공해야 하며(SHOULD), <code>image</code>에도 저해상도 자리표시자로 제공할 수 있습니다(MAY).</td>
 </tr>
 <tr>
 <td style="text-align: left;">sources</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#media-source">Media Source</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Alternate renditions of the resource at <code>url</code>. The Business SHOULD include the rendition at <code>url</code>.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;"><code>url</code>에 있는 리소스의 대체 렌디션. 비즈니스는 <code>url</code>의 렌디션도 포함해야 합니다(SHOULD).</td>
 </tr>
 </tbody>
 </table>
@@ -5435,14 +5435,14 @@ ID를 반환합니다. 카탈로그 조회로 얻은 변형 ID는 체크아웃�
 <tr>
 <td style="text-align: left;">url</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">A directly displayable image.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">바로 표시할 수 있는 이미지.</td>
 </tr>
 <tr>
 <td style="text-align: left;">sources</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#media-source">Media Source</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Alternate encodings and sizes of the image (e.g. <code>image/avif</code>, <code>image/webp</code>, <code>image/jpeg</code>; width variants for responsive layout). <code>url</code> SHOULD be the most broadly decodable rendition.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이미지의 대체 인코딩과 크기(예: <code>image/avif</code>, <code>image/webp</code>, <code>image/jpeg</code>, 반응형 레이아웃을 위한 너비 변형). <code>url</code>은 가장 널리 디코딩할 수 있는 렌디션이어야 합니다(SHOULD).</td>
 </tr>
 </tbody>
 </table>
@@ -5462,26 +5462,26 @@ ID를 반환합니다. 카탈로그 조회로 얻은 변형 ID는 체크아웃�
 <tr>
 <td style="text-align: left;">url</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">A playable rendition of the video: a progressive file or an adaptive-streaming manifest.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">재생 가능한 동영상 렌디션: 프로그레시브 파일 또는 적응형 스트리밍 매니페스트.</td>
 </tr>
 <tr>
 <td style="text-align: left;">width</td>
 <td style="text-align: left;">integer</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Intrinsic pixel width of the video; a rendition's own dimensions are on its <code>sources</code> entry.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">동영상의 고유 픽셀 너비. 각 렌디션의 실제 크기는 해당 <code>sources</code> 항목에 있습니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">height</td>
 <td style="text-align: left;">integer</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Intrinsic pixel height of the video; a rendition's own dimensions are on its <code>sources</code> entry.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">동영상의 고유 픽셀 높이. 각 렌디션의 실제 크기는 해당 <code>sources</code> 항목에 있습니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">sources</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#media-source">Media Source</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Alternate renditions (MP4/WebM) and adaptive manifests (HLS/DASH).</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">대체 렌디션(MP4/WebM)과 적응형 매니페스트(HLS/DASH).</td>
 </tr>
 </tbody>
 </table>
@@ -5513,14 +5513,14 @@ ID를 반환합니다. 카탈로그 조회로 얻은 변형 ID는 체크아웃�
 <tr>
 <td style="text-align: left;">url</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">The third-party player the Platform embeds. A video the Business serves as files from any origin, including a CDN, is <code>video</code>, not <code>external_video</code>.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">플랫폼이 임베드하는 서드파티 플레이어. 비즈니스가 CDN을 포함한 어떤 출처에서든 파일로 제공하는 동영상은 <code>external_video</code>가 아니라 <code>video</code>입니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">sources</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#media-source">Media Source</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Not used: a video presented through a player has no renditions.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">사용하지 않음: 플레이어로 표시되는 동영상에는 렌디션이 없습니다.</td>
 </tr>
 </tbody>
 </table>
@@ -5540,26 +5540,26 @@ ID를 반환합니다. 카탈로그 조회로 얻은 변형 ID는 체크아웃�
 <tr>
 <td style="text-align: left;">url</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">The primary model file (e.g. GLB).</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">기본 모델 파일(예: GLB).</td>
 </tr>
 <tr>
 <td style="text-align: left;">width</td>
 <td style="text-align: left;">integer</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Not applicable: a 3D model has no pixel dimensions.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">해당 없음: 3D 모델에는 픽셀 크기가 없습니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">height</td>
 <td style="text-align: left;">integer</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Not applicable: a 3D model has no pixel dimensions.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">해당 없음: 3D 모델에는 픽셀 크기가 없습니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">sources</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#media-source">Media Source</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Alternate file formats of the model (glTF/GLB/USDZ).</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">모델의 대체 파일 형식(glTF/GLB/USDZ).</td>
 </tr>
 </tbody>
 </table>
@@ -5577,14 +5577,14 @@ ID를 반환합니다. 카탈로그 조회로 얻은 변형 ID는 체크아웃�
 <tr>
 <td style="text-align: left;">name</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Option name (e.g., 'Size', 'Color').</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">옵션 이름(예: 'Size', 'Color').</td>
 </tr>
 <tr>
 <td style="text-align: left;">values</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#option-value">Option Value</a>]</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Available values for this option.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">이 옵션에 사용할 수 있는 값.</td>
 </tr>
 </tbody>
 </table>
@@ -5602,14 +5602,14 @@ ID를 반환합니다. 카탈로그 조회로 얻은 변형 ID는 체크아웃�
 <tr>
 <td style="text-align: left;">id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Optional server-assigned identifier for this option value. When present in a selected_option, the server SHOULD use it for matching instead of label.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">서버가 할당한 이 옵션 값의 식별자(선택 사항). selected_option에 있으면 서버는 label 대신 이 값을 매칭에 사용해야 합니다(SHOULD).</td>
 </tr>
 <tr>
 <td style="text-align: left;">label</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Display text for this option value (e.g., 'Small', 'Blue').</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">이 옵션 값의 표시 텍스트(예: 'Small', 'Blue').</td>
 </tr>
 </tbody>
 </table>
@@ -5627,20 +5627,20 @@ ID를 반환합니다. 카탈로그 조회로 얻은 변형 ID는 체크아웃�
 <tr>
 <td style="text-align: left;">name</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Option name (e.g., 'Size').</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">옵션 이름(예: 'Size').</td>
 </tr>
 <tr>
 <td style="text-align: left;">id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Optional option value identifier from option_value.id. When present, the server SHOULD use it for matching; name and label remain required for display.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">option_value.id에서 가져온 옵션 값 식별자(선택 사항). 있으면 서버는 이를 매칭에 사용해야 하며(SHOULD), name과 label은 표시용으로 여전히 필요합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">label</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Selected option label (e.g., 'Large').</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">선택한 옵션 레이블(예: 'Large').</td>
 </tr>
 </tbody>
 </table>
@@ -5658,26 +5658,26 @@ ID를 반환합니다. 카탈로그 조회로 얻은 변형 ID는 체크아웃�
 <tr>
 <td style="text-align: left;">value</td>
 <td style="text-align: left;">number</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Average rating value.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">평균 평점.</td>
 </tr>
 <tr>
 <td style="text-align: left;">scale_min</td>
 <td style="text-align: left;">number</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Minimum value on the rating scale (e.g., 1 for 1-5 stars).</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">평점 척도의 최솟값(예: 1~5점 척도면 1).</td>
 </tr>
 <tr>
 <td style="text-align: left;">scale_max</td>
 <td style="text-align: left;">number</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Maximum value on the rating scale (e.g., 5 for 5-star).</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">평점 척도의 최댓값(예: 별 5개 척도면 5).</td>
 </tr>
 <tr>
 <td style="text-align: left;">count</td>
 <td style="text-align: left;">integer</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Number of reviews contributing to the rating.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">평점 산정에 반영된 리뷰 수.</td>
 </tr>
 </tbody>
 </table>
@@ -5698,26 +5698,26 @@ get_product에서는 <code>$.product</code>입니다. 전체 모델은 <a href="
 <tr>
 <td style="text-align: left;">type</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#reverse-domain-name">Reverse Domain Name</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Policy type discriminator. Open reverse-DNS vocabulary. See specification documentation for the registry of well-known policy types. Businesses MAY define custom types in their own domain (e.g., <code>com.example.policy.price_match</code>). Platforms MUST tolerate unknown values.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">정책 유형 판별자. 열린 역 DNS 어휘입니다. 잘 알려진 정책 유형의 레지스트리는 명세 문서를 참고하세요. 비즈니스는 자체 도메인에 사용자 정의 유형을 정의할 수 있습니다(MAY, 예: <code>com.example.policy.price_match</code>). 플랫폼은 알 수 없는 값을 반드시 허용해야 합니다(MUST).</td>
 </tr>
 <tr>
 <td style="text-align: left;">description</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#description">Description</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Human-readable policy summary in one or more formats (plain, markdown, html). Required on every policy so a platform can present it without understanding any type-specific fields. This is not the buyer-facing disclosure — display is compelled by a <code>messages[]</code> warning (see the Policies section).</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">하나 이상의 형식(plain, markdown, html)으로 된 사람이 읽을 수 있는 정책 요약. 플랫폼이 유형별 필드를 이해하지 못해도 표시할 수 있도록 모든 정책에 필수입니다. 이것은 구매자 대상 고지가 아닙니다. 표시 의무는 <code>messages[]</code> 경고로 부과됩니다(정책 섹션 참고).</td>
 </tr>
 <tr>
 <td style="text-align: left;">applies_to</td>
 <td style="text-align: left;">Array[string]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">RFC 9535 JSONPath expressions identifying the nodes this policy applies to, relative to the embedding response root (e.g., <code>$.line_items[0]</code> in cart/checkout, <code>$.products[2]</code> in catalog). Each target covers the node it names and everything nested under it, so a target on a product also covers its variants. A singular query (RFC 9535 Section 2.3.5.1; name and index selectors only) names a single node; filters, wildcards, and slices match a set. When omitted, the policy applies to the entire response. When policies of the same <code>type</code> contest a node, the narrowest target wins and overrides the rest. See the Policies section for how specificity resolves.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 정책이 적용되는 노드를 가리키는 RFC 9535 JSONPath 표현식으로, 응답을 포함하는 루트를 기준으로 합니다(예: 장바구니·체크아웃의 <code>$.line_items[0]</code>, 카탈로그의 <code>$.products[2]</code>). 각 대상은 지정한 노드와 그 아래에 중첩된 모든 것을 포함하므로, 상품을 대상으로 하면 그 변형도 포함됩니다. 단수 쿼리(RFC 9535 Section 2.3.5.1, 이름·인덱스 선택자만 사용)는 노드 하나를 지정하고, 필터·와일드카드·슬라이스는 노드 집합과 일치합니다. 생략하면 정책이 응답 전체에 적용됩니다. 같은 <code>type</code>의 정책들이 한 노드를 두고 경합하면 가장 좁은 대상이 이기고 나머지를 덮어씁니다. 구체성을 판정하는 방법은 정책 섹션을 참고하세요.</td>
 </tr>
 <tr>
 <td style="text-align: left;">url</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Optional link to the full policy document.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">전체 정책 문서 링크(선택 사항).</td>
 </tr>
 </tbody>
 </table>
@@ -5818,38 +5818,38 @@ get_product에서는 <code>$.product</code>입니다. 전체 모델은 <a href="
 <tr>
 <td style="text-align: left;">type</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;"><strong>Constant = error</strong>. Message type discriminator.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;"><strong>상수 = error</strong>. 메시지 유형 판별자.</td>
 </tr>
 <tr>
 <td style="text-align: left;">code</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#error-code">Error Code</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Error code identifying the type of error. Standard errors are defined in capability specifications (see examples) and have standardized semantics; freeform codes are permitted.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">오류 유형을 식별하는 오류 코드. 표준 오류는 기능 명세에 정의되어 있고(예시 참고) 의미가 표준화되어 있으며, 자유 형식 코드도 허용합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">path</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">RFC 9535 JSONPath to the component the message refers to (e.g., $.line_items[0]).</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">메시지가 가리키는 구성 요소의 RFC 9535 JSONPath(예: $.line_items[0]).</td>
 </tr>
 <tr>
 <td style="text-align: left;">content_type</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Content format, default = plain.<br><strong>Enum:</strong> <code>plain</code>, <code>markdown</code></td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">콘텐츠 형식. 기본값은 plain.<br><strong>허용 값:</strong> <code>plain</code>, <code>markdown</code></td>
 </tr>
 <tr>
 <td style="text-align: left;">content</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Human-readable message.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">사람이 읽을 수 있는 메시지.</td>
 </tr>
 <tr>
 <td style="text-align: left;">severity</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Reflects the resource state and recommended action. 'recoverable': platform can resolve the condition in band, for example by modifying inputs or processing a related Action, and submit a new operation when needed. 'requires_buyer_input': merchant requires information their API doesn't support collecting programmatically (checkout incomplete). 'requires_buyer_review': buyer must authorize before order placement due to policy, regulatory, or entitlement rules. 'unrecoverable': no valid resource exists to act on, retry with new resource or inputs. Errors with 'requires_<em>' severity contribute to 'status: requires_escalation'.<br></em><em>Enum:</em>* <code>recoverable</code>, <code>requires_buyer_input</code>, <code>requires_buyer_review</code>, <code>unrecoverable</code></td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">리소스 상태와 권장 조치를 나타냅니다. 'recoverable': 플랫폼이 입력을 수정하거나 관련 Action을 처리하는 등 대역 내에서 상황을 해결하고, 필요하면 새 작업을 제출할 수 있습니다. 'requires_buyer_input': 판매자의 API로는 프로그래밍 방식으로 수집할 수 없는 정보가 필요합니다(체크아웃 미완료). 'requires_buyer_review': 정책, 규제, 자격 규칙 때문에 주문 전에 구매자가 승인해야 합니다. 'unrecoverable': 조치할 유효한 리소스가 없으므로 새 리소스나 입력으로 재시도해야 합니다. 'requires_<em>' 심각도의 오류는 'status: requires_escalation'의 원인이 됩니다.<br></em><em>허용 값:</em>* <code>recoverable</code>, <code>requires_buyer_input</code>, <code>requires_buyer_review</code>, <code>unrecoverable</code></td>
 </tr>
 </tbody>
 </table>
@@ -5867,50 +5867,50 @@ get_product에서는 <code>$.product</code>입니다. 전체 모델은 <a href="
 <tr>
 <td style="text-align: left;">type</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;"><strong>Constant = warning</strong>. Message type discriminator.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;"><strong>상수 = warning</strong>. 메시지 유형 판별자.</td>
 </tr>
 <tr>
 <td style="text-align: left;">path</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">RFC 9535 JSONPath to the component the message refers to (e.g., $.line_items[0]).</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">메시지가 가리키는 구성 요소의 RFC 9535 JSONPath(예: $.line_items[0]).</td>
 </tr>
 <tr>
 <td style="text-align: left;">code</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#warning-code">Warning Code</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Warning code identifying the type of warning. Standard codes are defined in capability specifications (see examples) and have standardized semantics; freeform codes are permitted.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">경고 유형을 식별하는 경고 코드. 표준 코드는 기능 명세에 정의되어 있고(예시 참고) 표준화된 의미를 지닙니다. 자유 형식 코드도 허용됩니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">content</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Human-readable warning message that MUST be displayed.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">반드시 표시해야 하는(MUST) 사람이 읽을 수 있는 경고 메시지.</td>
 </tr>
 <tr>
 <td style="text-align: left;">content_type</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Content format, default = plain.<br><strong>Enum:</strong> <code>plain</code>, <code>markdown</code></td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">콘텐츠 형식. 기본값은 plain.<br><strong>허용 값:</strong> <code>plain</code>, <code>markdown</code></td>
 </tr>
 <tr>
 <td style="text-align: left;">presentation</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Rendering contract for this warning. 'notice' (default): platform MUST display, MAY dismiss. 'disclosure': platform MUST display in proximity to the path-referenced component, MUST NOT hide or auto-dismiss. See specification for full contract.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 경고의 렌더링 규약입니다. 'notice'(기본값): 플랫폼은 반드시 표시해야 하며(MUST), 닫을 수 있습니다(MAY). 'disclosure': 플랫폼은 반드시 path가 가리키는 구성 요소 가까이에 표시해야 하며(MUST), 숨기거나 자동으로 닫아서는 안 됩니다(MUST NOT). 전체 규약은 명세를 참고하세요.</td>
 </tr>
 <tr>
 <td style="text-align: left;">image_url</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">URL to a required visual element (e.g., warning symbol, energy class label).</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">필수 시각 요소(예: 경고 기호, 에너지 등급 라벨)의 URL.</td>
 </tr>
 <tr>
 <td style="text-align: left;">url</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Reference URL for more information (e.g., regulatory site, registry entry, policy page).</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">추가 정보를 위한 참조 URL(예: 규제 기관 사이트, 등록부 항목, 정책 페이지).</td>
 </tr>
 </tbody>
 </table>
@@ -5928,32 +5928,32 @@ get_product에서는 <code>$.product</code>입니다. 전체 모델은 <a href="
 <tr>
 <td style="text-align: left;">type</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;"><strong>Constant = info</strong>. Message type discriminator.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;"><strong>상수 = info</strong>. 메시지 유형 판별자.</td>
 </tr>
 <tr>
 <td style="text-align: left;">path</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">RFC 9535 JSONPath to the component the message refers to (e.g., $.line_items[0]).</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">메시지가 가리키는 구성 요소의 RFC 9535 JSONPath(예: $.line_items[0]).</td>
 </tr>
 <tr>
 <td style="text-align: left;">code</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#info-code">Info Code</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Info code identifying the type of informational message. Standard codes are defined in capability specifications (see examples) and have standardized semantics; freeform codes are permitted.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">정보 메시지의 유형을 식별하는 정보 코드. 표준 코드는 기능 명세에 정의되어 있고(예시 참고) 표준화된 의미를 가지며, 자유 형식 코드도 허용됩니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">content_type</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Content format, default = plain.<br><strong>Enum:</strong> <code>plain</code>, <code>markdown</code></td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">콘텐츠 형식. 기본값은 plain.<br><strong>허용 값:</strong> <code>plain</code>, <code>markdown</code></td>
 </tr>
 <tr>
 <td style="text-align: left;">content</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Human-readable message.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">사람이 읽을 수 있는 메시지.</td>
 </tr>
 </tbody>
 </table>

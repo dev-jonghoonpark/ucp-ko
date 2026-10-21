@@ -4786,50 +4786,50 @@
 <tr>
 <td style="text-align: left;">property</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#property">Property</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">The physical establishment or geographic location where the lodging is situated (e.g., hotel, resort, villa estate, cabin park).</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">숙박 시설이 위치한 실제 시설 또는 지리적 위치(예: 호텔, 리조트, 빌라 단지, 캐빈 파크).</td>
 </tr>
 <tr>
 <td style="text-align: left;">stays</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#stay">Stay</a>]</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">List of stay line-items for the booking.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">예약의 숙박 라인 아이템 목록.</td>
 </tr>
 <tr>
 <td style="text-align: left;">booker</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#booker">Booker</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Representation of the legal contracting party making the reservation.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">예약하는 법적 계약 당사자 정보.</td>
 </tr>
 <tr>
 <td style="text-align: left;">guests</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#guest">Guest</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">List of guest profiles associated with the booking.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">예약에 연결된 투숙객 프로필 목록.</td>
 </tr>
 <tr>
 <td style="text-align: left;">travel_purpose</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Purpose of the trip or reservation, supplied by the Platform. Well-known values: <code>business</code>, <code>leisure</code>. Platforms MAY send additional values; a Business MUST ignore values it does not recognize and treat the purpose as unspecified.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">플랫폼이 제공하는 여행 또는 예약의 목적입니다. 잘 알려진 값: <code>business</code>, <code>leisure</code>. 플랫폼은 다른 값을 보낼 수 있으며(MAY), 비즈니스는 인식하지 못하는 값을 반드시 무시하고 목적이 지정되지 않은 것으로 처리해야 합니다(MUST).</td>
 </tr>
 <tr>
 <td style="text-align: left;">context</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#context">Context</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Provisional buyer signals for relevance and localization—not authoritative data. Businesses SHOULD use these values when verified inputs (e.g., shipping address) are absent, and MAY ignore or down-rank them if inconsistent with higher-confidence signals (authenticated account, risk detection) or regulatory constraints (export controls). Eligibility and policy enforcement MUST occur at checkout time using binding transaction data. Context SHOULD be non-identifying and can be disclosed progressively—coarse signals early, finer resolution as the session progresses. Higher-resolution data (shipping address, billing address) supersedes context.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">관련성 판단과 현지화를 위한 잠정적 구매자 신호로, 권위 있는 데이터가 아닙니다. 검증된 입력(예: 배송 주소)이 없으면 비즈니스는 이 값을 사용해야 하며(SHOULD), 더 신뢰도 높은 신호(인증된 계정, 위험 탐지)나 규제 제약(수출 통제)과 맞지 않으면 무시하거나 우선순위를 낮출 수 있습니다(MAY). 자격 판단과 정책 적용은 반드시 체크아웃 시점에 구속력 있는 거래 데이터로 수행해야 합니다(MUST). 컨텍스트는 개인을 식별할 수 없어야 하며(SHOULD), 단계적으로 공개할 수 있습니다. 초기에는 대략적인 신호를, 세션이 진행되면서 더 세밀한 정보를 제공합니다. 더 세밀한 데이터(배송 주소, 청구 주소)가 컨텍스트보다 우선합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">signals</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#signals">Signals</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Environment data provided by the platform to support authorization and abuse prevention. Values MUST NOT be buyer-asserted claims — platforms provide signals based on direct observation or independently verifiable third-party attestations. All signal keys MUST use reverse-domain naming to ensure provenance and prevent collisions when multiple extensions contribute to the shared namespace.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">승인과 악용 방지를 돕기 위해 플랫폼이 제공하는 환경 데이터. 값은 구매자가 주장한 내용이어서는 안 됩니다(MUST NOT). 플랫폼은 직접 관찰했거나 독립적으로 검증 가능한 제3자 증명에 근거한 신호를 제공합니다. 여러 확장이 공유 네임스페이스에 값을 추가할 때 출처를 보장하고 충돌을 막기 위해, 모든 신호 키는 반드시 역도메인 이름을 사용해야 합니다(MUST).</td>
 </tr>
 <tr>
 <td style="text-align: left;">payment</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#payment">Payment</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Payment configuration containing handlers.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">핸들러를 포함한 결제 구성.</td>
 </tr>
 </tbody>
 </table>
@@ -4847,122 +4847,122 @@
 <tr>
 <td style="text-align: left;">ucp</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#ucp-response-booking-schema">UCP Booking Response Schema</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">UCP metadata for booking responses.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">예약 응답용 UCP 메타데이터.</td>
 </tr>
 <tr>
 <td style="text-align: left;">id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Unique identifier of the booking.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">예약의 고유 식별자.</td>
 </tr>
 <tr>
 <td style="text-align: left;">status</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Booking state indicating the current phase and required action. See Booking Status lifecycle documentation for state transition details.<br><strong>Enum:</strong> <code>incomplete</code>, <code>requires_escalation</code>, <code>ready_for_complete</code>, <code>complete_in_progress</code>, <code>completed</code>, <code>canceled</code></td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">현재 단계와 필요한 작업을 나타내는 예약 상태. 상태 전이에 대한 자세한 내용은 Booking Status 생명주기 문서를 참고하세요.<br><strong>허용 값:</strong> <code>incomplete</code>, <code>requires_escalation</code>, <code>ready_for_complete</code>, <code>complete_in_progress</code>, <code>completed</code>, <code>canceled</code></td>
 </tr>
 <tr>
 <td style="text-align: left;">property</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#property">Property</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">The physical establishment or geographic location where the lodging is situated (e.g., hotel, resort, villa estate, cabin park).</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">숙박 시설이 위치한 실제 시설 또는 지리적 위치(예: 호텔, 리조트, 빌라 단지, 캐빈 파크).</td>
 </tr>
 <tr>
 <td style="text-align: left;">stays</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#stay">Stay Response</a>]</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">List of stay line-items for the booking.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">예약의 숙박 라인 아이템 목록.</td>
 </tr>
 <tr>
 <td style="text-align: left;">booker</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#booker">Booker</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Representation of the legal contracting party making the reservation.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">예약하는 법적 계약 당사자 정보.</td>
 </tr>
 <tr>
 <td style="text-align: left;">guests</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#guest">Guest</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">List of guest profiles associated with the booking.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">예약에 연결된 투숙객 프로필 목록.</td>
 </tr>
 <tr>
 <td style="text-align: left;">travel_purpose</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Purpose of the trip or reservation, supplied by the Platform. Well-known values: <code>business</code>, <code>leisure</code>. Platforms MAY send additional values; a Business MUST ignore values it does not recognize and treat the purpose as unspecified.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">플랫폼이 제공하는 여행 또는 예약의 목적입니다. 잘 알려진 값: <code>business</code>, <code>leisure</code>. 플랫폼은 다른 값을 보낼 수 있으며(MAY), 비즈니스는 인식하지 못하는 값을 반드시 무시하고 목적이 지정되지 않은 것으로 처리해야 합니다(MUST).</td>
 </tr>
 <tr>
 <td style="text-align: left;">context</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#context">Context</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Provisional buyer signals for relevance and localization—not authoritative data. Businesses SHOULD use these values when verified inputs (e.g., shipping address) are absent, and MAY ignore or down-rank them if inconsistent with higher-confidence signals (authenticated account, risk detection) or regulatory constraints (export controls). Eligibility and policy enforcement MUST occur at checkout time using binding transaction data. Context SHOULD be non-identifying and can be disclosed progressively—coarse signals early, finer resolution as the session progresses. Higher-resolution data (shipping address, billing address) supersedes context.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">관련성 판단과 현지화를 위한 잠정적 구매자 신호로, 권위 있는 데이터가 아닙니다. 검증된 입력(예: 배송 주소)이 없으면 비즈니스는 이 값을 사용해야 하며(SHOULD), 더 신뢰도 높은 신호(인증된 계정, 위험 탐지)나 규제 제약(수출 통제)과 맞지 않으면 무시하거나 우선순위를 낮출 수 있습니다(MAY). 자격 판단과 정책 적용은 반드시 체크아웃 시점에 구속력 있는 거래 데이터로 수행해야 합니다(MUST). 컨텍스트는 개인을 식별할 수 없어야 하며(SHOULD), 단계적으로 공개할 수 있습니다. 초기에는 대략적인 신호를, 세션이 진행되면서 더 세밀한 정보를 제공합니다. 더 세밀한 데이터(배송 주소, 청구 주소)가 컨텍스트보다 우선합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">signals</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#signals">Signals</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Environment data provided by the platform to support authorization and abuse prevention. Values MUST NOT be buyer-asserted claims — platforms provide signals based on direct observation or independently verifiable third-party attestations. All signal keys MUST use reverse-domain naming to ensure provenance and prevent collisions when multiple extensions contribute to the shared namespace.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">승인과 악용 방지를 돕기 위해 플랫폼이 제공하는 환경 데이터. 값은 구매자가 주장한 내용이어서는 안 됩니다(MUST NOT). 플랫폼은 직접 관찰했거나 독립적으로 검증 가능한 제3자 증명에 근거한 신호를 제공합니다. 여러 확장이 공유 네임스페이스에 값을 추가할 때 출처를 보장하고 충돌을 막기 위해, 모든 신호 키는 반드시 역도메인 이름을 사용해야 합니다(MUST).</td>
 </tr>
 <tr>
 <td style="text-align: left;">currency</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">ISO 4217 currency code reflecting the business's market determination. Derived from address, context, and geo IP—buyers provide signals, businesses determine currency.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">비즈니스가 판단한 시장을 반영하는 ISO 4217 통화 코드. 주소, 컨텍스트, geo IP로 결정합니다. 구매자는 신호를 제공하고 통화는 비즈니스가 결정합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">totals</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#totals">Totals</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Authoritative pricing breakdown for the booking. The <code>total</code> entry represents the authoritative all-in stay liability across all requested units. All non-total entries are price addends that sum to <code>total</code>. When payment timing is split across schedules or property-collected charges apply, timing breakdowns are conveyed via payment terms (<code>payment.terms[]</code>) schedules rather than within <code>totals</code>.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">예약의 권위 있는 가격 내역. <code>total</code> 항목은 요청한 모든 단위에 걸친 권위 있는 총 숙박 비용을 나타냅니다. total이 아닌 항목은 모두 합산하면 <code>total</code>이 되는 가격 가산 항목입니다. 결제 시점이 여러 일정으로 나뉘거나 숙박 시설에서 직접 징수하는 요금이 있으면, 시점별 내역은 <code>totals</code>가 아니라 결제 조건(<code>payment.terms[]</code>) 일정으로 전달합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">actions</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#actions">Actions</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Outstanding extension-defined Actions for this booking.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 예약에 대해 확장이 정의한 미해결 Action.</td>
 </tr>
 <tr>
 <td style="text-align: left;">messages</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#message">Message</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">List of messages with error and info about the booking session state.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">예약 세션 상태에 대한 오류·정보 메시지 목록.</td>
 </tr>
 <tr>
 <td style="text-align: left;">links</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#link">Link</a>]</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Links to be displayed by the platform (Privacy Policy, TOS). Mandatory for legal compliance.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">플랫폼이 표시할 링크(개인정보처리방침, 이용약관). 법적 준수를 위해 필수입니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">policies</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#policy">Policy</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Policies (e.g., cancellation terms) that apply to the booking session. <code>applies_to</code> targets are relative to the response root; when absent or empty, refer to the URLs in <code>links[]</code>.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">예약 세션에 적용되는 정책(예: 취소 조건). <code>applies_to</code> 대상은 응답 루트를 기준으로 하며, 없거나 비어 있으면 <code>links[]</code>의 URL을 참조합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">expires_at</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">RFC 3339 timestamp after which the booking session is no longer valid. Indicates how long session state, quoted pricing, and any temporary inventory holds remain valid. Businesses MUST NOT complete a booking at a modified price without first returning updated totals to the platform.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 시점 이후로 예약 세션이 더 이상 유효하지 않은 RFC 3339 타임스탬프입니다. 세션 상태, 견적 가격, 임시 재고 보류가 얼마나 오래 유효한지 나타냅니다. 비즈니스는 업데이트된 합계를 먼저 플랫폼에 반환하지 않고 변경된 가격으로 예약을 완료해서는 안 됩니다(MUST NOT).</td>
 </tr>
 <tr>
 <td style="text-align: left;">continue_url</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">URL for booking handoff and session recovery. MUST be provided when status is requires_escalation. See specification for format and availability requirements.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">예약 핸드오프와 세션 복구용 URL. status가 requires_escalation이면 반드시 제공해야 합니다(MUST). 형식과 가용성 요구 사항은 명세를 참고하세요.</td>
 </tr>
 <tr>
 <td style="text-align: left;">payment</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#payment">Payment</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Payment configuration containing handlers.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">핸들러를 포함한 결제 구성.</td>
 </tr>
 <tr>
 <td style="text-align: left;">confirmation</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#booking-confirmation">Booking Confirmation</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Details about the booking created from this specific session.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 세션에서 생성된 예약의 세부 정보.</td>
 </tr>
 </tbody>
 </table>
@@ -5199,122 +5199,122 @@
 <tr>
 <td style="text-align: left;">ucp</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#ucp-response-booking-schema">UCP Booking Response Schema</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">UCP metadata for booking responses.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">예약 응답용 UCP 메타데이터.</td>
 </tr>
 <tr>
 <td style="text-align: left;">id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Unique identifier of the booking.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">예약의 고유 식별자.</td>
 </tr>
 <tr>
 <td style="text-align: left;">status</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Booking state indicating the current phase and required action. See Booking Status lifecycle documentation for state transition details.<br><strong>Enum:</strong> <code>incomplete</code>, <code>requires_escalation</code>, <code>ready_for_complete</code>, <code>complete_in_progress</code>, <code>completed</code>, <code>canceled</code></td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">현재 단계와 필요한 작업을 나타내는 예약 상태. 상태 전이에 대한 자세한 내용은 Booking Status 생명주기 문서를 참고하세요.<br><strong>허용 값:</strong> <code>incomplete</code>, <code>requires_escalation</code>, <code>ready_for_complete</code>, <code>complete_in_progress</code>, <code>completed</code>, <code>canceled</code></td>
 </tr>
 <tr>
 <td style="text-align: left;">property</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#property">Property</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">The physical establishment or geographic location where the lodging is situated (e.g., hotel, resort, villa estate, cabin park).</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">숙박 시설이 위치한 실제 시설 또는 지리적 위치(예: 호텔, 리조트, 빌라 단지, 캐빈 파크).</td>
 </tr>
 <tr>
 <td style="text-align: left;">stays</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#stay">Stay Response</a>]</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">List of stay line-items for the booking.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">예약의 숙박 라인 아이템 목록.</td>
 </tr>
 <tr>
 <td style="text-align: left;">booker</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#booker">Booker</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Representation of the legal contracting party making the reservation.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">예약하는 법적 계약 당사자 정보.</td>
 </tr>
 <tr>
 <td style="text-align: left;">guests</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#guest">Guest</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">List of guest profiles associated with the booking.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">예약에 연결된 투숙객 프로필 목록.</td>
 </tr>
 <tr>
 <td style="text-align: left;">travel_purpose</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Purpose of the trip or reservation, supplied by the Platform. Well-known values: <code>business</code>, <code>leisure</code>. Platforms MAY send additional values; a Business MUST ignore values it does not recognize and treat the purpose as unspecified.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">플랫폼이 제공하는 여행 또는 예약의 목적입니다. 잘 알려진 값: <code>business</code>, <code>leisure</code>. 플랫폼은 다른 값을 보낼 수 있으며(MAY), 비즈니스는 인식하지 못하는 값을 반드시 무시하고 목적이 지정되지 않은 것으로 처리해야 합니다(MUST).</td>
 </tr>
 <tr>
 <td style="text-align: left;">context</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#context">Context</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Provisional buyer signals for relevance and localization—not authoritative data. Businesses SHOULD use these values when verified inputs (e.g., shipping address) are absent, and MAY ignore or down-rank them if inconsistent with higher-confidence signals (authenticated account, risk detection) or regulatory constraints (export controls). Eligibility and policy enforcement MUST occur at checkout time using binding transaction data. Context SHOULD be non-identifying and can be disclosed progressively—coarse signals early, finer resolution as the session progresses. Higher-resolution data (shipping address, billing address) supersedes context.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">관련성 판단과 현지화를 위한 잠정적 구매자 신호로, 권위 있는 데이터가 아닙니다. 검증된 입력(예: 배송 주소)이 없으면 비즈니스는 이 값을 사용해야 하며(SHOULD), 더 신뢰도 높은 신호(인증된 계정, 위험 탐지)나 규제 제약(수출 통제)과 맞지 않으면 무시하거나 우선순위를 낮출 수 있습니다(MAY). 자격 판단과 정책 적용은 반드시 체크아웃 시점에 구속력 있는 거래 데이터로 수행해야 합니다(MUST). 컨텍스트는 개인을 식별할 수 없어야 하며(SHOULD), 단계적으로 공개할 수 있습니다. 초기에는 대략적인 신호를, 세션이 진행되면서 더 세밀한 정보를 제공합니다. 더 세밀한 데이터(배송 주소, 청구 주소)가 컨텍스트보다 우선합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">signals</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#signals">Signals</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Environment data provided by the platform to support authorization and abuse prevention. Values MUST NOT be buyer-asserted claims — platforms provide signals based on direct observation or independently verifiable third-party attestations. All signal keys MUST use reverse-domain naming to ensure provenance and prevent collisions when multiple extensions contribute to the shared namespace.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">승인과 악용 방지를 돕기 위해 플랫폼이 제공하는 환경 데이터. 값은 구매자가 주장한 내용이어서는 안 됩니다(MUST NOT). 플랫폼은 직접 관찰했거나 독립적으로 검증 가능한 제3자 증명에 근거한 신호를 제공합니다. 여러 확장이 공유 네임스페이스에 값을 추가할 때 출처를 보장하고 충돌을 막기 위해, 모든 신호 키는 반드시 역도메인 이름을 사용해야 합니다(MUST).</td>
 </tr>
 <tr>
 <td style="text-align: left;">currency</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">ISO 4217 currency code reflecting the business's market determination. Derived from address, context, and geo IP—buyers provide signals, businesses determine currency.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">비즈니스가 판단한 시장을 반영하는 ISO 4217 통화 코드. 주소, 컨텍스트, geo IP로 결정합니다. 구매자는 신호를 제공하고 통화는 비즈니스가 결정합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">totals</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#totals">Totals</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Authoritative pricing breakdown for the booking. The <code>total</code> entry represents the authoritative all-in stay liability across all requested units. All non-total entries are price addends that sum to <code>total</code>. When payment timing is split across schedules or property-collected charges apply, timing breakdowns are conveyed via payment terms (<code>payment.terms[]</code>) schedules rather than within <code>totals</code>.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">예약의 권위 있는 가격 내역. <code>total</code> 항목은 요청한 모든 단위에 걸친 권위 있는 총 숙박 비용을 나타냅니다. total이 아닌 항목은 모두 합산하면 <code>total</code>이 되는 가격 가산 항목입니다. 결제 시점이 여러 일정으로 나뉘거나 숙박 시설에서 직접 징수하는 요금이 있으면, 시점별 내역은 <code>totals</code>가 아니라 결제 조건(<code>payment.terms[]</code>) 일정으로 전달합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">actions</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#actions">Actions</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Outstanding extension-defined Actions for this booking.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 예약에 대해 확장이 정의한 미해결 Action.</td>
 </tr>
 <tr>
 <td style="text-align: left;">messages</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#message">Message</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">List of messages with error and info about the booking session state.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">예약 세션 상태에 대한 오류·정보 메시지 목록.</td>
 </tr>
 <tr>
 <td style="text-align: left;">links</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#link">Link</a>]</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Links to be displayed by the platform (Privacy Policy, TOS). Mandatory for legal compliance.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">플랫폼이 표시할 링크(개인정보처리방침, 이용약관). 법적 준수를 위해 필수입니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">policies</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#policy">Policy</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Policies (e.g., cancellation terms) that apply to the booking session. <code>applies_to</code> targets are relative to the response root; when absent or empty, refer to the URLs in <code>links[]</code>.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">예약 세션에 적용되는 정책(예: 취소 조건). <code>applies_to</code> 대상은 응답 루트를 기준으로 하며, 없거나 비어 있으면 <code>links[]</code>의 URL을 참조합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">expires_at</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">RFC 3339 timestamp after which the booking session is no longer valid. Indicates how long session state, quoted pricing, and any temporary inventory holds remain valid. Businesses MUST NOT complete a booking at a modified price without first returning updated totals to the platform.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 시점 이후로 예약 세션이 더 이상 유효하지 않은 RFC 3339 타임스탬프입니다. 세션 상태, 견적 가격, 임시 재고 보류가 얼마나 오래 유효한지 나타냅니다. 비즈니스는 업데이트된 합계를 먼저 플랫폼에 반환하지 않고 변경된 가격으로 예약을 완료해서는 안 됩니다(MUST NOT).</td>
 </tr>
 <tr>
 <td style="text-align: left;">continue_url</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">URL for booking handoff and session recovery. MUST be provided when status is requires_escalation. See specification for format and availability requirements.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">예약 핸드오프와 세션 복구용 URL. status가 requires_escalation이면 반드시 제공해야 합니다(MUST). 형식과 가용성 요구 사항은 명세를 참고하세요.</td>
 </tr>
 <tr>
 <td style="text-align: left;">payment</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#payment">Payment</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Payment configuration containing handlers.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">핸들러를 포함한 결제 구성.</td>
 </tr>
 <tr>
 <td style="text-align: left;">confirmation</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#booking-confirmation">Booking Confirmation</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Details about the booking created from this specific session.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 세션에서 생성된 예약의 세부 정보.</td>
 </tr>
 </tbody>
 </table>
@@ -5337,50 +5337,50 @@
 <tr>
 <td style="text-align: left;">property</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#property">Property</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">The physical establishment or geographic location where the lodging is situated (e.g., hotel, resort, villa estate, cabin park).</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">숙박 시설이 위치한 실제 시설 또는 지리적 위치(예: 호텔, 리조트, 빌라 단지, 캐빈 파크).</td>
 </tr>
 <tr>
 <td style="text-align: left;">stays</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#stay">Stay</a>]</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">List of stay line-items for the booking.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">예약의 숙박 라인 아이템 목록.</td>
 </tr>
 <tr>
 <td style="text-align: left;">booker</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#booker">Booker</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Representation of the legal contracting party making the reservation.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">예약하는 법적 계약 당사자 정보.</td>
 </tr>
 <tr>
 <td style="text-align: left;">guests</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#guest">Guest</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">List of guest profiles associated with the booking.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">예약에 연결된 투숙객 프로필 목록.</td>
 </tr>
 <tr>
 <td style="text-align: left;">travel_purpose</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Purpose of the trip or reservation, supplied by the Platform. Well-known values: <code>business</code>, <code>leisure</code>. Platforms MAY send additional values; a Business MUST ignore values it does not recognize and treat the purpose as unspecified.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">플랫폼이 제공하는 여행 또는 예약의 목적입니다. 잘 알려진 값: <code>business</code>, <code>leisure</code>. 플랫폼은 다른 값을 보낼 수 있으며(MAY), 비즈니스는 인식하지 못하는 값을 반드시 무시하고 목적이 지정되지 않은 것으로 처리해야 합니다(MUST).</td>
 </tr>
 <tr>
 <td style="text-align: left;">context</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#context">Context</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Provisional buyer signals for relevance and localization—not authoritative data. Businesses SHOULD use these values when verified inputs (e.g., shipping address) are absent, and MAY ignore or down-rank them if inconsistent with higher-confidence signals (authenticated account, risk detection) or regulatory constraints (export controls). Eligibility and policy enforcement MUST occur at checkout time using binding transaction data. Context SHOULD be non-identifying and can be disclosed progressively—coarse signals early, finer resolution as the session progresses. Higher-resolution data (shipping address, billing address) supersedes context.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">관련성 판단과 현지화를 위한 잠정적 구매자 신호로, 권위 있는 데이터가 아닙니다. 검증된 입력(예: 배송 주소)이 없으면 비즈니스는 이 값을 사용해야 하며(SHOULD), 더 신뢰도 높은 신호(인증된 계정, 위험 탐지)나 규제 제약(수출 통제)과 맞지 않으면 무시하거나 우선순위를 낮출 수 있습니다(MAY). 자격 판단과 정책 적용은 반드시 체크아웃 시점에 구속력 있는 거래 데이터로 수행해야 합니다(MUST). 컨텍스트는 개인을 식별할 수 없어야 하며(SHOULD), 단계적으로 공개할 수 있습니다. 초기에는 대략적인 신호를, 세션이 진행되면서 더 세밀한 정보를 제공합니다. 더 세밀한 데이터(배송 주소, 청구 주소)가 컨텍스트보다 우선합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">signals</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#signals">Signals</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Environment data provided by the platform to support authorization and abuse prevention. Values MUST NOT be buyer-asserted claims — platforms provide signals based on direct observation or independently verifiable third-party attestations. All signal keys MUST use reverse-domain naming to ensure provenance and prevent collisions when multiple extensions contribute to the shared namespace.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">승인과 악용 방지를 돕기 위해 플랫폼이 제공하는 환경 데이터. 값은 구매자가 주장한 내용이어서는 안 됩니다(MUST NOT). 플랫폼은 직접 관찰했거나 독립적으로 검증 가능한 제3자 증명에 근거한 신호를 제공합니다. 여러 확장이 공유 네임스페이스에 값을 추가할 때 출처를 보장하고 충돌을 막기 위해, 모든 신호 키는 반드시 역도메인 이름을 사용해야 합니다(MUST).</td>
 </tr>
 <tr>
 <td style="text-align: left;">payment</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#payment">Payment</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Payment configuration containing handlers.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">핸들러를 포함한 결제 구성.</td>
 </tr>
 </tbody>
 </table>
@@ -5398,122 +5398,122 @@
 <tr>
 <td style="text-align: left;">ucp</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#ucp-response-booking-schema">UCP Booking Response Schema</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">UCP metadata for booking responses.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">예약 응답용 UCP 메타데이터.</td>
 </tr>
 <tr>
 <td style="text-align: left;">id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Unique identifier of the booking.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">예약의 고유 식별자.</td>
 </tr>
 <tr>
 <td style="text-align: left;">status</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Booking state indicating the current phase and required action. See Booking Status lifecycle documentation for state transition details.<br><strong>Enum:</strong> <code>incomplete</code>, <code>requires_escalation</code>, <code>ready_for_complete</code>, <code>complete_in_progress</code>, <code>completed</code>, <code>canceled</code></td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">현재 단계와 필요한 작업을 나타내는 예약 상태. 상태 전이에 대한 자세한 내용은 Booking Status 생명주기 문서를 참고하세요.<br><strong>허용 값:</strong> <code>incomplete</code>, <code>requires_escalation</code>, <code>ready_for_complete</code>, <code>complete_in_progress</code>, <code>completed</code>, <code>canceled</code></td>
 </tr>
 <tr>
 <td style="text-align: left;">property</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#property">Property</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">The physical establishment or geographic location where the lodging is situated (e.g., hotel, resort, villa estate, cabin park).</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">숙박 시설이 위치한 실제 시설 또는 지리적 위치(예: 호텔, 리조트, 빌라 단지, 캐빈 파크).</td>
 </tr>
 <tr>
 <td style="text-align: left;">stays</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#stay">Stay Response</a>]</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">List of stay line-items for the booking.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">예약의 숙박 라인 아이템 목록.</td>
 </tr>
 <tr>
 <td style="text-align: left;">booker</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#booker">Booker</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Representation of the legal contracting party making the reservation.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">예약하는 법적 계약 당사자 정보.</td>
 </tr>
 <tr>
 <td style="text-align: left;">guests</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#guest">Guest</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">List of guest profiles associated with the booking.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">예약에 연결된 투숙객 프로필 목록.</td>
 </tr>
 <tr>
 <td style="text-align: left;">travel_purpose</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Purpose of the trip or reservation, supplied by the Platform. Well-known values: <code>business</code>, <code>leisure</code>. Platforms MAY send additional values; a Business MUST ignore values it does not recognize and treat the purpose as unspecified.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">플랫폼이 제공하는 여행 또는 예약의 목적입니다. 잘 알려진 값: <code>business</code>, <code>leisure</code>. 플랫폼은 다른 값을 보낼 수 있으며(MAY), 비즈니스는 인식하지 못하는 값을 반드시 무시하고 목적이 지정되지 않은 것으로 처리해야 합니다(MUST).</td>
 </tr>
 <tr>
 <td style="text-align: left;">context</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#context">Context</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Provisional buyer signals for relevance and localization—not authoritative data. Businesses SHOULD use these values when verified inputs (e.g., shipping address) are absent, and MAY ignore or down-rank them if inconsistent with higher-confidence signals (authenticated account, risk detection) or regulatory constraints (export controls). Eligibility and policy enforcement MUST occur at checkout time using binding transaction data. Context SHOULD be non-identifying and can be disclosed progressively—coarse signals early, finer resolution as the session progresses. Higher-resolution data (shipping address, billing address) supersedes context.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">관련성 판단과 현지화를 위한 잠정적 구매자 신호로, 권위 있는 데이터가 아닙니다. 검증된 입력(예: 배송 주소)이 없으면 비즈니스는 이 값을 사용해야 하며(SHOULD), 더 신뢰도 높은 신호(인증된 계정, 위험 탐지)나 규제 제약(수출 통제)과 맞지 않으면 무시하거나 우선순위를 낮출 수 있습니다(MAY). 자격 판단과 정책 적용은 반드시 체크아웃 시점에 구속력 있는 거래 데이터로 수행해야 합니다(MUST). 컨텍스트는 개인을 식별할 수 없어야 하며(SHOULD), 단계적으로 공개할 수 있습니다. 초기에는 대략적인 신호를, 세션이 진행되면서 더 세밀한 정보를 제공합니다. 더 세밀한 데이터(배송 주소, 청구 주소)가 컨텍스트보다 우선합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">signals</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#signals">Signals</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Environment data provided by the platform to support authorization and abuse prevention. Values MUST NOT be buyer-asserted claims — platforms provide signals based on direct observation or independently verifiable third-party attestations. All signal keys MUST use reverse-domain naming to ensure provenance and prevent collisions when multiple extensions contribute to the shared namespace.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">승인과 악용 방지를 돕기 위해 플랫폼이 제공하는 환경 데이터. 값은 구매자가 주장한 내용이어서는 안 됩니다(MUST NOT). 플랫폼은 직접 관찰했거나 독립적으로 검증 가능한 제3자 증명에 근거한 신호를 제공합니다. 여러 확장이 공유 네임스페이스에 값을 추가할 때 출처를 보장하고 충돌을 막기 위해, 모든 신호 키는 반드시 역도메인 이름을 사용해야 합니다(MUST).</td>
 </tr>
 <tr>
 <td style="text-align: left;">currency</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">ISO 4217 currency code reflecting the business's market determination. Derived from address, context, and geo IP—buyers provide signals, businesses determine currency.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">비즈니스가 판단한 시장을 반영하는 ISO 4217 통화 코드. 주소, 컨텍스트, geo IP로 결정합니다. 구매자는 신호를 제공하고 통화는 비즈니스가 결정합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">totals</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#totals">Totals</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Authoritative pricing breakdown for the booking. The <code>total</code> entry represents the authoritative all-in stay liability across all requested units. All non-total entries are price addends that sum to <code>total</code>. When payment timing is split across schedules or property-collected charges apply, timing breakdowns are conveyed via payment terms (<code>payment.terms[]</code>) schedules rather than within <code>totals</code>.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">예약의 권위 있는 가격 내역. <code>total</code> 항목은 요청한 모든 단위에 걸친 권위 있는 총 숙박 비용을 나타냅니다. total이 아닌 항목은 모두 합산하면 <code>total</code>이 되는 가격 가산 항목입니다. 결제 시점이 여러 일정으로 나뉘거나 숙박 시설에서 직접 징수하는 요금이 있으면, 시점별 내역은 <code>totals</code>가 아니라 결제 조건(<code>payment.terms[]</code>) 일정으로 전달합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">actions</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#actions">Actions</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Outstanding extension-defined Actions for this booking.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 예약에 대해 확장이 정의한 미해결 Action.</td>
 </tr>
 <tr>
 <td style="text-align: left;">messages</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#message">Message</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">List of messages with error and info about the booking session state.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">예약 세션 상태에 대한 오류·정보 메시지 목록.</td>
 </tr>
 <tr>
 <td style="text-align: left;">links</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#link">Link</a>]</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Links to be displayed by the platform (Privacy Policy, TOS). Mandatory for legal compliance.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">플랫폼이 표시할 링크(개인정보처리방침, 이용약관). 법적 준수를 위해 필수입니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">policies</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#policy">Policy</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Policies (e.g., cancellation terms) that apply to the booking session. <code>applies_to</code> targets are relative to the response root; when absent or empty, refer to the URLs in <code>links[]</code>.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">예약 세션에 적용되는 정책(예: 취소 조건). <code>applies_to</code> 대상은 응답 루트를 기준으로 하며, 없거나 비어 있으면 <code>links[]</code>의 URL을 참조합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">expires_at</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">RFC 3339 timestamp after which the booking session is no longer valid. Indicates how long session state, quoted pricing, and any temporary inventory holds remain valid. Businesses MUST NOT complete a booking at a modified price without first returning updated totals to the platform.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 시점 이후로 예약 세션이 더 이상 유효하지 않은 RFC 3339 타임스탬프입니다. 세션 상태, 견적 가격, 임시 재고 보류가 얼마나 오래 유효한지 나타냅니다. 비즈니스는 업데이트된 합계를 먼저 플랫폼에 반환하지 않고 변경된 가격으로 예약을 완료해서는 안 됩니다(MUST NOT).</td>
 </tr>
 <tr>
 <td style="text-align: left;">continue_url</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">URL for booking handoff and session recovery. MUST be provided when status is requires_escalation. See specification for format and availability requirements.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">예약 핸드오프와 세션 복구용 URL. status가 requires_escalation이면 반드시 제공해야 합니다(MUST). 형식과 가용성 요구 사항은 명세를 참고하세요.</td>
 </tr>
 <tr>
 <td style="text-align: left;">payment</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#payment">Payment</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Payment configuration containing handlers.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">핸들러를 포함한 결제 구성.</td>
 </tr>
 <tr>
 <td style="text-align: left;">confirmation</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#booking-confirmation">Booking Confirmation</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Details about the booking created from this specific session.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 세션에서 생성된 예약의 세부 정보.</td>
 </tr>
 </tbody>
 </table>
@@ -5769,14 +5769,14 @@
 <tr>
 <td style="text-align: left;">signals</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#signals">Signals</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Environment data provided by the platform to support authorization and abuse prevention. Values MUST NOT be buyer-asserted claims — platforms provide signals based on direct observation or independently verifiable third-party attestations. All signal keys MUST use reverse-domain naming to ensure provenance and prevent collisions when multiple extensions contribute to the shared namespace.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">승인과 악용 방지를 돕기 위해 플랫폼이 제공하는 환경 데이터. 값은 구매자가 주장한 내용이어서는 안 됩니다(MUST NOT). 플랫폼은 직접 관찰했거나 독립적으로 검증 가능한 제3자 증명에 근거한 신호를 제공합니다. 여러 확장이 공유 네임스페이스에 값을 추가할 때 출처를 보장하고 충돌을 막기 위해, 모든 신호 키는 반드시 역도메인 이름을 사용해야 합니다(MUST).</td>
 </tr>
 <tr>
 <td style="text-align: left;">payment</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#payment">Payment</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Payment configuration containing handlers.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">핸들러를 포함한 결제 구성.</td>
 </tr>
 </tbody>
 </table>
@@ -5794,122 +5794,122 @@
 <tr>
 <td style="text-align: left;">ucp</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#ucp-response-booking-schema">UCP Booking Response Schema</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">UCP metadata for booking responses.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">예약 응답용 UCP 메타데이터.</td>
 </tr>
 <tr>
 <td style="text-align: left;">id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Unique identifier of the booking.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">예약의 고유 식별자.</td>
 </tr>
 <tr>
 <td style="text-align: left;">status</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Booking state indicating the current phase and required action. See Booking Status lifecycle documentation for state transition details.<br><strong>Enum:</strong> <code>incomplete</code>, <code>requires_escalation</code>, <code>ready_for_complete</code>, <code>complete_in_progress</code>, <code>completed</code>, <code>canceled</code></td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">현재 단계와 필요한 작업을 나타내는 예약 상태. 상태 전이에 대한 자세한 내용은 Booking Status 생명주기 문서를 참고하세요.<br><strong>허용 값:</strong> <code>incomplete</code>, <code>requires_escalation</code>, <code>ready_for_complete</code>, <code>complete_in_progress</code>, <code>completed</code>, <code>canceled</code></td>
 </tr>
 <tr>
 <td style="text-align: left;">property</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#property">Property</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">The physical establishment or geographic location where the lodging is situated (e.g., hotel, resort, villa estate, cabin park).</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">숙박 시설이 위치한 실제 시설 또는 지리적 위치(예: 호텔, 리조트, 빌라 단지, 캐빈 파크).</td>
 </tr>
 <tr>
 <td style="text-align: left;">stays</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#stay">Stay Response</a>]</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">List of stay line-items for the booking.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">예약의 숙박 라인 아이템 목록.</td>
 </tr>
 <tr>
 <td style="text-align: left;">booker</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#booker">Booker</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Representation of the legal contracting party making the reservation.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">예약하는 법적 계약 당사자 정보.</td>
 </tr>
 <tr>
 <td style="text-align: left;">guests</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#guest">Guest</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">List of guest profiles associated with the booking.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">예약에 연결된 투숙객 프로필 목록.</td>
 </tr>
 <tr>
 <td style="text-align: left;">travel_purpose</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Purpose of the trip or reservation, supplied by the Platform. Well-known values: <code>business</code>, <code>leisure</code>. Platforms MAY send additional values; a Business MUST ignore values it does not recognize and treat the purpose as unspecified.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">플랫폼이 제공하는 여행 또는 예약의 목적입니다. 잘 알려진 값: <code>business</code>, <code>leisure</code>. 플랫폼은 다른 값을 보낼 수 있으며(MAY), 비즈니스는 인식하지 못하는 값을 반드시 무시하고 목적이 지정되지 않은 것으로 처리해야 합니다(MUST).</td>
 </tr>
 <tr>
 <td style="text-align: left;">context</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#context">Context</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Provisional buyer signals for relevance and localization—not authoritative data. Businesses SHOULD use these values when verified inputs (e.g., shipping address) are absent, and MAY ignore or down-rank them if inconsistent with higher-confidence signals (authenticated account, risk detection) or regulatory constraints (export controls). Eligibility and policy enforcement MUST occur at checkout time using binding transaction data. Context SHOULD be non-identifying and can be disclosed progressively—coarse signals early, finer resolution as the session progresses. Higher-resolution data (shipping address, billing address) supersedes context.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">관련성 판단과 현지화를 위한 잠정적 구매자 신호로, 권위 있는 데이터가 아닙니다. 검증된 입력(예: 배송 주소)이 없으면 비즈니스는 이 값을 사용해야 하며(SHOULD), 더 신뢰도 높은 신호(인증된 계정, 위험 탐지)나 규제 제약(수출 통제)과 맞지 않으면 무시하거나 우선순위를 낮출 수 있습니다(MAY). 자격 판단과 정책 적용은 반드시 체크아웃 시점에 구속력 있는 거래 데이터로 수행해야 합니다(MUST). 컨텍스트는 개인을 식별할 수 없어야 하며(SHOULD), 단계적으로 공개할 수 있습니다. 초기에는 대략적인 신호를, 세션이 진행되면서 더 세밀한 정보를 제공합니다. 더 세밀한 데이터(배송 주소, 청구 주소)가 컨텍스트보다 우선합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">signals</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#signals">Signals</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Environment data provided by the platform to support authorization and abuse prevention. Values MUST NOT be buyer-asserted claims — platforms provide signals based on direct observation or independently verifiable third-party attestations. All signal keys MUST use reverse-domain naming to ensure provenance and prevent collisions when multiple extensions contribute to the shared namespace.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">승인과 악용 방지를 돕기 위해 플랫폼이 제공하는 환경 데이터. 값은 구매자가 주장한 내용이어서는 안 됩니다(MUST NOT). 플랫폼은 직접 관찰했거나 독립적으로 검증 가능한 제3자 증명에 근거한 신호를 제공합니다. 여러 확장이 공유 네임스페이스에 값을 추가할 때 출처를 보장하고 충돌을 막기 위해, 모든 신호 키는 반드시 역도메인 이름을 사용해야 합니다(MUST).</td>
 </tr>
 <tr>
 <td style="text-align: left;">currency</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">ISO 4217 currency code reflecting the business's market determination. Derived from address, context, and geo IP—buyers provide signals, businesses determine currency.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">비즈니스가 판단한 시장을 반영하는 ISO 4217 통화 코드. 주소, 컨텍스트, geo IP로 결정합니다. 구매자는 신호를 제공하고 통화는 비즈니스가 결정합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">totals</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#totals">Totals</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Authoritative pricing breakdown for the booking. The <code>total</code> entry represents the authoritative all-in stay liability across all requested units. All non-total entries are price addends that sum to <code>total</code>. When payment timing is split across schedules or property-collected charges apply, timing breakdowns are conveyed via payment terms (<code>payment.terms[]</code>) schedules rather than within <code>totals</code>.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">예약의 권위 있는 가격 내역. <code>total</code> 항목은 요청한 모든 단위에 걸친 권위 있는 총 숙박 비용을 나타냅니다. total이 아닌 항목은 모두 합산하면 <code>total</code>이 되는 가격 가산 항목입니다. 결제 시점이 여러 일정으로 나뉘거나 숙박 시설에서 직접 징수하는 요금이 있으면, 시점별 내역은 <code>totals</code>가 아니라 결제 조건(<code>payment.terms[]</code>) 일정으로 전달합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">actions</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#actions">Actions</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Outstanding extension-defined Actions for this booking.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 예약에 대해 확장이 정의한 미해결 Action.</td>
 </tr>
 <tr>
 <td style="text-align: left;">messages</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#message">Message</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">List of messages with error and info about the booking session state.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">예약 세션 상태에 대한 오류·정보 메시지 목록.</td>
 </tr>
 <tr>
 <td style="text-align: left;">links</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#link">Link</a>]</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Links to be displayed by the platform (Privacy Policy, TOS). Mandatory for legal compliance.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">플랫폼이 표시할 링크(개인정보처리방침, 이용약관). 법적 준수를 위해 필수입니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">policies</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#policy">Policy</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Policies (e.g., cancellation terms) that apply to the booking session. <code>applies_to</code> targets are relative to the response root; when absent or empty, refer to the URLs in <code>links[]</code>.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">예약 세션에 적용되는 정책(예: 취소 조건). <code>applies_to</code> 대상은 응답 루트를 기준으로 하며, 없거나 비어 있으면 <code>links[]</code>의 URL을 참조합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">expires_at</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">RFC 3339 timestamp after which the booking session is no longer valid. Indicates how long session state, quoted pricing, and any temporary inventory holds remain valid. Businesses MUST NOT complete a booking at a modified price without first returning updated totals to the platform.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 시점 이후로 예약 세션이 더 이상 유효하지 않은 RFC 3339 타임스탬프입니다. 세션 상태, 견적 가격, 임시 재고 보류가 얼마나 오래 유효한지 나타냅니다. 비즈니스는 업데이트된 합계를 먼저 플랫폼에 반환하지 않고 변경된 가격으로 예약을 완료해서는 안 됩니다(MUST NOT).</td>
 </tr>
 <tr>
 <td style="text-align: left;">continue_url</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">URL for booking handoff and session recovery. MUST be provided when status is requires_escalation. See specification for format and availability requirements.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">예약 핸드오프와 세션 복구용 URL. status가 requires_escalation이면 반드시 제공해야 합니다(MUST). 형식과 가용성 요구 사항은 명세를 참고하세요.</td>
 </tr>
 <tr>
 <td style="text-align: left;">payment</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#payment">Payment</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Payment configuration containing handlers.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">핸들러를 포함한 결제 구성.</td>
 </tr>
 <tr>
 <td style="text-align: left;">confirmation</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#booking-confirmation">Booking Confirmation</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Details about the booking created from this specific session.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 세션에서 생성된 예약의 세부 정보.</td>
 </tr>
 </tbody>
 </table>
@@ -6157,122 +6157,122 @@
 <tr>
 <td style="text-align: left;">ucp</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#ucp-response-booking-schema">UCP Booking Response Schema</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">UCP metadata for booking responses.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">예약 응답용 UCP 메타데이터.</td>
 </tr>
 <tr>
 <td style="text-align: left;">id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Unique identifier of the booking.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">예약의 고유 식별자.</td>
 </tr>
 <tr>
 <td style="text-align: left;">status</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Booking state indicating the current phase and required action. See Booking Status lifecycle documentation for state transition details.<br><strong>Enum:</strong> <code>incomplete</code>, <code>requires_escalation</code>, <code>ready_for_complete</code>, <code>complete_in_progress</code>, <code>completed</code>, <code>canceled</code></td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">현재 단계와 필요한 작업을 나타내는 예약 상태. 상태 전이에 대한 자세한 내용은 Booking Status 생명주기 문서를 참고하세요.<br><strong>허용 값:</strong> <code>incomplete</code>, <code>requires_escalation</code>, <code>ready_for_complete</code>, <code>complete_in_progress</code>, <code>completed</code>, <code>canceled</code></td>
 </tr>
 <tr>
 <td style="text-align: left;">property</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#property">Property</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">The physical establishment or geographic location where the lodging is situated (e.g., hotel, resort, villa estate, cabin park).</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">숙박 시설이 위치한 실제 시설 또는 지리적 위치(예: 호텔, 리조트, 빌라 단지, 캐빈 파크).</td>
 </tr>
 <tr>
 <td style="text-align: left;">stays</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#stay">Stay Response</a>]</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">List of stay line-items for the booking.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">예약의 숙박 라인 아이템 목록.</td>
 </tr>
 <tr>
 <td style="text-align: left;">booker</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#booker">Booker</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Representation of the legal contracting party making the reservation.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">예약하는 법적 계약 당사자 정보.</td>
 </tr>
 <tr>
 <td style="text-align: left;">guests</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#guest">Guest</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">List of guest profiles associated with the booking.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">예약에 연결된 투숙객 프로필 목록.</td>
 </tr>
 <tr>
 <td style="text-align: left;">travel_purpose</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Purpose of the trip or reservation, supplied by the Platform. Well-known values: <code>business</code>, <code>leisure</code>. Platforms MAY send additional values; a Business MUST ignore values it does not recognize and treat the purpose as unspecified.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">플랫폼이 제공하는 여행 또는 예약의 목적입니다. 잘 알려진 값: <code>business</code>, <code>leisure</code>. 플랫폼은 다른 값을 보낼 수 있으며(MAY), 비즈니스는 인식하지 못하는 값을 반드시 무시하고 목적이 지정되지 않은 것으로 처리해야 합니다(MUST).</td>
 </tr>
 <tr>
 <td style="text-align: left;">context</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#context">Context</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Provisional buyer signals for relevance and localization—not authoritative data. Businesses SHOULD use these values when verified inputs (e.g., shipping address) are absent, and MAY ignore or down-rank them if inconsistent with higher-confidence signals (authenticated account, risk detection) or regulatory constraints (export controls). Eligibility and policy enforcement MUST occur at checkout time using binding transaction data. Context SHOULD be non-identifying and can be disclosed progressively—coarse signals early, finer resolution as the session progresses. Higher-resolution data (shipping address, billing address) supersedes context.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">관련성 판단과 현지화를 위한 잠정적 구매자 신호로, 권위 있는 데이터가 아닙니다. 검증된 입력(예: 배송 주소)이 없으면 비즈니스는 이 값을 사용해야 하며(SHOULD), 더 신뢰도 높은 신호(인증된 계정, 위험 탐지)나 규제 제약(수출 통제)과 맞지 않으면 무시하거나 우선순위를 낮출 수 있습니다(MAY). 자격 판단과 정책 적용은 반드시 체크아웃 시점에 구속력 있는 거래 데이터로 수행해야 합니다(MUST). 컨텍스트는 개인을 식별할 수 없어야 하며(SHOULD), 단계적으로 공개할 수 있습니다. 초기에는 대략적인 신호를, 세션이 진행되면서 더 세밀한 정보를 제공합니다. 더 세밀한 데이터(배송 주소, 청구 주소)가 컨텍스트보다 우선합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">signals</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#signals">Signals</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Environment data provided by the platform to support authorization and abuse prevention. Values MUST NOT be buyer-asserted claims — platforms provide signals based on direct observation or independently verifiable third-party attestations. All signal keys MUST use reverse-domain naming to ensure provenance and prevent collisions when multiple extensions contribute to the shared namespace.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">승인과 악용 방지를 돕기 위해 플랫폼이 제공하는 환경 데이터. 값은 구매자가 주장한 내용이어서는 안 됩니다(MUST NOT). 플랫폼은 직접 관찰했거나 독립적으로 검증 가능한 제3자 증명에 근거한 신호를 제공합니다. 여러 확장이 공유 네임스페이스에 값을 추가할 때 출처를 보장하고 충돌을 막기 위해, 모든 신호 키는 반드시 역도메인 이름을 사용해야 합니다(MUST).</td>
 </tr>
 <tr>
 <td style="text-align: left;">currency</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">ISO 4217 currency code reflecting the business's market determination. Derived from address, context, and geo IP—buyers provide signals, businesses determine currency.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">비즈니스가 판단한 시장을 반영하는 ISO 4217 통화 코드. 주소, 컨텍스트, geo IP로 결정합니다. 구매자는 신호를 제공하고 통화는 비즈니스가 결정합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">totals</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#totals">Totals</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Authoritative pricing breakdown for the booking. The <code>total</code> entry represents the authoritative all-in stay liability across all requested units. All non-total entries are price addends that sum to <code>total</code>. When payment timing is split across schedules or property-collected charges apply, timing breakdowns are conveyed via payment terms (<code>payment.terms[]</code>) schedules rather than within <code>totals</code>.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">예약의 권위 있는 가격 내역. <code>total</code> 항목은 요청한 모든 단위에 걸친 권위 있는 총 숙박 비용을 나타냅니다. total이 아닌 항목은 모두 합산하면 <code>total</code>이 되는 가격 가산 항목입니다. 결제 시점이 여러 일정으로 나뉘거나 숙박 시설에서 직접 징수하는 요금이 있으면, 시점별 내역은 <code>totals</code>가 아니라 결제 조건(<code>payment.terms[]</code>) 일정으로 전달합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">actions</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#actions">Actions</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Outstanding extension-defined Actions for this booking.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 예약에 대해 확장이 정의한 미해결 Action.</td>
 </tr>
 <tr>
 <td style="text-align: left;">messages</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#message">Message</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">List of messages with error and info about the booking session state.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">예약 세션 상태에 대한 오류·정보 메시지 목록.</td>
 </tr>
 <tr>
 <td style="text-align: left;">links</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#link">Link</a>]</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Links to be displayed by the platform (Privacy Policy, TOS). Mandatory for legal compliance.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">플랫폼이 표시할 링크(개인정보처리방침, 이용약관). 법적 준수를 위해 필수입니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">policies</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#policy">Policy</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Policies (e.g., cancellation terms) that apply to the booking session. <code>applies_to</code> targets are relative to the response root; when absent or empty, refer to the URLs in <code>links[]</code>.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">예약 세션에 적용되는 정책(예: 취소 조건). <code>applies_to</code> 대상은 응답 루트를 기준으로 하며, 없거나 비어 있으면 <code>links[]</code>의 URL을 참조합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">expires_at</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">RFC 3339 timestamp after which the booking session is no longer valid. Indicates how long session state, quoted pricing, and any temporary inventory holds remain valid. Businesses MUST NOT complete a booking at a modified price without first returning updated totals to the platform.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 시점 이후로 예약 세션이 더 이상 유효하지 않은 RFC 3339 타임스탬프입니다. 세션 상태, 견적 가격, 임시 재고 보류가 얼마나 오래 유효한지 나타냅니다. 비즈니스는 업데이트된 합계를 먼저 플랫폼에 반환하지 않고 변경된 가격으로 예약을 완료해서는 안 됩니다(MUST NOT).</td>
 </tr>
 <tr>
 <td style="text-align: left;">continue_url</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">URL for booking handoff and session recovery. MUST be provided when status is requires_escalation. See specification for format and availability requirements.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">예약 핸드오프와 세션 복구용 URL. status가 requires_escalation이면 반드시 제공해야 합니다(MUST). 형식과 가용성 요구 사항은 명세를 참고하세요.</td>
 </tr>
 <tr>
 <td style="text-align: left;">payment</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#payment">Payment</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Payment configuration containing handlers.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">핸들러를 포함한 결제 구성.</td>
 </tr>
 <tr>
 <td style="text-align: left;">confirmation</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#booking-confirmation">Booking Confirmation</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Details about the booking created from this specific session.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 세션에서 생성된 예약의 세부 정보.</td>
 </tr>
 </tbody>
 </table>

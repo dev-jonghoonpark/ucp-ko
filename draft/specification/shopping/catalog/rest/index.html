@@ -4577,38 +4577,38 @@
 <tr>
 <td style="text-align: left;">query</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Free-text search query.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">자유 텍스트 검색어.</td>
 </tr>
 <tr>
 <td style="text-align: left;">context</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#context">Context</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Provisional buyer signals for relevance and localization—not authoritative data. Businesses SHOULD use these values when verified inputs (e.g., shipping address) are absent, and MAY ignore or down-rank them if inconsistent with higher-confidence signals (authenticated account, risk detection) or regulatory constraints (export controls). Eligibility and policy enforcement MUST occur at checkout time using binding transaction data. Context SHOULD be non-identifying and can be disclosed progressively—coarse signals early, finer resolution as the session progresses. Higher-resolution data (shipping address, billing address) supersedes context.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">관련성 판단과 현지화를 위한 잠정적 구매자 신호로, 권위 있는 데이터가 아닙니다. 검증된 입력(예: 배송 주소)이 없으면 비즈니스는 이 값을 사용해야 하며(SHOULD), 더 신뢰도 높은 신호(인증된 계정, 위험 탐지)나 규제 제약(수출 통제)과 맞지 않으면 무시하거나 우선순위를 낮출 수 있습니다(MAY). 자격 판단과 정책 적용은 반드시 체크아웃 시점에 구속력 있는 거래 데이터로 수행해야 합니다(MUST). 컨텍스트는 개인을 식별할 수 없어야 하며(SHOULD), 단계적으로 공개할 수 있습니다. 초기에는 대략적인 신호를, 세션이 진행되면서 더 세밀한 정보를 제공합니다. 더 세밀한 데이터(배송 주소, 청구 주소)가 컨텍스트보다 우선합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">signals</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#signals">Signals</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Environment data provided by the platform to support authorization and abuse prevention. Values MUST NOT be buyer-asserted claims — platforms provide signals based on direct observation or independently verifiable third-party attestations. All signal keys MUST use reverse-domain naming to ensure provenance and prevent collisions when multiple extensions contribute to the shared namespace.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">승인과 악용 방지를 돕기 위해 플랫폼이 제공하는 환경 데이터. 값은 구매자가 주장한 내용이어서는 안 됩니다(MUST NOT). 플랫폼은 직접 관찰했거나 독립적으로 검증 가능한 제3자 증명에 근거한 신호를 제공합니다. 여러 확장이 공유 네임스페이스에 값을 추가할 때 출처를 보장하고 충돌을 막기 위해, 모든 신호 키는 반드시 역도메인 이름을 사용해야 합니다(MUST).</td>
 </tr>
 <tr>
 <td style="text-align: left;">attribution</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#attribution">Attribution</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Platform-emitted referral and conversion-event context — campaign identifiers, click IDs, source/medium markers, etc. The same parameters platforms communicate via URL query parameters in browser-based flows.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">플랫폼이 내보내는 추천 및 전환 이벤트 맥락: 캠페인 식별자, 클릭 ID, source/medium 마커 등. 브라우저 기반 흐름에서 플랫폼이 URL 쿼리 매개변수로 전달하는 것과 같은 매개변수입니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">filters</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#search-filters">Search Filters</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Filter criteria to narrow search results. All specified filters combine with AND logic.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">검색 결과를 좁히는 필터 조건. 지정한 모든 필터는 AND 논리로 결합됩니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">pagination</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#pagination-request">Pagination Request</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Cursor-based pagination for list operations.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">목록 작업을 위한 커서 기반 페이지네이션.</td>
 </tr>
 </tbody>
 </table>
@@ -4626,38 +4626,38 @@
 <tr>
 <td style="text-align: left;">ucp</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#ucp-response-catalog-schema">UCP Catalog Response Schema</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">UCP metadata for catalog responses.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">카탈로그 응답용 UCP 메타데이터.</td>
 </tr>
 <tr>
 <td style="text-align: left;">products</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#product">Product</a>]</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Products matching the search criteria.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">검색 조건과 일치하는 상품.</td>
 </tr>
 <tr>
 <td style="text-align: left;">pagination</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#pagination-response">Pagination Response</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Cursor-based pagination for list operations.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">목록 작업을 위한 커서 기반 페이지네이션.</td>
 </tr>
 <tr>
 <td style="text-align: left;">actions</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#actions">Actions</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Outstanding extension-defined Actions for this catalog search response.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 카탈로그 검색 응답에 대해 확장이 정의한 미해결 Action.</td>
 </tr>
 <tr>
 <td style="text-align: left;">messages</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#message">Message</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Errors, warnings, or informational messages about the search results.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">검색 결과에 관한 오류, 경고, 정보 메시지.</td>
 </tr>
 <tr>
 <td style="text-align: left;">policies</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#policy">Policy</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Policies (e.g., return/refund terms) that apply to the products in these search results. <code>applies_to</code> targets are relative to the response root; when absent or empty, refer to the URLs in <code>links[]</code>.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 검색 결과의 상품에 적용되는 정책(예: 반품/환불 조건). <code>applies_to</code> 대상은 응답 루트를 기준으로 하며, 없거나 비어 있으면 <code>links[]</code>의 URL을 참조합니다.</td>
 </tr>
 </tbody>
 </table>
@@ -4798,32 +4798,32 @@
 <tr>
 <td style="text-align: left;">ids</td>
 <td style="text-align: left;">Array[string]</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Identifiers to lookup. Implementations MUST support product ID and variant ID; MAY support secondary identifiers (SKU, handle, etc.).</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">조회할 식별자. 구현은 반드시 상품 ID와 변형 ID를 지원해야 하며(MUST), 보조 식별자(SKU, handle 등)를 지원할 수 있습니다(MAY).</td>
 </tr>
 <tr>
 <td style="text-align: left;">filters</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#search-filters">Search Filters</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Filter criteria to narrow returned products and variants. All specified filters combine with AND logic.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">반환되는 상품과 변형을 좁히는 필터 조건. 지정한 모든 필터는 AND 논리로 결합됩니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">context</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#context">Context</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Provisional buyer signals for relevance and localization—not authoritative data. Businesses SHOULD use these values when verified inputs (e.g., shipping address) are absent, and MAY ignore or down-rank them if inconsistent with higher-confidence signals (authenticated account, risk detection) or regulatory constraints (export controls). Eligibility and policy enforcement MUST occur at checkout time using binding transaction data. Context SHOULD be non-identifying and can be disclosed progressively—coarse signals early, finer resolution as the session progresses. Higher-resolution data (shipping address, billing address) supersedes context.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">관련성 판단과 현지화를 위한 잠정적 구매자 신호로, 권위 있는 데이터가 아닙니다. 검증된 입력(예: 배송 주소)이 없으면 비즈니스는 이 값을 사용해야 하며(SHOULD), 더 신뢰도 높은 신호(인증된 계정, 위험 탐지)나 규제 제약(수출 통제)과 맞지 않으면 무시하거나 우선순위를 낮출 수 있습니다(MAY). 자격 판단과 정책 적용은 반드시 체크아웃 시점에 구속력 있는 거래 데이터로 수행해야 합니다(MUST). 컨텍스트는 개인을 식별할 수 없어야 하며(SHOULD), 단계적으로 공개할 수 있습니다. 초기에는 대략적인 신호를, 세션이 진행되면서 더 세밀한 정보를 제공합니다. 더 세밀한 데이터(배송 주소, 청구 주소)가 컨텍스트보다 우선합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">signals</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#signals">Signals</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Environment data provided by the platform to support authorization and abuse prevention. Values MUST NOT be buyer-asserted claims — platforms provide signals based on direct observation or independently verifiable third-party attestations. All signal keys MUST use reverse-domain naming to ensure provenance and prevent collisions when multiple extensions contribute to the shared namespace.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">승인과 악용 방지를 돕기 위해 플랫폼이 제공하는 환경 데이터. 값은 구매자가 주장한 내용이어서는 안 됩니다(MUST NOT). 플랫폼은 직접 관찰했거나 독립적으로 검증 가능한 제3자 증명에 근거한 신호를 제공합니다. 여러 확장이 공유 네임스페이스에 값을 추가할 때 출처를 보장하고 충돌을 막기 위해, 모든 신호 키는 반드시 역도메인 이름을 사용해야 합니다(MUST).</td>
 </tr>
 <tr>
 <td style="text-align: left;">attribution</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#attribution">Attribution</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Platform-emitted referral and conversion-event context — campaign identifiers, click IDs, source/medium markers, etc. The same parameters platforms communicate via URL query parameters in browser-based flows.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">플랫폼이 내보내는 추천 및 전환 이벤트 맥락: 캠페인 식별자, 클릭 ID, source/medium 마커 등. 브라우저 기반 흐름에서 플랫폼이 URL 쿼리 매개변수로 전달하는 것과 같은 매개변수입니다.</td>
 </tr>
 </tbody>
 </table>
@@ -4841,32 +4841,32 @@
 <tr>
 <td style="text-align: left;">ucp</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#ucp-response-catalog-schema">UCP Catalog Response Schema</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">UCP metadata for catalog responses.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">카탈로그 응답용 UCP 메타데이터.</td>
 </tr>
 <tr>
 <td style="text-align: left;">products</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#product">Product</a>]</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Products matching the requested identifiers. May contain fewer items if some identifiers not found, or more if identifiers match multiple products.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">요청한 식별자와 일치하는 상품입니다. 일부 식별자를 찾지 못하면 항목이 더 적을 수 있고, 식별자가 여러 상품과 일치하면 더 많을 수 있습니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">actions</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#actions">Actions</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Outstanding extension-defined Actions for this catalog lookup response.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 카탈로그 조회 응답에 대해 확장이 정의한 미해결 Action.</td>
 </tr>
 <tr>
 <td style="text-align: left;">messages</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#message">Message</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Errors, warnings, or informational messages about the requested items.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">요청된 항목에 관한 오류, 경고, 정보 메시지.</td>
 </tr>
 <tr>
 <td style="text-align: left;">policies</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#policy">Policy</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Policies (e.g., return/refund terms) that apply to the products in this response. <code>applies_to</code> targets are relative to the response root; when absent or empty, refer to the URLs in <code>links[]</code>.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 응답의 상품에 적용되는 정책(예: 반품/환불 조건). <code>applies_to</code> 대상은 응답 루트를 기준으로 하며, 없거나 비어 있으면 <code>links[]</code>의 URL을 참조합니다.</td>
 </tr>
 </tbody>
 </table>
@@ -5028,44 +5028,44 @@
 <tr>
 <td style="text-align: left;">id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Product or variant identifier. Implementations MUST support product ID and variant ID.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">상품 또는 변형 식별자입니다. 구현체는 반드시 상품 ID와 변형 ID를 모두 지원해야 합니다(MUST).</td>
 </tr>
 <tr>
 <td style="text-align: left;">selected</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#selected-option">Selected Option</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Partial or full option selections for interactive variant narrowing. When provided, response option values include availability signals (available, exists) relative to these selections.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">대화형으로 변형을 좁혀 가기 위한 부분 또는 전체 옵션 선택. 제공되면 응답의 옵션 값에 이 선택을 기준으로 한 가용성 신호(available, exists)가 포함됩니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">preferences</td>
 <td style="text-align: left;">Array[string]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Option names in relaxation priority order. When no exact variant matches all selections, the server drops options from the end of this list first. E.g., ['Color', 'Size'] keeps Color and relaxes Size.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">완화 우선순위 순서로 나열한 옵션 이름. 모든 선택과 정확히 일치하는 변형이 없으면 서버는 이 목록의 끝에 있는 옵션부터 제외합니다. 예를 들어 ['Color', 'Size']는 Color를 유지하고 Size를 완화합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">filters</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#search-filters">Search Filters</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Filter criteria to narrow returned variants. All specified filters combine with AND logic.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">반환되는 변형을 좁히는 필터 조건. 지정한 모든 필터는 AND 논리로 결합됩니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">context</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#context">Context</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Provisional buyer signals for relevance and localization—not authoritative data. Businesses SHOULD use these values when verified inputs (e.g., shipping address) are absent, and MAY ignore or down-rank them if inconsistent with higher-confidence signals (authenticated account, risk detection) or regulatory constraints (export controls). Eligibility and policy enforcement MUST occur at checkout time using binding transaction data. Context SHOULD be non-identifying and can be disclosed progressively—coarse signals early, finer resolution as the session progresses. Higher-resolution data (shipping address, billing address) supersedes context.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">관련성 판단과 현지화를 위한 잠정적 구매자 신호로, 권위 있는 데이터가 아닙니다. 검증된 입력(예: 배송 주소)이 없으면 비즈니스는 이 값을 사용해야 하며(SHOULD), 더 신뢰도 높은 신호(인증된 계정, 위험 탐지)나 규제 제약(수출 통제)과 맞지 않으면 무시하거나 우선순위를 낮출 수 있습니다(MAY). 자격 판단과 정책 적용은 반드시 체크아웃 시점에 구속력 있는 거래 데이터로 수행해야 합니다(MUST). 컨텍스트는 개인을 식별할 수 없어야 하며(SHOULD), 단계적으로 공개할 수 있습니다. 초기에는 대략적인 신호를, 세션이 진행되면서 더 세밀한 정보를 제공합니다. 더 세밀한 데이터(배송 주소, 청구 주소)가 컨텍스트보다 우선합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">signals</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#signals">Signals</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Environment data provided by the platform to support authorization and abuse prevention. Values MUST NOT be buyer-asserted claims — platforms provide signals based on direct observation or independently verifiable third-party attestations. All signal keys MUST use reverse-domain naming to ensure provenance and prevent collisions when multiple extensions contribute to the shared namespace.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">승인과 악용 방지를 돕기 위해 플랫폼이 제공하는 환경 데이터. 값은 구매자가 주장한 내용이어서는 안 됩니다(MUST NOT). 플랫폼은 직접 관찰했거나 독립적으로 검증 가능한 제3자 증명에 근거한 신호를 제공합니다. 여러 확장이 공유 네임스페이스에 값을 추가할 때 출처를 보장하고 충돌을 막기 위해, 모든 신호 키는 반드시 역도메인 이름을 사용해야 합니다(MUST).</td>
 </tr>
 <tr>
 <td style="text-align: left;">attribution</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#attribution">Attribution</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Platform-emitted referral and conversion-event context — campaign identifiers, click IDs, source/medium markers, etc. The same parameters platforms communicate via URL query parameters in browser-based flows.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">플랫폼이 내보내는 추천 및 전환 이벤트 맥락: 캠페인 식별자, 클릭 ID, source/medium 마커 등. 브라우저 기반 흐름에서 플랫폼이 URL 쿼리 매개변수로 전달하는 것과 같은 매개변수입니다.</td>
 </tr>
 </tbody>
 </table>
@@ -5315,63 +5315,63 @@ HTTP 200을 반환합니다. 이는 전송 에러가 아니라 애플리케이�
 <tbody>
 <tr>
 <td style="text-align: left;"><code>Authorization</code></td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Should contain oauth token representing the following 2 schemes: 1. Platform self authenticating (client_credentials). 2. Platform authenticating on behalf of end user (authorization_code).</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">다음 두 방식을 나타내는 OAuth 토큰을 담아야 합니다. 1. 플랫폼 자체 인증(client_credentials). 2. 최종 사용자를 대신한 플랫폼 인증(authorization_code).</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>X-API-Key</code></td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Authenticates the platform with a reusable api key allocated to the platform by the business.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">비즈니스가 플랫폼에 할당한 재사용 가능한 API 키로 플랫폼을 인증합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>Signature</code></td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">RFC 9421 HTTP Message Signature. Required when using HTTP Message Signatures for authentication. Format: <code>sig1=:&lt;base64-signature&gt;:</code>.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">RFC 9421 HTTP Message Signature입니다. 인증에 HTTP Message Signatures를 사용할 때 필수입니다. 형식: <code>sig1=:&lt;base64-signature&gt;:</code>.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>Signature-Input</code></td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">RFC 9421 Signature-Input header. Required when using HTTP Message Signatures for authentication. Format: <code>sig1=("@method" "@path" ...);created=&lt;timestamp&gt;;keyid="&lt;key-id&gt;"</code>.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">RFC 9421 Signature-Input 헤더입니다. 인증에 HTTP Message Signatures를 사용할 때 필수입니다. 형식: <code>sig1=("@method" "@path" ...);created=&lt;timestamp&gt;;keyid="&lt;key-id&gt;"</code>.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>Content-Digest</code></td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Body digest per RFC 9530. Required for requests/responses with a body. Format: <code>sha-256=:&lt;base64-digest&gt;:</code>.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">RFC 9530 본문 다이제스트. 본문이 있는 요청/응답에는 필수입니다. 형식: <code>sha-256=:&lt;base64-digest&gt;:</code>.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>Request-Id</code></td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">For tracing the requests across network layers and components.</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">네트워크 계층과 구성 요소 전반에서 요청을 추적하기 위한 값.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>User-Agent</code></td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Identifies the user agent string making the call.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">호출하는 사용자 에이전트 문자열을 식별합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>UCP-Agent</code></td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">Identifies the UCP agent making the call. All requests MUST include the UCP-Agent header containing the signer's profile URI using RFC 8941 Dictionary syntax. The URL MUST point to /.well-known/ucp. Format: profile="https://example.com/.well-known/ucp".</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">호출하는 UCP 에이전트를 식별합니다. 모든 요청은 반드시 RFC 8941 Dictionary 구문으로 서명자의 프로필 URI를 담은 UCP-Agent 헤더를 포함해야 합니다(MUST). URL은 반드시 /.well-known/ucp를 가리켜야 합니다(MUST). 형식: profile="https://example.com/.well-known/ucp".</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>Content-Type</code></td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Representation Metadata. Tells the receiver what the data in the message body actually is.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">표현 메타데이터(Representation Metadata)입니다. 메시지 본문의 데이터가 실제로 무엇인지 수신자에게 알려 줍니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>Accept</code></td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Content Negotiation. The client tells the server what data formats it is capable of understanding.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">콘텐츠 협상. 클라이언트가 이해할 수 있는 데이터 형식을 서버에 알립니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>Accept-Language</code></td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Localization. Tells the receiver the user's preferred natural languages, often with "weights" or priorities.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">현지화. 사용자가 선호하는 자연어를 수신자에게 알리며, 흔히 "가중치"나 우선순위가 함께 붙습니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>Accept-Encoding</code></td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Compression. The client tells the server which content-codings it supports, usually for compression.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">압축. 클라이언트가 지원하는 콘텐츠 인코딩(주로 압축)을 서버에 알립니다.</td>
 </tr>
 </tbody>
 </table>
@@ -5387,18 +5387,18 @@ HTTP 200을 반환합니다. 이는 전송 에러가 아니라 애플리케이�
 <tbody>
 <tr>
 <td style="text-align: left;"><code>Signature</code></td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">RFC 9421 HTTP Message Signature for response. Contains the signature value in the format <code>sig1=:&lt;base64-signature&gt;:</code>.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">응답에 대한 RFC 9421 HTTP Message Signature입니다. 서명 값을 <code>sig1=:&lt;base64-signature&gt;:</code> 형식으로 담습니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>Signature-Input</code></td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">RFC 9421 Signature-Input header for response. Describes signed components, timestamp, and key ID.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">응답에 대한 RFC 9421 Signature-Input 헤더입니다. 서명된 구성 요소, 타임스탬프, 키 ID를 기술합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>Content-Digest</code></td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">JCS-canonicalized body digest per RFC 8785. Format: <code>sha-256=:&lt;base64-digest&gt;:</code>.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">RFC 8785에 따라 JCS로 정규화한 본문 다이제스트. 형식: <code>sha-256=:&lt;base64-digest&gt;:</code>.</td>
 </tr>
 </tbody>
 </table>
@@ -5474,7 +5474,7 @@ HTTP 200을 반환합니다. 이는 전송 에러가 아니라 애플리케이�
 <p>비즈니스 처리 결과에는 표준 HTTP 200 상태를 사용하고, 메시지는 응답 본문에 담습니다.</p>
 <h2 id="entities">엔터티<a class="headerlink" href="#entities" title="Permanent link">&para;</a></h2>
 <h3 id="ucp-response-catalog-schema">UCP 응답 카탈로그<a class="headerlink" href="#ucp-response-catalog-schema" title="Permanent link">&para;</a></h3>
-<p>UCP metadata for catalog responses.</p>
+<p>카탈로그 응답용 UCP 메타데이터.</p>
 <table>
 <thead>
 <tr>
@@ -5488,43 +5488,43 @@ HTTP 200을 반환합니다. 이는 전송 에러가 아니라 애플리케이�
 <tr>
 <td style="text-align: left;">version</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Version identifier in YYYY-MM-DD format.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">YYYY-MM-DD 형식의 버전 식별자.</td>
 </tr>
 <tr>
 <td style="text-align: left;">map_order</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Preferred key-traversal order for sibling registry fields inside the root <code>ucp</code> envelope (<code>services</code>, <code>capabilities</code>, and <code>payment_handlers</code>).</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">루트 <code>ucp</code> 엔벌로프 안에 있는 형제 레지스트리 필드(<code>services</code>, <code>capabilities</code>, <code>payment_handlers</code>)의 선호 키 순회 순서.</td>
 </tr>
 <tr>
 <td style="text-align: left;">status</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Application-level status of the UCP operation.<br><strong>Enum:</strong> <code>success</code>, <code>error</code></td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">UCP 작업의 애플리케이션 수준 상태.<br><strong>허용 값:</strong> <code>success</code>, <code>error</code></td>
 </tr>
 <tr>
 <td style="text-align: left;">services</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Service registry keyed by reverse-domain name.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">역도메인 이름을 키로 하는 서비스 레지스트리.</td>
 </tr>
 <tr>
 <td style="text-align: left;">capabilities</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Capability registry keyed by reverse-domain name.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">역도메인 이름을 키로 하는 기능 레지스트리.</td>
 </tr>
 <tr>
 <td style="text-align: left;">payment_handlers</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Payment handler registry keyed by reverse-domain name.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">역 도메인 이름을 키로 하는 결제 핸들러 레지스트리.</td>
 </tr>
 </tbody>
 </table>
 <h3 id="detail-product">상세 상품<a class="headerlink" href="#detail-product" title="Permanent link">&para;</a></h3>
-<p>A product in a get_product response, extended with effective selections and availability signals on option values.</p>
+<p>get_product 응답의 상품으로, 유효 선택 항목과 옵션 값의 재고 신호가 추가됩니다.</p>
 <table>
 <thead>
 <tr>
@@ -5538,92 +5538,92 @@ HTTP 200을 반환합니다. 이는 전송 에러가 아니라 애플리케이�
 <tr>
 <td style="text-align: left;">id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Global ID (GID) uniquely identifying this product.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">이 상품을 고유하게 식별하는 전역 ID(GID).</td>
 </tr>
 <tr>
 <td style="text-align: left;">handle</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">URL-safe slug for SEO-friendly URLs (e.g., 'blue-runner-pro'). Use id for stable API references.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">SEO 친화적인 URL을 위한 URL 안전 슬러그(예: 'blue-runner-pro'). 안정적인 API 참조에는 id를 사용하세요.</td>
 </tr>
 <tr>
 <td style="text-align: left;">title</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Product title.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">상품 제목.</td>
 </tr>
 <tr>
 <td style="text-align: left;">description</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#description">Description</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Product description in one or more formats.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">하나 이상의 형식으로 작성된 상품 설명.</td>
 </tr>
 <tr>
 <td style="text-align: left;">url</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Canonical product page URL.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">표준 상품 페이지 URL.</td>
 </tr>
 <tr>
 <td style="text-align: left;">categories</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#category">Category</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Product categories with optional taxonomy identifiers.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">선택적 분류 체계 식별자가 포함된 상품 카테고리.</td>
 </tr>
 <tr>
 <td style="text-align: left;">price_range</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#price-range">Price Range</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Price range across all variants.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">모든 변형에 걸친 가격 범위.</td>
 </tr>
 <tr>
 <td style="text-align: left;">list_price_range</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#price-range">Price Range</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">List price range before discounts (for strikethrough display).</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">할인 전 정가 범위(취소선 표시용).</td>
 </tr>
 <tr>
 <td style="text-align: left;">media</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#media">Media</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Product media (images, videos, 3D models). First item is the featured media for listings.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">상품 미디어(이미지, 동영상, 3D 모델). 첫 번째 항목은 목록에 표시되는 대표 미디어입니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">options</td>
 <td style="text-align: left;">Array[object]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Product options with availability signals relative to the effective selections. Product options (Size, Color, etc.).</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">현재 유효한 선택을 기준으로 한 재고 신호가 포함된 상품 옵션. 상품 옵션(Size, Color 등).</td>
 </tr>
 <tr>
 <td style="text-align: left;">variants</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#variant">Variant</a>]</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Purchasable variants of this product. First item is the featured variant for listings.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">이 상품의 구매 가능한 변형입니다. 첫 번째 항목은 목록에 표시되는 대표 변형입니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">rating</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#rating">Rating</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Aggregate product rating.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">상품 종합 평점.</td>
 </tr>
 <tr>
 <td style="text-align: left;">tags</td>
 <td style="text-align: left;">Array[string]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Product tags for categorization and search.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">분류와 검색에 쓰는 상품 태그.</td>
 </tr>
 <tr>
 <td style="text-align: left;">metadata</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Business-defined custom data extending the standard product model.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">표준 상품 모델을 확장하는 비즈니스 정의 사용자 데이터.</td>
 </tr>
 <tr>
 <td style="text-align: left;">selected</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#selected-option">Selected Option</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Effective option selections that anchor the featured variant and availability signals. Required when the product has configurable options; may be empty or omitted for products with no option axes.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">대표 변형과 가용성 신호의 기준이 되는 실제 옵션 선택. 상품에 구성 가능한 옵션이 있으면 필수이며, 옵션 축이 없는 상품에서는 비우거나 생략할 수 있습니다.</td>
 </tr>
 </tbody>
 </table>
@@ -5641,32 +5641,32 @@ HTTP 200을 반환합니다. 이는 전송 에러가 아니라 애플리케이�
 <tr>
 <td style="text-align: left;">ucp</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#ucp-response-catalog-schema">UCP Catalog Response Schema</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">UCP metadata for catalog responses.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">카탈로그 응답용 UCP 메타데이터.</td>
 </tr>
 <tr>
 <td style="text-align: left;">product</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">The requested product with full detail. Singular — this is a single-resource operation.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">요청한 상품의 전체 세부 정보. 단수형이며, 단일 리소스 작업입니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">actions</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#actions">Actions</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Outstanding extension-defined Actions for this product response.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 상품 응답에 대해 확장이 정의한 미해결 Action.</td>
 </tr>
 <tr>
 <td style="text-align: left;">messages</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#message">Message</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Warnings or informational messages about the product (e.g., price recently changed, limited availability).</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">상품에 대한 경고 또는 안내 메시지(예: 최근 가격 변경, 재고 부족).</td>
 </tr>
 <tr>
 <td style="text-align: left;">policies</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#policy">Policy</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Policies (e.g., return/refund terms) that apply to this product. <code>applies_to</code> targets are relative to the response root; when absent or empty, refer to the URLs in <code>links[]</code>.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 상품에 적용되는 정책(예: 반품/환불 조건). <code>applies_to</code> 대상은 응답 루트를 기준으로 하며, 없거나 비어 있으면 <code>links[]</code>의 URL을 참조합니다.</td>
 </tr>
 </tbody>
 </table>
@@ -5684,20 +5684,20 @@ HTTP 200을 반환합니다. 이는 전송 에러가 아니라 애플리케이�
 <tr>
 <td style="text-align: left;">ucp</td>
 <td style="text-align: left;">UCP Error</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">UCP protocol metadata. Status MUST be 'error' for error response.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">UCP 프로토콜 메타데이터. 오류 응답에서는 status가 반드시 'error'여야 합니다(MUST).</td>
 </tr>
 <tr>
 <td style="text-align: left;">messages</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#message">Message</a>]</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Array of messages describing why the operation failed.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">작업이 실패한 이유를 설명하는 메시지 배열.</td>
 </tr>
 <tr>
 <td style="text-align: left;">continue_url</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">URL for buyer handoff or session recovery.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">구매자 핸드오프 또는 세션 복구용 URL.</td>
 </tr>
 </tbody>
 </table>

@@ -4834,92 +4834,92 @@
 <tr>
 <td style="text-align: left;">ucp</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#ucp-response-cart-schema">UCP Cart Response Schema</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">UCP metadata for cart responses. No payment handlers needed pre-checkout.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">장바구니 응답용 UCP 메타데이터. 체크아웃 전에는 결제 핸들러가 필요 없습니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Unique cart identifier.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">고유 장바구니 식별자.</td>
 </tr>
 <tr>
 <td style="text-align: left;">line_items</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#line-item">Line Item Response</a>]</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Cart line items. Same structure as checkout. Full replacement on update.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">장바구니 라인 아이템. 체크아웃과 구조가 같습니다. 업데이트 시 전체를 교체합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">context</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#context">Context</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Buyer signals for localization (country, region, postal_code). Merchant uses for pricing, availability, currency. Falls back to geo-IP if omitted.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">현지화를 위한 구매자 신호(country, region, postal_code). 판매자는 이를 가격, 재고, 통화를 정하는 데 사용합니다. 생략하면 geo-IP로 대체합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">signals</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#signals">Signals</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Environment data provided by the platform to support authorization and abuse prevention. Values MUST NOT be buyer-asserted claims — platforms provide signals based on direct observation or independently verifiable third-party attestations. All signal keys MUST use reverse-domain naming to ensure provenance and prevent collisions when multiple extensions contribute to the shared namespace.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">승인과 악용 방지를 돕기 위해 플랫폼이 제공하는 환경 데이터. 값은 구매자가 주장한 내용이어서는 안 됩니다(MUST NOT). 플랫폼은 직접 관찰했거나 독립적으로 검증 가능한 제3자 증명에 근거한 신호를 제공합니다. 여러 확장이 공유 네임스페이스에 값을 추가할 때 출처를 보장하고 충돌을 막기 위해, 모든 신호 키는 반드시 역도메인 이름을 사용해야 합니다(MUST).</td>
 </tr>
 <tr>
 <td style="text-align: left;">attribution</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#attribution">Attribution</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Platform-emitted referral and conversion-event context — campaign identifiers, click IDs, source/medium markers, etc. The same parameters platforms communicate via URL query parameters in browser-based flows.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">플랫폼이 내보내는 추천 및 전환 이벤트 맥락: 캠페인 식별자, 클릭 ID, source/medium 마커 등. 브라우저 기반 흐름에서 플랫폼이 URL 쿼리 매개변수로 전달하는 것과 같은 매개변수입니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">buyer</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#buyer">Buyer</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Optional buyer information for personalized estimates.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">개인화된 견적을 위한 구매자 정보(선택 사항).</td>
 </tr>
 <tr>
 <td style="text-align: left;">currency</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">ISO 4217 currency code. Determined by merchant based on context or geo-IP.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">ISO 4217 통화 코드. 판매자가 컨텍스트나 geo-IP를 바탕으로 결정합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">totals</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#totals">Totals</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Estimated cost breakdown. May be partial if shipping/tax not yet calculable.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">예상 비용 내역. 배송비·세금을 아직 계산할 수 없으면 일부만 포함될 수 있습니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">actions</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#actions">Actions</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Outstanding extension-defined Actions for this cart.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 장바구니에 대해 확장이 정의한 미해결 Action.</td>
 </tr>
 <tr>
 <td style="text-align: left;">messages</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#message">Message</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Validation messages, warnings, or informational notices.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">검증 메시지, 경고 또는 안내성 알림.</td>
 </tr>
 <tr>
 <td style="text-align: left;">links</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#link">Link</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Optional merchant links (policies, FAQs).</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">판매자 링크(선택 사항, 정책, FAQ).</td>
 </tr>
 <tr>
 <td style="text-align: left;">policies</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#policy">Policy</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Policies (e.g., return/refund terms) that apply to the items in this cart. <code>applies_to</code> targets are relative to the response root; when absent or empty, refer to the URLs in <code>links[]</code>.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 장바구니의 항목에 적용되는 정책(예: 반품/환불 조건). <code>applies_to</code> 대상은 응답 루트를 기준으로 하며, 없거나 비어 있으면 <code>links[]</code>의 URL을 참조합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">continue_url</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">URL for cart handoff and session recovery. Enables sharing and human-in-the-loop flows.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">장바구니 핸드오프와 세션 복구용 URL. 공유와 사람이 개입하는(human-in-the-loop) 흐름을 지원합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">expires_at</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Cart expiry timestamp (RFC 3339). Optional.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">장바구니 만료 타임스탬프(RFC 3339). 선택 사항.</td>
 </tr>
 </tbody>
 </table>
@@ -5000,7 +5000,7 @@
 <p>장바구니는 <a href="../checkout/">체크아웃</a>과 같은 엔티티 스키마를 재사용합니다. 덕분에
 장바구니를 체크아웃 세션으로 전환해도 데이터 구조가 일관되게 유지됩니다.</p>
 <h3 id="ucp-response-cart-schema">UCP 응답 장바구니<a class="headerlink" href="#ucp-response-cart-schema" title="Permanent link">&para;</a></h3>
-<p>UCP metadata for cart responses. No payment handlers needed pre-checkout.</p>
+<p>장바구니 응답용 UCP 메타데이터. 체크아웃 전에는 결제 핸들러가 필요 없습니다.</p>
 <table>
 <thead>
 <tr>
@@ -5014,38 +5014,38 @@
 <tr>
 <td style="text-align: left;">version</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Version identifier in YYYY-MM-DD format.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">YYYY-MM-DD 형식의 버전 식별자.</td>
 </tr>
 <tr>
 <td style="text-align: left;">map_order</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Preferred key-traversal order for sibling registry fields inside the root <code>ucp</code> envelope (<code>services</code>, <code>capabilities</code>, and <code>payment_handlers</code>).</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">루트 <code>ucp</code> 엔벌로프 안에 있는 형제 레지스트리 필드(<code>services</code>, <code>capabilities</code>, <code>payment_handlers</code>)의 선호 키 순회 순서.</td>
 </tr>
 <tr>
 <td style="text-align: left;">status</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Application-level status of the UCP operation.<br><strong>Enum:</strong> <code>success</code>, <code>error</code></td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">UCP 작업의 애플리케이션 수준 상태.<br><strong>허용 값:</strong> <code>success</code>, <code>error</code></td>
 </tr>
 <tr>
 <td style="text-align: left;">services</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Service registry keyed by reverse-domain name.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">역도메인 이름을 키로 하는 서비스 레지스트리.</td>
 </tr>
 <tr>
 <td style="text-align: left;">capabilities</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Capability registry keyed by reverse-domain name.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">역도메인 이름을 키로 하는 기능 레지스트리.</td>
 </tr>
 <tr>
 <td style="text-align: left;">payment_handlers</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Payment handler registry keyed by reverse-domain name.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">역 도메인 이름을 키로 하는 결제 핸들러 레지스트리.</td>
 </tr>
 </tbody>
 </table>
@@ -5064,14 +5064,14 @@
 <tr>
 <td style="text-align: left;">item</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#item">Item</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
+<td style="text-align: left;"><strong>필수</strong></td>
 <td style="text-align: left;"></td>
 </tr>
 <tr>
 <td style="text-align: left;">quantity</td>
 <td style="text-align: left;">integer</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Always an integer step count. On Platform requests, steps use the item's Business-authoritative sale basis; omitting <code>item.quantity_unit</code> makes no assertion and does not imply <code>each</code>. On Business responses, <code>item.quantity_unit</code> describes the basis; if absent, it encodes the <code>each</code> machine identity (<code>C62</code>, 0) and <code>quantity</code> counts whole items.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">항상 정수 단계 수입니다. 플랫폼 요청에서 단계는 비즈니스가 권위를 갖는 항목의 판매 기준을 사용합니다. <code>item.quantity_unit</code>을 생략하면 아무것도 단정하지 않으며 <code>each</code>를 뜻하지도 않습니다. 비즈니스 응답에서는 <code>item.quantity_unit</code>이 기준을 설명합니다. 없으면 <code>each</code> 기계 식별자(<code>C62</code>, 0)를 나타내며 <code>quantity</code>는 개별 항목의 개수를 셉니다.</td>
 </tr>
 </tbody>
 </table>
@@ -5089,26 +5089,26 @@
 <tr>
 <td style="text-align: left;">id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
+<td style="text-align: left;">선택</td>
 <td style="text-align: left;"></td>
 </tr>
 <tr>
 <td style="text-align: left;">item</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#item">Item</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
+<td style="text-align: left;"><strong>필수</strong></td>
 <td style="text-align: left;"></td>
 </tr>
 <tr>
 <td style="text-align: left;">quantity</td>
 <td style="text-align: left;">integer</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Always an integer step count. On Platform requests, steps use the item's Business-authoritative sale basis; omitting <code>item.quantity_unit</code> makes no assertion and does not imply <code>each</code>. On Business responses, <code>item.quantity_unit</code> describes the basis; if absent, it encodes the <code>each</code> machine identity (<code>C62</code>, 0) and <code>quantity</code> counts whole items.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">항상 정수 단계 수입니다. 플랫폼 요청에서 단계는 비즈니스가 권위를 갖는 항목의 판매 기준을 사용합니다. <code>item.quantity_unit</code>을 생략하면 아무것도 단정하지 않으며 <code>each</code>를 뜻하지도 않습니다. 비즈니스 응답에서는 <code>item.quantity_unit</code>이 기준을 설명합니다. 없으면 <code>each</code> 기계 식별자(<code>C62</code>, 0)를 나타내며 <code>quantity</code>는 개별 항목의 개수를 셉니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">parent_id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Parent line item identifier for any nested structures.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">중첩 구조에 사용하는 상위 라인 아이템 식별자.</td>
 </tr>
 </tbody>
 </table>
@@ -5126,32 +5126,32 @@
 <tr>
 <td style="text-align: left;">id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
+<td style="text-align: left;"><strong>필수</strong></td>
 <td style="text-align: left;"></td>
 </tr>
 <tr>
 <td style="text-align: left;">item</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#item">Item</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
+<td style="text-align: left;"><strong>필수</strong></td>
 <td style="text-align: left;"></td>
 </tr>
 <tr>
 <td style="text-align: left;">quantity</td>
 <td style="text-align: left;">integer</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Always an integer step count. On Platform requests, steps use the item's Business-authoritative sale basis; omitting <code>item.quantity_unit</code> makes no assertion and does not imply <code>each</code>. On Business responses, <code>item.quantity_unit</code> describes the basis; if absent, it encodes the <code>each</code> machine identity (<code>C62</code>, 0) and <code>quantity</code> counts whole items.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">항상 정수 단계 수입니다. 플랫폼 요청에서 단계는 비즈니스가 권위를 갖는 항목의 판매 기준을 사용합니다. <code>item.quantity_unit</code>을 생략하면 아무것도 단정하지 않으며 <code>each</code>를 뜻하지도 않습니다. 비즈니스 응답에서는 <code>item.quantity_unit</code>이 기준을 설명합니다. 없으면 <code>each</code> 기계 식별자(<code>C62</code>, 0)를 나타내며 <code>quantity</code>는 개별 항목의 개수를 셉니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">totals</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#total">Total Response</a>]</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Line item totals breakdown.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">라인 아이템 합계 내역.</td>
 </tr>
 <tr>
 <td style="text-align: left;">parent_id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Parent line item identifier for any nested structures.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">중첩 구조에 사용하는 상위 라인 아이템 식별자.</td>
 </tr>
 </tbody>
 </table>
@@ -5169,38 +5169,38 @@
 <tr>
 <td style="text-align: left;">id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">The product identifier, often the SKU, required to resolve the product details associated with this line item. Should be recognized by both the Platform, and the Business.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">이 라인 아이템에 연결된 상품 세부 정보를 확인하는 데 필요한 상품 식별자로, 주로 SKU입니다. 플랫폼과 비즈니스 모두 인식할 수 있어야 합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">title</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Product title.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">상품 제목.</td>
 </tr>
 <tr>
 <td style="text-align: left;">price</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#amount">Amount</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Unit price in ISO 4217 minor units. Price is the amount per one whole <code>quantity_unit.unit</code> (for example, per lb or per hour); when <code>quantity_unit</code> is absent, it is per <code>each</code>.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">ISO 4217 최소 단위로 표시한 단가. 가격은 <code>quantity_unit.unit</code> 하나(예: lb당 또는 시간당)에 대한 금액이며, <code>quantity_unit</code>이 없으면 <code>each</code> 기준입니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">quantity_unit</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#quantity-unit">Quantity Unit</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Sale basis this item's <code>quantity</code> is denominated in. On an authoritative Business response, absence encodes the default <code>each</code> machine identity (<code>C62</code>, 0); the Business MUST include this descriptor for every non-<code>each</code> response. On Platform requests, omission makes no assertion: the Business interprets <code>quantity</code> using the item's authoritative sale basis. If the Platform includes this descriptor, it asserts the unit-descriptor machine identity. The Business MUST compare that machine identity (<code>unit</code>, effective <code>scale</code>), ignore <code>display_text</code> and <code>increment</code>, and resolve a mismatch by conversion surfaced as a visible line revision with a warning, or by rejection with a recoverable business outcome; silent reinterpretation is forbidden. An explicit <code>C62</code> descriptor at effective scale 0 matches an authoritative basis represented by an absent descriptor.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 항목의 <code>quantity</code>가 표시되는 판매 기준입니다. 권위 있는 비즈니스 응답에서 이 값이 없으면 기본값인 <code>each</code>의 기계적 정체성(<code>C62</code>, 0)을 뜻하며, <code>each</code>가 아닌 모든 응답에는 비즈니스가 반드시 이 기술자를 포함해야 합니다(MUST). 플랫폼 요청에서는 생략해도 아무것도 주장하지 않으며, 비즈니스는 항목의 권위 있는 판매 기준으로 <code>quantity</code>를 해석합니다. 플랫폼이 이 기술자를 포함하면 단위 기술자의 기계적 정체성을 주장하는 것입니다. 비즈니스는 반드시 그 기계적 정체성(<code>unit</code>, 실효 <code>scale</code>)을 비교하고(MUST), <code>display_text</code>와 <code>increment</code>는 무시하며, 불일치는 경고와 함께 눈에 보이는 라인 수정으로 드러나는 변환이나 복구 가능한 비즈니스 결과로 거부하는 방식으로 해결해야 합니다. 조용히 다르게 해석하는 것은 금지됩니다. 실효 scale 0의 명시적 <code>C62</code> 기술자는 기술자가 없는 것으로 표현된 권위 있는 판매 기준과 일치합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">unit_price</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#unit-price">Unit Price</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Pricing basis for this item. On an authoritative Business response, the Business MUST include <code>unit_price</code> on every line whose pricing basis differs from its sale basis (for example, priced per pound but sold per <code>each</code>); presence on a line marks the rate as transactional rather than display-only. When the pricing basis is the sale basis, <code>item.price</code> fully denominates the charge and this field MAY be omitted.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 항목의 가격 책정 기준입니다. 권위 있는 비즈니스 응답에서는 가격 책정 기준이 판매 기준과 다른 모든 라인(예: 파운드당 가격이지만 <code>each</code> 단위로 판매)에 비즈니스가 반드시 <code>unit_price</code>를 포함해야 합니다(MUST). 라인에 이 값이 있으면 해당 단가는 표시용이 아니라 거래에 쓰이는 값입니다. 가격 책정 기준이 판매 기준과 같으면 <code>item.price</code>만으로 청구 금액이 온전히 정해지므로 이 필드는 생략할 수 있습니다(MAY).</td>
 </tr>
 <tr>
 <td style="text-align: left;">image_url</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Product image URI.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">상품 이미지 URI.</td>
 </tr>
 </tbody>
 </table>
@@ -5218,26 +5218,26 @@
 <tr>
 <td style="text-align: left;">first_name</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">First name of the buyer.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">구매자의 이름.</td>
 </tr>
 <tr>
 <td style="text-align: left;">last_name</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Last name of the buyer.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">구매자의 성.</td>
 </tr>
 <tr>
 <td style="text-align: left;">email</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Email of the buyer.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">구매자의 이메일.</td>
 </tr>
 <tr>
 <td style="text-align: left;">phone_number</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">E.164 standard.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">E.164 표준.</td>
 </tr>
 </tbody>
 </table>
@@ -5255,56 +5255,56 @@
 <tr>
 <td style="text-align: left;">address_country</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">The country, as a 2-letter ISO 3166-1 alpha-2 code (e.g. "US"). A 3-letter alpha-3 code or full country name MAY also be used.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">2자리 ISO 3166-1 alpha-2 코드로 표기한 국가(예: "US"). 3자리 alpha-3 코드나 전체 국가명을 사용할 수도 있습니다(MAY).</td>
 </tr>
 <tr>
 <td style="text-align: left;">address_region</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">The first-level administrative region within the country (e.g. a state or province such as California).</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">국가 안의 1차 행정 구역(예: California 같은 주 또는 도).</td>
 </tr>
 <tr>
 <td style="text-align: left;">postal_code</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">The postal code (e.g. "94043").</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">우편번호(예: "94043").</td>
 </tr>
 <tr>
 <td style="text-align: left;">location</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Stable, opaque identifier for a Location in the Business's namespace. This provisional, non-binding hint is distinct from the Buyer's locality. The operation specification or an active capability/extension defines its effects. A common example in retail shopping is the default home store ID selected and saved by the user when purchasing groceries.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">비즈니스 네임스페이스 안에서 위치(Location)를 가리키는 안정적이고 불투명한 식별자. 이 값은 잠정적이고 구속력 없는 힌트이며 구매자의 지역 정보와는 별개입니다. 효과는 작업 명세나 활성화된 기능/확장이 정의합니다. 소매 쇼핑의 흔한 예로, 사용자가 식료품을 구매할 때 선택해 저장한 기본 단골 매장 ID가 있습니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">intent</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Background context describing buyer's intent (e.g., 'looking for a gift under $50', 'need something durable for outdoor use'). Informs relevance, recommendations, and personalization.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">구매자의 의도를 설명하는 배경 맥락(예: 'looking for a gift under $50', 'need something durable for outdoor use'). 관련성, 추천, 개인화에 활용됩니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">language</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Preferred language for content. Use IETF BCP 47 language tags (e.g., 'en', 'fr-CA', 'zh-Hans'). For REST, equivalent to Accept-Language header—platforms SHOULD fall back to Accept-Language when this field is absent; when provided, overrides Accept-Language. Businesses MAY return content in a different language if unavailable.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">콘텐츠의 선호 언어입니다. IETF BCP 47 언어 태그(예: 'en', 'fr-CA', 'zh-Hans')를 사용합니다. REST에서는 Accept-Language 헤더에 해당합니다. 이 필드가 없으면 플랫폼은 Accept-Language로 대체해야 하며(SHOULD), 값이 있으면 Accept-Language보다 우선합니다. 해당 언어를 제공할 수 없으면 비즈니스는 다른 언어로 콘텐츠를 반환할 수 있습니다(MAY).</td>
 </tr>
 <tr>
 <td style="text-align: left;">currency</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Preferred currency (ISO 4217, e.g., 'EUR', 'USD'). Businesses determine presentment currency from context and authoritative signals; this hint MAY inform selection in multi-currency markets. Also serves as the denomination for price filter values — platforms SHOULD include this field when sending price filters. Response prices include explicit currency confirming the resolution.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">선호 통화(ISO 4217, 예: 'EUR', 'USD'). 비즈니스는 맥락과 신뢰할 수 있는 신호로 표시 통화를 결정하며, 다중 통화 시장에서는 이 힌트를 선택에 참고할 수 있습니다(MAY). 가격 필터 값의 통화 단위로도 쓰이므로, 플랫폼은 가격 필터를 보낼 때 이 필드를 포함해야 합니다(SHOULD). 응답 가격에는 결정된 통화를 확인할 수 있도록 통화가 명시됩니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">eligibility</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#reverse-domain-name">Reverse Domain Name</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Buyer claims about eligible benefits such as loyalty membership, payment instrument perks, and similar. Recognized claims MAY inform the Business response (e.g., member-only product availability, adjusted pricing in catalog, provisional discounts at cart or checkout). Businesses MUST ignore unrecognized values without error. Values MUST use reverse-domain naming (e.g., 'com.example.loyalty_gold', 'org.school.student') and MUST be non-identifying.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">로열티 멤버십, 결제 수단 혜택 등 적격 혜택에 대한 구매자 주장. 인식된 주장은 비즈니스 응답에 반영될 수 있습니다(MAY)(예: 회원 전용 상품 구매 가능 여부, 카탈로그의 조정 가격, 장바구니나 체크아웃의 잠정 할인). 비즈니스는 인식하지 못한 값을 오류 없이 반드시 무시해야 합니다(MUST). 값은 반드시 역 도메인 이름 규칙을 사용해야 하며(MUST)(예: 'com.example.loyalty_gold', 'org.school.student'), 반드시 개인을 식별할 수 없어야 합니다(MUST).</td>
 </tr>
 <tr>
 <td style="text-align: left;">payment</td>
 <td style="text-align: left;">Array[object]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Buyer-preferred payment handlers in priority order (most preferred first). Each entry names a handler advertised in the Business profile's <code>ucp.payment_handlers</code>, optionally narrowed to preferred instrument types. The Business SHOULD use it to preselect or prioritize the handler (and type, when given) and MAY ignore unavailable or ineligible entries; unrecognized values MUST be ignored without error.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">구매자가 선호하는 결제 핸들러를 우선순위 순서(가장 선호하는 것이 먼저)로 나열합니다. 각 항목은 비즈니스 프로필의 <code>ucp.payment_handlers</code>에 공개된 핸들러를 가리키며, 선호하는 결제 수단 유형으로 범위를 좁힐 수도 있습니다. 비즈니스는 이를 사용해 핸들러(유형이 주어지면 유형까지)를 미리 선택하거나 우선순위를 정해야 하며(SHOULD), 사용할 수 없거나 자격이 없는 항목은 무시할 수 있습니다(MAY). 인식하지 못하는 값은 오류 없이 반드시 무시해야 합니다(MUST).</td>
 </tr>
 </tbody>
 </table>
@@ -5325,14 +5325,14 @@
 <tr>
 <td style="text-align: left;">dev.ucp.buyer_ip</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Client's IP address (IPv4 or IPv6).</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">클라이언트의 IP 주소(IPv4 또는 IPv6).</td>
 </tr>
 <tr>
 <td style="text-align: left;">dev.ucp.user_agent</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Client's HTTP User-Agent header or equivalent.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">클라이언트의 HTTP User-Agent 헤더 또는 그에 상응하는 값.</td>
 </tr>
 </tbody>
 </table>
@@ -5340,7 +5340,7 @@
 <p>플랫폼이 제공하는 유입 경로와 전환 이벤트 컨텍스트입니다. 플랫폼이 전달하는 캠페인 ID, 클릭
 식별자, 소스/매체 표식이 여기에 해당합니다. 자세한 내용과 동의 요구 사항은
 <a href="../../overview/#attribution">어트리뷰션</a>을 참고하세요.</p>
-<p>Platform-emitted referral and conversion-event context — campaign identifiers, click IDs, source/medium markers, etc. The same parameters platforms communicate via URL query parameters in browser-based flows.</p>
+<p>플랫폼이 내보내는 추천 및 전환 이벤트 맥락: 캠페인 식별자, 클릭 ID, source/medium 마커 등. 브라우저 기반 흐름에서 플랫폼이 URL 쿼리 매개변수로 전달하는 것과 같은 매개변수입니다.</p>
 <h3 id="total">합계<a class="headerlink" href="#total" title="Permanent link">&para;</a></h3>
 <p>장바구니와 체크아웃에는 같은 합계 규약이 적용됩니다. 렌더링 규약, 회계 항등식, 잘 알려진
 유형, 반복 유형, 하위 라인 의미론은 <a href="../checkout/#totals">체크아웃 합계</a>를 참고하세요.</p>
@@ -5357,20 +5357,20 @@
 <tr>
 <td style="text-align: left;">type</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Cost category. Well-known values: subtotal, items_discount, discount, fulfillment, tax, fee, total. Businesses MAY use additional values.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">비용 범주. 잘 알려진 값: subtotal, items_discount, discount, fulfillment, tax, fee, total. 비즈니스는 추가 값을 사용할 수 있습니다(MAY).</td>
 </tr>
 <tr>
 <td style="text-align: left;">display_text</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Text to display against the amount. Should reflect appropriate method (e.g., 'Shipping', 'Delivery').</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">금액 옆에 표시할 텍스트. 적절한 방식을 반영해야 합니다(예: 'Shipping', 'Delivery').</td>
 </tr>
 <tr>
 <td style="text-align: left;">amount</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#signed-amount">Signed Amount</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Monetary amount in the currency's minor unit as defined by ISO 4217. Refer to the currency's exponent to determine minor-to-major ratio (e.g., 2 for USD, 0 for JPY, 3 for KWD). May be negative — the sign is intrinsic to the value (e.g., discounts are negative, charges are positive).</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">ISO 4217에 정의된 통화의 최소 단위로 나타낸 금액. 최소 단위와 기본 단위의 비율은 통화의 지수를 참고합니다(예: USD는 2, JPY는 0, KWD는 3). 음수일 수 있으며, 부호는 값 자체에 포함됩니다(예: 할인은 음수, 청구 금액은 양수).</td>
 </tr>
 </tbody>
 </table>
@@ -5392,38 +5392,38 @@
 <tr>
 <td style="text-align: left;">type</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;"><strong>Constant = error</strong>. Message type discriminator.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;"><strong>상수 = error</strong>. 메시지 유형 판별자.</td>
 </tr>
 <tr>
 <td style="text-align: left;">code</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#error-code">Error Code</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Error code identifying the type of error. Standard errors are defined in capability specifications (see examples) and have standardized semantics; freeform codes are permitted.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">오류 유형을 식별하는 오류 코드. 표준 오류는 기능 명세에 정의되어 있고(예시 참고) 의미가 표준화되어 있으며, 자유 형식 코드도 허용합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">path</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">RFC 9535 JSONPath to the component the message refers to (e.g., $.line_items[0]).</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">메시지가 가리키는 구성 요소의 RFC 9535 JSONPath(예: $.line_items[0]).</td>
 </tr>
 <tr>
 <td style="text-align: left;">content_type</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Content format, default = plain.<br><strong>Enum:</strong> <code>plain</code>, <code>markdown</code></td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">콘텐츠 형식. 기본값은 plain.<br><strong>허용 값:</strong> <code>plain</code>, <code>markdown</code></td>
 </tr>
 <tr>
 <td style="text-align: left;">content</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Human-readable message.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">사람이 읽을 수 있는 메시지.</td>
 </tr>
 <tr>
 <td style="text-align: left;">severity</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Reflects the resource state and recommended action. 'recoverable': platform can resolve the condition in band, for example by modifying inputs or processing a related Action, and submit a new operation when needed. 'requires_buyer_input': merchant requires information their API doesn't support collecting programmatically (checkout incomplete). 'requires_buyer_review': buyer must authorize before order placement due to policy, regulatory, or entitlement rules. 'unrecoverable': no valid resource exists to act on, retry with new resource or inputs. Errors with 'requires_<em>' severity contribute to 'status: requires_escalation'.<br></em><em>Enum:</em>* <code>recoverable</code>, <code>requires_buyer_input</code>, <code>requires_buyer_review</code>, <code>unrecoverable</code></td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">리소스 상태와 권장 조치를 나타냅니다. 'recoverable': 플랫폼이 입력을 수정하거나 관련 Action을 처리하는 등 대역 내에서 상황을 해결하고, 필요하면 새 작업을 제출할 수 있습니다. 'requires_buyer_input': 판매자의 API로는 프로그래밍 방식으로 수집할 수 없는 정보가 필요합니다(체크아웃 미완료). 'requires_buyer_review': 정책, 규제, 자격 규칙 때문에 주문 전에 구매자가 승인해야 합니다. 'unrecoverable': 조치할 유효한 리소스가 없으므로 새 리소스나 입력으로 재시도해야 합니다. 'requires_<em>' 심각도의 오류는 'status: requires_escalation'의 원인이 됩니다.<br></em><em>허용 값:</em>* <code>recoverable</code>, <code>requires_buyer_input</code>, <code>requires_buyer_review</code>, <code>unrecoverable</code></td>
 </tr>
 </tbody>
 </table>
@@ -5441,32 +5441,32 @@
 <tr>
 <td style="text-align: left;">type</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;"><strong>Constant = info</strong>. Message type discriminator.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;"><strong>상수 = info</strong>. 메시지 유형 판별자.</td>
 </tr>
 <tr>
 <td style="text-align: left;">path</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">RFC 9535 JSONPath to the component the message refers to (e.g., $.line_items[0]).</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">메시지가 가리키는 구성 요소의 RFC 9535 JSONPath(예: $.line_items[0]).</td>
 </tr>
 <tr>
 <td style="text-align: left;">code</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#info-code">Info Code</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Info code identifying the type of informational message. Standard codes are defined in capability specifications (see examples) and have standardized semantics; freeform codes are permitted.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">정보 메시지의 유형을 식별하는 정보 코드. 표준 코드는 기능 명세에 정의되어 있고(예시 참고) 표준화된 의미를 가지며, 자유 형식 코드도 허용됩니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">content_type</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Content format, default = plain.<br><strong>Enum:</strong> <code>plain</code>, <code>markdown</code></td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">콘텐츠 형식. 기본값은 plain.<br><strong>허용 값:</strong> <code>plain</code>, <code>markdown</code></td>
 </tr>
 <tr>
 <td style="text-align: left;">content</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Human-readable message.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">사람이 읽을 수 있는 메시지.</td>
 </tr>
 </tbody>
 </table>
@@ -5484,50 +5484,50 @@
 <tr>
 <td style="text-align: left;">type</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;"><strong>Constant = warning</strong>. Message type discriminator.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;"><strong>상수 = warning</strong>. 메시지 유형 판별자.</td>
 </tr>
 <tr>
 <td style="text-align: left;">path</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">RFC 9535 JSONPath to the component the message refers to (e.g., $.line_items[0]).</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">메시지가 가리키는 구성 요소의 RFC 9535 JSONPath(예: $.line_items[0]).</td>
 </tr>
 <tr>
 <td style="text-align: left;">code</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#warning-code">Warning Code</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Warning code identifying the type of warning. Standard codes are defined in capability specifications (see examples) and have standardized semantics; freeform codes are permitted.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">경고 유형을 식별하는 경고 코드. 표준 코드는 기능 명세에 정의되어 있고(예시 참고) 표준화된 의미를 지닙니다. 자유 형식 코드도 허용됩니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">content</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Human-readable warning message that MUST be displayed.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">반드시 표시해야 하는(MUST) 사람이 읽을 수 있는 경고 메시지.</td>
 </tr>
 <tr>
 <td style="text-align: left;">content_type</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Content format, default = plain.<br><strong>Enum:</strong> <code>plain</code>, <code>markdown</code></td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">콘텐츠 형식. 기본값은 plain.<br><strong>허용 값:</strong> <code>plain</code>, <code>markdown</code></td>
 </tr>
 <tr>
 <td style="text-align: left;">presentation</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Rendering contract for this warning. 'notice' (default): platform MUST display, MAY dismiss. 'disclosure': platform MUST display in proximity to the path-referenced component, MUST NOT hide or auto-dismiss. See specification for full contract.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 경고의 렌더링 규약입니다. 'notice'(기본값): 플랫폼은 반드시 표시해야 하며(MUST), 닫을 수 있습니다(MAY). 'disclosure': 플랫폼은 반드시 path가 가리키는 구성 요소 가까이에 표시해야 하며(MUST), 숨기거나 자동으로 닫아서는 안 됩니다(MUST NOT). 전체 규약은 명세를 참고하세요.</td>
 </tr>
 <tr>
 <td style="text-align: left;">image_url</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">URL to a required visual element (e.g., warning symbol, energy class label).</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">필수 시각 요소(예: 경고 기호, 에너지 등급 라벨)의 URL.</td>
 </tr>
 <tr>
 <td style="text-align: left;">url</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Reference URL for more information (e.g., regulatory site, registry entry, policy page).</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">추가 정보를 위한 참조 URL(예: 규제 기관 사이트, 등록부 항목, 정책 페이지).</td>
 </tr>
 </tbody>
 </table>
@@ -5545,26 +5545,26 @@
 <tr>
 <td style="text-align: left;">type</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Type of link. Well-known values: <code>privacy_policy</code>, <code>terms_of_service</code>, <code>refund_policy</code>, <code>shipping_policy</code>, <code>faq</code>. Consumers SHOULD handle unknown values gracefully by displaying them using the <code>title</code> field or omitting the link.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">링크 유형. 잘 알려진 값: <code>privacy_policy</code>, <code>terms_of_service</code>, <code>refund_policy</code>, <code>shipping_policy</code>, <code>faq</code>. 소비자는 알 수 없는 값을 <code>title</code> 필드로 표시하거나 링크를 생략하는 식으로 적절히 처리해야 합니다(SHOULD).</td>
 </tr>
 <tr>
 <td style="text-align: left;">url</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">The actual URL pointing to the content to be displayed.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">표시할 콘텐츠를 가리키는 실제 URL.</td>
 </tr>
 <tr>
 <td style="text-align: left;">title</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Optional display text for the link. When provided, use this instead of generating from type.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">링크의 표시 텍스트(선택 사항). 제공되면 type에서 생성하는 대신 이 값을 사용합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Optional identifier for the linked resource when it is an addressable UCP resource (for example, a product or variant), so a platform can act on it through the capability that owns it. Omit for resources without a UCP identifier, such as a policy page.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">연결된 리소스가 주소 지정 가능한 UCP 리소스(예: 상품 또는 변형)일 때의 식별자(선택 사항). 플랫폼은 이를 이용해 해당 리소스를 소유한 기능으로 작업할 수 있습니다. 정책 페이지처럼 UCP 식별자가 없는 리소스에는 생략합니다.</td>
 </tr>
 </tbody>
 </table>
@@ -5585,26 +5585,26 @@
 <tr>
 <td style="text-align: left;">type</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#reverse-domain-name">Reverse Domain Name</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Policy type discriminator. Open reverse-DNS vocabulary. See specification documentation for the registry of well-known policy types. Businesses MAY define custom types in their own domain (e.g., <code>com.example.policy.price_match</code>). Platforms MUST tolerate unknown values.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">정책 유형 판별자. 열린 역 DNS 어휘입니다. 잘 알려진 정책 유형의 레지스트리는 명세 문서를 참고하세요. 비즈니스는 자체 도메인에 사용자 정의 유형을 정의할 수 있습니다(MAY, 예: <code>com.example.policy.price_match</code>). 플랫폼은 알 수 없는 값을 반드시 허용해야 합니다(MUST).</td>
 </tr>
 <tr>
 <td style="text-align: left;">description</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#description">Description</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Human-readable policy summary in one or more formats (plain, markdown, html). Required on every policy so a platform can present it without understanding any type-specific fields. This is not the buyer-facing disclosure — display is compelled by a <code>messages[]</code> warning (see the Policies section).</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">하나 이상의 형식(plain, markdown, html)으로 된 사람이 읽을 수 있는 정책 요약. 플랫폼이 유형별 필드를 이해하지 못해도 표시할 수 있도록 모든 정책에 필수입니다. 이것은 구매자 대상 고지가 아닙니다. 표시 의무는 <code>messages[]</code> 경고로 부과됩니다(정책 섹션 참고).</td>
 </tr>
 <tr>
 <td style="text-align: left;">applies_to</td>
 <td style="text-align: left;">Array[string]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">RFC 9535 JSONPath expressions identifying the nodes this policy applies to, relative to the embedding response root (e.g., <code>$.line_items[0]</code> in cart/checkout, <code>$.products[2]</code> in catalog). Each target covers the node it names and everything nested under it, so a target on a product also covers its variants. A singular query (RFC 9535 Section 2.3.5.1; name and index selectors only) names a single node; filters, wildcards, and slices match a set. When omitted, the policy applies to the entire response. When policies of the same <code>type</code> contest a node, the narrowest target wins and overrides the rest. See the Policies section for how specificity resolves.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 정책이 적용되는 노드를 가리키는 RFC 9535 JSONPath 표현식으로, 응답을 포함하는 루트를 기준으로 합니다(예: 장바구니·체크아웃의 <code>$.line_items[0]</code>, 카탈로그의 <code>$.products[2]</code>). 각 대상은 지정한 노드와 그 아래에 중첩된 모든 것을 포함하므로, 상품을 대상으로 하면 그 변형도 포함됩니다. 단수 쿼리(RFC 9535 Section 2.3.5.1, 이름·인덱스 선택자만 사용)는 노드 하나를 지정하고, 필터·와일드카드·슬라이스는 노드 집합과 일치합니다. 생략하면 정책이 응답 전체에 적용됩니다. 같은 <code>type</code>의 정책들이 한 노드를 두고 경합하면 가장 좁은 대상이 이기고 나머지를 덮어씁니다. 구체성을 판정하는 방법은 정책 섹션을 참고하세요.</td>
 </tr>
 <tr>
 <td style="text-align: left;">url</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Optional link to the full policy document.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">전체 정책 문서 링크(선택 사항).</td>
 </tr>
 </tbody>
 </table>

@@ -4469,7 +4469,7 @@
 </tbody>
 </table>
 <h3 id="request">요청<a class="headerlink" href="#request" title="Permanent link">&para;</a></h3>
-<p>Request body for location search. The <code>distance</code> and <code>serves</code> relations and every supplied <code>filters</code> predicate combine with AND; <code>query</code> does not relax them.</p>
+<p>위치 검색 요청 본문입니다. <code>distance</code>와 <code>serves</code> 관계, 그리고 제공된 모든 <code>filters</code> 조건은 AND로 결합되며, <code>query</code>가 이를 완화하지 않습니다.</p>
 <table>
 <thead>
 <tr>
@@ -4483,44 +4483,44 @@
 <tr>
 <td style="text-align: left;">query</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Free-text search query for natural language location search (e.g., 'restaurants near me that deliver', 'hotels with pool').</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">자연어 위치 검색을 위한 자유 텍스트 검색어(예: 'restaurants near me that deliver', 'hotels with pool').</td>
 </tr>
 <tr>
 <td style="text-align: left;">context</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#context">Context</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Provisional buyer signals for relevance and localization—not authoritative data. Businesses SHOULD use these values when verified inputs (e.g., shipping address) are absent, and MAY ignore or down-rank them if inconsistent with higher-confidence signals (authenticated account, risk detection) or regulatory constraints (export controls). Eligibility and policy enforcement MUST occur at checkout time using binding transaction data. Context SHOULD be non-identifying and can be disclosed progressively—coarse signals early, finer resolution as the session progresses. Higher-resolution data (shipping address, billing address) supersedes context.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">관련성 판단과 현지화를 위한 잠정적 구매자 신호로, 권위 있는 데이터가 아닙니다. 검증된 입력(예: 배송 주소)이 없으면 비즈니스는 이 값을 사용해야 하며(SHOULD), 더 신뢰도 높은 신호(인증된 계정, 위험 탐지)나 규제 제약(수출 통제)과 맞지 않으면 무시하거나 우선순위를 낮출 수 있습니다(MAY). 자격 판단과 정책 적용은 반드시 체크아웃 시점에 구속력 있는 거래 데이터로 수행해야 합니다(MUST). 컨텍스트는 개인을 식별할 수 없어야 하며(SHOULD), 단계적으로 공개할 수 있습니다. 초기에는 대략적인 신호를, 세션이 진행되면서 더 세밀한 정보를 제공합니다. 더 세밀한 데이터(배송 주소, 청구 주소)가 컨텍스트보다 우선합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">signals</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#signals">Signals</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Environment data provided by the platform to support authorization and abuse prevention. Values MUST NOT be buyer-asserted claims — platforms provide signals based on direct observation or independently verifiable third-party attestations. All signal keys MUST use reverse-domain naming to ensure provenance and prevent collisions when multiple extensions contribute to the shared namespace.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">승인과 악용 방지를 돕기 위해 플랫폼이 제공하는 환경 데이터. 값은 구매자가 주장한 내용이어서는 안 됩니다(MUST NOT). 플랫폼은 직접 관찰했거나 독립적으로 검증 가능한 제3자 증명에 근거한 신호를 제공합니다. 여러 확장이 공유 네임스페이스에 값을 추가할 때 출처를 보장하고 충돌을 막기 위해, 모든 신호 키는 반드시 역도메인 이름을 사용해야 합니다(MUST).</td>
 </tr>
 <tr>
 <td style="text-align: left;">distance</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#location-distance">Location Distance</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Optional explicit-center radius predicate. When present, it combines with <code>serves</code> and every supplied <code>filters</code> predicate using AND.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">명시적 중심점 반경 조건(선택 사항). 있으면 <code>serves</code> 및 제공된 모든 <code>filters</code> 조건과 AND로 결합됩니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">serves</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#location-serves">Location Serves</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Optional authoritative service-target predicate. When present, it combines with <code>distance</code> and every supplied <code>filters</code> predicate using AND.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">권위 있는 서비스 대상 조건(선택 사항). 있으면 <code>distance</code> 및 제공된 모든 <code>filters</code> 조건과 AND로 결합됩니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">filters</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#location-filter">Location Filter</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Filter criteria to narrow Location Search and Lookup results. All supplied filters combine with AND.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">위치 검색과 조회 결과를 좁히는 필터 조건. 제공된 모든 필터는 AND로 결합됩니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">pagination</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#pagination-request">Pagination Request</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Pagination parameters for requests.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">요청의 페이지네이션 매개변수.</td>
 </tr>
 </tbody>
 </table>
@@ -4538,26 +4538,26 @@
 <tr>
 <td style="text-align: left;">ucp</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#ucp-response-location-schema">UCP Location Response Schema</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">UCP metadata for location responses.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">위치 응답용 UCP 메타데이터.</td>
 </tr>
 <tr>
 <td style="text-align: left;">locations</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#location">Location</a>]</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Locations matching the search criteria.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">검색 조건에 맞는 위치.</td>
 </tr>
 <tr>
 <td style="text-align: left;">pagination</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#pagination-response">Pagination Response</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Pagination information in responses.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">응답의 페이지네이션 정보.</td>
 </tr>
 <tr>
 <td style="text-align: left;">messages</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#message">Message</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Errors, warnings, or informational messages about the search results.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">검색 결과에 관한 오류, 경고, 정보 메시지.</td>
 </tr>
 </tbody>
 </table>
@@ -4654,14 +4654,14 @@
 <tr>
 <td style="text-align: left;">center</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#geo">Geo</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Explicit center of the radius. The Platform MUST supply it; the Business MUST NOT derive it from context, signals, an IP address, or <code>serves</code>.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">반경의 명시적 중심점. 플랫폼이 반드시 제공해야 하며(MUST), 비즈니스는 컨텍스트, 신호, IP 주소, <code>serves</code>에서 이를 유추해서는 안 됩니다(MUST NOT).</td>
 </tr>
 <tr>
 <td style="text-align: left;">max</td>
 <td style="text-align: left;">number</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Inclusive maximum distance in RFC 7035 distance unit (meters). A Business unable to honor the supplied value MUST reject the request rather than clamp it or substitute another radius.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">RFC 7035 거리 단위(미터)로 나타낸 최대 거리(경계 포함). 제공된 값을 지킬 수 없는 비즈니스는 값을 잘라내거나 다른 반경으로 바꾸지 말고 반드시 요청을 거부해야 합니다(MUST).</td>
 </tr>
 </tbody>
 </table>
@@ -4709,14 +4709,14 @@
 <tr>
 <td style="text-align: left;">point</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#geo">Geo</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">WGS 84 coordinates of the service target.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">서비스 대상의 WGS 84 좌표.</td>
 </tr>
 <tr>
 <td style="text-align: left;">address</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#locality">Locality</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Coarse locality of the service target.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">서비스 대상의 대략적인 지역.</td>
 </tr>
 </tbody>
 </table>
@@ -4766,20 +4766,20 @@
 <tr>
 <td style="text-align: left;">hours</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Filter by operating hours, evaluated at the one supplied instant.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">영업시간으로 필터링하며, 제공된 단일 시점을 기준으로 평가합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">amenities</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/draft/draft/specification/reference/#amenity-type">Amenity Type</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Filter by amenity identifier. A Location matches only when its <code>amenities</code> map contains every supplied identifier as an exact key; descriptions and namespace prefixes do not participate in matching.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">편의 시설 식별자로 필터링합니다. 위치의 <code>amenities</code> 맵에 제공된 모든 식별자가 정확한 키로 있을 때만 일치합니다. 설명과 네임스페이스 접두사는 일치 판단에 사용하지 않습니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">items</td>
 <td style="text-align: left;">Array[string]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Current item-availability filter. A candidate Location matches only when the Business can currently provide every referenced item at that Location; all references combine with AND.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">현재 항목 가용성 필터. 비즈니스가 참조된 모든 항목을 해당 위치에서 현재 제공할 수 있을 때만 후보 위치가 일치합니다. 모든 참조는 AND로 결합됩니다.</td>
 </tr>
 </tbody>
 </table>
@@ -4890,7 +4890,7 @@ UCP 식별자의 정의가 해당 편의시설을 정확히 설명한다면 비�
 같다고 가정해서는 안 됩니다(<strong>MUST NOT</strong>). 이 허용은 페이지 크기에만 적용되며,
 <code>distance.max</code>를 줄여도 된다는 뜻은 아닙니다(<a href="#distance">거리</a> 참고).</p>
 <h3 id="pagination-request">페이지네이션 요청<a class="headerlink" href="#pagination-request" title="Permanent link">&para;</a></h3>
-<p>Pagination parameters for requests.</p>
+<p>요청의 페이지네이션 매개변수.</p>
 <table>
 <thead>
 <tr>
@@ -4904,19 +4904,19 @@ UCP 식별자의 정의가 해당 편의시설을 정확히 설명한다면 비�
 <tr>
 <td style="text-align: left;">cursor</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Opaque cursor from previous response.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이전 응답에서 받은 불투명 커서.</td>
 </tr>
 <tr>
 <td style="text-align: left;">limit</td>
 <td style="text-align: left;">integer</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Requested page size, not a guaranteed result count. When omitted, the Business MUST apply a default page size. A default of 10 is RECOMMENDED, but the Business MAY choose another value. The Business MAY return fewer results than the requested or default page size, including when enforcing its maximum page size. A Platform MUST NOT assume that the response count equals either value.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">요청 페이지 크기로, 결과 개수를 보장하지 않습니다. 생략하면 비즈니스는 반드시 기본 페이지 크기를 적용해야 합니다(MUST). 기본값은 10을 권장하지만(RECOMMENDED), 비즈니스는 다른 값을 선택할 수 있습니다(MAY). 비즈니스는 최대 페이지 크기를 적용하는 경우를 포함해 요청한 크기나 기본 크기보다 적은 결과를 반환할 수 있습니다(MAY). 플랫폼은 응답 개수가 두 값 중 어느 것과 같다고 가정해서는 안 됩니다(MUST NOT).</td>
 </tr>
 </tbody>
 </table>
 <h3 id="pagination-response">페이지네이션 응답<a class="headerlink" href="#pagination-response" title="Permanent link">&para;</a></h3>
-<p>Pagination information in responses.</p>
+<p>응답의 페이지네이션 정보.</p>
 <table>
 <thead>
 <tr>
@@ -4930,20 +4930,20 @@ UCP 식별자의 정의가 해당 편의시설을 정확히 설명한다면 비�
 <tr>
 <td style="text-align: left;">cursor</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Cursor to fetch the next page of results. MUST be present when has_next_page is true.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">다음 결과 페이지를 가져오기 위한 커서. has_next_page가 true이면 반드시 있어야 합니다(MUST).</td>
 </tr>
 <tr>
 <td style="text-align: left;">has_next_page</td>
 <td style="text-align: left;">boolean</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Whether more results are available.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">추가 결과가 있는지 여부.</td>
 </tr>
 <tr>
 <td style="text-align: left;">total_count</td>
 <td style="text-align: left;">integer</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Total number of matching items, if available.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">사용 가능한 경우, 일치하는 항목의 총개수.</td>
 </tr>
 </tbody>
 </table>

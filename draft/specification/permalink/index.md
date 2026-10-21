@@ -49,11 +49,11 @@ UCP 쇼핑 퍼머링크(permalink)는 **브라우저로 열 수 있는 쇼핑 �
 
 ### 설정
 
-Business browser endpoint configuration for shopping permalinks.
+쇼핑 퍼머링크용 비즈니스 브라우저 엔드포인트 설정.
 
-| 이름     | 타입   | 필수 여부    | 설명                                                                                                                                                                                                                         |
-| -------- | ------ | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| endpoint | string | **Required** | Absolute HTTPS browser endpoint with a non-empty authority and without userinfo, query, fragment, whitespace, backslashes, or trailing slash. Optional compact item path and query parameters are appended to this endpoint. |
+| 이름     | 타입   | 필수 여부 | 설명                                                                                                                                                                                             |
+| -------- | ------ | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| endpoint | string | **필수**  | authority가 비어 있지 않고 userinfo, 쿼리, 프래그먼트, 공백, 백슬래시, 후행 슬래시가 없는 절대 HTTPS 브라우저 엔드포인트. 선택적인 축약 항목 경로와 쿼리 매개변수가 이 엔드포인트 뒤에 붙습니다. |
 
 ## URL 형태와 라우트 바인딩
 

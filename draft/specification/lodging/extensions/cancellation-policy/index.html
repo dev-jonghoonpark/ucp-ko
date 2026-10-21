@@ -4171,32 +4171,32 @@
 <tr>
 <td style="text-align: left;">type</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#reverse-domain-name">Reverse Domain Name</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;"><strong>Constant = dev.ucp.lodging.policy.cancellation</strong>. Policy discriminator for lodging cancellation terms. Policy type discriminator. Open reverse-DNS vocabulary. See specification documentation for the registry of well-known policy types. Businesses MAY define custom types in their own domain (e.g., <code>com.example.policy.price_match</code>). Platforms MUST tolerate unknown values.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;"><strong>상수 = dev.ucp.lodging.policy.cancellation</strong>. 숙박 취소 조건을 나타내는 정책 판별자. 정책 유형 판별자. 열린 역 DNS 어휘입니다. 잘 알려진 정책 유형의 레지스트리는 명세 문서를 참고하세요. 비즈니스는 자체 도메인에 사용자 정의 유형을 정의할 수 있습니다(MAY, 예: <code>com.example.policy.price_match</code>). 플랫폼은 알 수 없는 값을 반드시 허용해야 합니다(MUST).</td>
 </tr>
 <tr>
 <td style="text-align: left;">description</td>
 <td style="text-align: left;"><a href="/ucp-ko/draft/draft/specification/reference/#description">Description</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Human-readable policy summary in one or more formats (plain, markdown, html). Required on every policy so a platform can present it without understanding any type-specific fields. This is not the buyer-facing disclosure — display is compelled by a <code>messages[]</code> warning (see the Policies section).</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">하나 이상의 형식(plain, markdown, html)으로 된 사람이 읽을 수 있는 정책 요약. 플랫폼이 유형별 필드를 이해하지 못해도 표시할 수 있도록 모든 정책에 필수입니다. 이것은 구매자 대상 고지가 아닙니다. 표시 의무는 <code>messages[]</code> 경고로 부과됩니다(정책 섹션 참고).</td>
 </tr>
 <tr>
 <td style="text-align: left;">applies_to</td>
 <td style="text-align: left;">Array[string]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">RFC 9535 JSONPath expressions identifying the nodes this policy applies to, relative to the embedding response root (e.g., <code>$.line_items[0]</code> in cart/checkout, <code>$.products[2]</code> in catalog). Each target covers the node it names and everything nested under it, so a target on a product also covers its variants. A singular query (RFC 9535 Section 2.3.5.1; name and index selectors only) names a single node; filters, wildcards, and slices match a set. When omitted, the policy applies to the entire response. When policies of the same <code>type</code> contest a node, the narrowest target wins and overrides the rest. See the Policies section for how specificity resolves.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 정책이 적용되는 노드를 가리키는 RFC 9535 JSONPath 표현식으로, 응답을 포함하는 루트를 기준으로 합니다(예: 장바구니·체크아웃의 <code>$.line_items[0]</code>, 카탈로그의 <code>$.products[2]</code>). 각 대상은 지정한 노드와 그 아래에 중첩된 모든 것을 포함하므로, 상품을 대상으로 하면 그 변형도 포함됩니다. 단수 쿼리(RFC 9535 Section 2.3.5.1, 이름·인덱스 선택자만 사용)는 노드 하나를 지정하고, 필터·와일드카드·슬라이스는 노드 집합과 일치합니다. 생략하면 정책이 응답 전체에 적용됩니다. 같은 <code>type</code>의 정책들이 한 노드를 두고 경합하면 가장 좁은 대상이 이기고 나머지를 덮어씁니다. 구체성을 판정하는 방법은 정책 섹션을 참고하세요.</td>
 </tr>
 <tr>
 <td style="text-align: left;">url</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Optional link to the full policy document.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">전체 정책 문서 링크(선택 사항).</td>
 </tr>
 <tr>
 <td style="text-align: left;">refundability</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">High-level refundability classification. Well-known values: <code>refundable</code> (free cancellation currently available), <code>partially_refundable</code> (cancellable with penalty, or inside penalty window), <code>non_refundable</code> (no refund upon cancellation).</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">상위 수준의 환불 가능 여부 분류. 잘 알려진 값: <code>refundable</code>(현재 무료 취소 가능), <code>partially_refundable</code>(위약금을 내고 취소 가능하거나 위약금 부과 기간 내), <code>non_refundable</code>(취소 시 환불 없음).</td>
 </tr>
 </tbody>
 </table>

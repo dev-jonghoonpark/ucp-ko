@@ -124,82 +124,82 @@
 
 #### 로열티
 
-Key-value map whose keys represent buyer/platform asserted eligibility claims and whose values represent associated membership information. All loyalty keys MUST use reverse-domain naming to ensure provenance and prevent collisions when multiple extensions contribute to the shared namespace.
+키는 구매자/플랫폼이 주장하는 자격 조건 클레임을, 값은 관련 멤버십 정보를 나타내는 키-값 맵. 여러 확장이 공유 네임스페이스에 값을 넣을 때 출처를 보장하고 충돌을 막기 위해 모든 로열티 키는 반드시 역 도메인 명명을 사용해야 합니다(MUST).
 
 #### 로열티 멤버십
 
-Loyalty membership the business has accepted for the eligibility claim represented by the parent map key. Programs that can be joined independently MUST be modeled as separate sibling entries under the loyalty map, distinguished by reverse-domain naming (e.g., 'com.example.rewards' and 'com.example.rewards.card').
+상위 맵 키가 나타내는 자격 조건 클레임에 대해 비즈니스가 수락한 로열티 멤버십. 독립적으로 가입할 수 있는 프로그램은 반드시 로열티 맵 아래에 별도의 형제 항목으로 모델링하고, 역 도메인 명명(예: 'com.example.rewards'와 'com.example.rewards.card')으로 구분해야 합니다(MUST).
 
-| 이름        | 타입          | 필수 여부    | 설명                                                                                                                                                                                                                                                            |
-| ----------- | ------------- | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| id          | string        | **Required** | Unique loyalty membership identifier.                                                                                                                                                                                                                           |
-| name        | string        | **Required** | Business specific name of the loyalty membership/program.                                                                                                                                                                                                       |
-| display_id  | string        | Optional     | A masked or partial version of the membership id for user recognition (e.g., '\*\*\*\*5678'). MUST NOT be set if the membership has not been verified.                                                                                                          |
-| tiers       | Array[object] | Optional     | Active or display-safe tier context for this membership. Most programs are single-status (one entry); programs with parallel status dimensions (e.g., current and lifetime) populate one entry per active tier. Omitted when no tier context has been resolved. |
-| rewards     | Array[object] | Optional     | Reward types and earning forecasts associated with this membership. Each object encapsulates one type of reward.                                                                                                                                                |
-| provisional | boolean       | **Required** | True if this membership requires additional verification.                                                                                                                                                                                                       |
+| 이름        | 타입          | 필수 여부 | 설명                                                                                                                                                                                                                                       |
+| ----------- | ------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| id          | string        | **필수**  | 고유 로열티 멤버십 식별자.                                                                                                                                                                                                                 |
+| name        | string        | **필수**  | 로열티 멤버십/프로그램의 비즈니스별 이름.                                                                                                                                                                                                  |
+| display_id  | string        | 선택      | 사용자가 알아볼 수 있도록 마스킹되거나 일부만 표시한 멤버십 ID(예: '\*\*\*\*5678'). 멤버십이 검증되지 않았다면 설정해서는 안 됩니다(MUST NOT).                                                                                             |
+| tiers       | Array[object] | 선택      | 이 멤버십의 활성 또는 표시해도 안전한 등급 정보. 대부분의 프로그램은 단일 등급(항목 하나)이며, 병렬 등급 차원(예: 현재 등급과 평생 등급)이 있는 프로그램은 활성 등급마다 항목을 하나씩 채웁니다. 등급 정보가 확정되지 않았으면 생략합니다. |
+| rewards     | Array[object] | 선택      | 이 멤버십과 연결된 리워드 유형과 적립 예측입니다. 각 객체는 리워드 유형 하나를 담습니다.                                                                                                                                                   |
+| provisional | boolean       | **필수**  | 이 멤버십에 추가 검증이 필요하면 true.                                                                                                                                                                                                     |
 
 #### 멤버십 등급
 
-Specific achievement rank or status milestone that unlocks escalating value as a member progresses through activity or spend.
+회원이 활동이나 지출을 통해 단계를 올라갈수록 더 큰 혜택을 여는 특정 달성 등급 또는 상태 단계.
 
-| 이름     | 타입          | 필수 여부    | 설명                                                    |
-| -------- | ------------- | ------------ | ------------------------------------------------------- |
-| id       | string        | **Required** | Unique identifier for the membership tier.              |
-| name     | string        | **Required** | The human-readable name of the tier (e.g., 'Platinum'). |
-| benefits | Array[object] | Optional     | List of benefits associated with this tier.             |
+| 이름     | 타입          | 필수 여부 | 설명                                           |
+| -------- | ------------- | --------- | ---------------------------------------------- |
+| id       | string        | **필수**  | 멤버십 등급의 고유 식별자.                     |
+| name     | string        | **필수**  | 사람이 읽을 수 있는 등급 이름(예: 'Platinum'). |
+| benefits | Array[object] | 선택      | 이 등급에 연결된 혜택 목록.                    |
 
 #### 멤버십 등급 혜택
 
-Benefits associated with a membership tier.
+멤버십 등급에 연관된 혜택.
 
-| 이름        | 타입   | 필수 여부    | 설명                                                                                        |
-| ----------- | ------ | ------------ | ------------------------------------------------------------------------------------------- |
-| id          | string | **Required** | Unique identifier for the tier benefit.                                                     |
-| description | string | **Required** | A display-ready, human-readable explanation of this benefit (e.g. 'Early access to sales'). |
+| 이름        | 타입   | 필수 여부 | 설명                                                                                  |
+| ----------- | ------ | --------- | ------------------------------------------------------------------------------------- |
+| id          | string | **필수**  | 등급 혜택의 고유 식별자.                                                              |
+| description | string | **필수**  | 이 혜택을 바로 표시할 수 있는, 사람이 읽을 수 있는 설명(예: 'Early access to sales'). |
 
 #### 멤버십 리워드
 
-Quantifiable reward type and optional earning forecast for the current transaction.
+수량화할 수 있는 리워드 유형과 현재 거래에 대한 선택적 적립 예측.
 
-| 이름             | 타입   | 필수 여부    | 설명                                                                                 |
-| ---------------- | ------ | ------------ | ------------------------------------------------------------------------------------ |
-| currency         | object | **Required** | A unit of value that customers can accumulate through various commercial activities. |
-| earning_forecast | object | Optional     | Preview of rewards to be earned from the current transaction.                        |
+| 이름             | 타입   | 필수 여부 | 설명                                                    |
+| ---------------- | ------ | --------- | ------------------------------------------------------- |
+| currency         | object | **필수**  | 고객이 다양한 상거래 활동으로 적립할 수 있는 가치 단위. |
+| earning_forecast | object | 선택      | 현재 거래로 적립될 리워드 미리보기.                     |
 
 #### 리워드 수량
 
-Non-negative integer amount denominated in the minor unit of the associated reward currency. The associated reward currency's `decimal_places` defines the minor-to-major ratio and defaults to 0 when omitted.
+연결된 리워드 통화의 최소 단위로 나타낸 음이 아닌 정수 금액. 최소 단위와 기본 단위의 비율은 연결된 리워드 통화의 `decimal_places`가 정의하며, 생략하면 기본값은 0입니다.
 
 #### 리워드 통화
 
-The currency of the loyalty reward.
+로열티 리워드의 통화.
 
-| 이름           | 타입    | 필수 여부    | 설명                                                                                                       |
-| -------------- | ------- | ------------ | ---------------------------------------------------------------------------------------------------------- |
-| name           | string  | **Required** | Human-readable name of the currency (e.g. 'LoyaltyStars').                                                 |
-| code           | string  | **Required** | Business-specific representation of the currency (e.g. 'LST').                                             |
-| decimal_places | integer | Optional     | The position of a digit to the right of a decimal point. Applies to all amount related fields for rewards. |
+| 이름           | 타입    | 필수 여부 | 설명                                                             |
+| -------------- | ------- | --------- | ---------------------------------------------------------------- |
+| name           | string  | **필수**  | 사람이 읽을 수 있는 통화 이름(예: 'LoyaltyStars').               |
+| code           | string  | **필수**  | 비즈니스별 통화 표기(예: 'LST').                                 |
+| decimal_places | integer | 선택      | 소수점 오른쪽 자릿수. 리워드의 모든 금액 관련 필드에 적용됩니다. |
 
 #### 적립 예상
 
-Preview of rewards to be earned from the current transaction.
+현재 거래로 적립될 리워드 미리보기.
 
-| 이름      | 타입          | 필수 여부    | 설명                                                     |
-| --------- | ------------- | ------------ | -------------------------------------------------------- |
-| amount    | integer       | **Required** | Total rewards to be earned if the transaction completes. |
-| breakdown | Array[object] | Optional     | List of breakdown of earning contributing to the total.  |
+| 이름      | 타입          | 필수 여부 | 설명                              |
+| --------- | ------------- | --------- | --------------------------------- |
+| amount    | integer       | **필수**  | 거래가 완료되면 적립될 총 리워드. |
+| breakdown | Array[object] | 선택      | 총액을 구성하는 적립 내역 목록.   |
 
 #### 적립 내역
 
-Breakdown rule of the reward earnings
+리워드 적립 내역 규칙
 
-| 이름        | 타입    | 필수 여부    | 설명                                                                                                                                                                   |
-| ----------- | ------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| id          | string  | **Required** | Unique rewards breakdown rule identifier.                                                                                                                              |
-| amount      | integer | **Required** | Rewards earned from this rule.                                                                                                                                         |
-| description | string  | **Required** | A display-ready, human-readable rationale for the specific rewards (e.g. 2x on footwear).                                                                              |
-| benefit_id  | string  | Optional     | Optional `id` of the membership_tier_benefit that produced this rewards rule. Resolves against `membership_tier_benefit.id` within the same parent loyalty membership. |
+| 이름        | 타입    | 필수 여부 | 설명                                                                                                                                     |
+| ----------- | ------- | --------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| id          | string  | **필수**  | 고유 리워드 내역 규칙 식별자.                                                                                                            |
+| amount      | integer | **필수**  | 이 규칙으로 적립된 리워드.                                                                                                               |
+| description | string  | **필수**  | 특정 리워드에 대해 바로 표시할 수 있는, 사람이 읽을 수 있는 근거(예: 신발 2배 적립).                                                     |
+| benefit_id  | string  | 선택      | 이 리워드 규칙을 만든 membership_tier_benefit의 `id`(선택 사항). 같은 상위 로열티 멤버십 안의 `membership_tier_benefit.id`로 해석됩니다. |
 
 ## 로열티 동작
 

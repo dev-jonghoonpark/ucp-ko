@@ -47,23 +47,23 @@
 
 **Inputs**
 
-| 이름         | 타입                                                                            | 필수 여부    | 설명                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| ------------ | ------------------------------------------------------------------------------- | ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| query        | string                                                                          | **Required** | Natural-language question.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| conversation | [Conversation](/ucp-ko/draft/draft/specification/common/ask/rest/#conversation) | Optional     | Provide a conversation to continue it on a follow-up; omit to start a new one.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| ids          | Array[string]                                                                   | Optional     | Optional identifiers that ground the question in any Business resource. A Business SHOULD accept its own Global IDs (GIDs) and MAY accept recognized secondary identifiers such as SKU, handle, or URL. GIDs self-describe to the Business; a Platform may send them as opaque grounding references. Examples include a product, location, cart, order, or booking.                                                                                                                                                                                                                                                                                                     |
-| context      | [Context](/ucp-ko/draft/draft/specification/reference/#context)                 | Optional     | Provisional buyer signals for relevance and localization—not authoritative data. Businesses SHOULD use these values when verified inputs (e.g., shipping address) are absent, and MAY ignore or down-rank them if inconsistent with higher-confidence signals (authenticated account, risk detection) or regulatory constraints (export controls). Eligibility and policy enforcement MUST occur at checkout time using binding transaction data. Context SHOULD be non-identifying and can be disclosed progressively—coarse signals early, finer resolution as the session progresses. Higher-resolution data (shipping address, billing address) supersedes context. |
-| signals      | [Signals](/ucp-ko/draft/draft/specification/reference/#signals)                 | Optional     | Environment data provided by the platform to support authorization and abuse prevention. Values MUST NOT be buyer-asserted claims — platforms provide signals based on direct observation or independently verifiable third-party attestations. All signal keys MUST use reverse-domain naming to ensure provenance and prevent collisions when multiple extensions contribute to the shared namespace.                                                                                                                                                                                                                                                                 |
+| 이름         | 타입                                                                            | 필수 여부 | 설명                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| ------------ | ------------------------------------------------------------------------------- | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| query        | string                                                                          | **필수**  | 자연어 질문.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| conversation | [Conversation](/ucp-ko/draft/draft/specification/common/ask/rest/#conversation) | 선택      | 후속 요청에서 대화를 이어가려면 conversation을 제공하고, 새 대화를 시작하려면 생략합니다.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| ids          | Array[string]                                                                   | 선택      | 질문의 근거가 되는 비즈니스 리소스의 식별자(선택 사항). 비즈니스는 자체 전역 ID(GID)를 받아들여야 하며(SHOULD), SKU, 핸들, URL 같은 인식 가능한 보조 식별자도 받을 수 있습니다(MAY). GID는 비즈니스가 스스로 해석할 수 있으므로 플랫폼은 이를 불투명한 근거 참조로 보낼 수 있습니다. 예로는 상품, 장소, 장바구니, 주문, 예약이 있습니다.                                                                                                                                                                                                                                                                              |
+| context      | [Context](/ucp-ko/draft/draft/specification/reference/#context)                 | 선택      | 관련성 판단과 현지화를 위한 잠정적 구매자 신호로, 권위 있는 데이터가 아닙니다. 검증된 입력(예: 배송 주소)이 없으면 비즈니스는 이 값을 사용해야 하며(SHOULD), 더 신뢰도 높은 신호(인증된 계정, 위험 탐지)나 규제 제약(수출 통제)과 맞지 않으면 무시하거나 우선순위를 낮출 수 있습니다(MAY). 자격 판단과 정책 적용은 반드시 체크아웃 시점에 구속력 있는 거래 데이터로 수행해야 합니다(MUST). 컨텍스트는 개인을 식별할 수 없어야 하며(SHOULD), 단계적으로 공개할 수 있습니다. 초기에는 대략적인 신호를, 세션이 진행되면서 더 세밀한 정보를 제공합니다. 더 세밀한 데이터(배송 주소, 청구 주소)가 컨텍스트보다 우선합니다. |
+| signals      | [Signals](/ucp-ko/draft/draft/specification/reference/#signals)                 | 선택      | 승인과 악용 방지를 돕기 위해 플랫폼이 제공하는 환경 데이터. 값은 구매자가 주장한 내용이어서는 안 됩니다(MUST NOT). 플랫폼은 직접 관찰했거나 독립적으로 검증 가능한 제3자 증명에 근거한 신호를 제공합니다. 여러 확장이 공유 네임스페이스에 값을 추가할 때 출처를 보장하고 충돌을 막기 위해, 모든 신호 키는 반드시 역도메인 이름을 사용해야 합니다(MUST).                                                                                                                                                                                                                                                               |
 
 **Output**
 
-| 이름         | 타입                                                                            | 필수 여부    | 설명                                                                                                                                                                                                                                                                                |
-| ------------ | ------------------------------------------------------------------------------- | ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| ucp          | UCP Ask Response Schema                                                         | **Required** | UCP metadata for ask responses.                                                                                                                                                                                                                                                     |
-| answer       | [Description](/ucp-ko/draft/draft/specification/reference/#description)         | **Required** | Answer provided by the Business. Plain text is required; Markdown and HTML are optional alternative encodings.                                                                                                                                                                      |
-| conversation | [Conversation](/ucp-ko/draft/draft/specification/common/ask/rest/#conversation) | Optional     | Business-issued conversation for multi-turn continuation. When returned, the business SHOULD retain its history until `expires_at` (or per its own policy) so a follow-up with the same `id` builds on it. An unresolved `id` starts a new conversation and is noted in `messages`. |
-| links        | Array\[[Link](/ucp-ko/draft/draft/specification/reference/#link)\]              | Optional     | Optional links and references related to the answer. When a link refers to an addressable UCP resource, the Business SHOULD include its GID in the link's `id`.                                                                                                                     |
-| messages     | Array\[[Message](/ucp-ko/draft/draft/specification/reference/#message)\]        | Optional     | Errors, warnings, or informational messages about the answer or its grounding.                                                                                                                                                                                                      |
+| 이름         | 타입                                                                            | 필수 여부 | 설명                                                                                                                                                                                                                                                                                              |
+| ------------ | ------------------------------------------------------------------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ucp          | UCP Ask Response Schema                                                         | **필수**  | ask 응답용 UCP 메타데이터.                                                                                                                                                                                                                                                                        |
+| answer       | [Description](/ucp-ko/draft/draft/specification/reference/#description)         | **필수**  | 비즈니스가 제공한 답변. 일반 텍스트는 필수이며, Markdown과 HTML은 선택적인 대체 인코딩입니다.                                                                                                                                                                                                     |
+| conversation | [Conversation](/ucp-ko/draft/draft/specification/common/ask/rest/#conversation) | 선택      | 여러 차례 이어지는 대화를 위해 비즈니스가 발급한 대화. 반환한 경우 비즈니스는 같은 `id`로 이어지는 후속 요청이 기존 대화를 이어받을 수 있도록 `expires_at`까지(또는 자체 정책에 따라) 기록을 보관해야 합니다(SHOULD). 해석되지 않는 `id`는 새 대화를 시작하며, 이 사실은 `messages`에 기록됩니다. |
+| links        | Array\[[Link](/ucp-ko/draft/draft/specification/reference/#link)\]              | 선택      | 답변과 관련된 링크와 참조(선택 사항). 링크가 주소 지정 가능한 UCP 리소스를 가리키면 비즈니스는 링크의 `id`에 해당 GID를 포함해야 합니다(SHOULD).                                                                                                                                                  |
+| messages     | Array\[[Message](/ucp-ko/draft/draft/specification/reference/#message)\]        | 선택      | 답변 또는 그 근거에 관한 오류, 경고, 정보 메시지.                                                                                                                                                                                                                                                 |
 
 #### 예시
 
@@ -204,29 +204,29 @@ HTTP 바인딩에서 정의하는 헤더는 다음과 같습니다.
 
 **Request Headers**
 
-| 헤더              | 필수    | 설명                                                                                                                                  |
-| ----------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| `Authorization`   | No      | Contains an OAuth token representing Platform or Buyer credentials.                                                                   |
-| `X-API-Key`       | No      | Reusable API key allocated to the Platform by the Business.                                                                           |
-| `Signature`       | No      | RFC 9421 HTTP Message Signature. Format: `sig1=:<base64-signature>:`.                                                                 |
-| `Signature-Input` | No      | RFC 9421 Signature-Input header. Format: `sig1=("@method" "@path" ...);created=<timestamp>;keyid="<key-id>"`.                         |
-| `Content-Digest`  | No      | Body digest per RFC 9530. Format: `sha-256=:<base64-digest>:`.                                                                        |
-| `Idempotency-Key` | No      | Ensures duplicate operations don't happen during retries.                                                                             |
-| `Request-Id`      | **Yes** | Unique UUID for tracing requests across components.                                                                                   |
-| `User-Agent`      | No      | Identifies the user agent string making the call.                                                                                     |
-| `UCP-Agent`       | **Yes** | Identifies the UCP agent making the call, containing the signer's profile URI. Format: profile="https://example.com/.well-known/ucp". |
-| `Content-Type`    | No      | Representation Metadata describing the body content.                                                                                  |
-| `Accept`          | No      | Content Negotiation, indicating accepted formats.                                                                                     |
-| `Accept-Language` | No      | Preferred natural languages for localization.                                                                                         |
-| `Accept-Encoding` | No      | Supported content-codings (compression).                                                                                              |
+| 헤더              | 필수   | 설명                                                                                                                   |
+| ----------------- | ------ | ---------------------------------------------------------------------------------------------------------------------- |
+| `Authorization`   | 아니요 | 플랫폼 또는 구매자 자격 증명을 나타내는 OAuth 토큰을 담습니다.                                                         |
+| `X-API-Key`       | 아니요 | 비즈니스가 플랫폼에 발급한 재사용 가능한 API 키.                                                                       |
+| `Signature`       | 아니요 | RFC 9421 HTTP Message Signature입니다. 형식: `sig1=:<base64-signature>:`.                                              |
+| `Signature-Input` | 아니요 | RFC 9421 Signature-Input 헤더입니다. 형식: `sig1=("@method" "@path" ...);created=<timestamp>;keyid="<key-id>"`.        |
+| `Content-Digest`  | 아니요 | RFC 9530 본문 다이제스트. 형식: `sha-256=:<base64-digest>:`.                                                           |
+| `Idempotency-Key` | 아니요 | 재시도 중에 같은 작업이 중복 실행되지 않도록 보장합니다.                                                               |
+| `Request-Id`      | **예** | 컴포넌트 간 요청을 추적하기 위한 고유 UUID.                                                                            |
+| `User-Agent`      | 아니요 | 호출하는 사용자 에이전트 문자열을 식별합니다.                                                                          |
+| `UCP-Agent`       | **예** | 호출하는 UCP 에이전트를 식별하며, 서명자의 프로필 URI를 담습니다. 형식: profile="https://example.com/.well-known/ucp". |
+| `Content-Type`    | 아니요 | 본문 콘텐츠를 기술하는 표현 메타데이터(Representation Metadata).                                                       |
+| `Accept`          | 아니요 | 콘텐츠 협상. 허용하는 형식을 나타냅니다.                                                                               |
+| `Accept-Language` | 아니요 | 현지화에 사용할 선호 자연어.                                                                                           |
+| `Accept-Encoding` | 아니요 | 지원하는 콘텐츠 코딩(압축).                                                                                            |
 
 **Response Headers**
 
-| 헤더              | 필수 | 설명                                          |
-| ----------------- | ---- | --------------------------------------------- |
-| `Signature`       | No   | RFC 9421 HTTP Message Signature for response. |
-| `Signature-Input` | No   | RFC 9421 Signature-Input header for response. |
-| `Content-Digest`  | No   | Body digest per RFC 9530 for response.        |
+| 헤더              | 필수   | 설명                                         |
+| ----------------- | ------ | -------------------------------------------- |
+| `Signature`       | 아니요 | 응답에 대한 RFC 9421 HTTP Message Signature. |
+| `Signature-Input` | 아니요 | 응답에 대한 RFC 9421 Signature-Input 헤더.   |
+| `Content-Digest`  | 아니요 | 응답에 대한 RFC 9530 본문 다이제스트.        |
 
 ### 헤더별 요구 사항
 
@@ -298,31 +298,31 @@ UCP는 전송 계층 에러와 비즈니스 결과를 분리하는 2계층 에�
 
 ### UCP 응답 Ask(엔벨로프)
 
-UCP metadata for ask responses.
+ask 응답용 UCP 메타데이터.
 
-| 이름             | 타입   | 필수 여부    | 설명                                                                                                                                           |
-| ---------------- | ------ | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| version          | string | **Required** | Version identifier in YYYY-MM-DD format.                                                                                                       |
-| map_order        | object | Optional     | Preferred key-traversal order for sibling registry fields inside the root `ucp` envelope (`services`, `capabilities`, and `payment_handlers`). |
-| status           | string | Optional     | Application-level status of the UCP operation. **Enum:** `success`, `error`                                                                    |
-| services         | object | Optional     | Service registry keyed by reverse-domain name.                                                                                                 |
-| capabilities     | object | Optional     | Capability registry keyed by reverse-domain name.                                                                                              |
-| payment_handlers | object | Optional     | Payment handler registry keyed by reverse-domain name.                                                                                         |
+| 이름             | 타입   | 필수 여부 | 설명                                                                                                                    |
+| ---------------- | ------ | --------- | ----------------------------------------------------------------------------------------------------------------------- |
+| version          | string | **필수**  | YYYY-MM-DD 형식의 버전 식별자.                                                                                          |
+| map_order        | object | 선택      | 루트 `ucp` 엔벌로프 안에 있는 형제 레지스트리 필드(`services`, `capabilities`, `payment_handlers`)의 선호 키 순회 순서. |
+| status           | string | 선택      | UCP 작업의 애플리케이션 수준 상태. **허용 값:** `success`, `error`                                                      |
+| services         | object | 선택      | 역도메인 이름을 키로 하는 서비스 레지스트리.                                                                            |
+| capabilities     | object | 선택      | 역도메인 이름을 키로 하는 기능 레지스트리.                                                                              |
+| payment_handlers | object | 선택      | 역 도메인 이름을 키로 하는 결제 핸들러 레지스트리.                                                                      |
 
 ### 대화
 
-| 이름       | 타입   | 필수 여부    | 설명                                                                                |
-| ---------- | ------ | ------------ | ----------------------------------------------------------------------------------- |
-| id         | string | **Required** | Opaque, business-issued conversation identifier.                                    |
-| expires_at | string | Optional     | RFC 3339 timestamp after which the conversation context may be discarded. Optional. |
+| 이름       | 타입   | 필수 여부 | 설명                                                                                      |
+| ---------- | ------ | --------- | ----------------------------------------------------------------------------------------- |
+| id         | string | **필수**  | 비즈니스가 발급한 불투명 대화 식별자.                                                     |
+| expires_at | string | 선택      | 이 시점 이후로 대화 컨텍스트를 폐기할 수 있는 RFC 3339 타임스탬프입니다. 선택 사항입니다. |
 
 ### 에러 응답
 
-| 이름         | 타입                                                                     | 필수 여부    | 설명                                                              |
-| ------------ | ------------------------------------------------------------------------ | ------------ | ----------------------------------------------------------------- |
-| ucp          | UCP Error                                                                | **Required** | UCP protocol metadata. Status MUST be 'error' for error response. |
-| messages     | Array\[[Message](/ucp-ko/draft/draft/specification/reference/#message)\] | **Required** | Array of messages describing why the operation failed.            |
-| continue_url | string                                                                   | Optional     | URL for buyer handoff or session recovery.                        |
+| 이름         | 타입                                                                     | 필수 여부 | 설명                                                                               |
+| ------------ | ------------------------------------------------------------------------ | --------- | ---------------------------------------------------------------------------------- |
+| ucp          | UCP Error                                                                | **필수**  | UCP 프로토콜 메타데이터. 오류 응답에서는 status가 반드시 'error'여야 합니다(MUST). |
+| messages     | Array\[[Message](/ucp-ko/draft/draft/specification/reference/#message)\] | **필수**  | 작업이 실패한 이유를 설명하는 메시지 배열.                                         |
+| continue_url | string                                                                   | 선택      | 구매자 핸드오프 또는 세션 복구용 URL.                                              |
 
 ## 적합성
 

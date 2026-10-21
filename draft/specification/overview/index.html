@@ -7590,7 +7590,7 @@ DNS 리바인딩을 막습니다. 호스트 이름 검사와 해석된 주소 �
 <a href="#component-versioning-and-release-snapshots">컴포넌트 버전 관리와 릴리스 스냅숏</a>을
 참고하세요.</p>
 <h4 id="service-definition">서비스 정의<a class="headerlink" href="#service-definition" title="Permanent link">&para;</a></h4>
-<p>Full service declaration for platform-level discovery. All transports require <code>version</code>, <code>spec</code>, and <code>transport</code>. REST, MCP, and embedded additionally require <code>schema</code>.</p>
+<p>플랫폼 수준 디스커버리를 위한 전체 서비스 선언. 모든 전송 방식에는 <code>version</code>, <code>spec</code>, <code>transport</code>가 필요합니다. REST, MCP, 임베디드는 <code>schema</code>도 추가로 필요합니다.</p>
 <table>
 <thead>
 <tr>
@@ -7604,44 +7604,44 @@ DNS 리바인딩을 막습니다. 호스트 이름 검사와 해석된 주소 �
 <tr>
 <td style="text-align: left;">version</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Entity version in YYYY-MM-DD format.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">YYYY-MM-DD 형식의 엔티티 버전.</td>
 </tr>
 <tr>
 <td style="text-align: left;">spec</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">URL to human-readable specification document.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">사람이 읽을 수 있는 명세 문서의 URL.</td>
 </tr>
 <tr>
 <td style="text-align: left;">schema</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">URL to JSON Schema defining this entity's structure and payloads.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 엔터티의 구조와 페이로드를 정의하는 JSON Schema의 URL.</td>
 </tr>
 <tr>
 <td style="text-align: left;">id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Unique identifier for this entity instance. Used to disambiguate when multiple instances exist.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 엔터티 인스턴스의 고유 식별자. 인스턴스가 여러 개일 때 구분하는 데 사용합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">config</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Entity-specific configuration. Structure defined by each entity's schema.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">엔티티별 구성. 구조는 각 엔티티의 스키마가 정의합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">transport</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Transport protocol for this service binding.<br><strong>Enum:</strong> <code>rest</code>, <code>mcp</code>, <code>a2a</code>, <code>embedded</code></td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">이 서비스 바인딩의 전송 프로토콜.<br><strong>허용 값:</strong> <code>rest</code>, <code>mcp</code>, <code>a2a</code>, <code>embedded</code></td>
 </tr>
 <tr>
 <td style="text-align: left;">endpoint</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Endpoint URL for this transport binding.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 전송 바인딩의 엔드포인트 URL.</td>
 </tr>
 </tbody>
 </table>
@@ -7674,7 +7674,7 @@ DNS 리바인딩을 막습니다. 호스트 이름 검사와 해석된 주소 �
 <p><strong>기능</strong>(capability)은 서비스 안의 기능 단위 하나입니다. 기능은 무엇을
 지원하는지, 문서와 스키마를 어디서 찾을 수 있는지를 선언합니다.</p>
 <h4 id="capability-definition">기능 정의<a class="headerlink" href="#capability-definition" title="Permanent link">&para;</a></h4>
-<p>Full capability declaration for platform-level discovery. Includes spec/schema URLs for agent fetching.</p>
+<p>플랫폼 수준 디스커버리를 위한 전체 기능 선언. 에이전트가 가져갈 spec/schema URL을 포함합니다.</p>
 <table>
 <thead>
 <tr>
@@ -7688,38 +7688,38 @@ DNS 리바인딩을 막습니다. 호스트 이름 검사와 해석된 주소 �
 <tr>
 <td style="text-align: left;">version</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Entity version in YYYY-MM-DD format.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">YYYY-MM-DD 형식의 엔티티 버전.</td>
 </tr>
 <tr>
 <td style="text-align: left;">spec</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">URL to human-readable specification document.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">사람이 읽을 수 있는 명세 문서의 URL.</td>
 </tr>
 <tr>
 <td style="text-align: left;">schema</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">URL to JSON Schema defining this entity's structure and payloads.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">이 엔터티의 구조와 페이로드를 정의하는 JSON Schema의 URL.</td>
 </tr>
 <tr>
 <td style="text-align: left;">id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Unique identifier for this entity instance. Used to disambiguate when multiple instances exist.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 엔터티 인스턴스의 고유 식별자. 인스턴스가 여러 개일 때 구분하는 데 사용합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">config</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Entity-specific configuration. Structure defined by each entity's schema.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">엔티티별 구성. 구조는 각 엔티티의 스키마가 정의합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">extends</td>
 <td style="text-align: left;">OneOf[<code>string</code>, <code>array</code>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Parent capability(s) this extends. Present for extensions, absent for root capabilities. Use array for multi-parent extensions.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 항목이 확장하는 상위 기능. 확장에는 있고 루트 기능에는 없습니다. 상위가 여럿인 확장은 배열을 사용합니다.</td>
 </tr>
 </tbody>
 </table>
