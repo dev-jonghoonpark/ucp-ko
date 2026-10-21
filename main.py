@@ -25,6 +25,49 @@ import subprocess
 from pathlib import Path
 from typing import Any
 
+# --- Korean port: translate schema `description` values -------------------
+# Field tables render each schema's `description` verbatim. Every JSON this
+# module loads goes through `json.load`/`json.loads`, so wrap them to swap
+# descriptions for the Korean text in ko/schema-descriptions.json. Schema
+# files themselves (published under /schemas/) stay in English.
+import json as _json_std  # noqa: E402
+
+
+class _KoJson:
+  """Drop-in `json` module that translates `description` values on load."""
+
+  _path = Path(__file__).parent / "ko" / "schema-descriptions.json"
+  _map = (
+    _json_std.loads(_path.read_text(encoding="utf-8")) if _path.exists() else {}
+  )
+
+  def __getattr__(self, name):
+    return getattr(_json_std, name)
+
+  def _tr(self, obj):
+    if isinstance(obj, dict):
+      return {
+        k: (
+          self._map.get(v, v)
+          if k == "description" and isinstance(v, str)
+          else self._tr(v)
+        )
+        for k, v in obj.items()
+      }
+    if isinstance(obj, list):
+      return [self._tr(v) for v in obj]
+    return obj
+
+  def load(self, fp, **kwargs):
+    return self._tr(_json_std.load(fp, **kwargs))
+
+  def loads(self, s, **kwargs):
+    return self._tr(_json_std.loads(s, **kwargs))
+
+
+json = _KoJson()
+# ---------------------------------------------------------------------------
+
 # --- CONFIGURATION ---
 # Base directories for schema resolution
 OPENAPI_DIR = Path("source/services")
@@ -625,9 +668,9 @@ def define_env(env):
     Markdown string such as ``**Required**`` (same everywhere) or
     ``**Required**; optional on update``.
     """
-    word = {"required": "required", "optional": "optional", "omit": "omitted"}
+    word = {"required": "필수", "optional": "선택", "omit": "생략"}
     response = "required" if field_name in required_list else "optional"
-    base_disp = "**Required**" if response == "required" else "Optional"
+    base_disp = "**필수**" if response == "required" else "선택"
 
     if ucp_request is None:
       return base_disp
@@ -635,7 +678,7 @@ def define_env(env):
     if isinstance(ucp_request, str):
       if ucp_request == response:
         return base_disp
-      return f"{base_disp}; {word.get(ucp_request, ucp_request)} in requests"
+      return f"{base_disp}; 요청에서는 {word.get(ucp_request, ucp_request)}"
 
     if isinstance(ucp_request, dict):
       # Only keep operations whose requirement differs from the response
@@ -654,7 +697,7 @@ def define_env(env):
             from_state = transition.get("from")
             from_disp = word.get(from_state, from_state)
             to_disp = word.get(to_state, to_state)
-            disp_val = f"transitioning from {from_disp} to {to_disp}"
+            disp_val = f"{from_disp}에서 {to_disp}(으)로 전환"
 
           if disp_val:
             diff_request[op] = disp_val
@@ -673,7 +716,7 @@ def define_env(env):
           groups[-1][1].append(op)
         else:
           groups.append((val, [op]))
-      clauses = [f"{val} on {' & '.join(ops)}" for val, ops in groups]
+      clauses = [f"{' & '.join(ops)} 시 {val}" for val, ops in groups]
       if not clauses:
         return base_disp
       return f"{base_disp}; {', '.join(clauses)}"
@@ -772,10 +815,10 @@ def define_env(env):
       if s_type or enum_val:
         desc = schema_data.get("description", "")
         if pattern_val:
-          desc += f"\n\n**Pattern:** `{pattern_val}`"
+          desc += f"\n\n**패턴:** `{pattern_val}`"
         if enum_val:
           formatted = ", ".join([f"`{v}`" for v in enum_val])
-          desc += f"\n\n**Enum:** {formatted}"
+          desc += f"\n\n**허용 값:** {formatted}"
         return desc
 
       return "_No properties defined._"
@@ -922,7 +965,7 @@ def define_env(env):
         desc = ""
         # Handle additional description text for constant
         if "const" in details:
-          desc += f"**Constant = {details.get('const')}**. "
+          desc += f"**상수 = {details.get('const')}**. "
         # Special handling for UCP version
         elif version_data and ref == "#/$defs/version":
           desc += version_data.get("description", "")
@@ -948,7 +991,7 @@ def define_env(env):
           # Add a line break if description exists, then append Enum list
           if desc:
             desc += "<br>"
-          desc += f"**Enum:** {formatted_enums}"
+          desc += f"**허용 값:** {formatted_enums}"
 
         # --- Handle Requirement (per request op + response) ---
         requirement = _field_requirement(
@@ -1532,7 +1575,7 @@ def define_env(env):
           # Add additional annotation for path parameters
           if param.get("in", "") == "path":
             prop_schema["description"] = (
-              prop_schema.get("description", "") + "Defined in path."
+              prop_schema.get("description", "") + "경로에 정의됩니다."
             )
           param_props[name] = prop_schema
           if param.get("required"):
@@ -1676,7 +1719,7 @@ def define_env(env):
         md_table.append("| :--- | :--- | :--- |")
         for h in headers_list:
           name = f"`{h.get('name')}`"
-          required = "**Yes**" if h.get("required") else "No"
+          required = "**예**" if h.get("required") else "아니요"
           desc = h.get("description", "")
           # Handle line breaks in description
           desc = desc.replace("\n", "<br>")
