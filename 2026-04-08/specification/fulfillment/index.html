@@ -3077,8 +3077,8 @@
 <tr>
 <td style="text-align: left;">fulfillment</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-04-08/2026-04-08/specification/fulfillment/#fulfillment"> Fulfillment</a></td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Fulfillment details.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">풀필먼트 세부 정보.</td>
 </tr>
 </tbody>
 </table>
@@ -3097,14 +3097,14 @@
 <tr>
 <td style="text-align: left;">methods</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/2026-04-08/2026-04-08/specification/reference/#fulfillment-method">Fulfillment Method</a>]</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Fulfillment methods for cart items.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">장바구니 상품의 풀필먼트 방식.</td>
 </tr>
 <tr>
 <td style="text-align: left;">available_methods</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/2026-04-08/2026-04-08/specification/reference/#fulfillment-available-method">Fulfillment Available Method</a>]</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Inventory availability hints.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">재고 가용성 힌트.</td>
 </tr>
 </tbody>
 </table>
@@ -3122,38 +3122,38 @@
 <tr>
 <td style="text-align: left;">id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">Unique fulfillment method identifier.</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">고유 풀필먼트 방식 식별자.</td>
 </tr>
 <tr>
 <td style="text-align: left;">type</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">Fulfillment method type.<br><strong>Enum:</strong> <code>shipping</code>, <code>pickup</code></td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">풀필먼트 방식 유형.<br><strong>허용 값:</strong> <code>shipping</code>, <code>pickup</code></td>
 </tr>
 <tr>
 <td style="text-align: left;">line_item_ids</td>
 <td style="text-align: left;">Array[string]</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">Line item IDs fulfilled via this method.</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">이 방식으로 풀필먼트되는 라인 아이템 ID.</td>
 </tr>
 <tr>
 <td style="text-align: left;">destinations</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/2026-04-08/2026-04-08/specification/reference/#fulfillment-destination">Fulfillment Destination</a>]</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Available destinations. For shipping: addresses. For pickup: retail locations.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">사용 가능한 목적지. 배송은 주소, 픽업은 소매 매장.</td>
 </tr>
 <tr>
 <td style="text-align: left;">selected_destination_id</td>
 <td style="text-align: left;">['string', 'null']</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">ID of the selected destination.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">선택한 목적지의 ID.</td>
 </tr>
 <tr>
 <td style="text-align: left;">groups</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/2026-04-08/2026-04-08/specification/reference/#fulfillment-group">Fulfillment Group</a>]</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Fulfillment groups for selecting options. Agent sets selected_option_id on groups to choose shipping method.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">옵션 선택을 위한 풀필먼트 그룹. 에이전트는 그룹에 selected_option_id를 설정해 배송 방식을 선택합니다.</td>
 </tr>
 </tbody>
 </table>
@@ -3173,62 +3173,62 @@
 <tr>
 <td style="text-align: left;">extended_address</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">An address extension such as an apartment number, C/O or alternative name.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">아파트 호수, C/O, 대체 이름 같은 주소 보충 정보.</td>
 </tr>
 <tr>
 <td style="text-align: left;">street_address</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">The street address.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">도로명 주소.</td>
 </tr>
 <tr>
 <td style="text-align: left;">address_locality</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">The locality in which the street address is, and which is in the region. For example, Mountain View.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">도로명 주소가 속하고 해당 지역 안에 있는 시·군·구. 예: Mountain View.</td>
 </tr>
 <tr>
 <td style="text-align: left;">address_region</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">The region in which the locality is, and which is in the country. Required for applicable countries (i.e. state in US, province in CA). For example, California or another appropriate first-level Administrative division.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">시·군·구가 속하고 해당 국가 안에 있는 지역. 해당하는 국가에서는 필수입니다(예: 미국의 주, 캐나다의 주). 예: California 또는 그 밖의 적절한 1차 행정 구역.</td>
 </tr>
 <tr>
 <td style="text-align: left;">address_country</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">The country. Recommended to be in 2-letter ISO 3166-1 alpha-2 format, for example "US". For backward compatibility, a 3-letter ISO 3166-1 alpha-3 country code such as "SGP" or a full country name such as "Singapore" can also be used.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">국가. 2자리 ISO 3166-1 alpha-2 형식(예: "US")을 권장합니다. 하위 호환성을 위해 "SGP" 같은 3자리 ISO 3166-1 alpha-3 국가 코드나 "Singapore" 같은 전체 국가명도 사용할 수 있습니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">postal_code</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">The postal code. For example, 94043.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">우편번호. 예: 94043.</td>
 </tr>
 <tr>
 <td style="text-align: left;">first_name</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Optional. First name of the contact associated with the address.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">선택 사항. 주소와 연결된 연락처의 이름.</td>
 </tr>
 <tr>
 <td style="text-align: left;">last_name</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Optional. Last name of the contact associated with the address.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">선택 사항. 주소와 연결된 연락처의 성.</td>
 </tr>
 <tr>
 <td style="text-align: left;">phone_number</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Optional. Phone number of the contact associated with the address.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">선택 사항. 주소와 연결된 연락처의 전화번호.</td>
 </tr>
 <tr>
 <td style="text-align: left;">id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">ID specific to this shipping destination.</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">이 배송 목적지에 고유한 ID.</td>
 </tr>
 </tbody>
 </table>
@@ -3246,20 +3246,20 @@
 <tr>
 <td style="text-align: left;">id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">Unique location identifier.</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">고유 위치 식별자.</td>
 </tr>
 <tr>
 <td style="text-align: left;">name</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">Location name (e.g., store name).</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">위치 이름(예: 매장 이름).</td>
 </tr>
 <tr>
 <td style="text-align: left;">address</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-04-08/2026-04-08/specification/reference/#postal-address">Postal Address</a></td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Physical address of the location.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">장소의 실제 주소.</td>
 </tr>
 </tbody>
 </table>
@@ -3277,26 +3277,26 @@
 <tr>
 <td style="text-align: left;">id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">Group identifier for referencing merchant-generated groups in updates.</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">업데이트 시 판매자가 생성한 그룹을 참조하기 위한 그룹 식별자.</td>
 </tr>
 <tr>
 <td style="text-align: left;">line_item_ids</td>
 <td style="text-align: left;">Array[string]</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">Line item IDs included in this group/package.</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">이 그룹/패키지에 포함된 라인 아이템 ID.</td>
 </tr>
 <tr>
 <td style="text-align: left;">options</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/2026-04-08/2026-04-08/specification/reference/#fulfillment-option">Fulfillment Option</a>]</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Available fulfillment options for this group.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">이 그룹에 사용할 수 있는 풀필먼트 옵션.</td>
 </tr>
 <tr>
 <td style="text-align: left;">selected_option_id</td>
 <td style="text-align: left;">['string', 'null']</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">ID of the selected fulfillment option for this group.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">이 그룹에서 선택한 풀필먼트 옵션의 ID.</td>
 </tr>
 </tbody>
 </table>
@@ -3314,44 +3314,44 @@
 <tr>
 <td style="text-align: left;">id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">Unique fulfillment option identifier.</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">고유 풀필먼트 옵션 식별자.</td>
 </tr>
 <tr>
 <td style="text-align: left;">title</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">Short label (e.g., 'Express Shipping', 'Curbside Pickup').</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">짧은 레이블(예: 'Express Shipping', 'Curbside Pickup').</td>
 </tr>
 <tr>
 <td style="text-align: left;">description</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Complete context for buyer decision (e.g., 'Arrives Dec 12-15 via FedEx').</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">구매자 결정을 위한 전체 맥락(예: 'Arrives Dec 12-15 via FedEx').</td>
 </tr>
 <tr>
 <td style="text-align: left;">carrier</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Carrier name (for shipping).</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">운송사 이름(배송용).</td>
 </tr>
 <tr>
 <td style="text-align: left;">earliest_fulfillment_time</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Earliest fulfillment date.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">가장 이른 풀필먼트 날짜.</td>
 </tr>
 <tr>
 <td style="text-align: left;">latest_fulfillment_time</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Latest fulfillment date.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">가장 늦은 풀필먼트 날짜.</td>
 </tr>
 <tr>
 <td style="text-align: left;">totals</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/2026-04-08/2026-04-08/specification/reference/#total">Total</a>]</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">Fulfillment option totals breakdown.</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">풀필먼트 옵션 합계 내역.</td>
 </tr>
 </tbody>
 </table>
@@ -3369,26 +3369,26 @@
 <tr>
 <td style="text-align: left;">type</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">Fulfillment method type this availability applies to.<br><strong>Enum:</strong> <code>shipping</code>, <code>pickup</code></td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">이 가용성이 적용되는 풀필먼트 방식 유형.<br><strong>허용 값:</strong> <code>shipping</code>, <code>pickup</code></td>
 </tr>
 <tr>
 <td style="text-align: left;">line_item_ids</td>
 <td style="text-align: left;">Array[string]</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">Line items available for this fulfillment method.</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">이 풀필먼트 방식에 사용할 수 있는 라인 아이템.</td>
 </tr>
 <tr>
 <td style="text-align: left;">fulfillable_on</td>
 <td style="text-align: left;">['string', 'null']</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">'now' for immediate availability, or ISO 8601 date for future (preorders, transfers).</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">즉시 구매 가능하면 'now', 향후 구매 가능(예약 주문, 이관)이면 ISO 8601 날짜.</td>
 </tr>
 <tr>
 <td style="text-align: left;">description</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Human-readable availability info (e.g., 'Available for pickup at Downtown Store today').</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">사람이 읽을 수 있는 가용성 정보(예: 'Available for pickup at Downtown Store today').</td>
 </tr>
 </tbody>
 </table>
@@ -3406,20 +3406,20 @@
 <tr>
 <td style="text-align: left;">type</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">Cost category. Well-known values: subtotal, items_discount, discount, fulfillment, tax, fee, total. Businesses MAY use additional values.</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">비용 범주. 잘 알려진 값: subtotal, items_discount, discount, fulfillment, tax, fee, total. 비즈니스는 추가 값을 사용할 수 있습니다(MAY).</td>
 </tr>
 <tr>
 <td style="text-align: left;">display_text</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Text to display against the amount. Should reflect appropriate method (e.g., 'Shipping', 'Delivery').</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">금액 옆에 표시할 텍스트. 적절한 방식을 반영해야 합니다(예: 'Shipping', 'Delivery').</td>
 </tr>
 <tr>
 <td style="text-align: left;">amount</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-04-08/2026-04-08/specification/reference/#signed-amount">Signed Amount</a></td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">Monetary amount in the currency's minor unit as defined by ISO 4217. Refer to the currency's exponent to determine minor-to-major ratio (e.g., 2 for USD, 0 for JPY, 3 for KWD). May be negative — the sign is intrinsic to the value (e.g., discounts are negative, charges are positive).</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">ISO 4217에 정의된 통화의 최소 단위로 나타낸 금액. 최소 단위와 기본 단위의 비율은 통화의 지수를 참고합니다(예: USD는 2, JPY는 0, KWD는 3). 음수일 수 있으며, 부호는 값 자체에 포함됩니다(예: 할인은 음수, 청구 금액은 양수).</td>
 </tr>
 </tbody>
 </table>
@@ -3437,56 +3437,56 @@
 <tr>
 <td style="text-align: left;">extended_address</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">An address extension such as an apartment number, C/O or alternative name.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">아파트 호수, C/O, 대체 이름 같은 주소 보충 정보.</td>
 </tr>
 <tr>
 <td style="text-align: left;">street_address</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">The street address.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">도로명 주소.</td>
 </tr>
 <tr>
 <td style="text-align: left;">address_locality</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">The locality in which the street address is, and which is in the region. For example, Mountain View.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">도로명 주소가 속하고 해당 지역 안에 있는 시·군·구. 예: Mountain View.</td>
 </tr>
 <tr>
 <td style="text-align: left;">address_region</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">The region in which the locality is, and which is in the country. Required for applicable countries (i.e. state in US, province in CA). For example, California or another appropriate first-level Administrative division.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">시·군·구가 속하고 해당 국가 안에 있는 지역. 해당하는 국가에서는 필수입니다(예: 미국의 주, 캐나다의 주). 예: California 또는 그 밖의 적절한 1차 행정 구역.</td>
 </tr>
 <tr>
 <td style="text-align: left;">address_country</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">The country. Recommended to be in 2-letter ISO 3166-1 alpha-2 format, for example "US". For backward compatibility, a 3-letter ISO 3166-1 alpha-3 country code such as "SGP" or a full country name such as "Singapore" can also be used.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">국가. 2자리 ISO 3166-1 alpha-2 형식(예: "US")을 권장합니다. 하위 호환성을 위해 "SGP" 같은 3자리 ISO 3166-1 alpha-3 국가 코드나 "Singapore" 같은 전체 국가명도 사용할 수 있습니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">postal_code</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">The postal code. For example, 94043.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">우편번호. 예: 94043.</td>
 </tr>
 <tr>
 <td style="text-align: left;">first_name</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Optional. First name of the contact associated with the address.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">선택 사항. 주소와 연결된 연락처의 이름.</td>
 </tr>
 <tr>
 <td style="text-align: left;">last_name</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Optional. Last name of the contact associated with the address.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">선택 사항. 주소와 연결된 연락처의 성.</td>
 </tr>
 <tr>
 <td style="text-align: left;">phone_number</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Optional. Phone number of the contact associated with the address.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">선택 사항. 주소와 연결된 연락처의 전화번호.</td>
 </tr>
 </tbody>
 </table>
@@ -3688,8 +3688,8 @@ Downtown Store에서 픽업할 수 있습니다.</p>
 <tr>
 <td style="text-align: left;">supports_multi_group</td>
 <td style="text-align: left;">boolean</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Enables multiple groups per method.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">방식당 여러 그룹을 사용할 수 있게 합니다.</td>
 </tr>
 </tbody>
 </table>
@@ -3717,14 +3717,14 @@ Downtown Store에서 픽업할 수 있습니다.</p>
 <tr>
 <td style="text-align: left;">allows_multi_destination</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Permits multiple destinations per method type.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">방법 유형별로 여러 목적지를 허용합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">allows_method_combinations</td>
 <td style="text-align: left;">Array[array]</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Allowed method type combinations.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">허용되는 결제 방법 유형 조합.</td>
 </tr>
 </tbody>
 </table>

@@ -2679,74 +2679,74 @@
 <tr>
 <td style="text-align: left;">ucp</td>
 <td style="text-align: left;">any</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">UCP metadata for order responses. No payment handlers needed post-purchase.</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">주문 응답용 UCP 메타데이터. 구매 후에는 결제 핸들러가 필요 없습니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">Unique order identifier.</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">고유 주문 식별자.</td>
 </tr>
 <tr>
 <td style="text-align: left;">label</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Human-readable label for identifying the order. MUST only be provided by the business.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">주문을 식별하기 위한 사람이 읽을 수 있는 라벨. 반드시 비즈니스만 제공해야 합니다(MUST).</td>
 </tr>
 <tr>
 <td style="text-align: left;">checkout_id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">Associated checkout ID for reconciliation.</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">정산 대사를 위한 연관 체크아웃 ID.</td>
 </tr>
 <tr>
 <td style="text-align: left;">permalink_url</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">Permalink to access the order on merchant site.</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">판매자 사이트에서 주문에 접근하는 퍼머링크.</td>
 </tr>
 <tr>
 <td style="text-align: left;">line_items</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/2026-04-08/2026-04-08/specification/reference/#order-line-item">Order Line Item</a>]</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">Line items representing what was purchased — can change post-order via edits or exchanges.</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">구매한 항목을 나타내는 라인 아이템. 주문 후 수정이나 교환으로 바뀔 수 있습니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">fulfillment</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">Fulfillment data: buyer expectations and what actually happened.</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">풀필먼트 데이터: 구매자 예상 정보와 실제로 일어난 일.</td>
 </tr>
 <tr>
 <td style="text-align: left;">adjustments</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/2026-04-08/2026-04-08/specification/reference/#adjustment">Adjustment</a>]</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Post-order events (refunds, returns, credits, disputes, cancellations, etc.) that exist independently of fulfillment.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">풀필먼트와 독립적으로 존재하는 주문 후 이벤트(환불, 반품, 크레딧, 분쟁, 취소 등).</td>
 </tr>
 <tr>
 <td style="text-align: left;">currency</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">ISO 4217 currency code. MUST match the currency from the originating checkout session.</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">ISO 4217 통화 코드. 반드시 원래 체크아웃 세션의 통화와 일치해야 합니다(MUST).</td>
 </tr>
 <tr>
 <td style="text-align: left;">totals</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-04-08/2026-04-08/specification/reference/#totals">Totals</a></td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">Different totals for the order.</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">주문의 각종 합계.</td>
 </tr>
 <tr>
 <td style="text-align: left;">messages</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/2026-04-08/2026-04-08/specification/reference/#message">Message</a>]</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Business outcome messages (errors, warnings, informational). Present when the business needs to communicate status or issues to the platform.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">비즈니스 결과 메시지(오류, 경고, 정보). 비즈니스가 플랫폼에 상태나 문제를 전달해야 할 때 포함됩니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">attribution</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-04-08/2026-04-08/specification/reference/#attribution">Attribution</a></td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Snapshot of the attribution associated with the originating checkout. Read-only on the order.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">원래 체크아웃과 연결된 어트리뷰션의 스냅샷입니다. 주문에서는 읽기 전용입니다.</td>
 </tr>
 </tbody>
 </table>

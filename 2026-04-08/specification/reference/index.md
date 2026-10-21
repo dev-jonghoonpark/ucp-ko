@@ -6,83 +6,83 @@
 
 ### Cart
 
-| 이름         | 타입                                                                                   | 필수    | 설명                                                                                                                                                                                                                                                                                                                                                                                                    |
-| ------------ | -------------------------------------------------------------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| ucp          | any                                                                                    | **Yes** | UCP metadata for cart responses. No payment handlers needed pre-checkout.                                                                                                                                                                                                                                                                                                                               |
-| id           | string                                                                                 | **Yes** | Unique cart identifier.                                                                                                                                                                                                                                                                                                                                                                                 |
-| line_items   | Array\[[Line Item](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#line-item)\] | **Yes** | Cart line items. Same structure as checkout. Full replacement on update.                                                                                                                                                                                                                                                                                                                                |
-| context      | [Context](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#context)              | No      | Buyer signals for localization (country, region, postal_code). Merchant uses for pricing, availability, currency. Falls back to geo-IP if omitted.                                                                                                                                                                                                                                                      |
-| signals      | [Signals](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#signals)              | No      | Environment data provided by the platform to support authorization and abuse prevention. Values MUST NOT be buyer-asserted claims — platforms provide signals based on direct observation or independently verifiable third-party attestations. All signal keys MUST use reverse-domain naming to ensure provenance and prevent collisions when multiple extensions contribute to the shared namespace. |
-| attribution  | [Attribution](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#attribution)      | No      | Platform-emitted referral and conversion-event context — campaign identifiers, click IDs, source/medium markers, etc. The same parameters platforms communicate via URL query parameters in browser-based flows.                                                                                                                                                                                        |
-| buyer        | [Buyer](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#buyer)                  | No      | Optional buyer information for personalized estimates.                                                                                                                                                                                                                                                                                                                                                  |
-| currency     | string                                                                                 | **Yes** | ISO 4217 currency code. Determined by merchant based on context or geo-IP.                                                                                                                                                                                                                                                                                                                              |
-| totals       | [Totals](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#totals)                | **Yes** | Estimated cost breakdown. May be partial if shipping/tax not yet calculable.                                                                                                                                                                                                                                                                                                                            |
-| messages     | Array\[[Message](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#message)\]     | No      | Validation messages, warnings, or informational notices.                                                                                                                                                                                                                                                                                                                                                |
-| links        | Array\[[Link](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#link)\]           | No      | Optional merchant links (policies, FAQs).                                                                                                                                                                                                                                                                                                                                                               |
-| continue_url | string                                                                                 | No      | URL for cart handoff and session recovery. Enables sharing and human-in-the-loop flows.                                                                                                                                                                                                                                                                                                                 |
-| expires_at   | string                                                                                 | No      | Cart expiry timestamp (RFC 3339). Optional.                                                                                                                                                                                                                                                                                                                                                             |
+| 이름         | 타입                                                                                   | 필수   | 설명                                                                                                                                                                                                                                                                                                                                                    |
+| ------------ | -------------------------------------------------------------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ucp          | any                                                                                    | **예** | 장바구니 응답용 UCP 메타데이터. 체크아웃 전에는 결제 핸들러가 필요 없습니다.                                                                                                                                                                                                                                                                            |
+| id           | string                                                                                 | **예** | 고유 장바구니 식별자.                                                                                                                                                                                                                                                                                                                                   |
+| line_items   | Array\[[Line Item](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#line-item)\] | **예** | 장바구니 라인 아이템. 체크아웃과 구조가 같습니다. 업데이트 시 전체를 교체합니다.                                                                                                                                                                                                                                                                        |
+| context      | [Context](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#context)              | 아니요 | 현지화를 위한 구매자 신호(country, region, postal_code). 판매자는 이를 가격, 재고, 통화를 정하는 데 사용합니다. 생략하면 geo-IP로 대체합니다.                                                                                                                                                                                                           |
+| signals      | [Signals](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#signals)              | 아니요 | 승인과 악용 방지를 돕기 위해 플랫폼이 제공하는 환경 데이터. 값은 구매자가 주장한 내용이어서는 안 됩니다(MUST NOT). 플랫폼은 직접 관찰했거나 독립적으로 검증 가능한 제3자 증명에 근거한 신호를 제공합니다. 여러 확장이 공유 네임스페이스에 값을 추가할 때 출처를 보장하고 충돌을 막기 위해, 모든 신호 키는 반드시 역도메인 이름을 사용해야 합니다(MUST). |
+| attribution  | [Attribution](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#attribution)      | 아니요 | 플랫폼이 내보내는 추천 및 전환 이벤트 맥락: 캠페인 식별자, 클릭 ID, source/medium 마커 등. 브라우저 기반 흐름에서 플랫폼이 URL 쿼리 매개변수로 전달하는 것과 같은 매개변수입니다.                                                                                                                                                                       |
+| buyer        | [Buyer](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#buyer)                  | 아니요 | 개인화된 견적을 위한 구매자 정보(선택 사항).                                                                                                                                                                                                                                                                                                            |
+| currency     | string                                                                                 | **예** | ISO 4217 통화 코드. 판매자가 컨텍스트나 geo-IP를 바탕으로 결정합니다.                                                                                                                                                                                                                                                                                   |
+| totals       | [Totals](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#totals)                | **예** | 예상 비용 내역. 배송비·세금을 아직 계산할 수 없으면 일부만 포함될 수 있습니다.                                                                                                                                                                                                                                                                          |
+| messages     | Array\[[Message](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#message)\]     | 아니요 | 검증 메시지, 경고 또는 안내성 알림.                                                                                                                                                                                                                                                                                                                     |
+| links        | Array\[[Link](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#link)\]           | 아니요 | 판매자 링크(선택 사항, 정책, FAQ).                                                                                                                                                                                                                                                                                                                      |
+| continue_url | string                                                                                 | 아니요 | 장바구니 핸드오프와 세션 복구용 URL. 공유와 사람이 개입하는(human-in-the-loop) 흐름을 지원합니다.                                                                                                                                                                                                                                                       |
+| expires_at   | string                                                                                 | 아니요 | 장바구니 만료 타임스탬프(RFC 3339). 선택 사항.                                                                                                                                                                                                                                                                                                          |
 
 ______________________________________________________________________
 
 ### Catalog Lookup
 
-Product/variant lookup by identifier. Supports batch retrieval (lookup_catalog) and single-product detail (get_product).
+식별자로 상품·변형을 조회합니다. 일괄 조회(lookup_catalog)와 단일 상품 상세 조회(get_product)를 지원합니다.
 
 ______________________________________________________________________
 
 ### Catalog Search
 
-Product catalog search capability.
+상품 카탈로그 검색 기능.
 
 ______________________________________________________________________
 
 ### Checkout
 
-| 이름         | 타입                                                                                            | 필수    | 설명                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| ------------ | ----------------------------------------------------------------------------------------------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| ucp          | any                                                                                             | **Yes** | UCP metadata for checkout responses.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| id           | string                                                                                          | **Yes** | Unique identifier of the checkout session.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| line_items   | Array\[[Line Item](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#line-item)\]          | **Yes** | List of line items being checked out.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| buyer        | [Buyer](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#buyer)                           | No      | Representation of the buyer.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| context      | [Context](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#context)                       | No      | Provisional buyer signals for relevance and localization—not authoritative data. Businesses SHOULD use these values when verified inputs (e.g., shipping address) are absent, and MAY ignore or down-rank them if inconsistent with higher-confidence signals (authenticated account, risk detection) or regulatory constraints (export controls). Eligibility and policy enforcement MUST occur at checkout time using binding transaction data. Context SHOULD be non-identifying and can be disclosed progressively—coarse signals early, finer resolution as the session progresses. Higher-resolution data (shipping address, billing address) supersedes context. |
-| signals      | [Signals](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#signals)                       | No      | Environment data provided by the platform to support authorization and abuse prevention. Values MUST NOT be buyer-asserted claims — platforms provide signals based on direct observation or independently verifiable third-party attestations. All signal keys MUST use reverse-domain naming to ensure provenance and prevent collisions when multiple extensions contribute to the shared namespace.                                                                                                                                                                                                                                                                 |
-| attribution  | [Attribution](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#attribution)               | No      | Platform-emitted referral and conversion-event context — campaign identifiers, click IDs, source/medium markers, etc. The same parameters platforms communicate via URL query parameters in browser-based flows.                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| status       | string                                                                                          | **Yes** | Checkout state indicating the current phase and required action. See Checkout Status lifecycle documentation for state transition details. **Enum:** `incomplete`, `requires_escalation`, `ready_for_complete`, `complete_in_progress`, `completed`, `canceled`                                                                                                                                                                                                                                                                                                                                                                                                         |
-| currency     | string                                                                                          | **Yes** | ISO 4217 currency code reflecting the merchant's market determination. Derived from address, context, and geo IP—buyers provide signals, merchants determine currency.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| totals       | [Totals](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#totals)                         | **Yes** | Different cart totals.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| messages     | Array\[[Message](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#message)\]              | No      | List of messages with error and info about the checkout session state.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| links        | Array\[[Link](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#link)\]                    | **Yes** | Links to be displayed by the platform (Privacy Policy, TOS). Mandatory for legal compliance.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| expires_at   | string                                                                                          | No      | RFC 3339 expiry timestamp. Default TTL is 6 hours from creation if not sent.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| continue_url | string                                                                                          | No      | URL for checkout handoff and session recovery. MUST be provided when status is requires_escalation. See specification for format and availability requirements.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| payment      | [Payment](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#payment)                       | No      | Payment configuration containing handlers.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| order        | [Order Confirmation](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#order-confirmation) | No      | Details about an order created for this checkout session.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| 이름         | 타입                                                                                            | 필수   | 설명                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| ------------ | ----------------------------------------------------------------------------------------------- | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ucp          | any                                                                                             | **예** | 체크아웃 응답용 UCP 메타데이터.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| id           | string                                                                                          | **예** | 체크아웃 세션의 고유 식별자.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| line_items   | Array\[[Line Item](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#line-item)\]          | **예** | 체크아웃 중인 라인 아이템 목록.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| buyer        | [Buyer](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#buyer)                           | 아니요 | 구매자 정보.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| context      | [Context](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#context)                       | 아니요 | 관련성 판단과 현지화를 위한 잠정적 구매자 신호로, 권위 있는 데이터가 아닙니다. 검증된 입력(예: 배송 주소)이 없으면 비즈니스는 이 값을 사용해야 하며(SHOULD), 더 신뢰도 높은 신호(인증된 계정, 위험 탐지)나 규제 제약(수출 통제)과 맞지 않으면 무시하거나 우선순위를 낮출 수 있습니다(MAY). 자격 판단과 정책 적용은 반드시 체크아웃 시점에 구속력 있는 거래 데이터로 수행해야 합니다(MUST). 컨텍스트는 개인을 식별할 수 없어야 하며(SHOULD), 단계적으로 공개할 수 있습니다. 초기에는 대략적인 신호를, 세션이 진행되면서 더 세밀한 정보를 제공합니다. 더 세밀한 데이터(배송 주소, 청구 주소)가 컨텍스트보다 우선합니다. |
+| signals      | [Signals](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#signals)                       | 아니요 | 승인과 악용 방지를 돕기 위해 플랫폼이 제공하는 환경 데이터. 값은 구매자가 주장한 내용이어서는 안 됩니다(MUST NOT). 플랫폼은 직접 관찰했거나 독립적으로 검증 가능한 제3자 증명에 근거한 신호를 제공합니다. 여러 확장이 공유 네임스페이스에 값을 추가할 때 출처를 보장하고 충돌을 막기 위해, 모든 신호 키는 반드시 역도메인 이름을 사용해야 합니다(MUST).                                                                                                                                                                                                                                                               |
+| attribution  | [Attribution](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#attribution)               | 아니요 | 플랫폼이 내보내는 추천 및 전환 이벤트 맥락: 캠페인 식별자, 클릭 ID, source/medium 마커 등. 브라우저 기반 흐름에서 플랫폼이 URL 쿼리 매개변수로 전달하는 것과 같은 매개변수입니다.                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| status       | string                                                                                          | **예** | 현재 단계와 필요한 조치를 나타내는 체크아웃 상태. 상태 전이에 대한 자세한 내용은 체크아웃 상태 수명 주기 문서를 참고하세요. **허용 값:** `incomplete`, `requires_escalation`, `ready_for_complete`, `complete_in_progress`, `completed`, `canceled`                                                                                                                                                                                                                                                                                                                                                                   |
+| currency     | string                                                                                          | **예** | 판매자가 판단한 시장을 반영하는 ISO 4217 통화 코드. 주소, 컨텍스트, geo IP로 결정합니다. 구매자는 신호를 제공하고 통화는 판매자가 결정합니다.                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| totals       | [Totals](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#totals)                         | **예** | 장바구니의 각종 합계.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| messages     | Array\[[Message](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#message)\]              | 아니요 | 체크아웃 세션 상태에 대한 오류·정보 메시지 목록.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| links        | Array\[[Link](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#link)\]                    | **예** | 플랫폼이 표시할 링크(개인정보처리방침, 이용약관). 법적 준수를 위해 필수입니다.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| expires_at   | string                                                                                          | 아니요 | RFC 3339 만료 타임스탬프입니다. 보내지 않으면 기본 TTL은 생성 시점부터 6시간입니다.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| continue_url | string                                                                                          | 아니요 | 체크아웃 핸드오프와 세션 복구용 URL. status가 requires_escalation이면 반드시 제공해야 합니다(MUST). 형식과 가용성 요구 사항은 명세를 참고하세요.                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| payment      | [Payment](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#payment)                       | 아니요 | 핸들러를 포함한 결제 구성.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| order        | [Order Confirmation](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#order-confirmation) | 아니요 | 이 체크아웃 세션으로 생성된 주문의 세부 정보.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 
 ______________________________________________________________________
 
 ### Order
 
-| 이름          | 타입                                                                                               | 필수    | 설명                                                                                                                                          |
-| ------------- | -------------------------------------------------------------------------------------------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| ucp           | any                                                                                                | **Yes** | UCP metadata for order responses. No payment handlers needed post-purchase.                                                                   |
-| id            | string                                                                                             | **Yes** | Unique order identifier.                                                                                                                      |
-| label         | string                                                                                             | No      | Human-readable label for identifying the order. MUST only be provided by the business.                                                        |
-| checkout_id   | string                                                                                             | **Yes** | Associated checkout ID for reconciliation.                                                                                                    |
-| permalink_url | string                                                                                             | **Yes** | Permalink to access the order on merchant site.                                                                                               |
-| line_items    | Array\[[Order Line Item](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#order-line-item)\] | **Yes** | Line items representing what was purchased — can change post-order via edits or exchanges.                                                    |
-| fulfillment   | object                                                                                             | **Yes** | Fulfillment data: buyer expectations and what actually happened.                                                                              |
-| adjustments   | Array\[[Adjustment](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#adjustment)\]           | No      | Post-order events (refunds, returns, credits, disputes, cancellations, etc.) that exist independently of fulfillment.                         |
-| currency      | string                                                                                             | **Yes** | ISO 4217 currency code. MUST match the currency from the originating checkout session.                                                        |
-| totals        | [Totals](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#totals)                            | **Yes** | Different totals for the order.                                                                                                               |
-| messages      | Array\[[Message](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#message)\]                 | No      | Business outcome messages (errors, warnings, informational). Present when the business needs to communicate status or issues to the platform. |
-| attribution   | [Attribution](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#attribution)                  | No      | Snapshot of the attribution associated with the originating checkout. Read-only on the order.                                                 |
+| 이름          | 타입                                                                                               | 필수   | 설명                                                                                                 |
+| ------------- | -------------------------------------------------------------------------------------------------- | ------ | ---------------------------------------------------------------------------------------------------- |
+| ucp           | any                                                                                                | **예** | 주문 응답용 UCP 메타데이터. 구매 후에는 결제 핸들러가 필요 없습니다.                                 |
+| id            | string                                                                                             | **예** | 고유 주문 식별자.                                                                                    |
+| label         | string                                                                                             | 아니요 | 주문을 식별하기 위한 사람이 읽을 수 있는 라벨. 반드시 비즈니스만 제공해야 합니다(MUST).              |
+| checkout_id   | string                                                                                             | **예** | 정산 대사를 위한 연관 체크아웃 ID.                                                                   |
+| permalink_url | string                                                                                             | **예** | 판매자 사이트에서 주문에 접근하는 퍼머링크.                                                          |
+| line_items    | Array\[[Order Line Item](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#order-line-item)\] | **예** | 구매한 항목을 나타내는 라인 아이템. 주문 후 수정이나 교환으로 바뀔 수 있습니다.                      |
+| fulfillment   | object                                                                                             | **예** | 풀필먼트 데이터: 구매자 예상 정보와 실제로 일어난 일.                                                |
+| adjustments   | Array\[[Adjustment](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#adjustment)\]           | 아니요 | 풀필먼트와 독립적으로 존재하는 주문 후 이벤트(환불, 반품, 크레딧, 분쟁, 취소 등).                    |
+| currency      | string                                                                                             | **예** | ISO 4217 통화 코드. 반드시 원래 체크아웃 세션의 통화와 일치해야 합니다(MUST).                        |
+| totals        | [Totals](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#totals)                            | **예** | 주문의 각종 합계.                                                                                    |
+| messages      | Array\[[Message](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#message)\]                 | 아니요 | 비즈니스 결과 메시지(오류, 경고, 정보). 비즈니스가 플랫폼에 상태나 문제를 전달해야 할 때 포함됩니다. |
+| attribution   | [Attribution](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#attribution)                  | 아니요 | 원래 체크아웃과 연결된 어트리뷰션의 스냅샷입니다. 주문에서는 읽기 전용입니다.                        |
 
 ______________________________________________________________________
 
 ### Payment
 
-| 이름        | 타입                                                                                                                                                             | 필수 | 설명                                                                                                                                                                                                                       |
-| ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| instruments | Array\[[Payment Instrument Selected Payment Instrument](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#payment-instrument-selected-payment-instrument)\] | No   | The payment instruments available for this payment. Each instrument is associated with a specific handler via the handler_id field. Handlers can extend the base payment_instrument schema to add handler-specific fields. |
+| 이름        | 타입                                                                                                                                                             | 필수   | 설명                                                                                                                                                                                |
+| ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| instruments | Array\[[Payment Instrument Selected Payment Instrument](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#payment-instrument-selected-payment-instrument)\] | 아니요 | 이 결제에 사용할 수 있는 결제 수단. 각 결제 수단은 handler_id 필드로 특정 핸들러와 연결됩니다. 핸들러는 기본 payment_instrument 스키마를 확장해 핸들러별 필드를 추가할 수 있습니다. |
 
 ______________________________________________________________________
 
@@ -90,196 +90,196 @@ ______________________________________________________________________
 
 ### Payment Account Info
 
-| 이름                      | 타입   | 필수 | 설명                                                                                                                                          |
-| ------------------------- | ------ | ---- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| payment_account_reference | string | No   | EMVCo PAR. A unique identifier linking a payment card to a specific account, enabling tracking across tokens (Apple Pay, physical card, etc). |
+| 이름                      | 타입   | 필수   | 설명                                                                                                                        |
+| ------------------------- | ------ | ------ | --------------------------------------------------------------------------------------------------------------------------- |
+| payment_account_reference | string | 아니요 | EMVCo PAR. 결제 카드를 특정 계좌에 연결하는 고유 식별자로, 여러 토큰(Apple Pay, 실물 카드 등)에 걸쳐 추적할 수 있게 합니다. |
 
 ______________________________________________________________________
 
 ### Adjustment
 
-| 이름        | 타입                                                                           | 필수    | 설명                                                                                                                                                                                            |
-| ----------- | ------------------------------------------------------------------------------ | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| id          | string                                                                         | **Yes** | Adjustment event identifier.                                                                                                                                                                    |
-| type        | string                                                                         | **Yes** | Type of adjustment (open string). Typically money-related like: refund, return, credit, price_adjustment, dispute, cancellation. Can be any value that makes sense for the merchant's business. |
-| occurred_at | string                                                                         | **Yes** | RFC 3339 timestamp when this adjustment occurred.                                                                                                                                               |
-| status      | string                                                                         | **Yes** | Adjustment status. **Enum:** `pending`, `completed`, `failed`                                                                                                                                   |
-| line_items  | Array[object]                                                                  | No      | Which line items and quantities are affected (optional).                                                                                                                                        |
-| totals      | Array\[[Total](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#total)\] | No      | Adjustment totals breakdown. Signed values - negative for money returned to buyer (refunds, credits), positive for additional charges (exchanges).                                              |
-| description | string                                                                         | No      | Human-readable reason or description (e.g., 'Defective item', 'Customer requested').                                                                                                            |
+| 이름        | 타입                                                                           | 필수   | 설명                                                                                                                                                                                    |
+| ----------- | ------------------------------------------------------------------------------ | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| id          | string                                                                         | **예** | 조정 이벤트 식별자.                                                                                                                                                                     |
+| type        | string                                                                         | **예** | 조정 유형(개방형 문자열). 일반적으로 refund, return, credit, price_adjustment, dispute, cancellation처럼 금전과 관련된 값입니다. 판매자 비즈니스에 맞는 어떤 값이든 사용할 수 있습니다. |
+| occurred_at | string                                                                         | **예** | 이 조정이 발생한 시점의 RFC 3339 타임스탬프.                                                                                                                                            |
+| status      | string                                                                         | **예** | 조정 상태. **허용 값:** `pending`, `completed`, `failed`                                                                                                                                |
+| line_items  | Array[object]                                                                  | 아니요 | 영향을 받는 라인 아이템과 수량(선택 사항).                                                                                                                                              |
+| totals      | Array\[[Total](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#total)\] | 아니요 | 조정 합계 내역. 부호가 있는 값으로, 구매자에게 돌려주는 금액(환불, 크레딧)은 음수, 추가 청구(교환)는 양수입니다.                                                                        |
+| description | string                                                                         | 아니요 | 사람이 읽을 수 있는 사유 또는 설명(예: 'Defective item', 'Customer requested').                                                                                                         |
 
 ______________________________________________________________________
 
 ### Amount
 
-Monetary amount in the currency's minor unit as defined by ISO 4217. Refer to the currency's exponent to determine minor-to-major ratio (e.g., 2 for USD, 0 for JPY, 3 for KWD).
+ISO 4217에 정의된 통화의 최소 단위로 나타낸 금액. 최소 단위와 기본 단위의 비율은 통화의 지수를 참고합니다(예: USD는 2, JPY는 0, KWD는 3).
 
 ______________________________________________________________________
 
 ### Attribution
 
-Platform-emitted referral and conversion-event context — campaign identifiers, click IDs, source/medium markers, etc. The same parameters platforms communicate via URL query parameters in browser-based flows.
+플랫폼이 내보내는 추천 및 전환 이벤트 맥락: 캠페인 식별자, 클릭 ID, source/medium 마커 등. 브라우저 기반 흐름에서 플랫폼이 URL 쿼리 매개변수로 전달하는 것과 같은 매개변수입니다.
 
 ______________________________________________________________________
 
 ### Available Payment Instrument
 
-| 이름        | 타입   | 필수    | 설명                                                                                                         |
-| ----------- | ------ | ------- | ------------------------------------------------------------------------------------------------------------ |
-| type        | string | **Yes** | The instrument type identifier (e.g., 'card', 'gift_card'). References an instrument schema's type constant. |
-| constraints | object | No      | Constraints on this instrument type. Structure depends on instrument type and active capabilities.           |
+| 이름        | 타입   | 필수   | 설명                                                                                       |
+| ----------- | ------ | ------ | ------------------------------------------------------------------------------------------ |
+| type        | string | **예** | 결제 수단 유형 식별자(예: 'card', 'gift_card'). 결제 수단 스키마의 type 상수를 참조합니다. |
+| constraints | object | 아니요 | 이 결제 수단 유형에 대한 제약 조건. 구조는 결제 수단 유형과 활성 기능에 따라 달라집니다.   |
 
 ______________________________________________________________________
 
 ### Binding
 
-| 이름        | 타입                                                                                        | 필수    | 설명                                                                                                                                                                                           |
-| ----------- | ------------------------------------------------------------------------------------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| checkout_id | string                                                                                      | **Yes** | The checkout session identifier this token is bound to.                                                                                                                                        |
-| identity    | [Payment Identity](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#payment-identity) | No      | The participant this token is bound to. Required when acting on behalf of another participant (e.g., agent tokenizing for merchant). Omit when the authenticated caller is the binding target. |
+| 이름        | 타입                                                                                        | 필수   | 설명                                                                                                                                                            |
+| ----------- | ------------------------------------------------------------------------------------------- | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| checkout_id | string                                                                                      | **예** | 이 토큰이 바인딩된 체크아웃 세션 식별자.                                                                                                                        |
+| identity    | [Payment Identity](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#payment-identity) | 아니요 | 이 토큰이 바인딩된 참여자. 다른 참여자를 대신해 동작할 때(예: 에이전트가 판매자를 위해 토큰화하는 경우) 필수입니다. 인증된 호출자가 바인딩 대상이면 생략합니다. |
 
 ______________________________________________________________________
 
 ### Business Fulfillment Config
 
-| 이름                       | 타입         | 필수 | 설명                                           |
-| -------------------------- | ------------ | ---- | ---------------------------------------------- |
-| allows_multi_destination   | object       | No   | Permits multiple destinations per method type. |
-| allows_method_combinations | Array[array] | No   | Allowed method type combinations.              |
+| 이름                       | 타입         | 필수   | 설명                                    |
+| -------------------------- | ------------ | ------ | --------------------------------------- |
+| allows_multi_destination   | object       | 아니요 | 방법 유형별로 여러 목적지를 허용합니다. |
+| allows_method_combinations | Array[array] | 아니요 | 허용되는 결제 방법 유형 조합.           |
 
 ______________________________________________________________________
 
 ### Buyer
 
-| 이름         | 타입   | 필수 | 설명                     |
-| ------------ | ------ | ---- | ------------------------ |
-| first_name   | string | No   | First name of the buyer. |
-| last_name    | string | No   | Last name of the buyer.  |
-| email        | string | No   | Email of the buyer.      |
-| phone_number | string | No   | E.164 standard.          |
+| 이름         | 타입   | 필수   | 설명             |
+| ------------ | ------ | ------ | ---------------- |
+| first_name   | string | 아니요 | 구매자의 이름.   |
+| last_name    | string | 아니요 | 구매자의 성.     |
+| email        | string | 아니요 | 구매자의 이메일. |
+| phone_number | string | 아니요 | E.164 표준.      |
 
 ______________________________________________________________________
 
 ### Card Credential
 
-| 이름             | 타입    | 필수    | 설명                                                                                                                                                   |
-| ---------------- | ------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| type             | string  | **Yes** | The credential type discriminator. Specific schemas will constrain this to a constant value.                                                           |
-| type             | any     | **Yes** | **Constant = card**. The credential type identifier for card credentials.                                                                              |
-| card_number_type | string  | **Yes** | The type of card number. Network tokens are preferred with fallback to FPAN. See PCI Scope for more details. **Enum:** `fpan`, `network_token`, `dpan` |
-| number           | string  | No      | Card number.                                                                                                                                           |
-| expiry_month     | integer | No      | The month of the card's expiration date (1-12).                                                                                                        |
-| expiry_year      | integer | No      | The year of the card's expiration date.                                                                                                                |
-| name             | string  | No      | Cardholder name.                                                                                                                                       |
-| cvc              | string  | No      | Card CVC number.                                                                                                                                       |
-| cryptogram       | string  | No      | Cryptogram provided with network tokens.                                                                                                               |
-| eci_value        | string  | No      | Electronic Commerce Indicator / Security Level Indicator provided with network tokens.                                                                 |
+| 이름             | 타입    | 필수   | 설명                                                                                                                                                       |
+| ---------------- | ------- | ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| type             | string  | **예** | 자격 증명 유형 판별자. 구체적인 스키마에서 이 값을 상수로 제한합니다.                                                                                      |
+| type             | any     | **예** | **상수 = card**. 카드 자격 증명의 자격 증명 유형 식별자.                                                                                                   |
+| card_number_type | string  | **예** | 카드 번호의 유형. 네트워크 토큰을 우선하며 FPAN으로 대체할 수 있습니다. 자세한 내용은 PCI Scope를 참고하세요. **허용 값:** `fpan`, `network_token`, `dpan` |
+| number           | string  | 아니요 | 카드 번호.                                                                                                                                                 |
+| expiry_month     | integer | 아니요 | 카드 만료일의 월(1-12).                                                                                                                                    |
+| expiry_year      | integer | 아니요 | 카드 만료일의 연도.                                                                                                                                        |
+| name             | string  | 아니요 | 카드 소유자 이름.                                                                                                                                          |
+| cvc              | string  | 아니요 | 카드 CVC 번호.                                                                                                                                             |
+| cryptogram       | string  | 아니요 | 네트워크 토큰과 함께 제공되는 크립토그램.                                                                                                                  |
+| eci_value        | string  | 아니요 | 네트워크 토큰과 함께 제공되는 ECI(Electronic Commerce Indicator) / SLI(Security Level Indicator).                                                          |
 
 ______________________________________________________________________
 
 ### Card Payment Instrument
 
-| 이름            | 타입                                                                                            | 필수    | 설명                                                                                                                                                         |
-| --------------- | ----------------------------------------------------------------------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| id              | string                                                                                          | No      | A unique identifier for this instrument instance, assigned by the platform.                                                                                  |
-| handler_id      | string                                                                                          | No      | The unique identifier for the handler instance that produced this instrument. This corresponds to the 'id' field in the Payment Handler definition.          |
-| type            | string                                                                                          | **Yes** | The broad category of the instrument (e.g., 'card', 'tokenized_card'). Specific schemas will constrain this to a constant value.                             |
-| billing_address | [Postal Address](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#postal-address)         | No      | The billing address associated with this payment method.                                                                                                     |
-| credential      | [Payment Credential](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#payment-credential) | No      | The base definition for any payment credential. Handlers define specific credential types.                                                                   |
-| display         | object                                                                                          | No      | Display information for this payment instrument. Each payment instrument schema defines its specific display properties, as outlined by the payment handler. |
-| type            | string                                                                                          | **Yes** | **Constant = card**. Indicates this is a card payment instrument.                                                                                            |
-| display         | object                                                                                          | No      | Display information for this card payment instrument.                                                                                                        |
+| 이름            | 타입                                                                                            | 필수   | 설명                                                                                                     |
+| --------------- | ----------------------------------------------------------------------------------------------- | ------ | -------------------------------------------------------------------------------------------------------- |
+| id              | string                                                                                          | 아니요 | 플랫폼이 할당하는, 이 결제 수단 인스턴스의 고유 식별자.                                                  |
+| handler_id      | string                                                                                          | 아니요 | 이 결제 수단을 생성한 핸들러 인스턴스의 고유 식별자. 결제 핸들러 정의의 'id' 필드에 해당합니다.          |
+| type            | string                                                                                          | **예** | 결제 수단의 대분류(예: 'card', 'tokenized_card'). 구체적인 스키마에서 이 값을 상수로 제한합니다.         |
+| billing_address | [Postal Address](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#postal-address)         | 아니요 | 이 결제 방법에 연결된 청구지 주소.                                                                       |
+| credential      | [Payment Credential](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#payment-credential) | 아니요 | 모든 결제 자격 증명의 기본 정의. 구체적인 자격 증명 유형은 핸들러가 정의합니다.                          |
+| display         | object                                                                                          | 아니요 | 이 결제 수단의 표시 정보. 각 결제 수단 스키마가 결제 핸들러의 설명에 따라 고유한 표시 속성을 정의합니다. |
+| type            | string                                                                                          | **예** | **상수 = card**. 카드 결제 수단임을 나타냅니다.                                                          |
+| display         | object                                                                                          | 아니요 | 이 카드 결제 수단의 표시 정보.                                                                           |
 
 ______________________________________________________________________
 
 ### Category
 
-| 이름     | 타입   | 필수    | 설명                                                                                  |
-| -------- | ------ | ------- | ------------------------------------------------------------------------------------- |
-| value    | string | **Yes** | Category value or path (e.g., 'Apparel > Shirts', '1604').                            |
-| taxonomy | string | No      | Source taxonomy. Well-known values: `google_product_category`, `shopify`, `merchant`. |
+| 이름     | 타입   | 필수   | 설명                                                                            |
+| -------- | ------ | ------ | ------------------------------------------------------------------------------- |
+| value    | string | **예** | 카테고리 값 또는 경로(예: 'Apparel > Shirts', '1604').                          |
+| taxonomy | string | 아니요 | 출처 분류 체계. 잘 알려진 값: `google_product_category`, `shopify`, `merchant`. |
 
 ______________________________________________________________________
 
 ### Context
 
-| 이름            | 타입                                                                                                       | 필수 | 설명                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| --------------- | ---------------------------------------------------------------------------------------------------------- | ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| address_country | string                                                                                                     | No   | The country. Recommended to be in 2-letter ISO 3166-1 alpha-2 format, for example "US". For backward compatibility, a 3-letter ISO 3166-1 alpha-3 country code such as "SGP" or a full country name such as "Singapore" can also be used. Optional hint for market context (currency, availability, pricing)—higher-resolution data (e.g., shipping address) supersedes this value.                                                                                |
-| address_region  | string                                                                                                     | No   | The region in which the locality is, and which is in the country. For example, California or another appropriate first-level Administrative division. Optional hint for progressive localization—higher-resolution data (e.g., shipping address) supersedes this value.                                                                                                                                                                                            |
-| postal_code     | string                                                                                                     | No   | The postal code. For example, 94043. Optional hint for regional refinement—higher-resolution data (e.g., shipping address) supersedes this value.                                                                                                                                                                                                                                                                                                                  |
-| intent          | string                                                                                                     | No   | Background context describing buyer's intent (e.g., 'looking for a gift under $50', 'need something durable for outdoor use'). Informs relevance, recommendations, and personalization.                                                                                                                                                                                                                                                                            |
-| language        | string                                                                                                     | No   | Preferred language for content. Use IETF BCP 47 language tags (e.g., 'en', 'fr-CA', 'zh-Hans'). For REST, equivalent to Accept-Language header—platforms SHOULD fall back to Accept-Language when this field is absent; when provided, overrides Accept-Language. Businesses MAY return content in a different language if unavailable.                                                                                                                            |
-| currency        | string                                                                                                     | No   | Preferred currency (ISO 4217, e.g., 'EUR', 'USD'). Businesses determine presentment currency from context and authoritative signals; this hint MAY inform selection in multi-currency markets. Also serves as the denomination for price filter values — platforms SHOULD include this field when sending price filters. Response prices include explicit currency confirming the resolution.                                                                      |
-| eligibility     | Array\[[Reverse Domain Name](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#reverse-domain-name)\] | No   | Buyer claims about eligible benefits such as loyalty membership, payment instrument perks, and similar. Recognized claims MAY inform the Business response (e.g., member-only product availability, adjusted pricing in catalog, provisional discounts at cart or checkout). Businesses MUST ignore unrecognized values without error. Values MUST use reverse-domain naming (e.g., 'com.example.loyalty_gold', 'org.school.student') and MUST be non-identifying. |
+| 이름            | 타입                                                                                                       | 필수   | 설명                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| --------------- | ---------------------------------------------------------------------------------------------------------- | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| address_country | string                                                                                                     | 아니요 | 국가. 2자리 ISO 3166-1 alpha-2 형식(예: "US")을 권장합니다. 하위 호환성을 위해 "SGP" 같은 3자리 ISO 3166-1 alpha-3 국가 코드나 "Singapore" 같은 전체 국가명도 사용할 수 있습니다. 시장 맥락(통화, 구매 가능 여부, 가격)을 위한 선택적 힌트이며, 더 정밀한 데이터(예: 배송지 주소)가 있으면 이 값보다 우선합니다.                                                                                                                                |
+| address_region  | string                                                                                                     | 아니요 | 시·군·구가 속하고 해당 국가 안에 있는 지역. 예: California 또는 그 밖의 적절한 1차 행정 구역. 점진적 현지화를 위한 선택적 힌트이며, 더 정밀한 데이터(예: 배송지 주소)가 있으면 이 값보다 우선합니다.                                                                                                                                                                                                                                            |
+| postal_code     | string                                                                                                     | 아니요 | 우편번호. 예: 94043. 지역 단위 세분화를 위한 선택적 힌트이며, 더 정밀한 데이터(예: 배송지 주소)가 있으면 이 값보다 우선합니다.                                                                                                                                                                                                                                                                                                                  |
+| intent          | string                                                                                                     | 아니요 | 구매자의 의도를 설명하는 배경 맥락(예: 'looking for a gift under $50', 'need something durable for outdoor use'). 관련성, 추천, 개인화에 활용됩니다.                                                                                                                                                                                                                                                                                            |
+| language        | string                                                                                                     | 아니요 | 콘텐츠의 선호 언어입니다. IETF BCP 47 언어 태그(예: 'en', 'fr-CA', 'zh-Hans')를 사용합니다. REST에서는 Accept-Language 헤더에 해당합니다. 이 필드가 없으면 플랫폼은 Accept-Language로 대체해야 하며(SHOULD), 값이 있으면 Accept-Language보다 우선합니다. 해당 언어를 제공할 수 없으면 비즈니스는 다른 언어로 콘텐츠를 반환할 수 있습니다(MAY).                                                                                                  |
+| currency        | string                                                                                                     | 아니요 | 선호 통화(ISO 4217, 예: 'EUR', 'USD'). 비즈니스는 맥락과 신뢰할 수 있는 신호로 표시 통화를 결정하며, 다중 통화 시장에서는 이 힌트를 선택에 참고할 수 있습니다(MAY). 가격 필터 값의 통화 단위로도 쓰이므로, 플랫폼은 가격 필터를 보낼 때 이 필드를 포함해야 합니다(SHOULD). 응답 가격에는 결정된 통화를 확인할 수 있도록 통화가 명시됩니다.                                                                                                      |
+| eligibility     | Array\[[Reverse Domain Name](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#reverse-domain-name)\] | 아니요 | 로열티 멤버십, 결제 수단 혜택 등 적격 혜택에 대한 구매자 주장. 인식된 주장은 비즈니스 응답에 반영될 수 있습니다(MAY)(예: 회원 전용 상품 구매 가능 여부, 카탈로그의 조정 가격, 장바구니나 체크아웃의 잠정 할인). 비즈니스는 인식하지 못한 값을 오류 없이 반드시 무시해야 합니다(MUST). 값은 반드시 역 도메인 이름 규칙을 사용해야 하며(MUST)(예: 'com.example.loyalty_gold', 'org.school.student'), 반드시 개인을 식별할 수 없어야 합니다(MUST). |
 
 ______________________________________________________________________
 
 ### Description
 
-| 이름     | 타입   | 필수 | 설명                                                                                                                                                                      |
-| -------- | ------ | ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| plain    | string | No   | Plain text content.                                                                                                                                                       |
-| html     | string | No   | HTML-formatted content. Security: Platforms MUST sanitize before rendering—strip scripts, event handlers, and untrusted elements. Treat all rich text as untrusted input. |
-| markdown | string | No   | Markdown-formatted content.                                                                                                                                               |
+| 이름     | 타입   | 필수   | 설명                                                                                                                                                                                              |
+| -------- | ------ | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| plain    | string | 아니요 | 일반 텍스트 콘텐츠.                                                                                                                                                                               |
+| html     | string | 아니요 | HTML 형식 콘텐츠. 보안: 플랫폼은 렌더링 전에 반드시 정제해야 합니다(MUST). 스크립트, 이벤트 핸들러, 신뢰할 수 없는 요소를 제거하세요. 모든 서식 있는 텍스트는 신뢰할 수 없는 입력으로 취급합니다. |
+| markdown | string | 아니요 | Markdown 형식의 콘텐츠.                                                                                                                                                                           |
 
 ______________________________________________________________________
 
 ### Detail Option Value
 
-| 이름      | 타입    | 필수 | 설명                                                                                           |
-| --------- | ------- | ---- | ---------------------------------------------------------------------------------------------- |
-| available | boolean | No   | Whether a variant matching this value and the current option selections is purchasable.        |
-| exists    | boolean | No   | Whether a variant matching this value and the current option selections exists in the catalog. |
+| 이름      | 타입    | 필수   | 설명                                                               |
+| --------- | ------- | ------ | ------------------------------------------------------------------ |
+| available | boolean | 아니요 | 이 값과 현재 선택한 옵션에 맞는 변형을 구매할 수 있는지 여부.      |
+| exists    | boolean | 아니요 | 이 값과 현재 선택한 옵션에 맞는 변형이 카탈로그에 존재하는지 여부. |
 
 ______________________________________________________________________
 
 ### Error Code
 
-Error code identifying the type of error. Standard errors are defined in specification (see examples), and have standardized semantics; freeform codes are permitted.
+오류 유형을 식별하는 오류 코드. 표준 오류는 명세에 정의되어 있고(예시 참고) 의미가 표준화되어 있으며, 자유 형식 코드도 허용합니다.
 
 ______________________________________________________________________
 
 ### Error Response
 
-| 이름         | 타입                                                                               | 필수    | 설명                                                              |
-| ------------ | ---------------------------------------------------------------------------------- | ------- | ----------------------------------------------------------------- |
-| ucp          | any                                                                                | **Yes** | UCP protocol metadata. Status MUST be 'error' for error response. |
-| messages     | Array\[[Message](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#message)\] | **Yes** | Array of messages describing why the operation failed.            |
-| continue_url | string                                                                             | No      | URL for buyer handoff or session recovery.                        |
+| 이름         | 타입                                                                               | 필수   | 설명                                                                               |
+| ------------ | ---------------------------------------------------------------------------------- | ------ | ---------------------------------------------------------------------------------- |
+| ucp          | any                                                                                | **예** | UCP 프로토콜 메타데이터. 오류 응답에서는 status가 반드시 'error'여야 합니다(MUST). |
+| messages     | Array\[[Message](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#message)\] | **예** | 작업이 실패한 이유를 설명하는 메시지 배열.                                         |
+| continue_url | string                                                                             | 아니요 | 구매자 핸드오프 또는 세션 복구용 URL.                                              |
 
 ______________________________________________________________________
 
 ### Expectation
 
-| 이름           | 타입                                                                                    | 필수    | 설명                                                                                                        |
-| -------------- | --------------------------------------------------------------------------------------- | ------- | ----------------------------------------------------------------------------------------------------------- |
-| id             | string                                                                                  | **Yes** | Expectation identifier.                                                                                     |
-| line_items     | Array[object]                                                                           | **Yes** | Which line items and quantities are in this expectation.                                                    |
-| method_type    | string                                                                                  | **Yes** | Delivery method type (shipping, pickup, digital). **Enum:** `shipping`, `pickup`, `digital`                 |
-| destination    | [Postal Address](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#postal-address) | **Yes** | Delivery destination address.                                                                               |
-| description    | string                                                                                  | No      | Human-readable delivery description (e.g., 'Arrives in 5-8 business days').                                 |
-| fulfillable_on | string                                                                                  | No      | When this expectation can be fulfilled: 'now' or ISO 8601 timestamp for future date (backorder, pre-order). |
+| 이름           | 타입                                                                                    | 필수   | 설명                                                                                                       |
+| -------------- | --------------------------------------------------------------------------------------- | ------ | ---------------------------------------------------------------------------------------------------------- |
+| id             | string                                                                                  | **예** | 예상 정보 식별자.                                                                                          |
+| line_items     | Array[object]                                                                           | **예** | 이 예상 배송에 포함된 라인 아이템과 수량.                                                                  |
+| method_type    | string                                                                                  | **예** | 배송 방식 유형(shipping, pickup, digital). **허용 값:** `shipping`, `pickup`, `digital`                    |
+| destination    | [Postal Address](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#postal-address) | **예** | 배송 목적지 주소.                                                                                          |
+| description    | string                                                                                  | 아니요 | 사람이 읽을 수 있는 배송 설명(예: 'Arrives in 5-8 business days').                                         |
+| fulfillable_on | string                                                                                  | 아니요 | 이 예상 배송을 이행할 수 있는 시점: 'now' 또는 향후 날짜(이월 주문, 사전 주문)에 대한 ISO 8601 타임스탬프. |
 
 ______________________________________________________________________
 
 ### Fulfillment
 
-| 이름              | 타입                                                                                                                         | 필수 | 설명                                |
-| ----------------- | ---------------------------------------------------------------------------------------------------------------------------- | ---- | ----------------------------------- |
-| methods           | Array\[[Fulfillment Method](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#fulfillment-method)\]                     | No   | Fulfillment methods for cart items. |
-| available_methods | Array\[[Fulfillment Available Method](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#fulfillment-available-method)\] | No   | Inventory availability hints.       |
+| 이름              | 타입                                                                                                                         | 필수   | 설명                           |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------- | ------ | ------------------------------ |
+| methods           | Array\[[Fulfillment Method](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#fulfillment-method)\]                     | 아니요 | 장바구니 상품의 풀필먼트 방식. |
+| available_methods | Array\[[Fulfillment Available Method](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#fulfillment-available-method)\] | 아니요 | 재고 가용성 힌트.              |
 
 ______________________________________________________________________
 
 ### Fulfillment Available Method
 
-| 이름           | 타입               | 필수    | 설명                                                                                     |
-| -------------- | ------------------ | ------- | ---------------------------------------------------------------------------------------- |
-| type           | string             | **Yes** | Fulfillment method type this availability applies to. **Enum:** `shipping`, `pickup`     |
-| line_item_ids  | Array[string]      | **Yes** | Line items available for this fulfillment method.                                        |
-| fulfillable_on | ['string', 'null'] | No      | 'now' for immediate availability, or ISO 8601 date for future (preorders, transfers).    |
-| description    | string             | No      | Human-readable availability info (e.g., 'Available for pickup at Downtown Store today'). |
+| 이름           | 타입               | 필수   | 설명                                                                                 |
+| -------------- | ------------------ | ------ | ------------------------------------------------------------------------------------ |
+| type           | string             | **예** | 이 가용성이 적용되는 풀필먼트 방식 유형. **허용 값:** `shipping`, `pickup`           |
+| line_item_ids  | Array[string]      | **예** | 이 풀필먼트 방식에 사용할 수 있는 라인 아이템.                                       |
+| fulfillable_on | ['string', 'null'] | 아니요 | 즉시 구매 가능하면 'now', 향후 구매 가능(예약 주문, 이관)이면 ISO 8601 날짜.         |
+| description    | string             | 아니요 | 사람이 읽을 수 있는 가용성 정보(예: 'Available for pickup at Downtown Store today'). |
 
 ______________________________________________________________________
 
@@ -291,123 +291,123 @@ ______________________________________________________________________
 
 ### Fulfillment Event
 
-| 이름            | 타입          | 필수    | 설명                                                                                                                                                                                                                                                                                                                                    |
-| --------------- | ------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| id              | string        | **Yes** | Fulfillment event identifier.                                                                                                                                                                                                                                                                                                           |
-| occurred_at     | string        | **Yes** | RFC 3339 timestamp when this fulfillment event occurred.                                                                                                                                                                                                                                                                                |
-| type            | string        | **Yes** | Fulfillment event type. Common values include: processing (preparing to ship), shipped (handed to carrier), in_transit (in delivery network), delivered (received by buyer), failed_attempt (delivery attempt failed), canceled (fulfillment canceled), undeliverable (cannot be delivered), returned_to_sender (returned to merchant). |
-| line_items      | Array[object] | **Yes** | Which line items and quantities are fulfilled in this event.                                                                                                                                                                                                                                                                            |
-| tracking_number | string        | No      | Carrier tracking number (required if type != processing).                                                                                                                                                                                                                                                                               |
-| tracking_url    | string        | No      | URL to track this shipment (required if type != processing).                                                                                                                                                                                                                                                                            |
-| carrier         | string        | No      | Carrier name (e.g., 'FedEx', 'USPS').                                                                                                                                                                                                                                                                                                   |
-| description     | string        | No      | Human-readable description of the shipment status or delivery information (e.g., 'Delivered to front door', 'Out for delivery').                                                                                                                                                                                                        |
+| 이름            | 타입          | 필수   | 설명                                                                                                                                                                                                                                                                           |
+| --------------- | ------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| id              | string        | **예** | 풀필먼트 이벤트 식별자.                                                                                                                                                                                                                                                        |
+| occurred_at     | string        | **예** | 이 풀필먼트 이벤트가 발생한 시점의 RFC 3339 타임스탬프.                                                                                                                                                                                                                        |
+| type            | string        | **예** | 풀필먼트 이벤트 유형. 일반적인 값: processing(배송 준비 중), shipped(운송사에 인계됨), in_transit(배송망에서 이동 중), delivered(구매자가 수령함), failed_attempt(배송 시도 실패), canceled(풀필먼트 취소됨), undeliverable(배송 불가), returned_to_sender(판매자에게 반송됨). |
+| line_items      | Array[object] | **예** | 이 이벤트에서 풀필먼트된 라인 아이템과 수량.                                                                                                                                                                                                                                   |
+| tracking_number | string        | 아니요 | 운송사 추적 번호(type != processing이면 필수).                                                                                                                                                                                                                                 |
+| tracking_url    | string        | 아니요 | 이 배송을 추적하는 URL(type != processing이면 필수).                                                                                                                                                                                                                           |
+| carrier         | string        | 아니요 | 운송사 이름(예: 'FedEx', 'USPS').                                                                                                                                                                                                                                              |
+| description     | string        | 아니요 | 사람이 읽을 수 있는 배송 상태 또는 배송 정보 설명(예: 'Delivered to front door', 'Out for delivery').                                                                                                                                                                          |
 
 ______________________________________________________________________
 
 ### Fulfillment Group
 
-| 이름               | 타입                                                                                                     | 필수    | 설명                                                                   |
-| ------------------ | -------------------------------------------------------------------------------------------------------- | ------- | ---------------------------------------------------------------------- |
-| id                 | string                                                                                                   | **Yes** | Group identifier for referencing merchant-generated groups in updates. |
-| line_item_ids      | Array[string]                                                                                            | **Yes** | Line item IDs included in this group/package.                          |
-| options            | Array\[[Fulfillment Option](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#fulfillment-option)\] | No      | Available fulfillment options for this group.                          |
-| selected_option_id | ['string', 'null']                                                                                       | No      | ID of the selected fulfillment option for this group.                  |
+| 이름               | 타입                                                                                                     | 필수   | 설명                                                          |
+| ------------------ | -------------------------------------------------------------------------------------------------------- | ------ | ------------------------------------------------------------- |
+| id                 | string                                                                                                   | **예** | 업데이트 시 판매자가 생성한 그룹을 참조하기 위한 그룹 식별자. |
+| line_item_ids      | Array[string]                                                                                            | **예** | 이 그룹/패키지에 포함된 라인 아이템 ID.                       |
+| options            | Array\[[Fulfillment Option](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#fulfillment-option)\] | 아니요 | 이 그룹에 사용할 수 있는 풀필먼트 옵션.                       |
+| selected_option_id | ['string', 'null']                                                                                       | 아니요 | 이 그룹에서 선택한 풀필먼트 옵션의 ID.                        |
 
 ______________________________________________________________________
 
 ### Fulfillment Method
 
-| 이름                    | 타입                                                                                                               | 필수    | 설명                                                                                                         |
-| ----------------------- | ------------------------------------------------------------------------------------------------------------------ | ------- | ------------------------------------------------------------------------------------------------------------ |
-| id                      | string                                                                                                             | **Yes** | Unique fulfillment method identifier.                                                                        |
-| type                    | string                                                                                                             | **Yes** | Fulfillment method type. **Enum:** `shipping`, `pickup`                                                      |
-| line_item_ids           | Array[string]                                                                                                      | **Yes** | Line item IDs fulfilled via this method.                                                                     |
-| destinations            | Array\[[Fulfillment Destination](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#fulfillment-destination)\] | No      | Available destinations. For shipping: addresses. For pickup: retail locations.                               |
-| selected_destination_id | ['string', 'null']                                                                                                 | No      | ID of the selected destination.                                                                              |
-| groups                  | Array\[[Fulfillment Group](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#fulfillment-group)\]             | No      | Fulfillment groups for selecting options. Agent sets selected_option_id on groups to choose shipping method. |
+| 이름                    | 타입                                                                                                               | 필수   | 설명                                                                                                  |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------ | ------ | ----------------------------------------------------------------------------------------------------- |
+| id                      | string                                                                                                             | **예** | 고유 풀필먼트 방식 식별자.                                                                            |
+| type                    | string                                                                                                             | **예** | 풀필먼트 방식 유형. **허용 값:** `shipping`, `pickup`                                                 |
+| line_item_ids           | Array[string]                                                                                                      | **예** | 이 방식으로 풀필먼트되는 라인 아이템 ID.                                                              |
+| destinations            | Array\[[Fulfillment Destination](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#fulfillment-destination)\] | 아니요 | 사용 가능한 목적지. 배송은 주소, 픽업은 소매 매장.                                                    |
+| selected_destination_id | ['string', 'null']                                                                                                 | 아니요 | 선택한 목적지의 ID.                                                                                   |
+| groups                  | Array\[[Fulfillment Group](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#fulfillment-group)\]             | 아니요 | 옵션 선택을 위한 풀필먼트 그룹. 에이전트는 그룹에 selected_option_id를 설정해 배송 방식을 선택합니다. |
 
 ______________________________________________________________________
 
 ### Fulfillment Option
 
-| 이름                      | 타입                                                                           | 필수    | 설명                                                                       |
-| ------------------------- | ------------------------------------------------------------------------------ | ------- | -------------------------------------------------------------------------- |
-| id                        | string                                                                         | **Yes** | Unique fulfillment option identifier.                                      |
-| title                     | string                                                                         | **Yes** | Short label (e.g., 'Express Shipping', 'Curbside Pickup').                 |
-| description               | string                                                                         | No      | Complete context for buyer decision (e.g., 'Arrives Dec 12-15 via FedEx'). |
-| carrier                   | string                                                                         | No      | Carrier name (for shipping).                                               |
-| earliest_fulfillment_time | string                                                                         | No      | Earliest fulfillment date.                                                 |
-| latest_fulfillment_time   | string                                                                         | No      | Latest fulfillment date.                                                   |
-| totals                    | Array\[[Total](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#total)\] | **Yes** | Fulfillment option totals breakdown.                                       |
+| 이름                      | 타입                                                                           | 필수   | 설명                                                             |
+| ------------------------- | ------------------------------------------------------------------------------ | ------ | ---------------------------------------------------------------- |
+| id                        | string                                                                         | **예** | 고유 풀필먼트 옵션 식별자.                                       |
+| title                     | string                                                                         | **예** | 짧은 레이블(예: 'Express Shipping', 'Curbside Pickup').          |
+| description               | string                                                                         | 아니요 | 구매자 결정을 위한 전체 맥락(예: 'Arrives Dec 12-15 via FedEx'). |
+| carrier                   | string                                                                         | 아니요 | 운송사 이름(배송용).                                             |
+| earliest_fulfillment_time | string                                                                         | 아니요 | 가장 이른 풀필먼트 날짜.                                         |
+| latest_fulfillment_time   | string                                                                         | 아니요 | 가장 늦은 풀필먼트 날짜.                                         |
+| totals                    | Array\[[Total](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#total)\] | **예** | 풀필먼트 옵션 합계 내역.                                         |
 
 ______________________________________________________________________
 
 ### Info Code
 
-Info code identifying the type of informational message. Standard codes are defined in capability specs (see examples), and have standardized semantics; freeform codes are permitted.
+정보 메시지의 유형을 식별하는 정보 코드. 표준 코드는 기능 명세에 정의되어 있고(예시 참고) 표준화된 의미를 가지며, 자유 형식 코드도 허용됩니다.
 
 ______________________________________________________________________
 
 ### Input Correlation
 
-| 이름  | 타입   | 필수    | 설명                                                                                                                                                                                                                                                                                                                          |
-| ----- | ------ | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| id    | string | **Yes** | The identifier from the lookup request that resolved to this variant.                                                                                                                                                                                                                                                         |
-| match | string | No      | How the request identifier resolved to this variant. Well-known values: `exact` (input directly identifies this variant, e.g., variant ID, SKU), `featured` (server selected this variant as representative, e.g., product ID resolved to best match). Businesses MAY implement and provide additional resolution strategies. |
+| 이름  | 타입   | 필수   | 설명                                                                                                                                                                                                                                                            |
+| ----- | ------ | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| id    | string | **예** | 이 변형으로 결정된, 조회 요청의 식별자.                                                                                                                                                                                                                         |
+| match | string | 아니요 | 요청 식별자가 이 변형으로 해석된 방식. 잘 알려진 값: `exact`(입력이 이 변형을 직접 식별함. 예: 변형 ID, SKU), `featured`(서버가 이 변형을 대표로 선택함. 예: 상품 ID를 가장 잘 맞는 변형으로 해석). 비즈니스는 추가 해석 전략을 구현해 제공할 수 있습니다(MAY). |
 
 ______________________________________________________________________
 
 ### Item
 
-| 이름      | 타입                                                                    | 필수    | 설명                                                                                                                                                                        |
-| --------- | ----------------------------------------------------------------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| id        | string                                                                  | **Yes** | The product identifier, often the SKU, required to resolve the product details associated with this line item. Should be recognized by both the Platform, and the Business. |
-| title     | string                                                                  | **Yes** | Product title.                                                                                                                                                              |
-| price     | [Amount](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#amount) | **Yes** | Unit price in ISO 4217 minor units.                                                                                                                                         |
-| image_url | string                                                                  | No      | Product image URI.                                                                                                                                                          |
+| 이름      | 타입                                                                    | 필수   | 설명                                                                                                                                       |
+| --------- | ----------------------------------------------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| id        | string                                                                  | **예** | 이 라인 아이템에 연결된 상품 세부 정보를 확인하는 데 필요한 상품 식별자로, 주로 SKU입니다. 플랫폼과 비즈니스 모두 인식할 수 있어야 합니다. |
+| title     | string                                                                  | **예** | 상품 제목.                                                                                                                                 |
+| price     | [Amount](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#amount) | **예** | ISO 4217 최소 단위로 표시한 단가.                                                                                                          |
+| image_url | string                                                                  | 아니요 | 상품 이미지 URI.                                                                                                                           |
 
 ______________________________________________________________________
 
 ### Line Item
 
-| 이름      | 타입                                                                           | 필수    | 설명                                                   |
-| --------- | ------------------------------------------------------------------------------ | ------- | ------------------------------------------------------ |
-| id        | string                                                                         | **Yes** |                                                        |
-| item      | [Item](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#item)            | **Yes** |                                                        |
-| quantity  | integer                                                                        | **Yes** | Quantity of the item being purchased.                  |
-| totals    | Array\[[Total](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#total)\] | **Yes** | Line item totals breakdown.                            |
-| parent_id | string                                                                         | No      | Parent line item identifier for any nested structures. |
+| 이름      | 타입                                                                           | 필수   | 설명                                          |
+| --------- | ------------------------------------------------------------------------------ | ------ | --------------------------------------------- |
+| id        | string                                                                         | **예** |                                               |
+| item      | [Item](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#item)            | **예** |                                               |
+| quantity  | integer                                                                        | **예** | 구매하는 항목의 수량.                         |
+| totals    | Array\[[Total](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#total)\] | **예** | 라인 아이템 합계 내역.                        |
+| parent_id | string                                                                         | 아니요 | 중첩 구조에 사용하는 상위 라인 아이템 식별자. |
 
 ______________________________________________________________________
 
 ### Link
 
-| 이름  | 타입   | 필수    | 설명                                                                                                                                                                                                                                 |
-| ----- | ------ | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| type  | string | **Yes** | Type of link. Well-known values: `privacy_policy`, `terms_of_service`, `refund_policy`, `shipping_policy`, `faq`. Consumers SHOULD handle unknown values gracefully by displaying them using the `title` field or omitting the link. |
-| url   | string | **Yes** | The actual URL pointing to the content to be displayed.                                                                                                                                                                              |
-| title | string | No      | Optional display text for the link. When provided, use this instead of generating from type.                                                                                                                                         |
+| 이름  | 타입   | 필수   | 설명                                                                                                                                                                                                                |
+| ----- | ------ | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| type  | string | **예** | 링크 유형. 잘 알려진 값: `privacy_policy`, `terms_of_service`, `refund_policy`, `shipping_policy`, `faq`. 소비자는 알 수 없는 값을 `title` 필드로 표시하거나 링크를 생략하는 식으로 적절히 처리해야 합니다(SHOULD). |
+| url   | string | **예** | 표시할 콘텐츠를 가리키는 실제 URL.                                                                                                                                                                                  |
+| title | string | 아니요 | 링크의 표시 텍스트(선택 사항). 제공되면 type에서 생성하는 대신 이 값을 사용합니다.                                                                                                                                  |
 
 ______________________________________________________________________
 
 ### Media
 
-| 이름     | 타입    | 필수    | 설명                                                         |
-| -------- | ------- | ------- | ------------------------------------------------------------ |
-| type     | string  | **Yes** | Media type. Well-known values: `image`, `video`, `model_3d`. |
-| url      | string  | **Yes** | URL to the media resource.                                   |
-| alt_text | string  | No      | Accessibility text describing the media.                     |
-| width    | integer | No      | Width in pixels (for images/video).                          |
-| height   | integer | No      | Height in pixels (for images/video).                         |
+| 이름     | 타입    | 필수   | 설명                                                     |
+| -------- | ------- | ------ | -------------------------------------------------------- |
+| type     | string  | **예** | 미디어 유형. 잘 알려진 값: `image`, `video`, `model_3d`. |
+| url      | string  | **예** | 미디어 리소스의 URL.                                     |
+| alt_text | string  | 아니요 | 미디어를 설명하는 접근성 텍스트.                         |
+| width    | integer | 아니요 | 픽셀 단위 너비(이미지/동영상용).                         |
+| height   | integer | 아니요 | 높이(픽셀, 이미지/동영상용).                             |
 
 ______________________________________________________________________
 
 ### Merchant Fulfillment Config
 
-| 이름                       | 타입         | 필수 | 설명                                           |
-| -------------------------- | ------------ | ---- | ---------------------------------------------- |
-| allows_multi_destination   | object       | No   | Permits multiple destinations per method type. |
-| allows_method_combinations | Array[array] | No   | Allowed method type combinations.              |
+| 이름                       | 타입         | 필수   | 설명                                    |
+| -------------------------- | ------------ | ------ | --------------------------------------- |
+| allows_multi_destination   | object       | 아니요 | 방법 유형별로 여러 목적지를 허용합니다. |
+| allows_method_combinations | Array[array] | 아니요 | 허용되는 결제 방법 유형 조합.           |
 
 ______________________________________________________________________
 
@@ -419,373 +419,373 @@ ______________________________________________________________________
 
 ### Message Error
 
-| 이름         | 타입                                                                            | 필수    | 설명                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| ------------ | ------------------------------------------------------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| type         | string                                                                          | **Yes** | **Constant = error**. Message type discriminator.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| code         | [Error Code](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#error-code) | **Yes** | Error code identifying the type of error. Standard errors are defined in specification (see examples), and have standardized semantics; freeform codes are permitted.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| path         | string                                                                          | No      | RFC 9535 JSONPath to the component the message refers to (e.g., $.items[1]).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| content_type | string                                                                          | No      | Content format, default = plain. **Enum:** `plain`, `markdown`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| content      | string                                                                          | **Yes** | Human-readable message.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| severity     | string                                                                          | **Yes** | Reflects the resource state and recommended action. 'recoverable': platform can resolve by modifying inputs and retrying via API. 'requires_buyer_input': merchant requires information their API doesn't support collecting programmatically (checkout incomplete). 'requires_buyer_review': buyer must authorize before order placement due to policy, regulatory, or entitlement rules. 'unrecoverable': no valid resource exists to act on, retry with new resource or inputs. Errors with 'requires\_*' severity contribute to 'status: requires_escalation'.* *Enum:*\* `recoverable`, `requires_buyer_input`, `requires_buyer_review`, `unrecoverable` |
+| 이름         | 타입                                                                            | 필수   | 설명                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| ------------ | ------------------------------------------------------------------------------- | ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| type         | string                                                                          | **예** | **상수 = error**. 메시지 유형 판별자.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| code         | [Error Code](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#error-code) | **예** | 오류 유형을 식별하는 오류 코드. 표준 오류는 명세에 정의되어 있고(예시 참고) 의미가 표준화되어 있으며, 자유 형식 코드도 허용합니다.                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| path         | string                                                                          | 아니요 | 메시지가 가리키는 구성 요소의 RFC 9535 JSONPath(예: $.items[1]).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| content_type | string                                                                          | 아니요 | 콘텐츠 형식. 기본값은 plain. **허용 값:** `plain`, `markdown`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| content      | string                                                                          | **예** | 사람이 읽을 수 있는 메시지.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| severity     | string                                                                          | **예** | 리소스 상태와 권장 조치를 나타냅니다. 'recoverable': 플랫폼이 입력을 수정하고 API로 재시도해 해결할 수 있습니다. 'requires_buyer_input': 판매자의 API로는 프로그래밍 방식으로 수집할 수 없는 정보가 필요합니다(체크아웃 미완료). 'requires_buyer_review': 정책, 규제, 자격 규칙 때문에 주문 전에 구매자가 승인해야 합니다. 'unrecoverable': 조치할 유효한 리소스가 없으므로 새 리소스나 입력으로 재시도해야 합니다. 'requires\_*' 심각도의 오류는 'status: requires_escalation'의 원인이 됩니다.* *허용 값:*\* `recoverable`, `requires_buyer_input`, `requires_buyer_review`, `unrecoverable` |
 
 ______________________________________________________________________
 
 ### Message Info
 
-| 이름         | 타입                                                                          | 필수    | 설명                                                                                                                                                                                   |
-| ------------ | ----------------------------------------------------------------------------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| type         | string                                                                        | **Yes** | **Constant = info**. Message type discriminator.                                                                                                                                       |
-| path         | string                                                                        | No      | RFC 9535 JSONPath to the component the message refers to.                                                                                                                              |
-| code         | [Info Code](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#info-code) | No      | Info code identifying the type of informational message. Standard codes are defined in capability specs (see examples), and have standardized semantics; freeform codes are permitted. |
-| content_type | string                                                                        | No      | Content format, default = plain. **Enum:** `plain`, `markdown`                                                                                                                         |
-| content      | string                                                                        | **Yes** | Human-readable message.                                                                                                                                                                |
+| 이름         | 타입                                                                          | 필수   | 설명                                                                                                                                           |
+| ------------ | ----------------------------------------------------------------------------- | ------ | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| type         | string                                                                        | **예** | **상수 = info**. 메시지 유형 판별자.                                                                                                           |
+| path         | string                                                                        | 아니요 | 메시지가 가리키는 구성 요소의 RFC 9535 JSONPath.                                                                                               |
+| code         | [Info Code](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#info-code) | 아니요 | 정보 메시지의 유형을 식별하는 정보 코드. 표준 코드는 기능 명세에 정의되어 있고(예시 참고) 표준화된 의미를 가지며, 자유 형식 코드도 허용됩니다. |
+| content_type | string                                                                        | 아니요 | 콘텐츠 형식. 기본값은 plain. **허용 값:** `plain`, `markdown`                                                                                  |
+| content      | string                                                                        | **예** | 사람이 읽을 수 있는 메시지.                                                                                                                    |
 
 ______________________________________________________________________
 
 ### Message Warning
 
-| 이름         | 타입                                                                                | 필수    | 설명                                                                                                                                                                                                                                                |
-| ------------ | ----------------------------------------------------------------------------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| type         | string                                                                              | **Yes** | **Constant = warning**. Message type discriminator.                                                                                                                                                                                                 |
-| path         | string                                                                              | No      | JSONPath (RFC 9535) to related field (e.g., $.line_items[0]).                                                                                                                                                                                       |
-| code         | [Warning Code](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#warning-code) | **Yes** | Warning code identifying the type of warning. Standard codes are defined in capability specs (see examples), and have standardized semantics; freeform codes are permitted.                                                                         |
-| content      | string                                                                              | **Yes** | Human-readable warning message that MUST be displayed.                                                                                                                                                                                              |
-| content_type | string                                                                              | No      | Content format, default = plain. **Enum:** `plain`, `markdown`                                                                                                                                                                                      |
-| presentation | string                                                                              | No      | Rendering contract for this warning. 'notice' (default): platform MUST display, MAY dismiss. 'disclosure': platform MUST display in proximity to the path-referenced component, MUST NOT hide or auto-dismiss. See specification for full contract. |
-| image_url    | string                                                                              | No      | URL to a required visual element (e.g., warning symbol, energy class label).                                                                                                                                                                        |
-| url          | string                                                                              | No      | Reference URL for more information (e.g., regulatory site, registry entry, policy page).                                                                                                                                                            |
+| 이름         | 타입                                                                                | 필수   | 설명                                                                                                                                                                                                                                                                            |
+| ------------ | ----------------------------------------------------------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| type         | string                                                                              | **예** | **상수 = warning**. 메시지 유형 판별자.                                                                                                                                                                                                                                         |
+| path         | string                                                                              | 아니요 | 관련 필드를 가리키는 JSONPath(RFC 9535)(예: $.line_items[0]).                                                                                                                                                                                                                   |
+| code         | [Warning Code](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#warning-code) | **예** | 경고 유형을 식별하는 경고 코드. 표준 코드는 기능 명세에 정의되어 있고(예시 참고) 표준화된 의미를 지닙니다. 자유 형식 코드도 허용됩니다.                                                                                                                                         |
+| content      | string                                                                              | **예** | 반드시 표시해야 하는(MUST) 사람이 읽을 수 있는 경고 메시지.                                                                                                                                                                                                                     |
+| content_type | string                                                                              | 아니요 | 콘텐츠 형식. 기본값은 plain. **허용 값:** `plain`, `markdown`                                                                                                                                                                                                                   |
+| presentation | string                                                                              | 아니요 | 이 경고의 렌더링 규약입니다. 'notice'(기본값): 플랫폼은 반드시 표시해야 하며(MUST), 닫을 수 있습니다(MAY). 'disclosure': 플랫폼은 반드시 path가 가리키는 구성 요소 가까이에 표시해야 하며(MUST), 숨기거나 자동으로 닫아서는 안 됩니다(MUST NOT). 전체 규약은 명세를 참고하세요. |
+| image_url    | string                                                                              | 아니요 | 필수 시각 요소(예: 경고 기호, 에너지 등급 라벨)의 URL.                                                                                                                                                                                                                          |
+| url          | string                                                                              | 아니요 | 추가 정보를 위한 참조 URL(예: 규제 기관 사이트, 등록부 항목, 정책 페이지).                                                                                                                                                                                                      |
 
 ______________________________________________________________________
 
 ### Option Value
 
-| 이름  | 타입   | 필수    | 설명                                                                                                                                                  |
-| ----- | ------ | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| id    | string | No      | Optional server-assigned identifier for this option value. When present in a selected_option, the server SHOULD use it for matching instead of label. |
-| label | string | **Yes** | Display text for this option value (e.g., 'Small', 'Blue').                                                                                           |
+| 이름  | 타입   | 필수   | 설명                                                                                                                             |
+| ----- | ------ | ------ | -------------------------------------------------------------------------------------------------------------------------------- |
+| id    | string | 아니요 | 서버가 할당한 이 옵션 값의 식별자(선택 사항). selected_option에 있으면 서버는 label 대신 이 값을 매칭에 사용해야 합니다(SHOULD). |
+| label | string | **예** | 이 옵션 값의 표시 텍스트(예: 'Small', 'Blue').                                                                                   |
 
 ______________________________________________________________________
 
 ### Order Confirmation
 
-| 이름          | 타입   | 필수    | 설명                                                                                   |
-| ------------- | ------ | ------- | -------------------------------------------------------------------------------------- |
-| id            | string | **Yes** | Unique order identifier.                                                               |
-| label         | string | No      | Human-readable label for identifying the order. MUST only be provided by the business. |
-| permalink_url | string | **Yes** | Permalink to access the order on merchant site.                                        |
+| 이름          | 타입   | 필수   | 설명                                                                                    |
+| ------------- | ------ | ------ | --------------------------------------------------------------------------------------- |
+| id            | string | **예** | 고유 주문 식별자.                                                                       |
+| label         | string | 아니요 | 주문을 식별하기 위한 사람이 읽을 수 있는 라벨. 반드시 비즈니스만 제공해야 합니다(MUST). |
+| permalink_url | string | **예** | 판매자 사이트에서 주문에 접근하는 퍼머링크.                                             |
 
 ______________________________________________________________________
 
 ### Order Line Item
 
-| 이름      | 타입                                                                           | 필수    | 설명                                                                                                                                                                                                                                                                |
-| --------- | ------------------------------------------------------------------------------ | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| id        | string                                                                         | **Yes** | Line item identifier.                                                                                                                                                                                                                                               |
-| item      | [Item](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#item)            | **Yes** | Product data (id, title, price, image_url).                                                                                                                                                                                                                         |
-| quantity  | object                                                                         | **Yes** | Quantity tracking for the line item.                                                                                                                                                                                                                                |
-| totals    | Array\[[Total](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#total)\] | **Yes** | Line item totals breakdown.                                                                                                                                                                                                                                         |
-| status    | string                                                                         | **Yes** | Derived status: removed if quantity.total == 0, fulfilled if quantity.total > 0 and quantity.fulfilled == quantity.total, partial if quantity.total > 0 and quantity.fulfilled > 0, otherwise processing. **Enum:** `processing`, `partial`, `fulfilled`, `removed` |
-| parent_id | string                                                                         | No      | Parent line item identifier for any nested structures.                                                                                                                                                                                                              |
+| 이름      | 타입                                                                           | 필수   | 설명                                                                                                                                                                                                                                                                 |
+| --------- | ------------------------------------------------------------------------------ | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| id        | string                                                                         | **예** | 라인 아이템 식별자.                                                                                                                                                                                                                                                  |
+| item      | [Item](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#item)            | **예** | 상품 데이터(id, title, price, image_url).                                                                                                                                                                                                                            |
+| quantity  | object                                                                         | **예** | 라인 아이템의 수량 추적 정보.                                                                                                                                                                                                                                        |
+| totals    | Array\[[Total](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#total)\] | **예** | 라인 아이템 합계 내역.                                                                                                                                                                                                                                               |
+| status    | string                                                                         | **예** | 파생 상태: quantity.total == 0이면 removed, quantity.total > 0이고 quantity.fulfilled == quantity.total이면 fulfilled, quantity.total > 0이고 quantity.fulfilled > 0이면 partial, 그 밖에는 processing. **허용 값:** `processing`, `partial`, `fulfilled`, `removed` |
+| parent_id | string                                                                         | 아니요 | 중첩 구조에 사용하는 상위 라인 아이템 식별자.                                                                                                                                                                                                                        |
 
 ______________________________________________________________________
 
 ### Pagination
 
-Cursor-based pagination for list operations.
+목록 작업을 위한 커서 기반 페이지네이션.
 
 ______________________________________________________________________
 
 ### Payment Credential
 
-| 이름 | 타입   | 필수    | 설명                                                                                         |
-| ---- | ------ | ------- | -------------------------------------------------------------------------------------------- |
-| type | string | **Yes** | The credential type discriminator. Specific schemas will constrain this to a constant value. |
+| 이름 | 타입   | 필수   | 설명                                                                  |
+| ---- | ------ | ------ | --------------------------------------------------------------------- |
+| type | string | **예** | 자격 증명 유형 판별자. 구체적인 스키마에서 이 값을 상수로 제한합니다. |
 
 ______________________________________________________________________
 
 ### Payment Identity
 
-| 이름         | 타입   | 필수    | 설명                                                                                   |
-| ------------ | ------ | ------- | -------------------------------------------------------------------------------------- |
-| access_token | string | **Yes** | Unique identifier for this participant, obtained during onboarding with the tokenizer. |
+| 이름         | 타입   | 필수   | 설명                                                                 |
+| ------------ | ------ | ------ | -------------------------------------------------------------------- |
+| access_token | string | **예** | 이 참여자의 고유 식별자로, 토큰화 제공자에 온보딩할 때 발급받습니다. |
 
 ______________________________________________________________________
 
 ### Payment Instrument
 
-| 이름            | 타입                                                                                            | 필수    | 설명                                                                                                                                                         |
-| --------------- | ----------------------------------------------------------------------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| id              | string                                                                                          | **Yes** | A unique identifier for this instrument instance, assigned by the platform.                                                                                  |
-| handler_id      | string                                                                                          | **Yes** | The unique identifier for the handler instance that produced this instrument. This corresponds to the 'id' field in the Payment Handler definition.          |
-| type            | string                                                                                          | **Yes** | The broad category of the instrument (e.g., 'card', 'tokenized_card'). Specific schemas will constrain this to a constant value.                             |
-| billing_address | [Postal Address](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#postal-address)         | No      | The billing address associated with this payment method.                                                                                                     |
-| credential      | [Payment Credential](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#payment-credential) | No      | The base definition for any payment credential. Handlers define specific credential types.                                                                   |
-| display         | object                                                                                          | No      | Display information for this payment instrument. Each payment instrument schema defines its specific display properties, as outlined by the payment handler. |
+| 이름            | 타입                                                                                            | 필수   | 설명                                                                                                     |
+| --------------- | ----------------------------------------------------------------------------------------------- | ------ | -------------------------------------------------------------------------------------------------------- |
+| id              | string                                                                                          | **예** | 플랫폼이 할당하는, 이 결제 수단 인스턴스의 고유 식별자.                                                  |
+| handler_id      | string                                                                                          | **예** | 이 결제 수단을 생성한 핸들러 인스턴스의 고유 식별자. 결제 핸들러 정의의 'id' 필드에 해당합니다.          |
+| type            | string                                                                                          | **예** | 결제 수단의 대분류(예: 'card', 'tokenized_card'). 구체적인 스키마에서 이 값을 상수로 제한합니다.         |
+| billing_address | [Postal Address](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#postal-address)         | 아니요 | 이 결제 방법에 연결된 청구지 주소.                                                                       |
+| credential      | [Payment Credential](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#payment-credential) | 아니요 | 모든 결제 자격 증명의 기본 정의. 구체적인 자격 증명 유형은 핸들러가 정의합니다.                          |
+| display         | object                                                                                          | 아니요 | 이 결제 수단의 표시 정보. 각 결제 수단 스키마가 결제 핸들러의 설명에 따라 고유한 표시 속성을 정의합니다. |
 
 ______________________________________________________________________
 
 ### Platform Fulfillment Config
 
-| 이름                 | 타입    | 필수 | 설명                                |
-| -------------------- | ------- | ---- | ----------------------------------- |
-| supports_multi_group | boolean | No   | Enables multiple groups per method. |
+| 이름                 | 타입    | 필수   | 설명                                      |
+| -------------------- | ------- | ------ | ----------------------------------------- |
+| supports_multi_group | boolean | 아니요 | 방식당 여러 그룹을 사용할 수 있게 합니다. |
 
 ______________________________________________________________________
 
 ### Postal Address
 
-| 이름             | 타입   | 필수 | 설명                                                                                                                                                                                                                                      |
-| ---------------- | ------ | ---- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| extended_address | string | No   | An address extension such as an apartment number, C/O or alternative name.                                                                                                                                                                |
-| street_address   | string | No   | The street address.                                                                                                                                                                                                                       |
-| address_locality | string | No   | The locality in which the street address is, and which is in the region. For example, Mountain View.                                                                                                                                      |
-| address_region   | string | No   | The region in which the locality is, and which is in the country. Required for applicable countries (i.e. state in US, province in CA). For example, California or another appropriate first-level Administrative division.               |
-| address_country  | string | No   | The country. Recommended to be in 2-letter ISO 3166-1 alpha-2 format, for example "US". For backward compatibility, a 3-letter ISO 3166-1 alpha-3 country code such as "SGP" or a full country name such as "Singapore" can also be used. |
-| postal_code      | string | No   | The postal code. For example, 94043.                                                                                                                                                                                                      |
-| first_name       | string | No   | Optional. First name of the contact associated with the address.                                                                                                                                                                          |
-| last_name        | string | No   | Optional. Last name of the contact associated with the address.                                                                                                                                                                           |
-| phone_number     | string | No   | Optional. Phone number of the contact associated with the address.                                                                                                                                                                        |
+| 이름             | 타입   | 필수   | 설명                                                                                                                                                                              |
+| ---------------- | ------ | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| extended_address | string | 아니요 | 아파트 호수, C/O, 대체 이름 같은 주소 보충 정보.                                                                                                                                  |
+| street_address   | string | 아니요 | 도로명 주소.                                                                                                                                                                      |
+| address_locality | string | 아니요 | 도로명 주소가 속하고 해당 지역 안에 있는 시·군·구. 예: Mountain View.                                                                                                             |
+| address_region   | string | 아니요 | 시·군·구가 속하고 해당 국가 안에 있는 지역. 해당하는 국가에서는 필수입니다(예: 미국의 주, 캐나다의 주). 예: California 또는 그 밖의 적절한 1차 행정 구역.                         |
+| address_country  | string | 아니요 | 국가. 2자리 ISO 3166-1 alpha-2 형식(예: "US")을 권장합니다. 하위 호환성을 위해 "SGP" 같은 3자리 ISO 3166-1 alpha-3 국가 코드나 "Singapore" 같은 전체 국가명도 사용할 수 있습니다. |
+| postal_code      | string | 아니요 | 우편번호. 예: 94043.                                                                                                                                                              |
+| first_name       | string | 아니요 | 선택 사항. 주소와 연결된 연락처의 이름.                                                                                                                                           |
+| last_name        | string | 아니요 | 선택 사항. 주소와 연결된 연락처의 성.                                                                                                                                             |
+| phone_number     | string | 아니요 | 선택 사항. 주소와 연결된 연락처의 전화번호.                                                                                                                                       |
 
 ______________________________________________________________________
 
 ### Price
 
-| 이름     | 타입                                                                    | 필수    | 설명                                                  |
-| -------- | ----------------------------------------------------------------------- | ------- | ----------------------------------------------------- |
-| amount   | [Amount](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#amount) | **Yes** | Amount in ISO 4217 minor units. Use 0 for free items. |
-| currency | string                                                                  | **Yes** | ISO 4217 currency code (e.g., 'USD', 'EUR', 'GBP').   |
+| 이름     | 타입                                                                    | 필수   | 설명                                                        |
+| -------- | ----------------------------------------------------------------------- | ------ | ----------------------------------------------------------- |
+| amount   | [Amount](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#amount) | **예** | ISO 4217 최소 통화 단위의 금액. 무료 항목은 0을 사용합니다. |
+| currency | string                                                                  | **예** | ISO 4217 통화 코드(예: 'USD', 'EUR', 'GBP').                |
 
 ______________________________________________________________________
 
 ### Price Filter
 
-| 이름 | 타입                                                                    | 필수 | 설명                                   |
-| ---- | ----------------------------------------------------------------------- | ---- | -------------------------------------- |
-| min  | [Amount](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#amount) | No   | Minimum price in ISO 4217 minor units. |
-| max  | [Amount](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#amount) | No   | Maximum price in ISO 4217 minor units. |
+| 이름 | 타입                                                                    | 필수   | 설명                                   |
+| ---- | ----------------------------------------------------------------------- | ------ | -------------------------------------- |
+| min  | [Amount](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#amount) | 아니요 | ISO 4217 최소 단위로 나타낸 최저 가격. |
+| max  | [Amount](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#amount) | 아니요 | ISO 4217 최소 단위로 나타낸 최고 가격. |
 
 ______________________________________________________________________
 
 ### Price Range
 
-| 이름 | 타입                                                                  | 필수    | 설명                        |
-| ---- | --------------------------------------------------------------------- | ------- | --------------------------- |
-| min  | [Price](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#price) | **Yes** | Minimum price in the range. |
-| max  | [Price](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#price) | **Yes** | Maximum price in the range. |
+| 이름 | 타입                                                                  | 필수   | 설명              |
+| ---- | --------------------------------------------------------------------- | ------ | ----------------- |
+| min  | [Price](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#price) | **예** | 범위의 최저 가격. |
+| max  | [Price](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#price) | **예** | 범위의 최고 가격. |
 
 ______________________________________________________________________
 
 ### Product
 
-| 이름             | 타입                                                                                             | 필수    | 설명                                                                                             |
-| ---------------- | ------------------------------------------------------------------------------------------------ | ------- | ------------------------------------------------------------------------------------------------ |
-| id               | string                                                                                           | **Yes** | Global ID (GID) uniquely identifying this product.                                               |
-| handle           | string                                                                                           | No      | URL-safe slug for SEO-friendly URLs (e.g., 'blue-runner-pro'). Use id for stable API references. |
-| title            | string                                                                                           | **Yes** | Product title.                                                                                   |
-| description      | [Description](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#description)                | **Yes** | Product description in one or more formats.                                                      |
-| url              | string                                                                                           | No      | Canonical product page URL.                                                                      |
-| categories       | Array\[[Category](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#category)\]             | No      | Product categories with optional taxonomy identifiers.                                           |
-| price_range      | [Price Range](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#price-range)                | **Yes** | Price range across all variants.                                                                 |
-| list_price_range | [Price Range](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#price-range)                | No      | List price range before discounts (for strikethrough display).                                   |
-| media            | Array\[[Media](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#media)\]                   | No      | Product media (images, videos, 3D models). First item is the featured media for listings.        |
-| options          | Array\[[Product Option](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#product-option)\] | No      | Product options (Size, Color, etc.).                                                             |
-| variants         | Array\[[Variant](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#variant)\]               | **Yes** | Purchasable variants of this product. First item is the featured variant for listings.           |
-| rating           | [Rating](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#rating)                          | No      | Aggregate product rating.                                                                        |
-| tags             | Array[string]                                                                                    | No      | Product tags for categorization and search.                                                      |
-| metadata         | object                                                                                           | No      | Business-defined custom data extending the standard product model.                               |
+| 이름             | 타입                                                                                             | 필수   | 설명                                                                                                   |
+| ---------------- | ------------------------------------------------------------------------------------------------ | ------ | ------------------------------------------------------------------------------------------------------ |
+| id               | string                                                                                           | **예** | 이 상품을 고유하게 식별하는 전역 ID(GID).                                                              |
+| handle           | string                                                                                           | 아니요 | SEO 친화적인 URL을 위한 URL 안전 슬러그(예: 'blue-runner-pro'). 안정적인 API 참조에는 id를 사용하세요. |
+| title            | string                                                                                           | **예** | 상품 제목.                                                                                             |
+| description      | [Description](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#description)                | **예** | 하나 이상의 형식으로 작성된 상품 설명.                                                                 |
+| url              | string                                                                                           | 아니요 | 표준 상품 페이지 URL.                                                                                  |
+| categories       | Array\[[Category](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#category)\]             | 아니요 | 선택적 분류 체계 식별자가 포함된 상품 카테고리.                                                        |
+| price_range      | [Price Range](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#price-range)                | **예** | 모든 변형에 걸친 가격 범위.                                                                            |
+| list_price_range | [Price Range](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#price-range)                | 아니요 | 할인 전 정가 범위(취소선 표시용).                                                                      |
+| media            | Array\[[Media](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#media)\]                   | 아니요 | 상품 미디어(이미지, 동영상, 3D 모델). 첫 번째 항목은 목록에 표시되는 대표 미디어입니다.                |
+| options          | Array\[[Product Option](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#product-option)\] | 아니요 | 상품 옵션(Size, Color 등).                                                                             |
+| variants         | Array\[[Variant](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#variant)\]               | **예** | 이 상품의 구매 가능한 변형입니다. 첫 번째 항목은 목록에 표시되는 대표 변형입니다.                      |
+| rating           | [Rating](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#rating)                          | 아니요 | 상품 종합 평점.                                                                                        |
+| tags             | Array[string]                                                                                    | 아니요 | 분류와 검색에 쓰는 상품 태그.                                                                          |
+| metadata         | object                                                                                           | 아니요 | 표준 상품 모델을 확장하는 비즈니스 정의 사용자 데이터.                                                 |
 
 ______________________________________________________________________
 
 ### Product Option
 
-| 이름   | 타입                                                                                         | 필수    | 설명                                 |
-| ------ | -------------------------------------------------------------------------------------------- | ------- | ------------------------------------ |
-| name   | string                                                                                       | **Yes** | Option name (e.g., 'Size', 'Color'). |
-| values | Array\[[Option Value](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#option-value)\] | **Yes** | Available values for this option.    |
+| 이름   | 타입                                                                                         | 필수   | 설명                            |
+| ------ | -------------------------------------------------------------------------------------------- | ------ | ------------------------------- |
+| name   | string                                                                                       | **예** | 옵션 이름(예: 'Size', 'Color'). |
+| values | Array\[[Option Value](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#option-value)\] | **예** | 이 옵션에 사용할 수 있는 값.    |
 
 ______________________________________________________________________
 
 ### Rating
 
-| 이름      | 타입    | 필수    | 설명                                                       |
-| --------- | ------- | ------- | ---------------------------------------------------------- |
-| value     | number  | **Yes** | Average rating value.                                      |
-| scale_min | number  | No      | Minimum value on the rating scale (e.g., 1 for 1-5 stars). |
-| scale_max | number  | **Yes** | Maximum value on the rating scale (e.g., 5 for 5-star).    |
-| count     | integer | No      | Number of reviews contributing to the rating.              |
+| 이름      | 타입    | 필수   | 설명                                     |
+| --------- | ------- | ------ | ---------------------------------------- |
+| value     | number  | **예** | 평균 평점.                               |
+| scale_min | number  | 아니요 | 평점 척도의 최솟값(예: 1~5점 척도면 1).  |
+| scale_max | number  | **예** | 평점 척도의 최댓값(예: 별 5개 척도면 5). |
+| count     | integer | 아니요 | 평점 산정에 반영된 리뷰 수.              |
 
 ______________________________________________________________________
 
 ### Retail Location
 
-| 이름    | 타입                                                                                    | 필수    | 설명                              |
-| ------- | --------------------------------------------------------------------------------------- | ------- | --------------------------------- |
-| id      | string                                                                                  | **Yes** | Unique location identifier.       |
-| name    | string                                                                                  | **Yes** | Location name (e.g., store name). |
-| address | [Postal Address](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#postal-address) | No      | Physical address of the location. |
+| 이름    | 타입                                                                                    | 필수   | 설명                      |
+| ------- | --------------------------------------------------------------------------------------- | ------ | ------------------------- |
+| id      | string                                                                                  | **예** | 고유 위치 식별자.         |
+| name    | string                                                                                  | **예** | 위치 이름(예: 매장 이름). |
+| address | [Postal Address](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#postal-address) | 아니요 | 장소의 실제 주소.         |
 
 ______________________________________________________________________
 
 ### Reverse Domain Name
 
-Reverse-domain identifier used for collision-safe namespacing of capabilities, services, handlers, eligibility claims, and extension-contributed keys. Must contain at least two dot-separated segments (e.g., 'dev.ucp.shopping.checkout', 'com.example.loyalty_gold').
+기능, 서비스, 핸들러, 자격 클레임, 확장이 추가한 키에 충돌 없는 네임스페이스를 부여하는 역도메인 식별자입니다. 점으로 구분된 세그먼트가 두 개 이상 있어야 합니다(예: 'dev.ucp.shopping.checkout', 'com.example.loyalty_gold').
 
-**Pattern:** `^[a-z][a-z0-9]*(?:\.[a-z][a-z0-9_]*)+$`
+**패턴:** `^[a-z][a-z0-9]*(?:\.[a-z][a-z0-9_]*)+$`
 
 ______________________________________________________________________
 
 ### Search Filters
 
-| 이름       | 타입                                                                                | 필수 | 설명                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| ---------- | ----------------------------------------------------------------------------------- | ---- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| categories | Array[string]                                                                       | No   | Filter by product categories (OR logic — matches products in any listed categories). Values match against the value field in product category entries. Valid values can be discovered from the categories field in search results, merchant documentation, or standard taxonomies that businesses may align with.                                                                                                                                                |
-| price      | [Price Filter](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#price-filter) | No   | Price range filter denominated in context.currency. When context.currency matches the presentment currency, businesses apply the filter directly. When it differs, businesses SHOULD convert filter values to the presentment currency before applying; if conversion is not supported, businesses MAY ignore the filter and SHOULD indicate this via a message. When context.currency is absent, filter denomination is ambiguous and businesses MAY ignore it. |
+| 이름       | 타입                                                                                | 필수   | 설명                                                                                                                                                                                                                                                                                                                                                                                                         |
+| ---------- | ----------------------------------------------------------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| categories | Array[string]                                                                       | 아니요 | 상품 카테고리로 필터링합니다(OR 논리 — 나열된 카테고리 중 하나라도 속한 상품과 일치). 값은 상품 카테고리 항목의 value 필드와 비교합니다. 유효한 값은 검색 결과의 categories 필드, 판매자 문서, 또는 비즈니스가 따를 수 있는 표준 분류 체계에서 찾을 수 있습니다.                                                                                                                                             |
+| price      | [Price Filter](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#price-filter) | 아니요 | context.currency 통화로 표시한 가격 범위 필터입니다. context.currency가 표시 통화와 같으면 비즈니스는 필터를 그대로 적용합니다. 다르면 비즈니스는 적용 전에 필터 값을 표시 통화로 변환해야 합니다(SHOULD). 변환을 지원하지 않으면 필터를 무시할 수 있으며(MAY), 이 사실을 메시지로 알려야 합니다(SHOULD). context.currency가 없으면 필터의 통화 단위가 모호하므로 비즈니스는 필터를 무시할 수 있습니다(MAY). |
 
 ______________________________________________________________________
 
 ### Selected Option
 
-| 이름  | 타입   | 필수    | 설명                                                                                                                                                    |
-| ----- | ------ | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| name  | string | **Yes** | Option name (e.g., 'Size').                                                                                                                             |
-| id    | string | No      | Optional option value identifier from option_value.id. When present, the server SHOULD use it for matching; name and label remain required for display. |
-| label | string | **Yes** | Selected option label (e.g., 'Large').                                                                                                                  |
+| 이름  | 타입   | 필수   | 설명                                                                                                                                                |
+| ----- | ------ | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| name  | string | **예** | 옵션 이름(예: 'Size').                                                                                                                              |
+| id    | string | 아니요 | option_value.id에서 가져온 옵션 값 식별자(선택 사항). 있으면 서버는 이를 매칭에 사용해야 하며(SHOULD), name과 label은 표시용으로 여전히 필요합니다. |
+| label | string | **예** | 선택한 옵션 레이블(예: 'Large').                                                                                                                    |
 
 ______________________________________________________________________
 
 ### Shipping Destination
 
-| 이름             | 타입   | 필수    | 설명                                                                                                                                                                                                                                      |
-| ---------------- | ------ | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| extended_address | string | No      | An address extension such as an apartment number, C/O or alternative name.                                                                                                                                                                |
-| street_address   | string | No      | The street address.                                                                                                                                                                                                                       |
-| address_locality | string | No      | The locality in which the street address is, and which is in the region. For example, Mountain View.                                                                                                                                      |
-| address_region   | string | No      | The region in which the locality is, and which is in the country. Required for applicable countries (i.e. state in US, province in CA). For example, California or another appropriate first-level Administrative division.               |
-| address_country  | string | No      | The country. Recommended to be in 2-letter ISO 3166-1 alpha-2 format, for example "US". For backward compatibility, a 3-letter ISO 3166-1 alpha-3 country code such as "SGP" or a full country name such as "Singapore" can also be used. |
-| postal_code      | string | No      | The postal code. For example, 94043.                                                                                                                                                                                                      |
-| first_name       | string | No      | Optional. First name of the contact associated with the address.                                                                                                                                                                          |
-| last_name        | string | No      | Optional. Last name of the contact associated with the address.                                                                                                                                                                           |
-| phone_number     | string | No      | Optional. Phone number of the contact associated with the address.                                                                                                                                                                        |
-| id               | string | **Yes** | ID specific to this shipping destination.                                                                                                                                                                                                 |
+| 이름             | 타입   | 필수   | 설명                                                                                                                                                                              |
+| ---------------- | ------ | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| extended_address | string | 아니요 | 아파트 호수, C/O, 대체 이름 같은 주소 보충 정보.                                                                                                                                  |
+| street_address   | string | 아니요 | 도로명 주소.                                                                                                                                                                      |
+| address_locality | string | 아니요 | 도로명 주소가 속하고 해당 지역 안에 있는 시·군·구. 예: Mountain View.                                                                                                             |
+| address_region   | string | 아니요 | 시·군·구가 속하고 해당 국가 안에 있는 지역. 해당하는 국가에서는 필수입니다(예: 미국의 주, 캐나다의 주). 예: California 또는 그 밖의 적절한 1차 행정 구역.                         |
+| address_country  | string | 아니요 | 국가. 2자리 ISO 3166-1 alpha-2 형식(예: "US")을 권장합니다. 하위 호환성을 위해 "SGP" 같은 3자리 ISO 3166-1 alpha-3 국가 코드나 "Singapore" 같은 전체 국가명도 사용할 수 있습니다. |
+| postal_code      | string | 아니요 | 우편번호. 예: 94043.                                                                                                                                                              |
+| first_name       | string | 아니요 | 선택 사항. 주소와 연결된 연락처의 이름.                                                                                                                                           |
+| last_name        | string | 아니요 | 선택 사항. 주소와 연결된 연락처의 성.                                                                                                                                             |
+| phone_number     | string | 아니요 | 선택 사항. 주소와 연결된 연락처의 전화번호.                                                                                                                                       |
+| id               | string | **예** | 이 배송 목적지에 고유한 ID.                                                                                                                                                       |
 
 ______________________________________________________________________
 
 ### Signals
 
-| 이름               | 타입   | 필수 | 설명                                           |
-| ------------------ | ------ | ---- | ---------------------------------------------- |
-| dev.ucp.buyer_ip   | string | No   | Client's IP address (IPv4 or IPv6).            |
-| dev.ucp.user_agent | string | No   | Client's HTTP User-Agent header or equivalent. |
+| 이름               | 타입   | 필수   | 설명                                                     |
+| ------------------ | ------ | ------ | -------------------------------------------------------- |
+| dev.ucp.buyer_ip   | string | 아니요 | 클라이언트의 IP 주소(IPv4 또는 IPv6).                    |
+| dev.ucp.user_agent | string | 아니요 | 클라이언트의 HTTP User-Agent 헤더 또는 그에 상응하는 값. |
 
 ______________________________________________________________________
 
 ### Signed Amount
 
-Monetary amount in the currency's minor unit as defined by ISO 4217. Refer to the currency's exponent to determine minor-to-major ratio (e.g., 2 for USD, 0 for JPY, 3 for KWD). May be negative — the sign is intrinsic to the value (e.g., discounts are negative, charges are positive).
+ISO 4217에 정의된 통화의 최소 단위로 나타낸 금액. 최소 단위와 기본 단위의 비율은 통화의 지수를 참고합니다(예: USD는 2, JPY는 0, KWD는 3). 음수일 수 있으며, 부호는 값 자체에 포함됩니다(예: 할인은 음수, 청구 금액은 양수).
 
 ______________________________________________________________________
 
 ### Token Credential
 
-| 이름  | 타입   | 필수    | 설명                                                                                         |
-| ----- | ------ | ------- | -------------------------------------------------------------------------------------------- |
-| type  | string | **Yes** | The credential type discriminator. Specific schemas will constrain this to a constant value. |
-| type  | string | **Yes** | The specific type of token produced by the handler (e.g., 'stripe_token').                   |
-| token | string | **Yes** | The token value.                                                                             |
+| 이름  | 타입   | 필수   | 설명                                                                  |
+| ----- | ------ | ------ | --------------------------------------------------------------------- |
+| type  | string | **예** | 자격 증명 유형 판별자. 구체적인 스키마에서 이 값을 상수로 제한합니다. |
+| type  | string | **예** | 핸들러가 생성한 토큰의 구체적인 유형(예: 'stripe_token').             |
+| token | string | **예** | 토큰 값.                                                              |
 
 ______________________________________________________________________
 
 ### Total
 
-| 이름         | 타입                                                                                  | 필수    | 설명                                                                                                                                                                                                                                                                                        |
-| ------------ | ------------------------------------------------------------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| type         | string                                                                                | **Yes** | Cost category. Well-known values: subtotal, items_discount, discount, fulfillment, tax, fee, total. Businesses MAY use additional values.                                                                                                                                                   |
-| display_text | string                                                                                | No      | Text to display against the amount. Should reflect appropriate method (e.g., 'Shipping', 'Delivery').                                                                                                                                                                                       |
-| amount       | [Signed Amount](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#signed-amount) | **Yes** | Monetary amount in the currency's minor unit as defined by ISO 4217. Refer to the currency's exponent to determine minor-to-major ratio (e.g., 2 for USD, 0 for JPY, 3 for KWD). May be negative — the sign is intrinsic to the value (e.g., discounts are negative, charges are positive). |
+| 이름         | 타입                                                                                  | 필수   | 설명                                                                                                                                                                                                                        |
+| ------------ | ------------------------------------------------------------------------------------- | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| type         | string                                                                                | **예** | 비용 범주. 잘 알려진 값: subtotal, items_discount, discount, fulfillment, tax, fee, total. 비즈니스는 추가 값을 사용할 수 있습니다(MAY).                                                                                    |
+| display_text | string                                                                                | 아니요 | 금액 옆에 표시할 텍스트. 적절한 방식을 반영해야 합니다(예: 'Shipping', 'Delivery').                                                                                                                                         |
+| amount       | [Signed Amount](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#signed-amount) | **예** | ISO 4217에 정의된 통화의 최소 단위로 나타낸 금액. 최소 단위와 기본 단위의 비율은 통화의 지수를 참고합니다(예: USD는 2, JPY는 0, KWD는 3). 음수일 수 있으며, 부호는 값 자체에 포함됩니다(예: 할인은 음수, 청구 금액은 양수). |
 
 ______________________________________________________________________
 
 ### Totals
 
-Pricing breakdown provided by the business. MUST contain exactly one subtotal and one total entry. Detail types (tax, fee, discount, fulfillment) may appear multiple times for itemization. Platforms MUST render all entries in order using display_text and amount.
+비즈니스가 제공하는 가격 내역입니다. 반드시 subtotal 항목과 total 항목을 정확히 하나씩 포함해야 합니다(MUST). 세부 유형(tax, fee, discount, fulfillment)은 항목별로 나누기 위해 여러 번 나올 수 있습니다. 플랫폼은 반드시 display_text와 amount를 사용해 모든 항목을 순서대로 렌더링해야 합니다(MUST).
 
 ______________________________________________________________________
 
 ### Variant
 
-| 이름         | 타입                                                                                               | 필수    | 설명                                                                                      |
-| ------------ | -------------------------------------------------------------------------------------------------- | ------- | ----------------------------------------------------------------------------------------- |
-| id           | string                                                                                             | **Yes** | Global ID (GID) uniquely identifying this variant. Used as item.id in checkout.           |
-| sku          | string                                                                                             | No      | Business-assigned identifier for inventory and fulfillment.                               |
-| barcodes     | Array[object]                                                                                      | No      | Industry-standard product identifiers for cross-reference and correlation.                |
-| handle       | string                                                                                             | No      | URL-safe variant handle/slug.                                                             |
-| title        | string                                                                                             | **Yes** | Variant display title (e.g., 'Blue / Large').                                             |
-| description  | [Description](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#description)                  | **Yes** | Variant description in one or more formats.                                               |
-| url          | string                                                                                             | No      | Canonical variant page URL.                                                               |
-| categories   | Array\[[Category](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#category)\]               | No      | Variant categories with optional taxonomy identifiers.                                    |
-| price        | [Price](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#price)                              | **Yes** | Current selling price.                                                                    |
-| list_price   | [Price](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#price)                              | No      | List price before discounts (for strikethrough display).                                  |
-| unit_price   | object                                                                                             | No      | Price per standard unit of measurement. MAY be omitted when unit pricing does not apply.  |
-| availability | object                                                                                             | No      | Variant availability for purchase.                                                        |
-| options      | Array\[[Selected Option](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#selected-option)\] | No      | Option values that define this variant (e.g., Color: Blue, Size: Large).                  |
-| media        | Array\[[Media](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#media)\]                     | No      | Variant media (images, videos, 3D models). First item is the featured media for listings. |
-| rating       | [Rating](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#rating)                            | No      | Variant rating.                                                                           |
-| tags         | Array[string]                                                                                      | No      | Variant tags for categorization and search.                                               |
-| metadata     | object                                                                                             | No      | Business-defined custom data extending the standard variant model.                        |
-| seller       | object                                                                                             | No      | Optional seller context for this variant.                                                 |
+| 이름         | 타입                                                                                               | 필수   | 설명                                                                                    |
+| ------------ | -------------------------------------------------------------------------------------------------- | ------ | --------------------------------------------------------------------------------------- |
+| id           | string                                                                                             | **예** | 이 변형을 고유하게 식별하는 전역 ID(GID). 체크아웃에서 item.id로 사용합니다.            |
+| sku          | string                                                                                             | 아니요 | 재고와 풀필먼트를 위해 비즈니스가 할당한 식별자.                                        |
+| barcodes     | Array[object]                                                                                      | 아니요 | 상호 참조와 연계를 위한 업계 표준 상품 식별자.                                          |
+| handle       | string                                                                                             | 아니요 | URL 안전 변형 핸들/슬러그.                                                              |
+| title        | string                                                                                             | **예** | 변형 표시 제목(예: 'Blue / Large').                                                     |
+| description  | [Description](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#description)                  | **예** | 하나 이상의 형식으로 된 변형 설명.                                                      |
+| url          | string                                                                                             | 아니요 | 표준 변형(variant) 페이지 URL.                                                          |
+| categories   | Array\[[Category](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#category)\]               | 아니요 | 선택적 분류 체계 식별자가 포함된 변형 카테고리.                                         |
+| price        | [Price](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#price)                              | **예** | 현재 판매 가격.                                                                         |
+| list_price   | [Price](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#price)                              | 아니요 | 할인 전 정가(취소선 표시용).                                                            |
+| unit_price   | object                                                                                             | 아니요 | 표준 측정 단위당 가격입니다. 단위 가격이 적용되지 않으면 생략할 수 있습니다(MAY).       |
+| availability | object                                                                                             | 아니요 | 변형의 구매 가능 여부.                                                                  |
+| options      | Array\[[Selected Option](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#selected-option)\] | 아니요 | 이 변형을 정의하는 옵션 값(예: Color: Blue, Size: Large).                               |
+| media        | Array\[[Media](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#media)\]                     | 아니요 | 변형 미디어(이미지, 동영상, 3D 모델). 첫 번째 항목이 목록에 노출되는 대표 미디어입니다. |
+| rating       | [Rating](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#rating)                            | 아니요 | 변형 평점.                                                                              |
+| tags         | Array[string]                                                                                      | 아니요 | 분류와 검색을 위한 변형 태그.                                                           |
+| metadata     | object                                                                                             | 아니요 | 표준 변형 모델을 확장하는 비즈니스 정의 사용자 데이터.                                  |
+| seller       | object                                                                                             | 아니요 | 이 변형의 판매자 맥락(선택 사항).                                                       |
 
 ______________________________________________________________________
 
 ### Warning Code
 
-Warning code identifying the type of warning. Standard codes are defined in capability specs (see examples), and have standardized semantics; freeform codes are permitted.
+경고 유형을 식별하는 경고 코드. 표준 코드는 기능 명세에 정의되어 있고(예시 참고) 표준화된 의미를 지닙니다. 자유 형식 코드도 허용됩니다.
 
 ______________________________________________________________________
 
 ### 선택된 결제 수단
 
-A payment instrument with selection state.
+선택 상태가 포함된 결제 수단.
 
-| 이름            | 타입    | 필수    | 설명                                                                                                                                                         |
-| --------------- | ------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| id              | string  | **Yes** | A unique identifier for this instrument instance, assigned by the platform.                                                                                  |
-| handler_id      | string  | **Yes** | The unique identifier for the handler instance that produced this instrument. This corresponds to the 'id' field in the Payment Handler definition.          |
-| type            | string  | **Yes** | The broad category of the instrument (e.g., 'card', 'tokenized_card'). Specific schemas will constrain this to a constant value.                             |
-| billing_address | object  | No      | The billing address associated with this payment method.                                                                                                     |
-| credential      | object  | No      | The base definition for any payment credential. Handlers define specific credential types.                                                                   |
-| display         | object  | No      | Display information for this payment instrument. Each payment instrument schema defines its specific display properties, as outlined by the payment handler. |
-| selected        | boolean | No      | Whether this instrument is selected by the user.                                                                                                             |
+| 이름            | 타입    | 필수   | 설명                                                                                                     |
+| --------------- | ------- | ------ | -------------------------------------------------------------------------------------------------------- |
+| id              | string  | **예** | 플랫폼이 할당하는, 이 결제 수단 인스턴스의 고유 식별자.                                                  |
+| handler_id      | string  | **예** | 이 결제 수단을 생성한 핸들러 인스턴스의 고유 식별자. 결제 핸들러 정의의 'id' 필드에 해당합니다.          |
+| type            | string  | **예** | 결제 수단의 대분류(예: 'card', 'tokenized_card'). 구체적인 스키마에서 이 값을 상수로 제한합니다.         |
+| billing_address | object  | 아니요 | 이 결제 방법에 연결된 청구지 주소.                                                                       |
+| credential      | object  | 아니요 | 모든 결제 자격 증명의 기본 정의. 구체적인 자격 증명 유형은 핸들러가 정의합니다.                          |
+| display         | object  | 아니요 | 이 결제 수단의 표시 정보. 각 결제 수단 스키마가 결제 핸들러의 설명에 따라 고유한 표시 속성을 정의합니다. |
+| selected        | boolean | 아니요 | 사용자가 이 결제 수단을 선택했는지 여부.                                                                 |
 
 ### 페이지네이션 요청
 
-Pagination parameters for requests.
+요청의 페이지네이션 매개변수.
 
-| 이름   | 타입    | 필수 | 설명                                                               |
-| ------ | ------- | ---- | ------------------------------------------------------------------ |
-| cursor | string  | No   | Opaque cursor from previous response.                              |
-| limit  | integer | No   | Requested page size. Implementations MAY clamp to a lower maximum. |
+| 이름   | 타입    | 필수   | 설명                                                                         |
+| ------ | ------- | ------ | ---------------------------------------------------------------------------- |
+| cursor | string  | 아니요 | 이전 응답에서 받은 불투명 커서.                                              |
+| limit  | integer | 아니요 | 요청 페이지 크기입니다. 구현체는 더 낮은 최댓값으로 제한할 수 있습니다(MAY). |
 
 ### 페이지네이션 응답
 
-Pagination information in responses.
+응답의 페이지네이션 정보.
 
-| 이름          | 타입    | 필수    | 설명                                                                                  |
-| ------------- | ------- | ------- | ------------------------------------------------------------------------------------- |
-| cursor        | string  | No      | Cursor to fetch the next page of results. MUST be present when has_next_page is true. |
-| has_next_page | boolean | **Yes** | Whether more results are available.                                                   |
-| total_count   | integer | No      | Total number of matching items, if available.                                         |
+| 이름          | 타입    | 필수   | 설명                                                                                        |
+| ------------- | ------- | ------ | ------------------------------------------------------------------------------------------- |
+| cursor        | string  | 아니요 | 다음 결과 페이지를 가져오기 위한 커서. has_next_page가 true이면 반드시 있어야 합니다(MUST). |
+| has_next_page | boolean | **예** | 추가 결과가 있는지 여부.                                                                    |
+| total_count   | integer | 아니요 | 사용 가능한 경우, 일치하는 항목의 총개수.                                                   |
 
 ### 에러 코드
 
-Error code identifying the type of error. Standard errors are defined in specification (see examples), and have standardized semantics; freeform codes are permitted.
+오류 유형을 식별하는 오류 코드. 표준 오류는 명세에 정의되어 있고(예시 참고) 의미가 표준화되어 있으며, 자유 형식 코드도 허용합니다.
 
 ### 경고 코드
 
-Warning code identifying the type of warning. Standard codes are defined in capability specs (see examples), and have standardized semantics; freeform codes are permitted.
+경고 유형을 식별하는 경고 코드. 표준 코드는 기능 명세에 정의되어 있고(예시 참고) 표준화된 의미를 지닙니다. 자유 형식 코드도 허용됩니다.
 
 ### 정보 코드
 
-Info code identifying the type of informational message. Standard codes are defined in capability specs (see examples), and have standardized semantics; freeform codes are permitted.
+정보 메시지의 유형을 식별하는 정보 코드. 표준 코드는 기능 명세에 정의되어 있고(예시 참고) 표준화된 의미를 가지며, 자유 형식 코드도 허용됩니다.
 
 ## 확장 스키마
 
@@ -793,67 +793,67 @@ Info code identifying the type of informational message. Standard codes are defi
 
 #### Merchant Authorization
 
-JWS Detached Content signature (RFC 7515 Appendix F) over the checkout response body (excluding ap2 field). Format: `<base64url-header>..<base64url-signature>`. The header MUST contain 'alg' (ES256/ES384/ES512) and 'kid' claims. The signature covers both the header and JCS-canonicalized checkout payload.
+체크아웃 응답 본문(ap2 필드 제외)에 대한 JWS Detached Content 서명(RFC 7515 Appendix F). 형식: `<base64url-header>..<base64url-signature>`. 헤더에는 반드시 'alg'(ES256/ES384/ES512)와 'kid' 클레임이 있어야 합니다(MUST). 서명은 헤더와 JCS로 정규화한 체크아웃 페이로드를 모두 대상으로 합니다.
 
-JWS Detached Content signature (RFC 7515 Appendix F) over the checkout response body (excluding ap2 field). Format: `<base64url-header>..<base64url-signature>`. The header MUST contain 'alg' (ES256/ES384/ES512) and 'kid' claims. The signature covers both the header and JCS-canonicalized checkout payload.
+체크아웃 응답 본문(ap2 필드 제외)에 대한 JWS Detached Content 서명(RFC 7515 Appendix F). 형식: `<base64url-header>..<base64url-signature>`. 헤더에는 반드시 'alg'(ES256/ES384/ES512)와 'kid' 클레임이 있어야 합니다(MUST). 서명은 헤더와 JCS로 정규화한 체크아웃 페이로드를 모두 대상으로 합니다.
 
-**Pattern:** `^[A-Za-z0-9_-]+\.\.[A-Za-z0-9_-]+$`
+**패턴:** `^[A-Za-z0-9_-]+\.\.[A-Za-z0-9_-]+$`
 
 #### Checkout Mandate
 
-SD-JWT+kb credential in `ap2.checkout_mandate`. Proving user authorization for the checkout. Contains the full checkout including `ap2.merchant_authorization`.
+`ap2.checkout_mandate`에 담기는 SD-JWT+kb 자격 증명입니다. 사용자가 체크아웃을 승인했음을 증명합니다. `ap2.merchant_authorization`을 포함한 체크아웃 전체가 들어 있습니다.
 
-SD-JWT+kb credential in `ap2.checkout_mandate`. Proving user authorization for the checkout. Contains the full checkout including `ap2.merchant_authorization`.
+`ap2.checkout_mandate`에 담기는 SD-JWT+kb 자격 증명입니다. 사용자가 체크아웃을 승인했음을 증명합니다. `ap2.merchant_authorization`을 포함한 체크아웃 전체가 들어 있습니다.
 
-**Pattern:** `^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]*\.[A-Za-z0-9_-]+(~[A-Za-z0-9_-]+)*$`
+**패턴:** `^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]*\.[A-Za-z0-9_-]+(~[A-Za-z0-9_-]+)*$`
 
 #### Ap2 With Merchant Authorization
 
-AP2 extension data including merchant authorization.
+판매자 인가를 포함한 AP2 확장 데이터.
 
-| 이름                   | 타입   | 필수 | 설명                                                       |
-| ---------------------- | ------ | ---- | ---------------------------------------------------------- |
-| merchant_authorization | string | No   | Merchant's signature proving checkout terms are authentic. |
+| 이름                   | 타입   | 필수   | 설명                                             |
+| ---------------------- | ------ | ------ | ------------------------------------------------ |
+| merchant_authorization | string | 아니요 | 체크아웃 조건이 진본임을 증명하는 판매자의 서명. |
 
 #### Ap2 With Checkout Mandate
 
-AP2 extension data including checkout mandate.
+체크아웃 위임(Mandate)을 포함한 AP2 확장 데이터.
 
-| 이름             | 타입   | 필수 | 설명                                             |
-| ---------------- | ------ | ---- | ------------------------------------------------ |
-| checkout_mandate | string | No   | SD-JWT+kb proving user authorized this checkout. |
+| 이름             | 타입   | 필수   | 설명                                                  |
+| ---------------- | ------ | ------ | ----------------------------------------------------- |
+| checkout_mandate | string | 아니요 | 사용자가 이 체크아웃을 승인했음을 증명하는 SD-JWT+kb. |
 
 #### Checkout with AP2 Mandate
 
-Checkout extended with AP2 mandate support.
+AP2 위임(Mandate) 지원이 추가된 체크아웃.
 
-| 이름         | 타입          | 필수    | 설명                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| ------------ | ------------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| ucp          | any           | **Yes** | UCP metadata for checkout responses.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| id           | string        | **Yes** | Unique identifier of the checkout session.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| line_items   | Array[object] | **Yes** | List of line items being checked out.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| buyer        | object        | No      | Representation of the buyer.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| context      | object        | No      | Provisional buyer signals for relevance and localization—not authoritative data. Businesses SHOULD use these values when verified inputs (e.g., shipping address) are absent, and MAY ignore or down-rank them if inconsistent with higher-confidence signals (authenticated account, risk detection) or regulatory constraints (export controls). Eligibility and policy enforcement MUST occur at checkout time using binding transaction data. Context SHOULD be non-identifying and can be disclosed progressively—coarse signals early, finer resolution as the session progresses. Higher-resolution data (shipping address, billing address) supersedes context. |
-| signals      | object        | No      | Environment data provided by the platform to support authorization and abuse prevention. Values MUST NOT be buyer-asserted claims — platforms provide signals based on direct observation or independently verifiable third-party attestations. All signal keys MUST use reverse-domain naming to ensure provenance and prevent collisions when multiple extensions contribute to the shared namespace.                                                                                                                                                                                                                                                                 |
-| attribution  | object        | No      | Platform-emitted referral and conversion-event context — campaign identifiers, click IDs, source/medium markers, etc. The same parameters platforms communicate via URL query parameters in browser-based flows.                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| status       | string        | **Yes** | Checkout state indicating the current phase and required action. See Checkout Status lifecycle documentation for state transition details. **Enum:** `incomplete`, `requires_escalation`, `ready_for_complete`, `complete_in_progress`, `completed`, `canceled`                                                                                                                                                                                                                                                                                                                                                                                                         |
-| currency     | string        | **Yes** | ISO 4217 currency code reflecting the merchant's market determination. Derived from address, context, and geo IP—buyers provide signals, merchants determine currency.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| totals       | Array[any]    | **Yes** | Different cart totals.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| messages     | Array[object] | No      | List of messages with error and info about the checkout session state.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| links        | Array[object] | **Yes** | Links to be displayed by the platform (Privacy Policy, TOS). Mandatory for legal compliance.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| expires_at   | string        | No      | RFC 3339 expiry timestamp. Default TTL is 6 hours from creation if not sent.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| continue_url | string        | No      | URL for checkout handoff and session recovery. MUST be provided when status is requires_escalation. See specification for format and availability requirements.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| payment      | object        | No      | Payment configuration containing handlers.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| order        | object        | No      | Details about an order created for this checkout session.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| ap2          | any           | No      |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| 이름         | 타입          | 필수   | 설명                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| ------------ | ------------- | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ucp          | any           | **예** | 체크아웃 응답용 UCP 메타데이터.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| id           | string        | **예** | 체크아웃 세션의 고유 식별자.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| line_items   | Array[object] | **예** | 체크아웃 중인 라인 아이템 목록.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| buyer        | object        | 아니요 | 구매자 정보.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| context      | object        | 아니요 | 관련성 판단과 현지화를 위한 잠정적 구매자 신호로, 권위 있는 데이터가 아닙니다. 검증된 입력(예: 배송 주소)이 없으면 비즈니스는 이 값을 사용해야 하며(SHOULD), 더 신뢰도 높은 신호(인증된 계정, 위험 탐지)나 규제 제약(수출 통제)과 맞지 않으면 무시하거나 우선순위를 낮출 수 있습니다(MAY). 자격 판단과 정책 적용은 반드시 체크아웃 시점에 구속력 있는 거래 데이터로 수행해야 합니다(MUST). 컨텍스트는 개인을 식별할 수 없어야 하며(SHOULD), 단계적으로 공개할 수 있습니다. 초기에는 대략적인 신호를, 세션이 진행되면서 더 세밀한 정보를 제공합니다. 더 세밀한 데이터(배송 주소, 청구 주소)가 컨텍스트보다 우선합니다. |
+| signals      | object        | 아니요 | 승인과 악용 방지를 돕기 위해 플랫폼이 제공하는 환경 데이터. 값은 구매자가 주장한 내용이어서는 안 됩니다(MUST NOT). 플랫폼은 직접 관찰했거나 독립적으로 검증 가능한 제3자 증명에 근거한 신호를 제공합니다. 여러 확장이 공유 네임스페이스에 값을 추가할 때 출처를 보장하고 충돌을 막기 위해, 모든 신호 키는 반드시 역도메인 이름을 사용해야 합니다(MUST).                                                                                                                                                                                                                                                               |
+| attribution  | object        | 아니요 | 플랫폼이 내보내는 추천 및 전환 이벤트 맥락: 캠페인 식별자, 클릭 ID, source/medium 마커 등. 브라우저 기반 흐름에서 플랫폼이 URL 쿼리 매개변수로 전달하는 것과 같은 매개변수입니다.                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| status       | string        | **예** | 현재 단계와 필요한 조치를 나타내는 체크아웃 상태. 상태 전이에 대한 자세한 내용은 체크아웃 상태 수명 주기 문서를 참고하세요. **허용 값:** `incomplete`, `requires_escalation`, `ready_for_complete`, `complete_in_progress`, `completed`, `canceled`                                                                                                                                                                                                                                                                                                                                                                   |
+| currency     | string        | **예** | 판매자가 판단한 시장을 반영하는 ISO 4217 통화 코드. 주소, 컨텍스트, geo IP로 결정합니다. 구매자는 신호를 제공하고 통화는 판매자가 결정합니다.                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| totals       | Array[any]    | **예** | 장바구니의 각종 합계.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| messages     | Array[object] | 아니요 | 체크아웃 세션 상태에 대한 오류·정보 메시지 목록.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| links        | Array[object] | **예** | 플랫폼이 표시할 링크(개인정보처리방침, 이용약관). 법적 준수를 위해 필수입니다.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| expires_at   | string        | 아니요 | RFC 3339 만료 타임스탬프입니다. 보내지 않으면 기본 TTL은 생성 시점부터 6시간입니다.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| continue_url | string        | 아니요 | 체크아웃 핸드오프와 세션 복구용 URL. status가 requires_escalation이면 반드시 제공해야 합니다(MUST). 형식과 가용성 요구 사항은 명세를 참고하세요.                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| payment      | object        | 아니요 | 핸들러를 포함한 결제 구성.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| order        | object        | 아니요 | 이 체크아웃 세션으로 생성된 주문의 세부 정보.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| ap2          | any           | 아니요 |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 
 #### AP2 Error Code
 
-Error codes specific to AP2 mandate verification.
+AP2 위임(Mandate) 검증에 특화된 오류 코드.
 
-Error codes specific to AP2 mandate verification.
+AP2 위임(Mandate) 검증에 특화된 오류 코드.
 
-**Enum:** `mandate_required`, `agent_missing_key`, `mandate_invalid_signature`, `mandate_expired`, `mandate_scope_mismatch`, `merchant_authorization_invalid`, `merchant_authorization_missing`
+**허용 값:** `mandate_required`, `agent_missing_key`, `mandate_invalid_signature`, `mandate_expired`, `mandate_scope_mismatch`, `merchant_authorization_invalid`, `merchant_authorization_missing`
 
 ______________________________________________________________________
 
@@ -861,50 +861,50 @@ ______________________________________________________________________
 
 #### Consent
 
-User consent states for data processing
+데이터 처리에 대한 사용자 동의 상태
 
-| 이름         | 타입    | 필수 | 설명                                              |
-| ------------ | ------- | ---- | ------------------------------------------------- |
-| analytics    | boolean | No   | Consent for analytics and performance tracking.   |
-| preferences  | boolean | No   | Consent for storing user preferences.             |
-| marketing    | boolean | No   | Consent for marketing communications.             |
-| sale_of_data | boolean | No   | Consent for selling data to third parties (CCPA). |
+| 이름         | 타입    | 필수   | 설명                                 |
+| ------------ | ------- | ------ | ------------------------------------ |
+| analytics    | boolean | 아니요 | 분석 및 성능 추적에 대한 동의.       |
+| preferences  | boolean | 아니요 | 사용자 환경설정 저장에 대한 동의.    |
+| marketing    | boolean | 아니요 | 마케팅 커뮤니케이션 수신 동의.       |
+| sale_of_data | boolean | 아니요 | 제3자에 대한 데이터 판매 동의(CCPA). |
 
 #### Buyer with Consent
 
-Buyer object extended with consent tracking.
+동의 추적이 추가된 구매자 객체.
 
-| 이름         | 타입   | 필수 | 설명                     |
-| ------------ | ------ | ---- | ------------------------ |
-| first_name   | string | No   | First name of the buyer. |
-| last_name    | string | No   | Last name of the buyer.  |
-| email        | string | No   | Email of the buyer.      |
-| phone_number | string | No   | E.164 standard.          |
-| consent      | object | No   | Consent tracking fields. |
+| 이름         | 타입   | 필수   | 설명             |
+| ------------ | ------ | ------ | ---------------- |
+| first_name   | string | 아니요 | 구매자의 이름.   |
+| last_name    | string | 아니요 | 구매자의 성.     |
+| email        | string | 아니요 | 구매자의 이메일. |
+| phone_number | string | 아니요 | E.164 표준.      |
+| consent      | object | 아니요 | 동의 추적 필드.  |
 
 #### Checkout with Buyer Consent
 
-Checkout extended with consent tracking via buyer object.
+구매자 객체로 동의를 추적하도록 확장한 체크아웃.
 
-| 이름         | 타입          | 필수    | 설명                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| ------------ | ------------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| ucp          | any           | **Yes** | UCP metadata for checkout responses.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| id           | string        | **Yes** | Unique identifier of the checkout session.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| line_items   | Array[object] | **Yes** | List of line items being checked out.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| buyer        | object        | No      | Representation of the buyer.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| context      | object        | No      | Provisional buyer signals for relevance and localization—not authoritative data. Businesses SHOULD use these values when verified inputs (e.g., shipping address) are absent, and MAY ignore or down-rank them if inconsistent with higher-confidence signals (authenticated account, risk detection) or regulatory constraints (export controls). Eligibility and policy enforcement MUST occur at checkout time using binding transaction data. Context SHOULD be non-identifying and can be disclosed progressively—coarse signals early, finer resolution as the session progresses. Higher-resolution data (shipping address, billing address) supersedes context. |
-| signals      | object        | No      | Environment data provided by the platform to support authorization and abuse prevention. Values MUST NOT be buyer-asserted claims — platforms provide signals based on direct observation or independently verifiable third-party attestations. All signal keys MUST use reverse-domain naming to ensure provenance and prevent collisions when multiple extensions contribute to the shared namespace.                                                                                                                                                                                                                                                                 |
-| attribution  | object        | No      | Platform-emitted referral and conversion-event context — campaign identifiers, click IDs, source/medium markers, etc. The same parameters platforms communicate via URL query parameters in browser-based flows.                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| status       | string        | **Yes** | Checkout state indicating the current phase and required action. See Checkout Status lifecycle documentation for state transition details. **Enum:** `incomplete`, `requires_escalation`, `ready_for_complete`, `complete_in_progress`, `completed`, `canceled`                                                                                                                                                                                                                                                                                                                                                                                                         |
-| currency     | string        | **Yes** | ISO 4217 currency code reflecting the merchant's market determination. Derived from address, context, and geo IP—buyers provide signals, merchants determine currency.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| totals       | Array[any]    | **Yes** | Different cart totals.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| messages     | Array[object] | No      | List of messages with error and info about the checkout session state.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| links        | Array[object] | **Yes** | Links to be displayed by the platform (Privacy Policy, TOS). Mandatory for legal compliance.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| expires_at   | string        | No      | RFC 3339 expiry timestamp. Default TTL is 6 hours from creation if not sent.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| continue_url | string        | No      | URL for checkout handoff and session recovery. MUST be provided when status is requires_escalation. See specification for format and availability requirements.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| payment      | object        | No      | Payment configuration containing handlers.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| order        | object        | No      | Details about an order created for this checkout session.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| buyer        | any           | No      | Buyer with consent tracking.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| 이름         | 타입          | 필수   | 설명                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| ------------ | ------------- | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ucp          | any           | **예** | 체크아웃 응답용 UCP 메타데이터.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| id           | string        | **예** | 체크아웃 세션의 고유 식별자.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| line_items   | Array[object] | **예** | 체크아웃 중인 라인 아이템 목록.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| buyer        | object        | 아니요 | 구매자 정보.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| context      | object        | 아니요 | 관련성 판단과 현지화를 위한 잠정적 구매자 신호로, 권위 있는 데이터가 아닙니다. 검증된 입력(예: 배송 주소)이 없으면 비즈니스는 이 값을 사용해야 하며(SHOULD), 더 신뢰도 높은 신호(인증된 계정, 위험 탐지)나 규제 제약(수출 통제)과 맞지 않으면 무시하거나 우선순위를 낮출 수 있습니다(MAY). 자격 판단과 정책 적용은 반드시 체크아웃 시점에 구속력 있는 거래 데이터로 수행해야 합니다(MUST). 컨텍스트는 개인을 식별할 수 없어야 하며(SHOULD), 단계적으로 공개할 수 있습니다. 초기에는 대략적인 신호를, 세션이 진행되면서 더 세밀한 정보를 제공합니다. 더 세밀한 데이터(배송 주소, 청구 주소)가 컨텍스트보다 우선합니다. |
+| signals      | object        | 아니요 | 승인과 악용 방지를 돕기 위해 플랫폼이 제공하는 환경 데이터. 값은 구매자가 주장한 내용이어서는 안 됩니다(MUST NOT). 플랫폼은 직접 관찰했거나 독립적으로 검증 가능한 제3자 증명에 근거한 신호를 제공합니다. 여러 확장이 공유 네임스페이스에 값을 추가할 때 출처를 보장하고 충돌을 막기 위해, 모든 신호 키는 반드시 역도메인 이름을 사용해야 합니다(MUST).                                                                                                                                                                                                                                                               |
+| attribution  | object        | 아니요 | 플랫폼이 내보내는 추천 및 전환 이벤트 맥락: 캠페인 식별자, 클릭 ID, source/medium 마커 등. 브라우저 기반 흐름에서 플랫폼이 URL 쿼리 매개변수로 전달하는 것과 같은 매개변수입니다.                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| status       | string        | **예** | 현재 단계와 필요한 조치를 나타내는 체크아웃 상태. 상태 전이에 대한 자세한 내용은 체크아웃 상태 수명 주기 문서를 참고하세요. **허용 값:** `incomplete`, `requires_escalation`, `ready_for_complete`, `complete_in_progress`, `completed`, `canceled`                                                                                                                                                                                                                                                                                                                                                                   |
+| currency     | string        | **예** | 판매자가 판단한 시장을 반영하는 ISO 4217 통화 코드. 주소, 컨텍스트, geo IP로 결정합니다. 구매자는 신호를 제공하고 통화는 판매자가 결정합니다.                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| totals       | Array[any]    | **예** | 장바구니의 각종 합계.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| messages     | Array[object] | 아니요 | 체크아웃 세션 상태에 대한 오류·정보 메시지 목록.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| links        | Array[object] | **예** | 플랫폼이 표시할 링크(개인정보처리방침, 이용약관). 법적 준수를 위해 필수입니다.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| expires_at   | string        | 아니요 | RFC 3339 만료 타임스탬프입니다. 보내지 않으면 기본 TTL은 생성 시점부터 6시간입니다.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| continue_url | string        | 아니요 | 체크아웃 핸드오프와 세션 복구용 URL. status가 requires_escalation이면 반드시 제공해야 합니다(MUST). 형식과 가용성 요구 사항은 명세를 참고하세요.                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| payment      | object        | 아니요 | 핸들러를 포함한 결제 구성.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| order        | object        | 아니요 | 이 체크아웃 세션으로 생성된 주문의 세부 정보.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| buyer        | any           | 아니요 | 동의 추적이 포함된 구매자.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 
 ______________________________________________________________________
 
@@ -912,82 +912,82 @@ ______________________________________________________________________
 
 #### Allocation
 
-Breakdown of how a discount amount was allocated to a specific target.
+할인 금액이 특정 대상에 어떻게 배분되었는지 보여 주는 내역.
 
-| 이름   | 타입    | 필수    | 설명                                                                              |
-| ------ | ------- | ------- | --------------------------------------------------------------------------------- |
-| path   | string  | **Yes** | JSONPath to the allocation target (e.g., '$.line_items[0]', '$.totals.shipping'). |
-| amount | integer | **Yes** | Amount allocated to this target in ISO 4217 minor units.                          |
+| 이름   | 타입    | 필수   | 설명                                                                       |
+| ------ | ------- | ------ | -------------------------------------------------------------------------- |
+| path   | string  | **예** | 할당 대상을 가리키는 JSONPath(예: '$.line_items[0]', '$.totals.shipping'). |
+| amount | integer | **예** | 이 대상에 배분된 금액(ISO 4217 최소 통화 단위).                            |
 
 #### Applied Discount
 
-A discount that was successfully applied.
+성공적으로 적용된 할인.
 
-| 이름        | 타입          | 필수    | 설명                                                                                                                                                                               |
-| ----------- | ------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| code        | string        | No      | The discount code. Omitted for automatic discounts.                                                                                                                                |
-| title       | string        | **Yes** | Human-readable discount name (e.g., 'Summer Sale 20% Off').                                                                                                                        |
-| amount      | integer       | **Yes** | Total discount amount in ISO 4217 minor units.                                                                                                                                     |
-| automatic   | boolean       | No      | True if applied automatically by merchant rules (no code required).                                                                                                                |
-| method      | string        | No      | Allocation method. 'each' = applied independently per item. 'across' = split proportionally by value. **Enum:** `each`, `across`                                                   |
-| priority    | integer       | No      | Stacking order for discount calculation. Lower numbers applied first (1 = first).                                                                                                  |
-| provisional | boolean       | No      | True if this discount requires additional verification.                                                                                                                            |
-| eligibility | string        | No      | The eligibility claim accepted by the Business for this discount. Corresponds to a value from context.eligibility. Omitted for code-based and non-eligibility automatic discounts. |
-| allocations | Array[object] | No      | Breakdown of where this discount was allocated. Sum of allocation amounts equals total amount.                                                                                     |
+| 이름        | 타입          | 필수   | 설명                                                                                                                                                      |
+| ----------- | ------------- | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| code        | string        | 아니요 | 할인 코드. 자동 할인에서는 생략됩니다.                                                                                                                    |
+| title       | string        | **예** | 사람이 읽을 수 있는 할인 이름(예: 'Summer Sale 20% Off').                                                                                                 |
+| amount      | integer       | **예** | ISO 4217 최소 단위로 표시한 총 할인 금액.                                                                                                                 |
+| automatic   | boolean       | 아니요 | 판매자 규칙에 따라 자동으로 적용되면(코드 불필요) true.                                                                                                   |
+| method      | string        | 아니요 | 배분 방식. 'each' = 항목마다 독립적으로 적용. 'across' = 금액에 비례해 나눔. **허용 값:** `each`, `across`                                                |
+| priority    | integer       | 아니요 | 할인 계산 시 적용 순서. 숫자가 낮을수록 먼저 적용됩니다(1 = 첫 번째).                                                                                     |
+| provisional | boolean       | 아니요 | 이 할인에 추가 검증이 필요하면 true.                                                                                                                      |
+| eligibility | string        | 아니요 | 비즈니스가 이 할인에 대해 인정한 적격성 주장. context.eligibility의 값 중 하나에 해당합니다. 코드 기반 할인과 적격성과 무관한 자동 할인에서는 생략됩니다. |
+| allocations | Array[object] | 아니요 | 이 할인이 배분된 위치 내역. 배분 금액의 합은 총액과 같습니다.                                                                                             |
 
 #### Discounts Object
 
-Discount codes input and applied discounts output.
+할인 코드 입력과 적용된 할인 출력.
 
-| 이름    | 타입          | 필수 | 설명                                                                                                       |
-| ------- | ------------- | ---- | ---------------------------------------------------------------------------------------------------------- |
-| codes   | Array[string] | No   | Discount codes to apply. Case-insensitive. Replaces previously submitted codes. Send empty array to clear. |
-| applied | Array[object] | No   | Discounts successfully applied (code-based and automatic).                                                 |
+| 이름    | 타입          | 필수   | 설명                                                                                                          |
+| ------- | ------------- | ------ | ------------------------------------------------------------------------------------------------------------- |
+| codes   | Array[string] | 아니요 | 적용할 할인 코드. 대소문자를 구분하지 않습니다. 이전에 제출한 코드를 대체합니다. 지우려면 빈 배열을 보내세요. |
+| applied | Array[object] | 아니요 | 성공적으로 적용된 할인(코드 기반 및 자동).                                                                    |
 
 #### Cart with Discount
 
-Cart extended with discount capability.
+할인 기능이 추가된 장바구니.
 
-| 이름         | 타입          | 필수    | 설명                                                                                                                                                                                                                                                                                                                                                                                                    |
-| ------------ | ------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| ucp          | any           | **Yes** | UCP metadata for cart responses. No payment handlers needed pre-checkout.                                                                                                                                                                                                                                                                                                                               |
-| id           | string        | **Yes** | Unique cart identifier.                                                                                                                                                                                                                                                                                                                                                                                 |
-| line_items   | Array[object] | **Yes** | Cart line items. Same structure as checkout. Full replacement on update.                                                                                                                                                                                                                                                                                                                                |
-| context      | object        | No      | Buyer signals for localization (country, region, postal_code). Merchant uses for pricing, availability, currency. Falls back to geo-IP if omitted.                                                                                                                                                                                                                                                      |
-| signals      | object        | No      | Environment data provided by the platform to support authorization and abuse prevention. Values MUST NOT be buyer-asserted claims — platforms provide signals based on direct observation or independently verifiable third-party attestations. All signal keys MUST use reverse-domain naming to ensure provenance and prevent collisions when multiple extensions contribute to the shared namespace. |
-| attribution  | object        | No      | Platform-emitted referral and conversion-event context — campaign identifiers, click IDs, source/medium markers, etc. The same parameters platforms communicate via URL query parameters in browser-based flows.                                                                                                                                                                                        |
-| buyer        | object        | No      | Optional buyer information for personalized estimates.                                                                                                                                                                                                                                                                                                                                                  |
-| currency     | string        | **Yes** | ISO 4217 currency code. Determined by merchant based on context or geo-IP.                                                                                                                                                                                                                                                                                                                              |
-| totals       | Array[any]    | **Yes** | Estimated cost breakdown. May be partial if shipping/tax not yet calculable.                                                                                                                                                                                                                                                                                                                            |
-| messages     | Array[object] | No      | Validation messages, warnings, or informational notices.                                                                                                                                                                                                                                                                                                                                                |
-| links        | Array[object] | No      | Optional merchant links (policies, FAQs).                                                                                                                                                                                                                                                                                                                                                               |
-| continue_url | string        | No      | URL for cart handoff and session recovery. Enables sharing and human-in-the-loop flows.                                                                                                                                                                                                                                                                                                                 |
-| expires_at   | string        | No      | Cart expiry timestamp (RFC 3339). Optional.                                                                                                                                                                                                                                                                                                                                                             |
-| discounts    | object        | No      | Discount codes input and applied discounts output.                                                                                                                                                                                                                                                                                                                                                      |
+| 이름         | 타입          | 필수   | 설명                                                                                                                                                                                                                                                                                                                                                    |
+| ------------ | ------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ucp          | any           | **예** | 장바구니 응답용 UCP 메타데이터. 체크아웃 전에는 결제 핸들러가 필요 없습니다.                                                                                                                                                                                                                                                                            |
+| id           | string        | **예** | 고유 장바구니 식별자.                                                                                                                                                                                                                                                                                                                                   |
+| line_items   | Array[object] | **예** | 장바구니 라인 아이템. 체크아웃과 구조가 같습니다. 업데이트 시 전체를 교체합니다.                                                                                                                                                                                                                                                                        |
+| context      | object        | 아니요 | 현지화를 위한 구매자 신호(country, region, postal_code). 판매자는 이를 가격, 재고, 통화를 정하는 데 사용합니다. 생략하면 geo-IP로 대체합니다.                                                                                                                                                                                                           |
+| signals      | object        | 아니요 | 승인과 악용 방지를 돕기 위해 플랫폼이 제공하는 환경 데이터. 값은 구매자가 주장한 내용이어서는 안 됩니다(MUST NOT). 플랫폼은 직접 관찰했거나 독립적으로 검증 가능한 제3자 증명에 근거한 신호를 제공합니다. 여러 확장이 공유 네임스페이스에 값을 추가할 때 출처를 보장하고 충돌을 막기 위해, 모든 신호 키는 반드시 역도메인 이름을 사용해야 합니다(MUST). |
+| attribution  | object        | 아니요 | 플랫폼이 내보내는 추천 및 전환 이벤트 맥락: 캠페인 식별자, 클릭 ID, source/medium 마커 등. 브라우저 기반 흐름에서 플랫폼이 URL 쿼리 매개변수로 전달하는 것과 같은 매개변수입니다.                                                                                                                                                                       |
+| buyer        | object        | 아니요 | 개인화된 견적을 위한 구매자 정보(선택 사항).                                                                                                                                                                                                                                                                                                            |
+| currency     | string        | **예** | ISO 4217 통화 코드. 판매자가 컨텍스트나 geo-IP를 바탕으로 결정합니다.                                                                                                                                                                                                                                                                                   |
+| totals       | Array[any]    | **예** | 예상 비용 내역. 배송비·세금을 아직 계산할 수 없으면 일부만 포함될 수 있습니다.                                                                                                                                                                                                                                                                          |
+| messages     | Array[object] | 아니요 | 검증 메시지, 경고 또는 안내성 알림.                                                                                                                                                                                                                                                                                                                     |
+| links        | Array[object] | 아니요 | 판매자 링크(선택 사항, 정책, FAQ).                                                                                                                                                                                                                                                                                                                      |
+| continue_url | string        | 아니요 | 장바구니 핸드오프와 세션 복구용 URL. 공유와 사람이 개입하는(human-in-the-loop) 흐름을 지원합니다.                                                                                                                                                                                                                                                       |
+| expires_at   | string        | 아니요 | 장바구니 만료 타임스탬프(RFC 3339). 선택 사항.                                                                                                                                                                                                                                                                                                          |
+| discounts    | object        | 아니요 | 할인 코드 입력과 적용된 할인 출력.                                                                                                                                                                                                                                                                                                                      |
 
 #### Checkout with Discount
 
-Checkout extended with discount capability.
+할인 기능이 추가된 체크아웃.
 
-| 이름         | 타입          | 필수    | 설명                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| ------------ | ------------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| ucp          | any           | **Yes** | UCP metadata for checkout responses.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| id           | string        | **Yes** | Unique identifier of the checkout session.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| line_items   | Array[object] | **Yes** | List of line items being checked out.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| buyer        | object        | No      | Representation of the buyer.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| context      | object        | No      | Provisional buyer signals for relevance and localization—not authoritative data. Businesses SHOULD use these values when verified inputs (e.g., shipping address) are absent, and MAY ignore or down-rank them if inconsistent with higher-confidence signals (authenticated account, risk detection) or regulatory constraints (export controls). Eligibility and policy enforcement MUST occur at checkout time using binding transaction data. Context SHOULD be non-identifying and can be disclosed progressively—coarse signals early, finer resolution as the session progresses. Higher-resolution data (shipping address, billing address) supersedes context. |
-| signals      | object        | No      | Environment data provided by the platform to support authorization and abuse prevention. Values MUST NOT be buyer-asserted claims — platforms provide signals based on direct observation or independently verifiable third-party attestations. All signal keys MUST use reverse-domain naming to ensure provenance and prevent collisions when multiple extensions contribute to the shared namespace.                                                                                                                                                                                                                                                                 |
-| attribution  | object        | No      | Platform-emitted referral and conversion-event context — campaign identifiers, click IDs, source/medium markers, etc. The same parameters platforms communicate via URL query parameters in browser-based flows.                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| status       | string        | **Yes** | Checkout state indicating the current phase and required action. See Checkout Status lifecycle documentation for state transition details. **Enum:** `incomplete`, `requires_escalation`, `ready_for_complete`, `complete_in_progress`, `completed`, `canceled`                                                                                                                                                                                                                                                                                                                                                                                                         |
-| currency     | string        | **Yes** | ISO 4217 currency code reflecting the merchant's market determination. Derived from address, context, and geo IP—buyers provide signals, merchants determine currency.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| totals       | Array[any]    | **Yes** | Different cart totals.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| messages     | Array[object] | No      | List of messages with error and info about the checkout session state.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| links        | Array[object] | **Yes** | Links to be displayed by the platform (Privacy Policy, TOS). Mandatory for legal compliance.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| expires_at   | string        | No      | RFC 3339 expiry timestamp. Default TTL is 6 hours from creation if not sent.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| continue_url | string        | No      | URL for checkout handoff and session recovery. MUST be provided when status is requires_escalation. See specification for format and availability requirements.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| payment      | object        | No      | Payment configuration containing handlers.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| order        | object        | No      | Details about an order created for this checkout session.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| discounts    | object        | No      | Discount codes input and applied discounts output.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| 이름         | 타입          | 필수   | 설명                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| ------------ | ------------- | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ucp          | any           | **예** | 체크아웃 응답용 UCP 메타데이터.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| id           | string        | **예** | 체크아웃 세션의 고유 식별자.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| line_items   | Array[object] | **예** | 체크아웃 중인 라인 아이템 목록.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| buyer        | object        | 아니요 | 구매자 정보.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| context      | object        | 아니요 | 관련성 판단과 현지화를 위한 잠정적 구매자 신호로, 권위 있는 데이터가 아닙니다. 검증된 입력(예: 배송 주소)이 없으면 비즈니스는 이 값을 사용해야 하며(SHOULD), 더 신뢰도 높은 신호(인증된 계정, 위험 탐지)나 규제 제약(수출 통제)과 맞지 않으면 무시하거나 우선순위를 낮출 수 있습니다(MAY). 자격 판단과 정책 적용은 반드시 체크아웃 시점에 구속력 있는 거래 데이터로 수행해야 합니다(MUST). 컨텍스트는 개인을 식별할 수 없어야 하며(SHOULD), 단계적으로 공개할 수 있습니다. 초기에는 대략적인 신호를, 세션이 진행되면서 더 세밀한 정보를 제공합니다. 더 세밀한 데이터(배송 주소, 청구 주소)가 컨텍스트보다 우선합니다. |
+| signals      | object        | 아니요 | 승인과 악용 방지를 돕기 위해 플랫폼이 제공하는 환경 데이터. 값은 구매자가 주장한 내용이어서는 안 됩니다(MUST NOT). 플랫폼은 직접 관찰했거나 독립적으로 검증 가능한 제3자 증명에 근거한 신호를 제공합니다. 여러 확장이 공유 네임스페이스에 값을 추가할 때 출처를 보장하고 충돌을 막기 위해, 모든 신호 키는 반드시 역도메인 이름을 사용해야 합니다(MUST).                                                                                                                                                                                                                                                               |
+| attribution  | object        | 아니요 | 플랫폼이 내보내는 추천 및 전환 이벤트 맥락: 캠페인 식별자, 클릭 ID, source/medium 마커 등. 브라우저 기반 흐름에서 플랫폼이 URL 쿼리 매개변수로 전달하는 것과 같은 매개변수입니다.                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| status       | string        | **예** | 현재 단계와 필요한 조치를 나타내는 체크아웃 상태. 상태 전이에 대한 자세한 내용은 체크아웃 상태 수명 주기 문서를 참고하세요. **허용 값:** `incomplete`, `requires_escalation`, `ready_for_complete`, `complete_in_progress`, `completed`, `canceled`                                                                                                                                                                                                                                                                                                                                                                   |
+| currency     | string        | **예** | 판매자가 판단한 시장을 반영하는 ISO 4217 통화 코드. 주소, 컨텍스트, geo IP로 결정합니다. 구매자는 신호를 제공하고 통화는 판매자가 결정합니다.                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| totals       | Array[any]    | **예** | 장바구니의 각종 합계.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| messages     | Array[object] | 아니요 | 체크아웃 세션 상태에 대한 오류·정보 메시지 목록.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| links        | Array[object] | **예** | 플랫폼이 표시할 링크(개인정보처리방침, 이용약관). 법적 준수를 위해 필수입니다.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| expires_at   | string        | 아니요 | RFC 3339 만료 타임스탬프입니다. 보내지 않으면 기본 TTL은 생성 시점부터 6시간입니다.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| continue_url | string        | 아니요 | 체크아웃 핸드오프와 세션 복구용 URL. status가 requires_escalation이면 반드시 제공해야 합니다(MUST). 형식과 가용성 요구 사항은 명세를 참고하세요.                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| payment      | object        | 아니요 | 핸들러를 포함한 결제 구성.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| order        | object        | 아니요 | 이 체크아웃 세션으로 생성된 주문의 세부 정보.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| discounts    | object        | 아니요 | 할인 코드 입력과 적용된 할인 출력.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 
 ______________________________________________________________________
 
@@ -995,85 +995,85 @@ ______________________________________________________________________
 
 #### Fulfillment Option
 
-A fulfillment option within a group (e.g., Standard Shipping $5, Express $15).
+그룹 내 풀필먼트 옵션(예: Standard Shipping $5, Express $15).
 
-| 이름                      | 타입          | 필수    | 설명                                                                       |
-| ------------------------- | ------------- | ------- | -------------------------------------------------------------------------- |
-| id                        | string        | **Yes** | Unique fulfillment option identifier.                                      |
-| title                     | string        | **Yes** | Short label (e.g., 'Express Shipping', 'Curbside Pickup').                 |
-| description               | string        | No      | Complete context for buyer decision (e.g., 'Arrives Dec 12-15 via FedEx'). |
-| carrier                   | string        | No      | Carrier name (for shipping).                                               |
-| earliest_fulfillment_time | string        | No      | Earliest fulfillment date.                                                 |
-| latest_fulfillment_time   | string        | No      | Latest fulfillment date.                                                   |
-| totals                    | Array[object] | **Yes** | Fulfillment option totals breakdown.                                       |
+| 이름                      | 타입          | 필수   | 설명                                                             |
+| ------------------------- | ------------- | ------ | ---------------------------------------------------------------- |
+| id                        | string        | **예** | 고유 풀필먼트 옵션 식별자.                                       |
+| title                     | string        | **예** | 짧은 레이블(예: 'Express Shipping', 'Curbside Pickup').          |
+| description               | string        | 아니요 | 구매자 결정을 위한 전체 맥락(예: 'Arrives Dec 12-15 via FedEx'). |
+| carrier                   | string        | 아니요 | 운송사 이름(배송용).                                             |
+| earliest_fulfillment_time | string        | 아니요 | 가장 이른 풀필먼트 날짜.                                         |
+| latest_fulfillment_time   | string        | 아니요 | 가장 늦은 풀필먼트 날짜.                                         |
+| totals                    | Array[object] | **예** | 풀필먼트 옵션 합계 내역.                                         |
 
 #### Fulfillment Group
 
-A merchant-generated package/group of line items with fulfillment options.
+판매자가 생성한, 풀필먼트 옵션을 포함하는 라인 아이템 패키지/그룹.
 
-| 이름               | 타입               | 필수    | 설명                                                                   |
-| ------------------ | ------------------ | ------- | ---------------------------------------------------------------------- |
-| id                 | string             | **Yes** | Group identifier for referencing merchant-generated groups in updates. |
-| line_item_ids      | Array[string]      | **Yes** | Line item IDs included in this group/package.                          |
-| options            | Array[object]      | No      | Available fulfillment options for this group.                          |
-| selected_option_id | ['string', 'null'] | No      | ID of the selected fulfillment option for this group.                  |
+| 이름               | 타입               | 필수   | 설명                                                          |
+| ------------------ | ------------------ | ------ | ------------------------------------------------------------- |
+| id                 | string             | **예** | 업데이트 시 판매자가 생성한 그룹을 참조하기 위한 그룹 식별자. |
+| line_item_ids      | Array[string]      | **예** | 이 그룹/패키지에 포함된 라인 아이템 ID.                       |
+| options            | Array[object]      | 아니요 | 이 그룹에 사용할 수 있는 풀필먼트 옵션.                       |
+| selected_option_id | ['string', 'null'] | 아니요 | 이 그룹에서 선택한 풀필먼트 옵션의 ID.                        |
 
 #### Fulfillment Method
 
-A fulfillment method (shipping or pickup) with destinations and groups.
+목적지와 그룹을 포함하는 풀필먼트 방법(배송 또는 픽업).
 
-| 이름                    | 타입               | 필수    | 설명                                                                                                         |
-| ----------------------- | ------------------ | ------- | ------------------------------------------------------------------------------------------------------------ |
-| id                      | string             | **Yes** | Unique fulfillment method identifier.                                                                        |
-| type                    | string             | **Yes** | Fulfillment method type. **Enum:** `shipping`, `pickup`                                                      |
-| line_item_ids           | Array[string]      | **Yes** | Line item IDs fulfilled via this method.                                                                     |
-| destinations            | Array[object]      | No      | Available destinations. For shipping: addresses. For pickup: retail locations.                               |
-| selected_destination_id | ['string', 'null'] | No      | ID of the selected destination.                                                                              |
-| groups                  | Array[object]      | No      | Fulfillment groups for selecting options. Agent sets selected_option_id on groups to choose shipping method. |
+| 이름                    | 타입               | 필수   | 설명                                                                                                  |
+| ----------------------- | ------------------ | ------ | ----------------------------------------------------------------------------------------------------- |
+| id                      | string             | **예** | 고유 풀필먼트 방식 식별자.                                                                            |
+| type                    | string             | **예** | 풀필먼트 방식 유형. **허용 값:** `shipping`, `pickup`                                                 |
+| line_item_ids           | Array[string]      | **예** | 이 방식으로 풀필먼트되는 라인 아이템 ID.                                                              |
+| destinations            | Array[object]      | 아니요 | 사용 가능한 목적지. 배송은 주소, 픽업은 소매 매장.                                                    |
+| selected_destination_id | ['string', 'null'] | 아니요 | 선택한 목적지의 ID.                                                                                   |
+| groups                  | Array[object]      | 아니요 | 옵션 선택을 위한 풀필먼트 그룹. 에이전트는 그룹에 selected_option_id를 설정해 배송 방식을 선택합니다. |
 
 #### Fulfillment Available Method
 
-Inventory availability hint for a fulfillment method type.
+풀필먼트 방식 유형별 재고 가용성 힌트.
 
-| 이름           | 타입               | 필수    | 설명                                                                                     |
-| -------------- | ------------------ | ------- | ---------------------------------------------------------------------------------------- |
-| type           | string             | **Yes** | Fulfillment method type this availability applies to. **Enum:** `shipping`, `pickup`     |
-| line_item_ids  | Array[string]      | **Yes** | Line items available for this fulfillment method.                                        |
-| fulfillable_on | ['string', 'null'] | No      | 'now' for immediate availability, or ISO 8601 date for future (preorders, transfers).    |
-| description    | string             | No      | Human-readable availability info (e.g., 'Available for pickup at Downtown Store today'). |
+| 이름           | 타입               | 필수   | 설명                                                                                 |
+| -------------- | ------------------ | ------ | ------------------------------------------------------------------------------------ |
+| type           | string             | **예** | 이 가용성이 적용되는 풀필먼트 방식 유형. **허용 값:** `shipping`, `pickup`           |
+| line_item_ids  | Array[string]      | **예** | 이 풀필먼트 방식에 사용할 수 있는 라인 아이템.                                       |
+| fulfillable_on | ['string', 'null'] | 아니요 | 즉시 구매 가능하면 'now', 향후 구매 가능(예약 주문, 이관)이면 ISO 8601 날짜.         |
+| description    | string             | 아니요 | 사람이 읽을 수 있는 가용성 정보(예: 'Available for pickup at Downtown Store today'). |
 
 #### Fulfillment
 
-Container for fulfillment methods and availability.
+풀필먼트 방식과 가용성을 담는 컨테이너.
 
-| 이름              | 타입          | 필수 | 설명                                |
-| ----------------- | ------------- | ---- | ----------------------------------- |
-| methods           | Array[object] | No   | Fulfillment methods for cart items. |
-| available_methods | Array[object] | No   | Inventory availability hints.       |
+| 이름              | 타입          | 필수   | 설명                           |
+| ----------------- | ------------- | ------ | ------------------------------ |
+| methods           | Array[object] | 아니요 | 장바구니 상품의 풀필먼트 방식. |
+| available_methods | Array[object] | 아니요 | 재고 가용성 힌트.              |
 
 #### Checkout with Fulfillment
 
-Checkout extended with hierarchical fulfillment.
+계층형 풀필먼트가 추가된 체크아웃.
 
-| 이름         | 타입          | 필수    | 설명                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| ------------ | ------------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| ucp          | any           | **Yes** | UCP metadata for checkout responses.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| id           | string        | **Yes** | Unique identifier of the checkout session.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| line_items   | Array[object] | **Yes** | List of line items being checked out.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| buyer        | object        | No      | Representation of the buyer.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| context      | object        | No      | Provisional buyer signals for relevance and localization—not authoritative data. Businesses SHOULD use these values when verified inputs (e.g., shipping address) are absent, and MAY ignore or down-rank them if inconsistent with higher-confidence signals (authenticated account, risk detection) or regulatory constraints (export controls). Eligibility and policy enforcement MUST occur at checkout time using binding transaction data. Context SHOULD be non-identifying and can be disclosed progressively—coarse signals early, finer resolution as the session progresses. Higher-resolution data (shipping address, billing address) supersedes context. |
-| signals      | object        | No      | Environment data provided by the platform to support authorization and abuse prevention. Values MUST NOT be buyer-asserted claims — platforms provide signals based on direct observation or independently verifiable third-party attestations. All signal keys MUST use reverse-domain naming to ensure provenance and prevent collisions when multiple extensions contribute to the shared namespace.                                                                                                                                                                                                                                                                 |
-| attribution  | object        | No      | Platform-emitted referral and conversion-event context — campaign identifiers, click IDs, source/medium markers, etc. The same parameters platforms communicate via URL query parameters in browser-based flows.                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| status       | string        | **Yes** | Checkout state indicating the current phase and required action. See Checkout Status lifecycle documentation for state transition details. **Enum:** `incomplete`, `requires_escalation`, `ready_for_complete`, `complete_in_progress`, `completed`, `canceled`                                                                                                                                                                                                                                                                                                                                                                                                         |
-| currency     | string        | **Yes** | ISO 4217 currency code reflecting the merchant's market determination. Derived from address, context, and geo IP—buyers provide signals, merchants determine currency.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| totals       | Array[any]    | **Yes** | Different cart totals.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| messages     | Array[object] | No      | List of messages with error and info about the checkout session state.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| links        | Array[object] | **Yes** | Links to be displayed by the platform (Privacy Policy, TOS). Mandatory for legal compliance.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| expires_at   | string        | No      | RFC 3339 expiry timestamp. Default TTL is 6 hours from creation if not sent.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| continue_url | string        | No      | URL for checkout handoff and session recovery. MUST be provided when status is requires_escalation. See specification for format and availability requirements.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| payment      | object        | No      | Payment configuration containing handlers.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| order        | object        | No      | Details about an order created for this checkout session.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| fulfillment  | object        | No      | Fulfillment details.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| 이름         | 타입          | 필수   | 설명                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| ------------ | ------------- | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ucp          | any           | **예** | 체크아웃 응답용 UCP 메타데이터.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| id           | string        | **예** | 체크아웃 세션의 고유 식별자.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| line_items   | Array[object] | **예** | 체크아웃 중인 라인 아이템 목록.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| buyer        | object        | 아니요 | 구매자 정보.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| context      | object        | 아니요 | 관련성 판단과 현지화를 위한 잠정적 구매자 신호로, 권위 있는 데이터가 아닙니다. 검증된 입력(예: 배송 주소)이 없으면 비즈니스는 이 값을 사용해야 하며(SHOULD), 더 신뢰도 높은 신호(인증된 계정, 위험 탐지)나 규제 제약(수출 통제)과 맞지 않으면 무시하거나 우선순위를 낮출 수 있습니다(MAY). 자격 판단과 정책 적용은 반드시 체크아웃 시점에 구속력 있는 거래 데이터로 수행해야 합니다(MUST). 컨텍스트는 개인을 식별할 수 없어야 하며(SHOULD), 단계적으로 공개할 수 있습니다. 초기에는 대략적인 신호를, 세션이 진행되면서 더 세밀한 정보를 제공합니다. 더 세밀한 데이터(배송 주소, 청구 주소)가 컨텍스트보다 우선합니다. |
+| signals      | object        | 아니요 | 승인과 악용 방지를 돕기 위해 플랫폼이 제공하는 환경 데이터. 값은 구매자가 주장한 내용이어서는 안 됩니다(MUST NOT). 플랫폼은 직접 관찰했거나 독립적으로 검증 가능한 제3자 증명에 근거한 신호를 제공합니다. 여러 확장이 공유 네임스페이스에 값을 추가할 때 출처를 보장하고 충돌을 막기 위해, 모든 신호 키는 반드시 역도메인 이름을 사용해야 합니다(MUST).                                                                                                                                                                                                                                                               |
+| attribution  | object        | 아니요 | 플랫폼이 내보내는 추천 및 전환 이벤트 맥락: 캠페인 식별자, 클릭 ID, source/medium 마커 등. 브라우저 기반 흐름에서 플랫폼이 URL 쿼리 매개변수로 전달하는 것과 같은 매개변수입니다.                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| status       | string        | **예** | 현재 단계와 필요한 조치를 나타내는 체크아웃 상태. 상태 전이에 대한 자세한 내용은 체크아웃 상태 수명 주기 문서를 참고하세요. **허용 값:** `incomplete`, `requires_escalation`, `ready_for_complete`, `complete_in_progress`, `completed`, `canceled`                                                                                                                                                                                                                                                                                                                                                                   |
+| currency     | string        | **예** | 판매자가 판단한 시장을 반영하는 ISO 4217 통화 코드. 주소, 컨텍스트, geo IP로 결정합니다. 구매자는 신호를 제공하고 통화는 판매자가 결정합니다.                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| totals       | Array[any]    | **예** | 장바구니의 각종 합계.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| messages     | Array[object] | 아니요 | 체크아웃 세션 상태에 대한 오류·정보 메시지 목록.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| links        | Array[object] | **예** | 플랫폼이 표시할 링크(개인정보처리방침, 이용약관). 법적 준수를 위해 필수입니다.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| expires_at   | string        | 아니요 | RFC 3339 만료 타임스탬프입니다. 보내지 않으면 기본 TTL은 생성 시점부터 6시간입니다.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| continue_url | string        | 아니요 | 체크아웃 핸드오프와 세션 복구용 URL. status가 requires_escalation이면 반드시 제공해야 합니다(MUST). 형식과 가용성 요구 사항은 명세를 참고하세요.                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| payment      | object        | 아니요 | 핸들러를 포함한 결제 구성.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| order        | object        | 아니요 | 이 체크아웃 세션으로 생성된 주문의 세부 정보.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| fulfillment  | object        | 아니요 | 풀필먼트 세부 정보.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 
 #### Dev.Ucp.Shopping.Fulfillment
 
@@ -1089,83 +1089,83 @@ ______________________________________________________________________
 
 플랫폼 프로필 문서(플랫폼이 알린 URI에 호스팅됨)의 최상위 구조입니다.
 
-Full UCP metadata for platform-level configuration. Hosted at a URI advertised by the platform in request headers.
+플랫폼 수준 구성을 위한 전체 UCP 메타데이터. 플랫폼이 요청 헤더로 알린 URI에 호스팅됩니다.
 
-| 이름             | 타입   | 필수    | 설명                                                                        |
-| ---------------- | ------ | ------- | --------------------------------------------------------------------------- |
-| version          | string | **Yes** | UCP version in YYYY-MM-DD format.                                           |
-| status           | string | No      | Application-level status of the UCP operation. **Enum:** `success`, `error` |
-| services         | object | **Yes** | Service registry keyed by reverse-domain name.                              |
-| capabilities     | object | No      | Capability registry keyed by reverse-domain name.                           |
-| payment_handlers | object | **Yes** | Payment handler registry keyed by reverse-domain name.                      |
-| services         | any    | **Yes** |                                                                             |
-| capabilities     | any    | No      |                                                                             |
-| payment_handlers | any    | **Yes** |                                                                             |
+| 이름             | 타입   | 필수   | 설명                                                               |
+| ---------------- | ------ | ------ | ------------------------------------------------------------------ |
+| version          | string | **예** | YYYY-MM-DD 형식의 UCP 버전.                                        |
+| status           | string | 아니요 | UCP 작업의 애플리케이션 수준 상태. **허용 값:** `success`, `error` |
+| services         | object | **예** | 역도메인 이름을 키로 하는 서비스 레지스트리.                       |
+| capabilities     | object | 아니요 | 역도메인 이름을 키로 하는 기능 레지스트리.                         |
+| payment_handlers | object | **예** | 역 도메인 이름을 키로 하는 결제 핸들러 레지스트리.                 |
+| services         | any    | **예** |                                                                    |
+| capabilities     | any    | 아니요 |                                                                    |
+| payment_handlers | any    | **예** |                                                                    |
 
 ### 비즈니스 디스커버리 프로필
 
 비즈니스 디스커버리 문서(`/.well-known/ucp`)의 최상위 구조입니다.
 
-UCP metadata for business/merchant-level configuration. Subset of platform schema with business-specific settings.
+비즈니스/판매자 수준 구성용 UCP 메타데이터. 비즈니스 전용 설정이 담긴 플랫폼 스키마의 부분 집합입니다.
 
-| 이름               | 타입   | 필수    | 설명                                                                                                                                                                                                                                                                                                 |
-| ------------------ | ------ | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| version            | string | **Yes** | UCP version in YYYY-MM-DD format.                                                                                                                                                                                                                                                                    |
-| status             | string | No      | Application-level status of the UCP operation. **Enum:** `success`, `error`                                                                                                                                                                                                                          |
-| services           | object | **Yes** | Service registry keyed by reverse-domain name.                                                                                                                                                                                                                                                       |
-| capabilities       | object | No      | Capability registry keyed by reverse-domain name.                                                                                                                                                                                                                                                    |
-| payment_handlers   | object | **Yes** | Payment handler registry keyed by reverse-domain name.                                                                                                                                                                                                                                               |
-| supported_versions | object | No      | Previous protocol versions this business supports, mapped to profile URIs. Businesses that support older protocol versions SHOULD advertise each version and link to its profile. Each URI points to a complete, self-contained profile for that version. When omitted, only `version` is supported. |
-| services           | any    | **Yes** |                                                                                                                                                                                                                                                                                                      |
-| capabilities       | any    | No      |                                                                                                                                                                                                                                                                                                      |
-| payment_handlers   | any    | **Yes** |                                                                                                                                                                                                                                                                                                      |
+| 이름               | 타입   | 필수   | 설명                                                                                                                                                                                                                                                                         |
+| ------------------ | ------ | ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| version            | string | **예** | YYYY-MM-DD 형식의 UCP 버전.                                                                                                                                                                                                                                                  |
+| status             | string | 아니요 | UCP 작업의 애플리케이션 수준 상태. **허용 값:** `success`, `error`                                                                                                                                                                                                           |
+| services           | object | **예** | 역도메인 이름을 키로 하는 서비스 레지스트리.                                                                                                                                                                                                                                 |
+| capabilities       | object | 아니요 | 역도메인 이름을 키로 하는 기능 레지스트리.                                                                                                                                                                                                                                   |
+| payment_handlers   | object | **예** | 역 도메인 이름을 키로 하는 결제 핸들러 레지스트리.                                                                                                                                                                                                                           |
+| supported_versions | object | 아니요 | 이 비즈니스가 지원하는 이전 프로토콜 버전과 각 버전의 프로필 URI 매핑입니다. 이전 프로토콜 버전을 지원하는 비즈니스는 각 버전을 공개하고 해당 프로필에 링크해야 합니다(SHOULD). 각 URI는 해당 버전의 완전하고 독립적인 프로필을 가리킵니다. 생략하면 `version`만 지원합니다. |
+| services           | any    | **예** |                                                                                                                                                                                                                                                                              |
+| capabilities       | any    | 아니요 |                                                                                                                                                                                                                                                                              |
+| payment_handlers   | any    | **예** |                                                                                                                                                                                                                                                                              |
 
 ### 체크아웃 응답 메타데이터
 
 체크아웃 응답에 포함되는 `ucp` 객체입니다.
 
-UCP metadata for checkout responses.
+체크아웃 응답용 UCP 메타데이터.
 
-| 이름             | 타입   | 필수    | 설명                                                                        |
-| ---------------- | ------ | ------- | --------------------------------------------------------------------------- |
-| version          | string | **Yes** | UCP version in YYYY-MM-DD format.                                           |
-| status           | string | No      | Application-level status of the UCP operation. **Enum:** `success`, `error` |
-| services         | object | No      | Service registry keyed by reverse-domain name.                              |
-| capabilities     | object | No      | Capability registry keyed by reverse-domain name.                           |
-| payment_handlers | object | **Yes** | Payment handler registry keyed by reverse-domain name.                      |
-| services         | any    | No      |                                                                             |
-| capabilities     | any    | No      |                                                                             |
-| payment_handlers | any    | **Yes** |                                                                             |
+| 이름             | 타입   | 필수   | 설명                                                               |
+| ---------------- | ------ | ------ | ------------------------------------------------------------------ |
+| version          | string | **예** | YYYY-MM-DD 형식의 UCP 버전.                                        |
+| status           | string | 아니요 | UCP 작업의 애플리케이션 수준 상태. **허용 값:** `success`, `error` |
+| services         | object | 아니요 | 역도메인 이름을 키로 하는 서비스 레지스트리.                       |
+| capabilities     | object | 아니요 | 역도메인 이름을 키로 하는 기능 레지스트리.                         |
+| payment_handlers | object | **예** | 역 도메인 이름을 키로 하는 결제 핸들러 레지스트리.                 |
+| services         | any    | 아니요 |                                                                    |
+| capabilities     | any    | 아니요 |                                                                    |
+| payment_handlers | any    | **예** |                                                                    |
 
 ### 장바구니 응답 메타데이터
 
 장바구니 응답에 포함되는 `ucp` 객체입니다.
 
-UCP metadata for cart responses. No payment handlers needed pre-checkout.
+장바구니 응답용 UCP 메타데이터. 체크아웃 전에는 결제 핸들러가 필요 없습니다.
 
-| 이름             | 타입   | 필수    | 설명                                                                        |
-| ---------------- | ------ | ------- | --------------------------------------------------------------------------- |
-| version          | string | **Yes** | UCP version in YYYY-MM-DD format.                                           |
-| status           | string | No      | Application-level status of the UCP operation. **Enum:** `success`, `error` |
-| services         | object | No      | Service registry keyed by reverse-domain name.                              |
-| capabilities     | object | No      | Capability registry keyed by reverse-domain name.                           |
-| payment_handlers | object | No      | Payment handler registry keyed by reverse-domain name.                      |
-| capabilities     | any    | No      |                                                                             |
+| 이름             | 타입   | 필수   | 설명                                                               |
+| ---------------- | ------ | ------ | ------------------------------------------------------------------ |
+| version          | string | **예** | YYYY-MM-DD 형식의 UCP 버전.                                        |
+| status           | string | 아니요 | UCP 작업의 애플리케이션 수준 상태. **허용 값:** `success`, `error` |
+| services         | object | 아니요 | 역도메인 이름을 키로 하는 서비스 레지스트리.                       |
+| capabilities     | object | 아니요 | 역도메인 이름을 키로 하는 기능 레지스트리.                         |
+| payment_handlers | object | 아니요 | 역 도메인 이름을 키로 하는 결제 핸들러 레지스트리.                 |
+| capabilities     | any    | 아니요 |                                                                    |
 
 ### 주문 응답 메타데이터
 
 주문 응답이나 이벤트에 포함되는 `ucp` 객체입니다.
 
-UCP metadata for order responses. No payment handlers needed post-purchase.
+주문 응답용 UCP 메타데이터. 구매 후에는 결제 핸들러가 필요 없습니다.
 
-| 이름             | 타입   | 필수    | 설명                                                                        |
-| ---------------- | ------ | ------- | --------------------------------------------------------------------------- |
-| version          | string | **Yes** | UCP version in YYYY-MM-DD format.                                           |
-| status           | string | No      | Application-level status of the UCP operation. **Enum:** `success`, `error` |
-| services         | object | No      | Service registry keyed by reverse-domain name.                              |
-| capabilities     | object | No      | Capability registry keyed by reverse-domain name.                           |
-| payment_handlers | object | No      | Payment handler registry keyed by reverse-domain name.                      |
-| capabilities     | any    | No      |                                                                             |
+| 이름             | 타입   | 필수   | 설명                                                               |
+| ---------------- | ------ | ------ | ------------------------------------------------------------------ |
+| version          | string | **예** | YYYY-MM-DD 형식의 UCP 버전.                                        |
+| status           | string | 아니요 | UCP 작업의 애플리케이션 수준 상태. **허용 값:** `success`, `error` |
+| services         | object | 아니요 | 역도메인 이름을 키로 하는 서비스 레지스트리.                       |
+| capabilities     | object | 아니요 | 역도메인 이름을 키로 하는 기능 레지스트리.                         |
+| payment_handlers | object | 아니요 | 역 도메인 이름을 키로 하는 결제 핸들러 레지스트리.                 |
+| capabilities     | any    | 아니요 |                                                                    |
 
 ### 기능(Capability)
 
@@ -1175,28 +1175,28 @@ UCP metadata for order responses. No payment handlers needed post-purchase.
 
 디스커버리 프로필에 나타나는 형태입니다.
 
-Full capability declaration for platform-level discovery. Includes spec/schema URLs for agent fetching.
+플랫폼 수준 디스커버리를 위한 전체 기능 선언. 에이전트가 가져갈 spec/schema URL을 포함합니다.
 
-| 이름    | 타입    | 필수    | 설명                                                                                                                            |
-| ------- | ------- | ------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| version | string  | **Yes** | Entity version in YYYY-MM-DD format.                                                                                            |
-| spec    | string  | **Yes** | URL to human-readable specification document.                                                                                   |
-| schema  | string  | **Yes** | URL to JSON Schema defining this entity's structure and payloads.                                                               |
-| id      | string  | No      | Unique identifier for this entity instance. Used to disambiguate when multiple instances exist.                                 |
-| config  | object  | No      | Entity-specific configuration. Structure defined by each entity's schema.                                                       |
-| extends | OneOf[] | No      | Parent capability(s) this extends. Present for extensions, absent for root capabilities. Use array for multi-parent extensions. |
+| 이름    | 타입    | 필수   | 설명                                                                                                        |
+| ------- | ------- | ------ | ----------------------------------------------------------------------------------------------------------- |
+| version | string  | **예** | YYYY-MM-DD 형식의 엔티티 버전.                                                                              |
+| spec    | string  | **예** | 사람이 읽을 수 있는 명세 문서의 URL.                                                                        |
+| schema  | string  | **예** | 이 엔터티의 구조와 페이로드를 정의하는 JSON Schema의 URL.                                                   |
+| id      | string  | 아니요 | 이 엔터티 인스턴스의 고유 식별자. 인스턴스가 여러 개일 때 구분하는 데 사용합니다.                           |
+| config  | object  | 아니요 | 엔티티별 구성. 구조는 각 엔티티의 스키마가 정의합니다.                                                      |
+| extends | OneOf[] | 아니요 | 이 항목이 확장하는 상위 기능. 확장에는 있고 루트 기능에는 없습니다. 상위가 여럿인 확장은 배열을 사용합니다. |
 
 #### 기능(응답)
 
 응답 메시지에 나타나는 형태입니다.
 
-Capability reference in responses. Only name/version required to confirm active capabilities.
+응답의 기능 참조. 활성 기능을 확인하는 데는 name/version만 있으면 됩니다.
 
-| 이름    | 타입    | 필수    | 설명                                                                                                                            |
-| ------- | ------- | ------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| version | string  | **Yes** | Entity version in YYYY-MM-DD format.                                                                                            |
-| spec    | string  | No      | URL to human-readable specification document.                                                                                   |
-| schema  | string  | No      | URL to JSON Schema defining this entity's structure and payloads.                                                               |
-| id      | string  | No      | Unique identifier for this entity instance. Used to disambiguate when multiple instances exist.                                 |
-| config  | object  | No      | Entity-specific configuration. Structure defined by each entity's schema.                                                       |
-| extends | OneOf[] | No      | Parent capability(s) this extends. Present for extensions, absent for root capabilities. Use array for multi-parent extensions. |
+| 이름    | 타입    | 필수   | 설명                                                                                                        |
+| ------- | ------- | ------ | ----------------------------------------------------------------------------------------------------------- |
+| version | string  | **예** | YYYY-MM-DD 형식의 엔티티 버전.                                                                              |
+| spec    | string  | 아니요 | 사람이 읽을 수 있는 명세 문서의 URL.                                                                        |
+| schema  | string  | 아니요 | 이 엔터티의 구조와 페이로드를 정의하는 JSON Schema의 URL.                                                   |
+| id      | string  | 아니요 | 이 엔터티 인스턴스의 고유 식별자. 인스턴스가 여러 개일 때 구분하는 데 사용합니다.                           |
+| config  | object  | 아니요 | 엔티티별 구성. 구조는 각 엔티티의 스키마가 정의합니다.                                                      |
+| extends | OneOf[] | 아니요 | 이 항목이 확장하는 상위 기능. 확장에는 있고 루트 기능에는 없습니다. 상위가 여럿인 확장은 배열을 사용합니다. |

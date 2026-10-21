@@ -2941,7 +2941,7 @@
 <h2 id="schema">스키마<a class="headerlink" href="#schema" title="Permanent link">&para;</a></h2>
 <p>이 기능이 활성화되면 장바구니나 체크아웃(또는 둘 다)에 <code>discounts</code> 객체가 추가됩니다.</p>
 <h3 id="discounts-object">Discounts 객체<a class="headerlink" href="#discounts-object" title="Permanent link">&para;</a></h3>
-<p>Discount codes input and applied discounts output.</p>
+<p>할인 코드 입력과 적용된 할인 출력.</p>
 <table>
 <thead>
 <tr>
@@ -2955,19 +2955,19 @@
 <tr>
 <td style="text-align: left;">codes</td>
 <td style="text-align: left;">Array[string]</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Discount codes to apply. Case-insensitive. Replaces previously submitted codes. Send empty array to clear.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">적용할 할인 코드. 대소문자를 구분하지 않습니다. 이전에 제출한 코드를 대체합니다. 지우려면 빈 배열을 보내세요.</td>
 </tr>
 <tr>
 <td style="text-align: left;">applied</td>
 <td style="text-align: left;">Array[object]</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Discounts successfully applied (code-based and automatic).</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">성공적으로 적용된 할인(코드 기반 및 자동).</td>
 </tr>
 </tbody>
 </table>
 <h3 id="applied-discount">적용된 할인<a class="headerlink" href="#applied-discount" title="Permanent link">&para;</a></h3>
-<p>A discount that was successfully applied.</p>
+<p>성공적으로 적용된 할인.</p>
 <table>
 <thead>
 <tr>
@@ -2981,61 +2981,61 @@
 <tr>
 <td style="text-align: left;">code</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">The discount code. Omitted for automatic discounts.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">할인 코드. 자동 할인에서는 생략됩니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">title</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">Human-readable discount name (e.g., 'Summer Sale 20% Off').</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">사람이 읽을 수 있는 할인 이름(예: 'Summer Sale 20% Off').</td>
 </tr>
 <tr>
 <td style="text-align: left;">amount</td>
 <td style="text-align: left;">integer</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">Total discount amount in ISO 4217 minor units.</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">ISO 4217 최소 단위로 표시한 총 할인 금액.</td>
 </tr>
 <tr>
 <td style="text-align: left;">automatic</td>
 <td style="text-align: left;">boolean</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">True if applied automatically by merchant rules (no code required).</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">판매자 규칙에 따라 자동으로 적용되면(코드 불필요) true.</td>
 </tr>
 <tr>
 <td style="text-align: left;">method</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Allocation method. 'each' = applied independently per item. 'across' = split proportionally by value.<br><strong>Enum:</strong> <code>each</code>, <code>across</code></td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">배분 방식. 'each' = 항목마다 독립적으로 적용. 'across' = 금액에 비례해 나눔.<br><strong>허용 값:</strong> <code>each</code>, <code>across</code></td>
 </tr>
 <tr>
 <td style="text-align: left;">priority</td>
 <td style="text-align: left;">integer</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Stacking order for discount calculation. Lower numbers applied first (1 = first).</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">할인 계산 시 적용 순서. 숫자가 낮을수록 먼저 적용됩니다(1 = 첫 번째).</td>
 </tr>
 <tr>
 <td style="text-align: left;">provisional</td>
 <td style="text-align: left;">boolean</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">True if this discount requires additional verification.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">이 할인에 추가 검증이 필요하면 true.</td>
 </tr>
 <tr>
 <td style="text-align: left;">eligibility</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">The eligibility claim accepted by the Business for this discount. Corresponds to a value from context.eligibility. Omitted for code-based and non-eligibility automatic discounts.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">비즈니스가 이 할인에 대해 인정한 적격성 주장. context.eligibility의 값 중 하나에 해당합니다. 코드 기반 할인과 적격성과 무관한 자동 할인에서는 생략됩니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">allocations</td>
 <td style="text-align: left;">Array[object]</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Breakdown of where this discount was allocated. Sum of allocation amounts equals total amount.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">이 할인이 배분된 위치 내역. 배분 금액의 합은 총액과 같습니다.</td>
 </tr>
 </tbody>
 </table>
 <h3 id="allocation">배분<a class="headerlink" href="#allocation" title="Permanent link">&para;</a></h3>
-<p>Breakdown of how a discount amount was allocated to a specific target.</p>
+<p>할인 금액이 특정 대상에 어떻게 배분되었는지 보여 주는 내역.</p>
 <table>
 <thead>
 <tr>
@@ -3049,14 +3049,14 @@
 <tr>
 <td style="text-align: left;">path</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">JSONPath to the allocation target (e.g., '$.line_items[0]', '$.totals.shipping').</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">할당 대상을 가리키는 JSONPath(예: '$.line_items[0]', '$.totals.shipping').</td>
 </tr>
 <tr>
 <td style="text-align: left;">amount</td>
 <td style="text-align: left;">integer</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">Amount allocated to this target in ISO 4217 minor units.</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">이 대상에 배분된 금액(ISO 4217 최소 통화 단위).</td>
 </tr>
 </tbody>
 </table>

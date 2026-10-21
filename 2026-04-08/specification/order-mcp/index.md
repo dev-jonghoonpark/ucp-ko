@@ -80,20 +80,20 @@ UCP 기능은 MCP 도구(Tool)와 1:1로 대응합니다.
 
 #### 출력 스키마
 
-| 이름          | 타입                                                                                               | 필수    | 설명                                                                                                                                          |
-| ------------- | -------------------------------------------------------------------------------------------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| ucp           | any                                                                                                | **Yes** | UCP metadata for order responses. No payment handlers needed post-purchase.                                                                   |
-| id            | string                                                                                             | **Yes** | Unique order identifier.                                                                                                                      |
-| label         | string                                                                                             | No      | Human-readable label for identifying the order. MUST only be provided by the business.                                                        |
-| checkout_id   | string                                                                                             | **Yes** | Associated checkout ID for reconciliation.                                                                                                    |
-| permalink_url | string                                                                                             | **Yes** | Permalink to access the order on merchant site.                                                                                               |
-| line_items    | Array\[[Order Line Item](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#order-line-item)\] | **Yes** | Line items representing what was purchased — can change post-order via edits or exchanges.                                                    |
-| fulfillment   | object                                                                                             | **Yes** | Fulfillment data: buyer expectations and what actually happened.                                                                              |
-| adjustments   | Array\[[Adjustment](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#adjustment)\]           | No      | Post-order events (refunds, returns, credits, disputes, cancellations, etc.) that exist independently of fulfillment.                         |
-| currency      | string                                                                                             | **Yes** | ISO 4217 currency code. MUST match the currency from the originating checkout session.                                                        |
-| totals        | [Totals](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#totals)                            | **Yes** | Different totals for the order.                                                                                                               |
-| messages      | Array\[[Message](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#message)\]                 | No      | Business outcome messages (errors, warnings, informational). Present when the business needs to communicate status or issues to the platform. |
-| attribution   | [Attribution](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#attribution)                  | No      | Snapshot of the attribution associated with the originating checkout. Read-only on the order.                                                 |
+| 이름          | 타입                                                                                               | 필수   | 설명                                                                                                 |
+| ------------- | -------------------------------------------------------------------------------------------------- | ------ | ---------------------------------------------------------------------------------------------------- |
+| ucp           | any                                                                                                | **예** | 주문 응답용 UCP 메타데이터. 구매 후에는 결제 핸들러가 필요 없습니다.                                 |
+| id            | string                                                                                             | **예** | 고유 주문 식별자.                                                                                    |
+| label         | string                                                                                             | 아니요 | 주문을 식별하기 위한 사람이 읽을 수 있는 라벨. 반드시 비즈니스만 제공해야 합니다(MUST).              |
+| checkout_id   | string                                                                                             | **예** | 정산 대사를 위한 연관 체크아웃 ID.                                                                   |
+| permalink_url | string                                                                                             | **예** | 판매자 사이트에서 주문에 접근하는 퍼머링크.                                                          |
+| line_items    | Array\[[Order Line Item](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#order-line-item)\] | **예** | 구매한 항목을 나타내는 라인 아이템. 주문 후 수정이나 교환으로 바뀔 수 있습니다.                      |
+| fulfillment   | object                                                                                             | **예** | 풀필먼트 데이터: 구매자 예상 정보와 실제로 일어난 일.                                                |
+| adjustments   | Array\[[Adjustment](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#adjustment)\]           | 아니요 | 풀필먼트와 독립적으로 존재하는 주문 후 이벤트(환불, 반품, 크레딧, 분쟁, 취소 등).                    |
+| currency      | string                                                                                             | **예** | ISO 4217 통화 코드. 반드시 원래 체크아웃 세션의 통화와 일치해야 합니다(MUST).                        |
+| totals        | [Totals](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#totals)                            | **예** | 주문의 각종 합계.                                                                                    |
+| messages      | Array\[[Message](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#message)\]                 | 아니요 | 비즈니스 결과 메시지(오류, 경고, 정보). 비즈니스가 플랫폼에 상태나 문제를 전달해야 할 때 포함됩니다. |
+| attribution   | [Attribution](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#attribution)                  | 아니요 | 원래 체크아웃과 연결된 어트리뷰션의 스냅샷입니다. 주문에서는 읽기 전용입니다.                        |
 
 #### 예시
 

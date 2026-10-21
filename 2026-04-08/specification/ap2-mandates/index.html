@@ -3203,7 +3203,7 @@ JWS입니다. 이중 점(<code>..</code>)은 페이로드를 따로(체크아웃
 <h3 id="step-1-checkout-creation-signing">1단계: 체크아웃 생성과 서명<a class="headerlink" href="#step-1-checkout-creation-signing" title="Permanent link">&para;</a></h3>
 <p>플랫폼이 세션을 시작합니다. 비즈니스는 응답 본문에 <code>ap2.merchant_authorization</code>이
 담긴 <code>Checkout</code> 객체를 반환합니다.</p>
-<p>Checkout extended with AP2 mandate support.</p>
+<p>AP2 위임(Mandate) 지원이 추가된 체크아웃.</p>
 <table>
 <thead>
 <tr>
@@ -3217,103 +3217,103 @@ JWS입니다. 이중 점(<code>..</code>)은 페이로드를 따로(체크아웃
 <tr>
 <td style="text-align: left;">ucp</td>
 <td style="text-align: left;">any</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">UCP metadata for checkout responses.</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">체크아웃 응답용 UCP 메타데이터.</td>
 </tr>
 <tr>
 <td style="text-align: left;">id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">Unique identifier of the checkout session.</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">체크아웃 세션의 고유 식별자.</td>
 </tr>
 <tr>
 <td style="text-align: left;">line_items</td>
 <td style="text-align: left;">Array[object]</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">List of line items being checked out.</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">체크아웃 중인 라인 아이템 목록.</td>
 </tr>
 <tr>
 <td style="text-align: left;">buyer</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Representation of the buyer.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">구매자 정보.</td>
 </tr>
 <tr>
 <td style="text-align: left;">context</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Provisional buyer signals for relevance and localization—not authoritative data. Businesses SHOULD use these values when verified inputs (e.g., shipping address) are absent, and MAY ignore or down-rank them if inconsistent with higher-confidence signals (authenticated account, risk detection) or regulatory constraints (export controls). Eligibility and policy enforcement MUST occur at checkout time using binding transaction data. Context SHOULD be non-identifying and can be disclosed progressively—coarse signals early, finer resolution as the session progresses. Higher-resolution data (shipping address, billing address) supersedes context.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">관련성 판단과 현지화를 위한 잠정적 구매자 신호로, 권위 있는 데이터가 아닙니다. 검증된 입력(예: 배송 주소)이 없으면 비즈니스는 이 값을 사용해야 하며(SHOULD), 더 신뢰도 높은 신호(인증된 계정, 위험 탐지)나 규제 제약(수출 통제)과 맞지 않으면 무시하거나 우선순위를 낮출 수 있습니다(MAY). 자격 판단과 정책 적용은 반드시 체크아웃 시점에 구속력 있는 거래 데이터로 수행해야 합니다(MUST). 컨텍스트는 개인을 식별할 수 없어야 하며(SHOULD), 단계적으로 공개할 수 있습니다. 초기에는 대략적인 신호를, 세션이 진행되면서 더 세밀한 정보를 제공합니다. 더 세밀한 데이터(배송 주소, 청구 주소)가 컨텍스트보다 우선합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">signals</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Environment data provided by the platform to support authorization and abuse prevention. Values MUST NOT be buyer-asserted claims — platforms provide signals based on direct observation or independently verifiable third-party attestations. All signal keys MUST use reverse-domain naming to ensure provenance and prevent collisions when multiple extensions contribute to the shared namespace.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">승인과 악용 방지를 돕기 위해 플랫폼이 제공하는 환경 데이터. 값은 구매자가 주장한 내용이어서는 안 됩니다(MUST NOT). 플랫폼은 직접 관찰했거나 독립적으로 검증 가능한 제3자 증명에 근거한 신호를 제공합니다. 여러 확장이 공유 네임스페이스에 값을 추가할 때 출처를 보장하고 충돌을 막기 위해, 모든 신호 키는 반드시 역도메인 이름을 사용해야 합니다(MUST).</td>
 </tr>
 <tr>
 <td style="text-align: left;">attribution</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Platform-emitted referral and conversion-event context — campaign identifiers, click IDs, source/medium markers, etc. The same parameters platforms communicate via URL query parameters in browser-based flows.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">플랫폼이 내보내는 추천 및 전환 이벤트 맥락: 캠페인 식별자, 클릭 ID, source/medium 마커 등. 브라우저 기반 흐름에서 플랫폼이 URL 쿼리 매개변수로 전달하는 것과 같은 매개변수입니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">status</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">Checkout state indicating the current phase and required action. See Checkout Status lifecycle documentation for state transition details.<br><strong>Enum:</strong> <code>incomplete</code>, <code>requires_escalation</code>, <code>ready_for_complete</code>, <code>complete_in_progress</code>, <code>completed</code>, <code>canceled</code></td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">현재 단계와 필요한 조치를 나타내는 체크아웃 상태. 상태 전이에 대한 자세한 내용은 체크아웃 상태 수명 주기 문서를 참고하세요.<br><strong>허용 값:</strong> <code>incomplete</code>, <code>requires_escalation</code>, <code>ready_for_complete</code>, <code>complete_in_progress</code>, <code>completed</code>, <code>canceled</code></td>
 </tr>
 <tr>
 <td style="text-align: left;">currency</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">ISO 4217 currency code reflecting the merchant's market determination. Derived from address, context, and geo IP—buyers provide signals, merchants determine currency.</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">판매자가 판단한 시장을 반영하는 ISO 4217 통화 코드. 주소, 컨텍스트, geo IP로 결정합니다. 구매자는 신호를 제공하고 통화는 판매자가 결정합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">totals</td>
 <td style="text-align: left;">Array[any]</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">Different cart totals.</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">장바구니의 각종 합계.</td>
 </tr>
 <tr>
 <td style="text-align: left;">messages</td>
 <td style="text-align: left;">Array[object]</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">List of messages with error and info about the checkout session state.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">체크아웃 세션 상태에 대한 오류·정보 메시지 목록.</td>
 </tr>
 <tr>
 <td style="text-align: left;">links</td>
 <td style="text-align: left;">Array[object]</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">Links to be displayed by the platform (Privacy Policy, TOS). Mandatory for legal compliance.</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">플랫폼이 표시할 링크(개인정보처리방침, 이용약관). 법적 준수를 위해 필수입니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">expires_at</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">RFC 3339 expiry timestamp. Default TTL is 6 hours from creation if not sent.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">RFC 3339 만료 타임스탬프입니다. 보내지 않으면 기본 TTL은 생성 시점부터 6시간입니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">continue_url</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">URL for checkout handoff and session recovery. MUST be provided when status is requires_escalation. See specification for format and availability requirements.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">체크아웃 핸드오프와 세션 복구용 URL. status가 requires_escalation이면 반드시 제공해야 합니다(MUST). 형식과 가용성 요구 사항은 명세를 참고하세요.</td>
 </tr>
 <tr>
 <td style="text-align: left;">payment</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Payment configuration containing handlers.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">핸들러를 포함한 결제 구성.</td>
 </tr>
 <tr>
 <td style="text-align: left;">order</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Details about an order created for this checkout session.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">이 체크아웃 세션으로 생성된 주문의 세부 정보.</td>
 </tr>
 <tr>
 <td style="text-align: left;">ap2</td>
 <td style="text-align: left;">any</td>
-<td style="text-align: left;">No</td>
+<td style="text-align: left;">아니요</td>
 <td style="text-align: left;"></td>
 </tr>
 </tbody>
@@ -3383,7 +3383,7 @@ JWS입니다. 이중 점(<code>..</code>)은 페이로드를 따로(체크아웃
 검증합니다.</p>
 <h3 id="step-3-submission-complete_checkout">3단계: 제출(<code>complete_checkout</code>)<a class="headerlink" href="#step-3-submission-complete_checkout" title="Permanent link">&para;</a></h3>
 <p>위임이 생성되면 플랫폼은 이를 완료 요청에 담아 제출합니다.</p>
-<p>AP2 extension data including checkout mandate.</p>
+<p>체크아웃 위임(Mandate)을 포함한 AP2 확장 데이터.</p>
 <table>
 <thead>
 <tr>
@@ -3397,8 +3397,8 @@ JWS입니다. 이중 점(<code>..</code>)은 페이로드를 따로(체크아웃
 <tr>
 <td style="text-align: left;">checkout_mandate</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">SD-JWT+kb proving user authorized this checkout.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">사용자가 이 체크아웃을 승인했음을 증명하는 SD-JWT+kb.</td>
 </tr>
 </tbody>
 </table>
@@ -3478,12 +3478,12 @@ JWS입니다. 이중 점(<code>..</code>)은 페이로드를 따로(체크아웃
 확인이 포함됩니다.</p>
 <h2 id="schema">스키마<a class="headerlink" href="#schema" title="Permanent link">&para;</a></h2>
 <h3 id="merchant-authorization">비즈니스 승인<a class="headerlink" href="#merchant-authorization" title="Permanent link">&para;</a></h3>
-<p>JWS Detached Content signature (RFC 7515 Appendix F) over the checkout response body (excluding ap2 field). Format: <code>&lt;base64url-header&gt;..&lt;base64url-signature&gt;</code>. The header MUST contain 'alg' (ES256/ES384/ES512) and 'kid' claims. The signature covers both the header and JCS-canonicalized checkout payload.</p>
-<p>JWS Detached Content signature (RFC 7515 Appendix F) over the checkout response body (excluding ap2 field). Format: <code>&lt;base64url-header&gt;..&lt;base64url-signature&gt;</code>. The header MUST contain 'alg' (ES256/ES384/ES512) and 'kid' claims. The signature covers both the header and JCS-canonicalized checkout payload.</p>
-<p><strong>Pattern:</strong> <code>^[A-Za-z0-9_-]+\.\.[A-Za-z0-9_-]+$</code></p>
+<p>체크아웃 응답 본문(ap2 필드 제외)에 대한 JWS Detached Content 서명(RFC 7515 Appendix F). 형식: <code>&lt;base64url-header&gt;..&lt;base64url-signature&gt;</code>. 헤더에는 반드시 'alg'(ES256/ES384/ES512)와 'kid' 클레임이 있어야 합니다(MUST). 서명은 헤더와 JCS로 정규화한 체크아웃 페이로드를 모두 대상으로 합니다.</p>
+<p>체크아웃 응답 본문(ap2 필드 제외)에 대한 JWS Detached Content 서명(RFC 7515 Appendix F). 형식: <code>&lt;base64url-header&gt;..&lt;base64url-signature&gt;</code>. 헤더에는 반드시 'alg'(ES256/ES384/ES512)와 'kid' 클레임이 있어야 합니다(MUST). 서명은 헤더와 JCS로 정규화한 체크아웃 페이로드를 모두 대상으로 합니다.</p>
+<p><strong>패턴:</strong> <code>^[A-Za-z0-9_-]+\.\.[A-Za-z0-9_-]+$</code></p>
 <h3 id="ap2-checkout-response">AP2 체크아웃 응답<a class="headerlink" href="#ap2-checkout-response" title="Permanent link">&para;</a></h3>
 <p>체크아웃 응답에 포함되는 <code>ap2</code> 객체입니다.</p>
-<p>AP2 extension data including merchant authorization.</p>
+<p>판매자 인가를 포함한 AP2 확장 데이터.</p>
 <table>
 <thead>
 <tr>
@@ -3497,18 +3497,18 @@ JWS입니다. 이중 점(<code>..</code>)은 페이로드를 따로(체크아웃
 <tr>
 <td style="text-align: left;">merchant_authorization</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Merchant's signature proving checkout terms are authentic.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">체크아웃 조건이 진본임을 증명하는 판매자의 서명.</td>
 </tr>
 </tbody>
 </table>
 <h3 id="checkout-mandate">체크아웃 위임<a class="headerlink" href="#checkout-mandate" title="Permanent link">&para;</a></h3>
-<p>SD-JWT+kb credential in <code>ap2.checkout_mandate</code>. Proving user authorization for the checkout. Contains the full checkout including <code>ap2.merchant_authorization</code>.</p>
-<p>SD-JWT+kb credential in <code>ap2.checkout_mandate</code>. Proving user authorization for the checkout. Contains the full checkout including <code>ap2.merchant_authorization</code>.</p>
-<p><strong>Pattern:</strong> <code>^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]*\.[A-Za-z0-9_-]+(~[A-Za-z0-9_-]+)*$</code></p>
+<p><code>ap2.checkout_mandate</code>에 담기는 SD-JWT+kb 자격 증명입니다. 사용자가 체크아웃을 승인했음을 증명합니다. <code>ap2.merchant_authorization</code>을 포함한 체크아웃 전체가 들어 있습니다.</p>
+<p><code>ap2.checkout_mandate</code>에 담기는 SD-JWT+kb 자격 증명입니다. 사용자가 체크아웃을 승인했음을 증명합니다. <code>ap2.merchant_authorization</code>을 포함한 체크아웃 전체가 들어 있습니다.</p>
+<p><strong>패턴:</strong> <code>^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]*\.[A-Za-z0-9_-]+(~[A-Za-z0-9_-]+)*$</code></p>
 <h3 id="ap2-complete-request">AP2 완료 요청<a class="headerlink" href="#ap2-complete-request" title="Permanent link">&para;</a></h3>
 <p>COMPLETE 체크아웃 요청에 포함되는 <code>ap2</code> 객체입니다.</p>
-<p>AP2 extension data including checkout mandate.</p>
+<p>체크아웃 위임(Mandate)을 포함한 AP2 확장 데이터.</p>
 <table>
 <thead>
 <tr>
@@ -3522,15 +3522,15 @@ JWS입니다. 이중 점(<code>..</code>)은 페이로드를 따로(체크아웃
 <tr>
 <td style="text-align: left;">checkout_mandate</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">SD-JWT+kb proving user authorized this checkout.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">사용자가 이 체크아웃을 승인했음을 증명하는 SD-JWT+kb.</td>
 </tr>
 </tbody>
 </table>
 <h3 id="error-codes">에러 코드<a class="headerlink" href="#error-codes" title="Permanent link">&para;</a></h3>
-<p>Error codes specific to AP2 mandate verification.</p>
-<p>Error codes specific to AP2 mandate verification.</p>
-<p><strong>Enum:</strong> <code>mandate_required</code>, <code>agent_missing_key</code>, <code>mandate_invalid_signature</code>, <code>mandate_expired</code>, <code>mandate_scope_mismatch</code>, <code>merchant_authorization_invalid</code>, <code>merchant_authorization_missing</code></p>
+<p>AP2 위임(Mandate) 검증에 특화된 오류 코드.</p>
+<p>AP2 위임(Mandate) 검증에 특화된 오류 코드.</p>
+<p><strong>허용 값:</strong> <code>mandate_required</code>, <code>agent_missing_key</code>, <code>mandate_invalid_signature</code>, <code>mandate_expired</code>, <code>mandate_scope_mismatch</code>, <code>merchant_authorization_invalid</code>, <code>merchant_authorization_missing</code></p>
 <table>
 <thead>
 <tr>

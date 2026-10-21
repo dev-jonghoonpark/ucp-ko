@@ -82,33 +82,33 @@
 
 ### 주문
 
-| 이름          | 타입                                                                                               | 필수    | 설명                                                                                                                                          |
-| ------------- | -------------------------------------------------------------------------------------------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| ucp           | any                                                                                                | **Yes** | UCP metadata for order responses. No payment handlers needed post-purchase.                                                                   |
-| id            | string                                                                                             | **Yes** | Unique order identifier.                                                                                                                      |
-| label         | string                                                                                             | No      | Human-readable label for identifying the order. MUST only be provided by the business.                                                        |
-| checkout_id   | string                                                                                             | **Yes** | Associated checkout ID for reconciliation.                                                                                                    |
-| permalink_url | string                                                                                             | **Yes** | Permalink to access the order on merchant site.                                                                                               |
-| line_items    | Array\[[Order Line Item](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#order-line-item)\] | **Yes** | Line items representing what was purchased — can change post-order via edits or exchanges.                                                    |
-| fulfillment   | object                                                                                             | **Yes** | Fulfillment data: buyer expectations and what actually happened.                                                                              |
-| adjustments   | Array\[[Adjustment](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#adjustment)\]           | No      | Post-order events (refunds, returns, credits, disputes, cancellations, etc.) that exist independently of fulfillment.                         |
-| currency      | string                                                                                             | **Yes** | ISO 4217 currency code. MUST match the currency from the originating checkout session.                                                        |
-| totals        | [Totals](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#totals)                            | **Yes** | Different totals for the order.                                                                                                               |
-| messages      | Array\[[Message](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#message)\]                 | No      | Business outcome messages (errors, warnings, informational). Present when the business needs to communicate status or issues to the platform. |
-| attribution   | [Attribution](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#attribution)                  | No      | Snapshot of the attribution associated with the originating checkout. Read-only on the order.                                                 |
+| 이름          | 타입                                                                                               | 필수   | 설명                                                                                                 |
+| ------------- | -------------------------------------------------------------------------------------------------- | ------ | ---------------------------------------------------------------------------------------------------- |
+| ucp           | any                                                                                                | **예** | 주문 응답용 UCP 메타데이터. 구매 후에는 결제 핸들러가 필요 없습니다.                                 |
+| id            | string                                                                                             | **예** | 고유 주문 식별자.                                                                                    |
+| label         | string                                                                                             | 아니요 | 주문을 식별하기 위한 사람이 읽을 수 있는 라벨. 반드시 비즈니스만 제공해야 합니다(MUST).              |
+| checkout_id   | string                                                                                             | **예** | 정산 대사를 위한 연관 체크아웃 ID.                                                                   |
+| permalink_url | string                                                                                             | **예** | 판매자 사이트에서 주문에 접근하는 퍼머링크.                                                          |
+| line_items    | Array\[[Order Line Item](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#order-line-item)\] | **예** | 구매한 항목을 나타내는 라인 아이템. 주문 후 수정이나 교환으로 바뀔 수 있습니다.                      |
+| fulfillment   | object                                                                                             | **예** | 풀필먼트 데이터: 구매자 예상 정보와 실제로 일어난 일.                                                |
+| adjustments   | Array\[[Adjustment](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#adjustment)\]           | 아니요 | 풀필먼트와 독립적으로 존재하는 주문 후 이벤트(환불, 반품, 크레딧, 분쟁, 취소 등).                    |
+| currency      | string                                                                                             | **예** | ISO 4217 통화 코드. 반드시 원래 체크아웃 세션의 통화와 일치해야 합니다(MUST).                        |
+| totals        | [Totals](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#totals)                            | **예** | 주문의 각종 합계.                                                                                    |
+| messages      | Array\[[Message](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#message)\]                 | 아니요 | 비즈니스 결과 메시지(오류, 경고, 정보). 비즈니스가 플랫폼에 상태나 문제를 전달해야 할 때 포함됩니다. |
+| attribution   | [Attribution](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#attribution)                  | 아니요 | 원래 체크아웃과 연결된 어트리뷰션의 스냅샷입니다. 주문에서는 읽기 전용입니다.                        |
 
 ### 주문 라인 아이템
 
 라인 아이템은 체크아웃에서 구매한 항목과 그 현재 상태를 반영합니다.
 
-| 이름      | 타입                                                                           | 필수    | 설명                                                                                                                                                                                                                                                                |
-| --------- | ------------------------------------------------------------------------------ | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| id        | string                                                                         | **Yes** | Line item identifier.                                                                                                                                                                                                                                               |
-| item      | [Item](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#item)            | **Yes** | Product data (id, title, price, image_url).                                                                                                                                                                                                                         |
-| quantity  | object                                                                         | **Yes** | Quantity tracking for the line item.                                                                                                                                                                                                                                |
-| totals    | Array\[[Total](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#total)\] | **Yes** | Line item totals breakdown.                                                                                                                                                                                                                                         |
-| status    | string                                                                         | **Yes** | Derived status: removed if quantity.total == 0, fulfilled if quantity.total > 0 and quantity.fulfilled == quantity.total, partial if quantity.total > 0 and quantity.fulfilled > 0, otherwise processing. **Enum:** `processing`, `partial`, `fulfilled`, `removed` |
-| parent_id | string                                                                         | No      | Parent line item identifier for any nested structures.                                                                                                                                                                                                              |
+| 이름      | 타입                                                                           | 필수   | 설명                                                                                                                                                                                                                                                                 |
+| --------- | ------------------------------------------------------------------------------ | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| id        | string                                                                         | **예** | 라인 아이템 식별자.                                                                                                                                                                                                                                                  |
+| item      | [Item](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#item)            | **예** | 상품 데이터(id, title, price, image_url).                                                                                                                                                                                                                            |
+| quantity  | object                                                                         | **예** | 라인 아이템의 수량 추적 정보.                                                                                                                                                                                                                                        |
+| totals    | Array\[[Total](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#total)\] | **예** | 라인 아이템 합계 내역.                                                                                                                                                                                                                                               |
+| status    | string                                                                         | **예** | 파생 상태: quantity.total == 0이면 removed, quantity.total > 0이고 quantity.fulfilled == quantity.total이면 fulfilled, quantity.total > 0이고 quantity.fulfilled > 0이면 partial, 그 밖에는 processing. **허용 값:** `processing`, `partial`, `fulfilled`, `removed` |
+| parent_id | string                                                                         | 아니요 | 중첩 구조에 사용하는 상위 라인 아이템 식별자.                                                                                                                                                                                                                        |
 
 **수량 구조:**
 
@@ -133,29 +133,29 @@ else → "processing"
 
 예상은 상품이 언제/어떻게 전달될지를 구매자에게 보여 주는 묶음입니다. 구매자에게 하는 현재의 약속을 나타내며, 주문 후에 분할, 병합, 조정될 수 있습니다.
 
-| 이름           | 타입                                                                                    | 필수    | 설명                                                                                                        |
-| -------------- | --------------------------------------------------------------------------------------- | ------- | ----------------------------------------------------------------------------------------------------------- |
-| id             | string                                                                                  | **Yes** | Expectation identifier.                                                                                     |
-| line_items     | Array[object]                                                                           | **Yes** | Which line items and quantities are in this expectation.                                                    |
-| method_type    | string                                                                                  | **Yes** | Delivery method type (shipping, pickup, digital). **Enum:** `shipping`, `pickup`, `digital`                 |
-| destination    | [Postal Address](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#postal-address) | **Yes** | Delivery destination address.                                                                               |
-| description    | string                                                                                  | No      | Human-readable delivery description (e.g., 'Arrives in 5-8 business days').                                 |
-| fulfillable_on | string                                                                                  | No      | When this expectation can be fulfilled: 'now' or ISO 8601 timestamp for future date (backorder, pre-order). |
+| 이름           | 타입                                                                                    | 필수   | 설명                                                                                                       |
+| -------------- | --------------------------------------------------------------------------------------- | ------ | ---------------------------------------------------------------------------------------------------------- |
+| id             | string                                                                                  | **예** | 예상 정보 식별자.                                                                                          |
+| line_items     | Array[object]                                                                           | **예** | 이 예상 배송에 포함된 라인 아이템과 수량.                                                                  |
+| method_type    | string                                                                                  | **예** | 배송 방식 유형(shipping, pickup, digital). **허용 값:** `shipping`, `pickup`, `digital`                    |
+| destination    | [Postal Address](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#postal-address) | **예** | 배송 목적지 주소.                                                                                          |
+| description    | string                                                                                  | 아니요 | 사람이 읽을 수 있는 배송 설명(예: 'Arrives in 5-8 business days').                                         |
+| fulfillable_on | string                                                                                  | 아니요 | 이 예상 배송을 이행할 수 있는 시점: 'now' 또는 향후 날짜(이월 주문, 사전 주문)에 대한 ISO 8601 타임스탬프. |
 
 ### 풀필먼트 이벤트
 
 이벤트는 실제 발송을 추적하는 추가 전용 기록입니다. `type` 필드는 개방형 문자열이며, 비즈니스는 자신의 풀필먼트 프로세스에 맞는 값이면 무엇이든 쓸 수 있습니다.
 
-| 이름            | 타입          | 필수    | 설명                                                                                                                                                                                                                                                                                                                                    |
-| --------------- | ------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| id              | string        | **Yes** | Fulfillment event identifier.                                                                                                                                                                                                                                                                                                           |
-| occurred_at     | string        | **Yes** | RFC 3339 timestamp when this fulfillment event occurred.                                                                                                                                                                                                                                                                                |
-| type            | string        | **Yes** | Fulfillment event type. Common values include: processing (preparing to ship), shipped (handed to carrier), in_transit (in delivery network), delivered (received by buyer), failed_attempt (delivery attempt failed), canceled (fulfillment canceled), undeliverable (cannot be delivered), returned_to_sender (returned to merchant). |
-| line_items      | Array[object] | **Yes** | Which line items and quantities are fulfilled in this event.                                                                                                                                                                                                                                                                            |
-| tracking_number | string        | No      | Carrier tracking number (required if type != processing).                                                                                                                                                                                                                                                                               |
-| tracking_url    | string        | No      | URL to track this shipment (required if type != processing).                                                                                                                                                                                                                                                                            |
-| carrier         | string        | No      | Carrier name (e.g., 'FedEx', 'USPS').                                                                                                                                                                                                                                                                                                   |
-| description     | string        | No      | Human-readable description of the shipment status or delivery information (e.g., 'Delivered to front door', 'Out for delivery').                                                                                                                                                                                                        |
+| 이름            | 타입          | 필수   | 설명                                                                                                                                                                                                                                                                           |
+| --------------- | ------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| id              | string        | **예** | 풀필먼트 이벤트 식별자.                                                                                                                                                                                                                                                        |
+| occurred_at     | string        | **예** | 이 풀필먼트 이벤트가 발생한 시점의 RFC 3339 타임스탬프.                                                                                                                                                                                                                        |
+| type            | string        | **예** | 풀필먼트 이벤트 유형. 일반적인 값: processing(배송 준비 중), shipped(운송사에 인계됨), in_transit(배송망에서 이동 중), delivered(구매자가 수령함), failed_attempt(배송 시도 실패), canceled(풀필먼트 취소됨), undeliverable(배송 불가), returned_to_sender(판매자에게 반송됨). |
+| line_items      | Array[object] | **예** | 이 이벤트에서 풀필먼트된 라인 아이템과 수량.                                                                                                                                                                                                                                   |
+| tracking_number | string        | 아니요 | 운송사 추적 번호(type != processing이면 필수).                                                                                                                                                                                                                                 |
+| tracking_url    | string        | 아니요 | 이 배송을 추적하는 URL(type != processing이면 필수).                                                                                                                                                                                                                           |
+| carrier         | string        | 아니요 | 운송사 이름(예: 'FedEx', 'USPS').                                                                                                                                                                                                                                              |
+| description     | string        | 아니요 | 사람이 읽을 수 있는 배송 상태 또는 배송 정보 설명(예: 'Delivered to front door', 'Out for delivery').                                                                                                                                                                          |
 
 예: `processing`, `shipped`, `in_transit`, `delivered`, `failed_attempt`, `canceled`, `undeliverable`, `returned_to_sender` 등.
 
@@ -163,15 +163,15 @@ else → "processing"
 
 조정은 풀필먼트와 별개로 존재하는 다형적 이벤트입니다. `type` 필드는 개방형 문자열이며, 비즈니스는 자신에게 맞는 값이면 무엇이든 쓸 수 있습니다.
 
-| 이름        | 타입                                                                           | 필수    | 설명                                                                                                                                                                                            |
-| ----------- | ------------------------------------------------------------------------------ | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| id          | string                                                                         | **Yes** | Adjustment event identifier.                                                                                                                                                                    |
-| type        | string                                                                         | **Yes** | Type of adjustment (open string). Typically money-related like: refund, return, credit, price_adjustment, dispute, cancellation. Can be any value that makes sense for the merchant's business. |
-| occurred_at | string                                                                         | **Yes** | RFC 3339 timestamp when this adjustment occurred.                                                                                                                                               |
-| status      | string                                                                         | **Yes** | Adjustment status. **Enum:** `pending`, `completed`, `failed`                                                                                                                                   |
-| line_items  | Array[object]                                                                  | No      | Which line items and quantities are affected (optional).                                                                                                                                        |
-| totals      | Array\[[Total](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#total)\] | No      | Adjustment totals breakdown. Signed values - negative for money returned to buyer (refunds, credits), positive for additional charges (exchanges).                                              |
-| description | string                                                                         | No      | Human-readable reason or description (e.g., 'Defective item', 'Customer requested').                                                                                                            |
+| 이름        | 타입                                                                           | 필수   | 설명                                                                                                                                                                                    |
+| ----------- | ------------------------------------------------------------------------------ | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| id          | string                                                                         | **예** | 조정 이벤트 식별자.                                                                                                                                                                     |
+| type        | string                                                                         | **예** | 조정 유형(개방형 문자열). 일반적으로 refund, return, credit, price_adjustment, dispute, cancellation처럼 금전과 관련된 값입니다. 판매자 비즈니스에 맞는 어떤 값이든 사용할 수 있습니다. |
+| occurred_at | string                                                                         | **예** | 이 조정이 발생한 시점의 RFC 3339 타임스탬프.                                                                                                                                            |
+| status      | string                                                                         | **예** | 조정 상태. **허용 값:** `pending`, `completed`, `failed`                                                                                                                                |
+| line_items  | Array[object]                                                                  | 아니요 | 영향을 받는 라인 아이템과 수량(선택 사항).                                                                                                                                              |
+| totals      | Array\[[Total](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#total)\] | 아니요 | 조정 합계 내역. 부호가 있는 값으로, 구매자에게 돌려주는 금액(환불, 크레딧)은 음수, 추가 청구(교환)는 양수입니다.                                                                        |
+| description | string                                                                         | 아니요 | 사람이 읽을 수 있는 사유 또는 설명(예: 'Defective item', 'Customer requested').                                                                                                         |
 
 예: `refund`, `return`, `credit`, `price_adjustment`, `dispute`, `cancellation` 등.
 
@@ -401,34 +401,34 @@ else → "processing"
 
 **Inputs**
 
-| 이름          | 타입                                                                                               | 필수    | 설명                                                                                                                                          |
-| ------------- | -------------------------------------------------------------------------------------------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| ucp           | any                                                                                                | **Yes** | UCP metadata for order responses. No payment handlers needed post-purchase.                                                                   |
-| id            | string                                                                                             | **Yes** | Unique order identifier.                                                                                                                      |
-| label         | string                                                                                             | No      | Human-readable label for identifying the order. MUST only be provided by the business.                                                        |
-| checkout_id   | string                                                                                             | **Yes** | Associated checkout ID for reconciliation.                                                                                                    |
-| permalink_url | string                                                                                             | **Yes** | Permalink to access the order on merchant site.                                                                                               |
-| line_items    | Array\[[Order Line Item](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#order-line-item)\] | **Yes** | Line items representing what was purchased — can change post-order via edits or exchanges.                                                    |
-| fulfillment   | object                                                                                             | **Yes** | Fulfillment data: buyer expectations and what actually happened.                                                                              |
-| adjustments   | Array\[[Adjustment](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#adjustment)\]           | No      | Post-order events (refunds, returns, credits, disputes, cancellations, etc.) that exist independently of fulfillment.                         |
-| totals        | [Totals](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#totals)                            | **Yes** | Different totals for the order.                                                                                                               |
-| messages      | Array\[[Message](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#message)\]                 | No      | Business outcome messages (errors, warnings, informational). Present when the business needs to communicate status or issues to the platform. |
+| 이름          | 타입                                                                                               | 필수   | 설명                                                                                                 |
+| ------------- | -------------------------------------------------------------------------------------------------- | ------ | ---------------------------------------------------------------------------------------------------- |
+| ucp           | any                                                                                                | **예** | 주문 응답용 UCP 메타데이터. 구매 후에는 결제 핸들러가 필요 없습니다.                                 |
+| id            | string                                                                                             | **예** | 고유 주문 식별자.                                                                                    |
+| label         | string                                                                                             | 아니요 | 주문을 식별하기 위한 사람이 읽을 수 있는 라벨. 반드시 비즈니스만 제공해야 합니다(MUST).              |
+| checkout_id   | string                                                                                             | **예** | 정산 대사를 위한 연관 체크아웃 ID.                                                                   |
+| permalink_url | string                                                                                             | **예** | 판매자 사이트에서 주문에 접근하는 퍼머링크.                                                          |
+| line_items    | Array\[[Order Line Item](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#order-line-item)\] | **예** | 구매한 항목을 나타내는 라인 아이템. 주문 후 수정이나 교환으로 바뀔 수 있습니다.                      |
+| fulfillment   | object                                                                                             | **예** | 풀필먼트 데이터: 구매자 예상 정보와 실제로 일어난 일.                                                |
+| adjustments   | Array\[[Adjustment](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#adjustment)\]           | 아니요 | 풀필먼트와 독립적으로 존재하는 주문 후 이벤트(환불, 반품, 크레딧, 분쟁, 취소 등).                    |
+| totals        | [Totals](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#totals)                            | **예** | 주문의 각종 합계.                                                                                    |
+| messages      | Array\[[Message](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#message)\]                 | 아니요 | 비즈니스 결과 메시지(오류, 경고, 정보). 비즈니스가 플랫폼에 상태나 문제를 전달해야 할 때 포함됩니다. |
 
 **Output**
 
-| 이름 | 타입                                                          | 필수    | 설명 |
-| ---- | ------------------------------------------------------------- | ------- | ---- |
-| ucp  | [Ucp](/ucp-ko/2026-04-08/2026-04-08/specification/order/#ucp) | **Yes** |      |
+| 이름 | 타입                                                          | 필수   | 설명 |
+| ---- | ------------------------------------------------------------- | ------ | ---- |
+| ucp  | [Ucp](/ucp-ko/2026-04-08/2026-04-08/specification/order/#ucp) | **예** |      |
 
 ### 웹훅 URL 설정
 
 플랫폼은 기능 협상 과정에서 주문 기능의 `config` 필드에 웹훅 URL을 넣어 둡니다. 비즈니스는 플랫폼 프로필에서 이 URL을 찾아 주문 수명 주기 이벤트를 보낼 때 사용합니다.
 
-Platform's order capability configuration.
+플랫폼의 주문 기능 구성.
 
-| 이름        | 타입   | 필수    | 설명                                                        |
-| ----------- | ------ | ------- | ----------------------------------------------------------- |
-| webhook_url | string | **Yes** | URL where merchant sends order lifecycle events (webhooks). |
+| 이름        | 타입   | 필수   | 설명                                               |
+| ----------- | ------ | ------ | -------------------------------------------------- |
+| webhook_url | string | **예** | 판매자가 주문 수명 주기 이벤트(웹훅)를 보내는 URL. |
 
 **예시:**
 
@@ -525,57 +525,57 @@ Signature: sig1=:MEUCIQDTxNq8h7LGHpvVZQp1iHkFp9+3N8Mxk2zH1wK4YuVN8w...:
 
 ### 상품
 
-| 이름      | 타입                                                                    | 필수    | 설명                                                                                                                                                                        |
-| --------- | ----------------------------------------------------------------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| id        | string                                                                  | **Yes** | The product identifier, often the SKU, required to resolve the product details associated with this line item. Should be recognized by both the Platform, and the Business. |
-| title     | string                                                                  | **Yes** | Product title.                                                                                                                                                              |
-| price     | [Amount](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#amount) | **Yes** | Unit price in ISO 4217 minor units.                                                                                                                                         |
-| image_url | string                                                                  | No      | Product image URI.                                                                                                                                                          |
+| 이름      | 타입                                                                    | 필수   | 설명                                                                                                                                       |
+| --------- | ----------------------------------------------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| id        | string                                                                  | **예** | 이 라인 아이템에 연결된 상품 세부 정보를 확인하는 데 필요한 상품 식별자로, 주로 SKU입니다. 플랫폼과 비즈니스 모두 인식할 수 있어야 합니다. |
+| title     | string                                                                  | **예** | 상품 제목.                                                                                                                                 |
+| price     | [Amount](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#amount) | **예** | ISO 4217 최소 단위로 표시한 단가.                                                                                                          |
+| image_url | string                                                                  | 아니요 | 상품 이미지 URI.                                                                                                                           |
 
 ### 우편 주소
 
-| 이름             | 타입   | 필수 | 설명                                                                                                                                                                                                                                      |
-| ---------------- | ------ | ---- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| extended_address | string | No   | An address extension such as an apartment number, C/O or alternative name.                                                                                                                                                                |
-| street_address   | string | No   | The street address.                                                                                                                                                                                                                       |
-| address_locality | string | No   | The locality in which the street address is, and which is in the region. For example, Mountain View.                                                                                                                                      |
-| address_region   | string | No   | The region in which the locality is, and which is in the country. Required for applicable countries (i.e. state in US, province in CA). For example, California or another appropriate first-level Administrative division.               |
-| address_country  | string | No   | The country. Recommended to be in 2-letter ISO 3166-1 alpha-2 format, for example "US". For backward compatibility, a 3-letter ISO 3166-1 alpha-3 country code such as "SGP" or a full country name such as "Singapore" can also be used. |
-| postal_code      | string | No   | The postal code. For example, 94043.                                                                                                                                                                                                      |
-| first_name       | string | No   | Optional. First name of the contact associated with the address.                                                                                                                                                                          |
-| last_name        | string | No   | Optional. Last name of the contact associated with the address.                                                                                                                                                                           |
-| phone_number     | string | No   | Optional. Phone number of the contact associated with the address.                                                                                                                                                                        |
+| 이름             | 타입   | 필수   | 설명                                                                                                                                                                              |
+| ---------------- | ------ | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| extended_address | string | 아니요 | 아파트 호수, C/O, 대체 이름 같은 주소 보충 정보.                                                                                                                                  |
+| street_address   | string | 아니요 | 도로명 주소.                                                                                                                                                                      |
+| address_locality | string | 아니요 | 도로명 주소가 속하고 해당 지역 안에 있는 시·군·구. 예: Mountain View.                                                                                                             |
+| address_region   | string | 아니요 | 시·군·구가 속하고 해당 국가 안에 있는 지역. 해당하는 국가에서는 필수입니다(예: 미국의 주, 캐나다의 주). 예: California 또는 그 밖의 적절한 1차 행정 구역.                         |
+| address_country  | string | 아니요 | 국가. 2자리 ISO 3166-1 alpha-2 형식(예: "US")을 권장합니다. 하위 호환성을 위해 "SGP" 같은 3자리 ISO 3166-1 alpha-3 국가 코드나 "Singapore" 같은 전체 국가명도 사용할 수 있습니다. |
+| postal_code      | string | 아니요 | 우편번호. 예: 94043.                                                                                                                                                              |
+| first_name       | string | 아니요 | 선택 사항. 주소와 연결된 연락처의 이름.                                                                                                                                           |
+| last_name        | string | 아니요 | 선택 사항. 주소와 연결된 연락처의 성.                                                                                                                                             |
+| phone_number     | string | 아니요 | 선택 사항. 주소와 연결된 연락처의 전화번호.                                                                                                                                       |
 
 ### 응답
 
-Capability reference in responses. Only name/version required to confirm active capabilities.
+응답의 기능 참조. 활성 기능을 확인하는 데는 name/version만 있으면 됩니다.
 
-| 이름    | 타입    | 필수    | 설명                                                                                                                            |
-| ------- | ------- | ------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| version | string  | **Yes** | Entity version in YYYY-MM-DD format.                                                                                            |
-| spec    | string  | No      | URL to human-readable specification document.                                                                                   |
-| schema  | string  | No      | URL to JSON Schema defining this entity's structure and payloads.                                                               |
-| id      | string  | No      | Unique identifier for this entity instance. Used to disambiguate when multiple instances exist.                                 |
-| config  | object  | No      | Entity-specific configuration. Structure defined by each entity's schema.                                                       |
-| extends | OneOf[] | No      | Parent capability(s) this extends. Present for extensions, absent for root capabilities. Use array for multi-parent extensions. |
+| 이름    | 타입    | 필수   | 설명                                                                                                        |
+| ------- | ------- | ------ | ----------------------------------------------------------------------------------------------------------- |
+| version | string  | **예** | YYYY-MM-DD 형식의 엔티티 버전.                                                                              |
+| spec    | string  | 아니요 | 사람이 읽을 수 있는 명세 문서의 URL.                                                                        |
+| schema  | string  | 아니요 | 이 엔터티의 구조와 페이로드를 정의하는 JSON Schema의 URL.                                                   |
+| id      | string  | 아니요 | 이 엔터티 인스턴스의 고유 식별자. 인스턴스가 여러 개일 때 구분하는 데 사용합니다.                           |
+| config  | object  | 아니요 | 엔티티별 구성. 구조는 각 엔티티의 스키마가 정의합니다.                                                      |
+| extends | OneOf[] | 아니요 | 이 항목이 확장하는 상위 기능. 확장에는 있고 루트 기능에는 없습니다. 상위가 여럿인 확장은 배열을 사용합니다. |
 
 ### 합계
 
-| 이름         | 타입                                                                                  | 필수    | 설명                                                                                                                                                                                                                                                                                        |
-| ------------ | ------------------------------------------------------------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| type         | string                                                                                | **Yes** | Cost category. Well-known values: subtotal, items_discount, discount, fulfillment, tax, fee, total. Businesses MAY use additional values.                                                                                                                                                   |
-| display_text | string                                                                                | No      | Text to display against the amount. Should reflect appropriate method (e.g., 'Shipping', 'Delivery').                                                                                                                                                                                       |
-| amount       | [Signed Amount](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#signed-amount) | **Yes** | Monetary amount in the currency's minor unit as defined by ISO 4217. Refer to the currency's exponent to determine minor-to-major ratio (e.g., 2 for USD, 0 for JPY, 3 for KWD). May be negative — the sign is intrinsic to the value (e.g., discounts are negative, charges are positive). |
+| 이름         | 타입                                                                                  | 필수   | 설명                                                                                                                                                                                                                        |
+| ------------ | ------------------------------------------------------------------------------------- | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| type         | string                                                                                | **예** | 비용 범주. 잘 알려진 값: subtotal, items_discount, discount, fulfillment, tax, fee, total. 비즈니스는 추가 값을 사용할 수 있습니다(MAY).                                                                                    |
+| display_text | string                                                                                | 아니요 | 금액 옆에 표시할 텍스트. 적절한 방식을 반영해야 합니다(예: 'Shipping', 'Delivery').                                                                                                                                         |
+| amount       | [Signed Amount](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#signed-amount) | **예** | ISO 4217에 정의된 통화의 최소 단위로 나타낸 금액. 최소 단위와 기본 단위의 비율은 통화의 지수를 참고합니다(예: USD는 2, JPY는 0, KWD는 3). 음수일 수 있으며, 부호는 값 자체에 포함됩니다(예: 할인은 음수, 청구 금액은 양수). |
 
 ### UCP 응답 주문 스키마
 
-UCP metadata for order responses. No payment handlers needed post-purchase.
+주문 응답용 UCP 메타데이터. 구매 후에는 결제 핸들러가 필요 없습니다.
 
-| 이름             | 타입   | 필수    | 설명                                                                        |
-| ---------------- | ------ | ------- | --------------------------------------------------------------------------- |
-| version          | string | **Yes** | UCP version in YYYY-MM-DD format.                                           |
-| status           | string | No      | Application-level status of the UCP operation. **Enum:** `success`, `error` |
-| services         | object | No      | Service registry keyed by reverse-domain name.                              |
-| capabilities     | object | No      | Capability registry keyed by reverse-domain name.                           |
-| payment_handlers | object | No      | Payment handler registry keyed by reverse-domain name.                      |
-| capabilities     | any    | No      |                                                                             |
+| 이름             | 타입   | 필수   | 설명                                                               |
+| ---------------- | ------ | ------ | ------------------------------------------------------------------ |
+| version          | string | **예** | YYYY-MM-DD 형식의 UCP 버전.                                        |
+| status           | string | 아니요 | UCP 작업의 애플리케이션 수준 상태. **허용 값:** `success`, `error` |
+| services         | object | 아니요 | 역도메인 이름을 키로 하는 서비스 레지스트리.                       |
+| capabilities     | object | 아니요 | 역도메인 이름을 키로 하는 기능 레지스트리.                         |
+| payment_handlers | object | 아니요 | 역 도메인 이름을 키로 하는 결제 핸들러 레지스트리.                 |
+| capabilities     | any    | 아니요 |                                                                    |

@@ -37,14 +37,14 @@
 
 ### Consent 객체
 
-User consent states for data processing
+데이터 처리에 대한 사용자 동의 상태
 
-| 이름         | 타입    | 필수 | 설명                                              |
-| ------------ | ------- | ---- | ------------------------------------------------- |
-| analytics    | boolean | No   | Consent for analytics and performance tracking.   |
-| preferences  | boolean | No   | Consent for storing user preferences.             |
-| marketing    | boolean | No   | Consent for marketing communications.             |
-| sale_of_data | boolean | No   | Consent for selling data to third parties (CCPA). |
+| 이름         | 타입    | 필수   | 설명                                 |
+| ------------ | ------- | ------ | ------------------------------------ |
+| analytics    | boolean | 아니요 | 분석 및 성능 추적에 대한 동의.       |
+| preferences  | boolean | 아니요 | 사용자 환경설정 저장에 대한 동의.    |
+| marketing    | boolean | 아니요 | 마케팅 커뮤니케이션 수신 동의.       |
+| sale_of_data | boolean | 아니요 | 제3자에 대한 데이터 판매 동의(CCPA). |
 
 ## 사용법
 

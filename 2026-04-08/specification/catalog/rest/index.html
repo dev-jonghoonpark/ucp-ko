@@ -2966,38 +2966,38 @@
 <tr>
 <td style="text-align: left;">query</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Free-text search query.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">자유 텍스트 검색어.</td>
 </tr>
 <tr>
 <td style="text-align: left;">context</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-04-08/2026-04-08/specification/reference/#context">Context</a></td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Provisional buyer signals for relevance and localization—not authoritative data. Businesses SHOULD use these values when verified inputs (e.g., shipping address) are absent, and MAY ignore or down-rank them if inconsistent with higher-confidence signals (authenticated account, risk detection) or regulatory constraints (export controls). Eligibility and policy enforcement MUST occur at checkout time using binding transaction data. Context SHOULD be non-identifying and can be disclosed progressively—coarse signals early, finer resolution as the session progresses. Higher-resolution data (shipping address, billing address) supersedes context.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">관련성 판단과 현지화를 위한 잠정적 구매자 신호로, 권위 있는 데이터가 아닙니다. 검증된 입력(예: 배송 주소)이 없으면 비즈니스는 이 값을 사용해야 하며(SHOULD), 더 신뢰도 높은 신호(인증된 계정, 위험 탐지)나 규제 제약(수출 통제)과 맞지 않으면 무시하거나 우선순위를 낮출 수 있습니다(MAY). 자격 판단과 정책 적용은 반드시 체크아웃 시점에 구속력 있는 거래 데이터로 수행해야 합니다(MUST). 컨텍스트는 개인을 식별할 수 없어야 하며(SHOULD), 단계적으로 공개할 수 있습니다. 초기에는 대략적인 신호를, 세션이 진행되면서 더 세밀한 정보를 제공합니다. 더 세밀한 데이터(배송 주소, 청구 주소)가 컨텍스트보다 우선합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">signals</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-04-08/2026-04-08/specification/reference/#signals">Signals</a></td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Environment data provided by the platform to support authorization and abuse prevention. Values MUST NOT be buyer-asserted claims — platforms provide signals based on direct observation or independently verifiable third-party attestations. All signal keys MUST use reverse-domain naming to ensure provenance and prevent collisions when multiple extensions contribute to the shared namespace.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">승인과 악용 방지를 돕기 위해 플랫폼이 제공하는 환경 데이터. 값은 구매자가 주장한 내용이어서는 안 됩니다(MUST NOT). 플랫폼은 직접 관찰했거나 독립적으로 검증 가능한 제3자 증명에 근거한 신호를 제공합니다. 여러 확장이 공유 네임스페이스에 값을 추가할 때 출처를 보장하고 충돌을 막기 위해, 모든 신호 키는 반드시 역도메인 이름을 사용해야 합니다(MUST).</td>
 </tr>
 <tr>
 <td style="text-align: left;">attribution</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-04-08/2026-04-08/specification/reference/#attribution">Attribution</a></td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Platform-emitted referral and conversion-event context — campaign identifiers, click IDs, source/medium markers, etc. The same parameters platforms communicate via URL query parameters in browser-based flows.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">플랫폼이 내보내는 추천 및 전환 이벤트 맥락: 캠페인 식별자, 클릭 ID, source/medium 마커 등. 브라우저 기반 흐름에서 플랫폼이 URL 쿼리 매개변수로 전달하는 것과 같은 매개변수입니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">filters</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-04-08/2026-04-08/specification/reference/#search-filters">Search Filters</a></td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Filter criteria to narrow search results. All specified filters combine with AND logic.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">검색 결과를 좁히는 필터 조건. 지정한 모든 필터는 AND 논리로 결합됩니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">pagination</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-04-08/2026-04-08/specification/reference/#pagination-request">Pagination Request</a></td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Cursor-based pagination for list operations.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">목록 작업을 위한 커서 기반 페이지네이션.</td>
 </tr>
 </tbody>
 </table>
@@ -3015,26 +3015,26 @@
 <tr>
 <td style="text-align: left;">ucp</td>
 <td style="text-align: left;">any</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">UCP metadata for catalog responses.</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">카탈로그 응답용 UCP 메타데이터.</td>
 </tr>
 <tr>
 <td style="text-align: left;">products</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/2026-04-08/2026-04-08/specification/reference/#product">Product</a>]</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">Products matching the search criteria.</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">검색 조건과 일치하는 상품.</td>
 </tr>
 <tr>
 <td style="text-align: left;">pagination</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-04-08/2026-04-08/specification/reference/#pagination-response">Pagination Response</a></td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Cursor-based pagination for list operations.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">목록 작업을 위한 커서 기반 페이지네이션.</td>
 </tr>
 <tr>
 <td style="text-align: left;">messages</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/2026-04-08/2026-04-08/specification/reference/#message">Message</a>]</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Errors, warnings, or informational messages about the search results.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">검색 결과에 관한 오류, 경고, 정보 메시지.</td>
 </tr>
 </tbody>
 </table>
@@ -3173,32 +3173,32 @@
 <tr>
 <td style="text-align: left;">ids</td>
 <td style="text-align: left;">Array[string]</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">Identifiers to lookup. Implementations MUST support product ID and variant ID; MAY support secondary identifiers (SKU, handle, etc.).</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">조회할 식별자. 구현은 반드시 상품 ID와 변형 ID를 지원해야 하며(MUST), 보조 식별자(SKU, handle 등)를 지원할 수 있습니다(MAY).</td>
 </tr>
 <tr>
 <td style="text-align: left;">filters</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-04-08/2026-04-08/specification/reference/#search-filters">Search Filters</a></td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Filter criteria to narrow returned products and variants. All specified filters combine with AND logic.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">반환되는 상품과 변형을 좁히는 필터 조건. 지정한 모든 필터는 AND 논리로 결합됩니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">context</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-04-08/2026-04-08/specification/reference/#context">Context</a></td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Provisional buyer signals for relevance and localization—not authoritative data. Businesses SHOULD use these values when verified inputs (e.g., shipping address) are absent, and MAY ignore or down-rank them if inconsistent with higher-confidence signals (authenticated account, risk detection) or regulatory constraints (export controls). Eligibility and policy enforcement MUST occur at checkout time using binding transaction data. Context SHOULD be non-identifying and can be disclosed progressively—coarse signals early, finer resolution as the session progresses. Higher-resolution data (shipping address, billing address) supersedes context.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">관련성 판단과 현지화를 위한 잠정적 구매자 신호로, 권위 있는 데이터가 아닙니다. 검증된 입력(예: 배송 주소)이 없으면 비즈니스는 이 값을 사용해야 하며(SHOULD), 더 신뢰도 높은 신호(인증된 계정, 위험 탐지)나 규제 제약(수출 통제)과 맞지 않으면 무시하거나 우선순위를 낮출 수 있습니다(MAY). 자격 판단과 정책 적용은 반드시 체크아웃 시점에 구속력 있는 거래 데이터로 수행해야 합니다(MUST). 컨텍스트는 개인을 식별할 수 없어야 하며(SHOULD), 단계적으로 공개할 수 있습니다. 초기에는 대략적인 신호를, 세션이 진행되면서 더 세밀한 정보를 제공합니다. 더 세밀한 데이터(배송 주소, 청구 주소)가 컨텍스트보다 우선합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">signals</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-04-08/2026-04-08/specification/reference/#signals">Signals</a></td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Environment data provided by the platform to support authorization and abuse prevention. Values MUST NOT be buyer-asserted claims — platforms provide signals based on direct observation or independently verifiable third-party attestations. All signal keys MUST use reverse-domain naming to ensure provenance and prevent collisions when multiple extensions contribute to the shared namespace.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">승인과 악용 방지를 돕기 위해 플랫폼이 제공하는 환경 데이터. 값은 구매자가 주장한 내용이어서는 안 됩니다(MUST NOT). 플랫폼은 직접 관찰했거나 독립적으로 검증 가능한 제3자 증명에 근거한 신호를 제공합니다. 여러 확장이 공유 네임스페이스에 값을 추가할 때 출처를 보장하고 충돌을 막기 위해, 모든 신호 키는 반드시 역도메인 이름을 사용해야 합니다(MUST).</td>
 </tr>
 <tr>
 <td style="text-align: left;">attribution</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-04-08/2026-04-08/specification/reference/#attribution">Attribution</a></td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Platform-emitted referral and conversion-event context — campaign identifiers, click IDs, source/medium markers, etc. The same parameters platforms communicate via URL query parameters in browser-based flows.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">플랫폼이 내보내는 추천 및 전환 이벤트 맥락: 캠페인 식별자, 클릭 ID, source/medium 마커 등. 브라우저 기반 흐름에서 플랫폼이 URL 쿼리 매개변수로 전달하는 것과 같은 매개변수입니다.</td>
 </tr>
 </tbody>
 </table>
@@ -3216,20 +3216,20 @@
 <tr>
 <td style="text-align: left;">ucp</td>
 <td style="text-align: left;">any</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">UCP metadata for catalog responses.</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">카탈로그 응답용 UCP 메타데이터.</td>
 </tr>
 <tr>
 <td style="text-align: left;">products</td>
 <td style="text-align: left;">Array[any]</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">Products matching the requested identifiers. May contain fewer items if some identifiers not found, or more if identifiers match multiple products.</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">요청한 식별자와 일치하는 상품입니다. 일부 식별자를 찾지 못하면 항목이 더 적을 수 있고, 식별자가 여러 상품과 일치하면 더 많을 수 있습니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">messages</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/2026-04-08/2026-04-08/specification/reference/#message">Message</a>]</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Errors, warnings, or informational messages about the requested items.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">요청된 항목에 관한 오류, 경고, 정보 메시지.</td>
 </tr>
 </tbody>
 </table>
@@ -3382,44 +3382,44 @@
 <tr>
 <td style="text-align: left;">id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">Product or variant identifier. Implementations MUST support product ID and variant ID.</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">상품 또는 변형 식별자입니다. 구현체는 반드시 상품 ID와 변형 ID를 모두 지원해야 합니다(MUST).</td>
 </tr>
 <tr>
 <td style="text-align: left;">selected</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/2026-04-08/2026-04-08/specification/reference/#selected-option">Selected Option</a>]</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Partial or full option selections for interactive variant narrowing. When provided, response option values include availability signals (available, exists) relative to these selections.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">대화형으로 변형을 좁혀 가기 위한 부분 또는 전체 옵션 선택. 제공되면 응답의 옵션 값에 이 선택을 기준으로 한 가용성 신호(available, exists)가 포함됩니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">preferences</td>
 <td style="text-align: left;">Array[string]</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Option names in relaxation priority order. When no exact variant matches all selections, the server drops options from the end of this list first. E.g., ['Color', 'Size'] keeps Color and relaxes Size.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">완화 우선순위 순서로 나열한 옵션 이름. 모든 선택과 정확히 일치하는 변형이 없으면 서버는 이 목록의 끝에 있는 옵션부터 제외합니다. 예를 들어 ['Color', 'Size']는 Color를 유지하고 Size를 완화합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">filters</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-04-08/2026-04-08/specification/reference/#search-filters">Search Filters</a></td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Filter criteria to narrow returned variants. All specified filters combine with AND logic.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">반환되는 변형을 좁히는 필터 조건. 지정한 모든 필터는 AND 논리로 결합됩니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">context</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-04-08/2026-04-08/specification/reference/#context">Context</a></td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Provisional buyer signals for relevance and localization—not authoritative data. Businesses SHOULD use these values when verified inputs (e.g., shipping address) are absent, and MAY ignore or down-rank them if inconsistent with higher-confidence signals (authenticated account, risk detection) or regulatory constraints (export controls). Eligibility and policy enforcement MUST occur at checkout time using binding transaction data. Context SHOULD be non-identifying and can be disclosed progressively—coarse signals early, finer resolution as the session progresses. Higher-resolution data (shipping address, billing address) supersedes context.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">관련성 판단과 현지화를 위한 잠정적 구매자 신호로, 권위 있는 데이터가 아닙니다. 검증된 입력(예: 배송 주소)이 없으면 비즈니스는 이 값을 사용해야 하며(SHOULD), 더 신뢰도 높은 신호(인증된 계정, 위험 탐지)나 규제 제약(수출 통제)과 맞지 않으면 무시하거나 우선순위를 낮출 수 있습니다(MAY). 자격 판단과 정책 적용은 반드시 체크아웃 시점에 구속력 있는 거래 데이터로 수행해야 합니다(MUST). 컨텍스트는 개인을 식별할 수 없어야 하며(SHOULD), 단계적으로 공개할 수 있습니다. 초기에는 대략적인 신호를, 세션이 진행되면서 더 세밀한 정보를 제공합니다. 더 세밀한 데이터(배송 주소, 청구 주소)가 컨텍스트보다 우선합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">signals</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-04-08/2026-04-08/specification/reference/#signals">Signals</a></td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Environment data provided by the platform to support authorization and abuse prevention. Values MUST NOT be buyer-asserted claims — platforms provide signals based on direct observation or independently verifiable third-party attestations. All signal keys MUST use reverse-domain naming to ensure provenance and prevent collisions when multiple extensions contribute to the shared namespace.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">승인과 악용 방지를 돕기 위해 플랫폼이 제공하는 환경 데이터. 값은 구매자가 주장한 내용이어서는 안 됩니다(MUST NOT). 플랫폼은 직접 관찰했거나 독립적으로 검증 가능한 제3자 증명에 근거한 신호를 제공합니다. 여러 확장이 공유 네임스페이스에 값을 추가할 때 출처를 보장하고 충돌을 막기 위해, 모든 신호 키는 반드시 역도메인 이름을 사용해야 합니다(MUST).</td>
 </tr>
 <tr>
 <td style="text-align: left;">attribution</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-04-08/2026-04-08/specification/reference/#attribution">Attribution</a></td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Platform-emitted referral and conversion-event context — campaign identifiers, click IDs, source/medium markers, etc. The same parameters platforms communicate via URL query parameters in browser-based flows.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">플랫폼이 내보내는 추천 및 전환 이벤트 맥락: 캠페인 식별자, 클릭 ID, source/medium 마커 등. 브라우저 기반 흐름에서 플랫폼이 URL 쿼리 매개변수로 전달하는 것과 같은 매개변수입니다.</td>
 </tr>
 </tbody>
 </table>
@@ -3629,7 +3629,7 @@ HTTP 200을 반환합니다. 이는 전송 에러가 아니라 애플리케이�
 <p>비즈니스 처리 결과에는 표준 HTTP 200 상태를 사용하고, 메시지는 응답 본문에 담습니다.</p>
 <h2 id="entities">엔터티<a class="headerlink" href="#entities" title="Permanent link">&para;</a></h2>
 <h3 id="ucp-response-catalog-schema">UCP 응답 카탈로그<a class="headerlink" href="#ucp-response-catalog-schema" title="Permanent link">&para;</a></h3>
-<p>UCP metadata for catalog responses.</p>
+<p>카탈로그 응답용 UCP 메타데이터.</p>
 <table>
 <thead>
 <tr>
@@ -3643,43 +3643,43 @@ HTTP 200을 반환합니다. 이는 전송 에러가 아니라 애플리케이�
 <tr>
 <td style="text-align: left;">version</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">UCP version in YYYY-MM-DD format.</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">YYYY-MM-DD 형식의 UCP 버전.</td>
 </tr>
 <tr>
 <td style="text-align: left;">status</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Application-level status of the UCP operation.<br><strong>Enum:</strong> <code>success</code>, <code>error</code></td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">UCP 작업의 애플리케이션 수준 상태.<br><strong>허용 값:</strong> <code>success</code>, <code>error</code></td>
 </tr>
 <tr>
 <td style="text-align: left;">services</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Service registry keyed by reverse-domain name.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">역도메인 이름을 키로 하는 서비스 레지스트리.</td>
 </tr>
 <tr>
 <td style="text-align: left;">capabilities</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Capability registry keyed by reverse-domain name.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">역도메인 이름을 키로 하는 기능 레지스트리.</td>
 </tr>
 <tr>
 <td style="text-align: left;">payment_handlers</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Payment handler registry keyed by reverse-domain name.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">역 도메인 이름을 키로 하는 결제 핸들러 레지스트리.</td>
 </tr>
 <tr>
 <td style="text-align: left;">capabilities</td>
 <td style="text-align: left;">any</td>
-<td style="text-align: left;">No</td>
+<td style="text-align: left;">아니요</td>
 <td style="text-align: left;"></td>
 </tr>
 </tbody>
 </table>
 <h3 id="detail-product">상세 상품<a class="headerlink" href="#detail-product" title="Permanent link">&para;</a></h3>
-<p>A product in a get_product response, extended with effective selections and availability signals on option values.</p>
+<p>get_product 응답의 상품으로, 유효 선택 항목과 옵션 값의 재고 신호가 추가됩니다.</p>
 <table>
 <thead>
 <tr>
@@ -3693,14 +3693,14 @@ HTTP 200을 반환합니다. 이는 전송 에러가 아니라 애플리케이�
 <tr>
 <td style="text-align: left;">selected</td>
 <td style="text-align: left;">Array[object]</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Effective option selections that anchor the featured variant and availability signals. Required when the product has configurable options; may be empty or omitted for products with no option axes.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">대표 변형과 가용성 신호의 기준이 되는 실제 옵션 선택. 상품에 구성 가능한 옵션이 있으면 필수이며, 옵션 축이 없는 상품에서는 비우거나 생략할 수 있습니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">options</td>
 <td style="text-align: left;">Array[object]</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Product options with availability signals relative to the effective selections.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">현재 유효한 선택을 기준으로 한 재고 신호가 포함된 상품 옵션.</td>
 </tr>
 </tbody>
 </table>
@@ -3718,20 +3718,20 @@ HTTP 200을 반환합니다. 이는 전송 에러가 아니라 애플리케이�
 <tr>
 <td style="text-align: left;">ucp</td>
 <td style="text-align: left;">any</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">UCP metadata for catalog responses.</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">카탈로그 응답용 UCP 메타데이터.</td>
 </tr>
 <tr>
 <td style="text-align: left;">product</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">The requested product with full detail. Singular — this is a single-resource operation.</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">요청한 상품의 전체 세부 정보. 단수형이며, 단일 리소스 작업입니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">messages</td>
 <td style="text-align: left;">Array[object]</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Warnings or informational messages about the product (e.g., price recently changed, limited availability).</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">상품에 대한 경고 또는 안내 메시지(예: 최근 가격 변경, 재고 부족).</td>
 </tr>
 </tbody>
 </table>
@@ -3749,20 +3749,20 @@ HTTP 200을 반환합니다. 이는 전송 에러가 아니라 애플리케이�
 <tr>
 <td style="text-align: left;">ucp</td>
 <td style="text-align: left;">any</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">UCP protocol metadata. Status MUST be 'error' for error response.</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">UCP 프로토콜 메타데이터. 오류 응답에서는 status가 반드시 'error'여야 합니다(MUST).</td>
 </tr>
 <tr>
 <td style="text-align: left;">messages</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/2026-04-08/2026-04-08/specification/reference/#message">Message</a>]</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">Array of messages describing why the operation failed.</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">작업이 실패한 이유를 설명하는 메시지 배열.</td>
 </tr>
 <tr>
 <td style="text-align: left;">continue_url</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">URL for buyer handoff or session recovery.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">구매자 핸드오프 또는 세션 복구용 URL.</td>
 </tr>
 </tbody>
 </table>

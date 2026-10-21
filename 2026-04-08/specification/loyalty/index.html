@@ -2945,10 +2945,10 @@
 <h2 id="schema">스키마<a class="headerlink" href="#schema" title="Permanent link">&para;</a></h2>
 <h3 id="entities">엔터티<a class="headerlink" href="#entities" title="Permanent link">&para;</a></h3>
 <h4 id="loyalty">로열티<a class="headerlink" href="#loyalty" title="Permanent link">&para;</a></h4>
-<p>Key-value map whose keys represent buyer/platform asserted eligibility claims and whose values represent associated membership information. All loyalty keys MUST use reverse-domain naming to ensure provenance and prevent collisions when multiple extensions contribute to the shared namespace.</p>
-<p>Key-value map whose keys represent buyer/platform asserted eligibility claims and whose values represent associated membership information. All loyalty keys MUST use reverse-domain naming to ensure provenance and prevent collisions when multiple extensions contribute to the shared namespace.</p>
+<p>키는 구매자/플랫폼이 주장하는 자격 조건 클레임을, 값은 관련 멤버십 정보를 나타내는 키-값 맵. 여러 확장이 공유 네임스페이스에 값을 넣을 때 출처를 보장하고 충돌을 막기 위해 모든 로열티 키는 반드시 역 도메인 명명을 사용해야 합니다(MUST).</p>
+<p>키는 구매자/플랫폼이 주장하는 자격 조건 클레임을, 값은 관련 멤버십 정보를 나타내는 키-값 맵. 여러 확장이 공유 네임스페이스에 값을 넣을 때 출처를 보장하고 충돌을 막기 위해 모든 로열티 키는 반드시 역 도메인 명명을 사용해야 합니다(MUST).</p>
 <h4 id="loyalty-membership">로열티 멤버십<a class="headerlink" href="#loyalty-membership" title="Permanent link">&para;</a></h4>
-<p>Loyalty membership the business has accepted for the eligibility claim represented by the parent map key. Programs that can be joined independently MUST be modeled as separate sibling entries under the loyalty map, distinguished by reverse-domain naming (e.g., 'com.example.rewards' and 'com.example.rewards.card').</p>
+<p>상위 맵 키가 나타내는 자격 조건 클레임에 대해 비즈니스가 수락한 로열티 멤버십. 독립적으로 가입할 수 있는 프로그램은 반드시 로열티 맵 아래에 별도의 형제 항목으로 모델링하고, 역 도메인 명명(예: 'com.example.rewards'와 'com.example.rewards.card')으로 구분해야 합니다(MUST).</p>
 <table>
 <thead>
 <tr>
@@ -2962,43 +2962,43 @@
 <tr>
 <td style="text-align: left;">id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">Unique loyalty membership identifier.</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">고유 로열티 멤버십 식별자.</td>
 </tr>
 <tr>
 <td style="text-align: left;">name</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">Business specific name of the loyalty membership/program.</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">로열티 멤버십/프로그램의 비즈니스별 이름.</td>
 </tr>
 <tr>
 <td style="text-align: left;">display_id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">A masked or partial version of the membership id for user recognition (e.g., '****5678'). MUST NOT be set if the membership has not been verified.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">사용자가 알아볼 수 있도록 마스킹되거나 일부만 표시한 멤버십 ID(예: '****5678'). 멤버십이 검증되지 않았다면 설정해서는 안 됩니다(MUST NOT).</td>
 </tr>
 <tr>
 <td style="text-align: left;">tiers</td>
 <td style="text-align: left;">Array[object]</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Active or display-safe tier context for this membership. Most programs are single-status (one entry); programs with parallel status dimensions (e.g., current and lifetime) populate one entry per active tier. Omitted when no tier context has been resolved.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">이 멤버십의 활성 또는 표시해도 안전한 등급 정보. 대부분의 프로그램은 단일 등급(항목 하나)이며, 병렬 등급 차원(예: 현재 등급과 평생 등급)이 있는 프로그램은 활성 등급마다 항목을 하나씩 채웁니다. 등급 정보가 확정되지 않았으면 생략합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">rewards</td>
 <td style="text-align: left;">Array[object]</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Reward types and earning forecasts associated with this membership. Each object encapsulates one type of reward.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">이 멤버십과 연결된 리워드 유형과 적립 예측입니다. 각 객체는 리워드 유형 하나를 담습니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">provisional</td>
 <td style="text-align: left;">boolean</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">True if this membership requires additional verification.</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">이 멤버십에 추가 검증이 필요하면 true.</td>
 </tr>
 </tbody>
 </table>
 <h4 id="membership-tier">멤버십 등급<a class="headerlink" href="#membership-tier" title="Permanent link">&para;</a></h4>
-<p>Specific achievement rank or status milestone that unlocks escalating value as a member progresses through activity or spend.</p>
+<p>회원이 활동이나 지출을 통해 단계를 올라갈수록 더 큰 혜택을 여는 특정 달성 등급 또는 상태 단계.</p>
 <table>
 <thead>
 <tr>
@@ -3012,25 +3012,25 @@
 <tr>
 <td style="text-align: left;">id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">Unique identifier for the membership tier.</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">멤버십 등급의 고유 식별자.</td>
 </tr>
 <tr>
 <td style="text-align: left;">name</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">The human-readable name of the tier (e.g., 'Platinum').</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">사람이 읽을 수 있는 등급 이름(예: 'Platinum').</td>
 </tr>
 <tr>
 <td style="text-align: left;">benefits</td>
 <td style="text-align: left;">Array[object]</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">List of benefits associated with this tier.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">이 등급에 연결된 혜택 목록.</td>
 </tr>
 </tbody>
 </table>
 <h4 id="membership-tier-benefit">멤버십 등급 혜택<a class="headerlink" href="#membership-tier-benefit" title="Permanent link">&para;</a></h4>
-<p>Benefits associated with a membership tier.</p>
+<p>멤버십 등급에 연관된 혜택.</p>
 <table>
 <thead>
 <tr>
@@ -3044,19 +3044,19 @@
 <tr>
 <td style="text-align: left;">id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">Unique identifier for the tier benefit.</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">등급 혜택의 고유 식별자.</td>
 </tr>
 <tr>
 <td style="text-align: left;">description</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">A display-ready, human-readable explanation of this benefit (e.g. 'Early access to sales').</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">이 혜택을 바로 표시할 수 있는, 사람이 읽을 수 있는 설명(예: 'Early access to sales').</td>
 </tr>
 </tbody>
 </table>
 <h4 id="membership-reward">멤버십 리워드<a class="headerlink" href="#membership-reward" title="Permanent link">&para;</a></h4>
-<p>Quantifiable reward type and optional earning forecast for the current transaction.</p>
+<p>수량화할 수 있는 리워드 유형과 현재 거래에 대한 선택적 적립 예측.</p>
 <table>
 <thead>
 <tr>
@@ -3070,22 +3070,22 @@
 <tr>
 <td style="text-align: left;">currency</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">A unit of value that customers can accumulate through various commercial activities.</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">고객이 다양한 상거래 활동으로 적립할 수 있는 가치 단위.</td>
 </tr>
 <tr>
 <td style="text-align: left;">earning_forecast</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Preview of rewards to be earned from the current transaction.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">현재 거래로 적립될 리워드 미리보기.</td>
 </tr>
 </tbody>
 </table>
 <h4 id="reward-amount">리워드 수량<a class="headerlink" href="#reward-amount" title="Permanent link">&para;</a></h4>
-<p>Non-negative integer amount denominated in the minor unit of the associated reward currency. The associated reward currency's <code>decimal_places</code> defines the minor-to-major ratio and defaults to 0 when omitted.</p>
-<p>Non-negative integer amount denominated in the minor unit of the associated reward currency. The associated reward currency's <code>decimal_places</code> defines the minor-to-major ratio and defaults to 0 when omitted.</p>
+<p>연결된 리워드 통화의 최소 단위로 나타낸 음이 아닌 정수 금액. 최소 단위와 기본 단위의 비율은 연결된 리워드 통화의 <code>decimal_places</code>가 정의하며, 생략하면 기본값은 0입니다.</p>
+<p>연결된 리워드 통화의 최소 단위로 나타낸 음이 아닌 정수 금액. 최소 단위와 기본 단위의 비율은 연결된 리워드 통화의 <code>decimal_places</code>가 정의하며, 생략하면 기본값은 0입니다.</p>
 <h4 id="reward-currency">리워드 통화<a class="headerlink" href="#reward-currency" title="Permanent link">&para;</a></h4>
-<p>The currency of the loyalty reward.</p>
+<p>로열티 리워드의 통화.</p>
 <table>
 <thead>
 <tr>
@@ -3099,25 +3099,25 @@
 <tr>
 <td style="text-align: left;">name</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">Human-readable name of the currency (e.g. 'LoyaltyStars').</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">사람이 읽을 수 있는 통화 이름(예: 'LoyaltyStars').</td>
 </tr>
 <tr>
 <td style="text-align: left;">code</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">Business-specific representation of the currency (e.g. 'LST').</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">비즈니스별 통화 표기(예: 'LST').</td>
 </tr>
 <tr>
 <td style="text-align: left;">decimal_places</td>
 <td style="text-align: left;">integer</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">The position of a digit to the right of a decimal point. Applies to all amount related fields for rewards.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">소수점 오른쪽 자릿수. 리워드의 모든 금액 관련 필드에 적용됩니다.</td>
 </tr>
 </tbody>
 </table>
 <h4 id="earning-forecast">적립 예상<a class="headerlink" href="#earning-forecast" title="Permanent link">&para;</a></h4>
-<p>Preview of rewards to be earned from the current transaction.</p>
+<p>현재 거래로 적립될 리워드 미리보기.</p>
 <table>
 <thead>
 <tr>
@@ -3131,19 +3131,19 @@
 <tr>
 <td style="text-align: left;">amount</td>
 <td style="text-align: left;">integer</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">Total rewards to be earned if the transaction completes.</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">거래가 완료되면 적립될 총 리워드.</td>
 </tr>
 <tr>
 <td style="text-align: left;">breakdown</td>
 <td style="text-align: left;">Array[object]</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">List of breakdown of earning contributing to the total.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">총액을 구성하는 적립 내역 목록.</td>
 </tr>
 </tbody>
 </table>
 <h4 id="earning-breakdown">적립 내역<a class="headerlink" href="#earning-breakdown" title="Permanent link">&para;</a></h4>
-<p>Breakdown rule of the reward earnings</p>
+<p>리워드 적립 내역 규칙</p>
 <table>
 <thead>
 <tr>
@@ -3157,26 +3157,26 @@
 <tr>
 <td style="text-align: left;">id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">Unique rewards breakdown rule identifier.</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">고유 리워드 내역 규칙 식별자.</td>
 </tr>
 <tr>
 <td style="text-align: left;">amount</td>
 <td style="text-align: left;">integer</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">Rewards earned from this rule.</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">이 규칙으로 적립된 리워드.</td>
 </tr>
 <tr>
 <td style="text-align: left;">description</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">A display-ready, human-readable rationale for the specific rewards (e.g. 2x on footwear).</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">특정 리워드에 대해 바로 표시할 수 있는, 사람이 읽을 수 있는 근거(예: 신발 2배 적립).</td>
 </tr>
 <tr>
 <td style="text-align: left;">benefit_id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Optional <code>id</code> of the membership_tier_benefit that produced this rewards rule. Resolves against <code>membership_tier_benefit.id</code> within the same parent loyalty membership.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">이 리워드 규칙을 만든 membership_tier_benefit의 <code>id</code>(선택 사항). 같은 상위 로열티 멤버십 안의 <code>membership_tier_benefit.id</code>로 해석됩니다.</td>
 </tr>
 </tbody>
 </table>

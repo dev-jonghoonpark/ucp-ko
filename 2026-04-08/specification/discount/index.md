@@ -45,37 +45,37 @@
 
 ### Discounts 객체
 
-Discount codes input and applied discounts output.
+할인 코드 입력과 적용된 할인 출력.
 
-| 이름    | 타입          | 필수 | 설명                                                                                                       |
-| ------- | ------------- | ---- | ---------------------------------------------------------------------------------------------------------- |
-| codes   | Array[string] | No   | Discount codes to apply. Case-insensitive. Replaces previously submitted codes. Send empty array to clear. |
-| applied | Array[object] | No   | Discounts successfully applied (code-based and automatic).                                                 |
+| 이름    | 타입          | 필수   | 설명                                                                                                          |
+| ------- | ------------- | ------ | ------------------------------------------------------------------------------------------------------------- |
+| codes   | Array[string] | 아니요 | 적용할 할인 코드. 대소문자를 구분하지 않습니다. 이전에 제출한 코드를 대체합니다. 지우려면 빈 배열을 보내세요. |
+| applied | Array[object] | 아니요 | 성공적으로 적용된 할인(코드 기반 및 자동).                                                                    |
 
 ### 적용된 할인
 
-A discount that was successfully applied.
+성공적으로 적용된 할인.
 
-| 이름        | 타입          | 필수    | 설명                                                                                                                                                                               |
-| ----------- | ------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| code        | string        | No      | The discount code. Omitted for automatic discounts.                                                                                                                                |
-| title       | string        | **Yes** | Human-readable discount name (e.g., 'Summer Sale 20% Off').                                                                                                                        |
-| amount      | integer       | **Yes** | Total discount amount in ISO 4217 minor units.                                                                                                                                     |
-| automatic   | boolean       | No      | True if applied automatically by merchant rules (no code required).                                                                                                                |
-| method      | string        | No      | Allocation method. 'each' = applied independently per item. 'across' = split proportionally by value. **Enum:** `each`, `across`                                                   |
-| priority    | integer       | No      | Stacking order for discount calculation. Lower numbers applied first (1 = first).                                                                                                  |
-| provisional | boolean       | No      | True if this discount requires additional verification.                                                                                                                            |
-| eligibility | string        | No      | The eligibility claim accepted by the Business for this discount. Corresponds to a value from context.eligibility. Omitted for code-based and non-eligibility automatic discounts. |
-| allocations | Array[object] | No      | Breakdown of where this discount was allocated. Sum of allocation amounts equals total amount.                                                                                     |
+| 이름        | 타입          | 필수   | 설명                                                                                                                                                      |
+| ----------- | ------------- | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| code        | string        | 아니요 | 할인 코드. 자동 할인에서는 생략됩니다.                                                                                                                    |
+| title       | string        | **예** | 사람이 읽을 수 있는 할인 이름(예: 'Summer Sale 20% Off').                                                                                                 |
+| amount      | integer       | **예** | ISO 4217 최소 단위로 표시한 총 할인 금액.                                                                                                                 |
+| automatic   | boolean       | 아니요 | 판매자 규칙에 따라 자동으로 적용되면(코드 불필요) true.                                                                                                   |
+| method      | string        | 아니요 | 배분 방식. 'each' = 항목마다 독립적으로 적용. 'across' = 금액에 비례해 나눔. **허용 값:** `each`, `across`                                                |
+| priority    | integer       | 아니요 | 할인 계산 시 적용 순서. 숫자가 낮을수록 먼저 적용됩니다(1 = 첫 번째).                                                                                     |
+| provisional | boolean       | 아니요 | 이 할인에 추가 검증이 필요하면 true.                                                                                                                      |
+| eligibility | string        | 아니요 | 비즈니스가 이 할인에 대해 인정한 적격성 주장. context.eligibility의 값 중 하나에 해당합니다. 코드 기반 할인과 적격성과 무관한 자동 할인에서는 생략됩니다. |
+| allocations | Array[object] | 아니요 | 이 할인이 배분된 위치 내역. 배분 금액의 합은 총액과 같습니다.                                                                                             |
 
 ### 배분
 
-Breakdown of how a discount amount was allocated to a specific target.
+할인 금액이 특정 대상에 어떻게 배분되었는지 보여 주는 내역.
 
-| 이름   | 타입    | 필수    | 설명                                                                              |
-| ------ | ------- | ------- | --------------------------------------------------------------------------------- |
-| path   | string  | **Yes** | JSONPath to the allocation target (e.g., '$.line_items[0]', '$.totals.shipping'). |
-| amount | integer | **Yes** | Amount allocated to this target in ISO 4217 minor units.                          |
+| 이름   | 타입    | 필수   | 설명                                                                       |
+| ------ | ------- | ------ | -------------------------------------------------------------------------- |
+| path   | string  | **예** | 할당 대상을 가리키는 JSONPath(예: '$.line_items[0]', '$.totals.shipping'). |
+| amount | integer | **예** | 이 대상에 배분된 금액(ISO 4217 최소 통화 단위).                            |
 
 ## 배분 세부 사항
 

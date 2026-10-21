@@ -12,23 +12,23 @@
 
 ### 요청
 
-| 이름        | 타입   | 필수 | 설명                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| ----------- | ------ | ---- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| query       | string | No   | Free-text search query.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| context     | object | No   | Provisional buyer signals for relevance and localization—not authoritative data. Businesses SHOULD use these values when verified inputs (e.g., shipping address) are absent, and MAY ignore or down-rank them if inconsistent with higher-confidence signals (authenticated account, risk detection) or regulatory constraints (export controls). Eligibility and policy enforcement MUST occur at checkout time using binding transaction data. Context SHOULD be non-identifying and can be disclosed progressively—coarse signals early, finer resolution as the session progresses. Higher-resolution data (shipping address, billing address) supersedes context. |
-| signals     | object | No   | Environment data provided by the platform to support authorization and abuse prevention. Values MUST NOT be buyer-asserted claims — platforms provide signals based on direct observation or independently verifiable third-party attestations. All signal keys MUST use reverse-domain naming to ensure provenance and prevent collisions when multiple extensions contribute to the shared namespace.                                                                                                                                                                                                                                                                 |
-| attribution | object | No   | Platform-emitted referral and conversion-event context — campaign identifiers, click IDs, source/medium markers, etc. The same parameters platforms communicate via URL query parameters in browser-based flows.                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| filters     | object | No   | Filter criteria to narrow search results. All specified filters combine with AND logic.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| pagination  | object | No   | Pagination parameters for requests.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| 이름        | 타입   | 필수   | 설명                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| ----------- | ------ | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| query       | string | 아니요 | 자유 텍스트 검색어.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| context     | object | 아니요 | 관련성 판단과 현지화를 위한 잠정적 구매자 신호로, 권위 있는 데이터가 아닙니다. 검증된 입력(예: 배송 주소)이 없으면 비즈니스는 이 값을 사용해야 하며(SHOULD), 더 신뢰도 높은 신호(인증된 계정, 위험 탐지)나 규제 제약(수출 통제)과 맞지 않으면 무시하거나 우선순위를 낮출 수 있습니다(MAY). 자격 판단과 정책 적용은 반드시 체크아웃 시점에 구속력 있는 거래 데이터로 수행해야 합니다(MUST). 컨텍스트는 개인을 식별할 수 없어야 하며(SHOULD), 단계적으로 공개할 수 있습니다. 초기에는 대략적인 신호를, 세션이 진행되면서 더 세밀한 정보를 제공합니다. 더 세밀한 데이터(배송 주소, 청구 주소)가 컨텍스트보다 우선합니다. |
+| signals     | object | 아니요 | 승인과 악용 방지를 돕기 위해 플랫폼이 제공하는 환경 데이터. 값은 구매자가 주장한 내용이어서는 안 됩니다(MUST NOT). 플랫폼은 직접 관찰했거나 독립적으로 검증 가능한 제3자 증명에 근거한 신호를 제공합니다. 여러 확장이 공유 네임스페이스에 값을 추가할 때 출처를 보장하고 충돌을 막기 위해, 모든 신호 키는 반드시 역도메인 이름을 사용해야 합니다(MUST).                                                                                                                                                                                                                                                               |
+| attribution | object | 아니요 | 플랫폼이 내보내는 추천 및 전환 이벤트 맥락: 캠페인 식별자, 클릭 ID, source/medium 마커 등. 브라우저 기반 흐름에서 플랫폼이 URL 쿼리 매개변수로 전달하는 것과 같은 매개변수입니다.                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| filters     | object | 아니요 | 검색 결과를 좁히는 필터 조건. 지정한 모든 필터는 AND 논리로 결합됩니다.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| pagination  | object | 아니요 | 요청의 페이지네이션 매개변수.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 
 ### 응답
 
-| 이름       | 타입          | 필수    | 설명                                                                  |
-| ---------- | ------------- | ------- | --------------------------------------------------------------------- |
-| ucp        | any           | **Yes** | UCP metadata for catalog responses.                                   |
-| products   | Array[object] | **Yes** | Products matching the search criteria.                                |
-| pagination | object        | No      | Pagination information in responses.                                  |
-| messages   | Array[object] | No      | Errors, warnings, or informational messages about the search results. |
+| 이름       | 타입          | 필수   | 설명                                      |
+| ---------- | ------------- | ------ | ----------------------------------------- |
+| ucp        | any           | **예** | 카탈로그 응답용 UCP 메타데이터.           |
+| products   | Array[object] | **예** | 검색 조건과 일치하는 상품.                |
+| pagination | object        | 아니요 | 응답의 페이지네이션 정보.                 |
+| messages   | Array[object] | 아니요 | 검색 결과에 관한 오류, 경고, 정보 메시지. |
 
 ## 검색 입력
 
@@ -40,17 +40,17 @@
 
 검색 결과를 좁히는 필터 조건입니다. 표준 필터는 아래에 정의되어 있으며, 판매자는 `additionalProperties`로 사용자 정의 필터를 추가로 지원할 수 있습니다(MAY).
 
-| 이름       | 타입                                                                                | 필수 | 설명                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| ---------- | ----------------------------------------------------------------------------------- | ---- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| categories | Array[string]                                                                       | No   | Filter by product categories (OR logic — matches products in any listed categories). Values match against the value field in product category entries. Valid values can be discovered from the categories field in search results, merchant documentation, or standard taxonomies that businesses may align with.                                                                                                                                                |
-| price      | [Price Filter](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#price-filter) | No   | Price range filter denominated in context.currency. When context.currency matches the presentment currency, businesses apply the filter directly. When it differs, businesses SHOULD convert filter values to the presentment currency before applying; if conversion is not supported, businesses MAY ignore the filter and SHOULD indicate this via a message. When context.currency is absent, filter denomination is ambiguous and businesses MAY ignore it. |
+| 이름       | 타입                                                                                | 필수   | 설명                                                                                                                                                                                                                                                                                                                                                                                                         |
+| ---------- | ----------------------------------------------------------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| categories | Array[string]                                                                       | 아니요 | 상품 카테고리로 필터링합니다(OR 논리 — 나열된 카테고리 중 하나라도 속한 상품과 일치). 값은 상품 카테고리 항목의 value 필드와 비교합니다. 유효한 값은 검색 결과의 categories 필드, 판매자 문서, 또는 비즈니스가 따를 수 있는 표준 분류 체계에서 찾을 수 있습니다.                                                                                                                                             |
+| price      | [Price Filter](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#price-filter) | 아니요 | context.currency 통화로 표시한 가격 범위 필터입니다. context.currency가 표시 통화와 같으면 비즈니스는 필터를 그대로 적용합니다. 다르면 비즈니스는 적용 전에 필터 값을 표시 통화로 변환해야 합니다(SHOULD). 변환을 지원하지 않으면 필터를 무시할 수 있으며(MAY), 이 사실을 메시지로 알려야 합니다(SHOULD). context.currency가 없으면 필터의 통화 단위가 모호하므로 비즈니스는 필터를 무시할 수 있습니다(MAY). |
 
 ### 가격 필터
 
-| 이름 | 타입                                                                    | 필수 | 설명                                   |
-| ---- | ----------------------------------------------------------------------- | ---- | -------------------------------------- |
-| min  | [Amount](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#amount) | No   | Minimum price in ISO 4217 minor units. |
-| max  | [Amount](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#amount) | No   | Maximum price in ISO 4217 minor units. |
+| 이름 | 타입                                                                    | 필수   | 설명                                   |
+| ---- | ----------------------------------------------------------------------- | ------ | -------------------------------------- |
+| min  | [Amount](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#amount) | 아니요 | ISO 4217 최소 단위로 나타낸 최저 가격. |
+| max  | [Amount](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#amount) | 아니요 | ISO 4217 최소 단위로 나타낸 최고 가격. |
 
 ## 페이지네이션
 
@@ -62,22 +62,22 @@
 
 ### 페이지네이션 요청
 
-Pagination parameters for requests.
+요청의 페이지네이션 매개변수.
 
-| 이름   | 타입    | 필수 | 설명                                                               |
-| ------ | ------- | ---- | ------------------------------------------------------------------ |
-| cursor | string  | No   | Opaque cursor from previous response.                              |
-| limit  | integer | No   | Requested page size. Implementations MAY clamp to a lower maximum. |
+| 이름   | 타입    | 필수   | 설명                                                                         |
+| ------ | ------- | ------ | ---------------------------------------------------------------------------- |
+| cursor | string  | 아니요 | 이전 응답에서 받은 불투명 커서.                                              |
+| limit  | integer | 아니요 | 요청 페이지 크기입니다. 구현체는 더 낮은 최댓값으로 제한할 수 있습니다(MAY). |
 
 ### 페이지네이션 응답
 
-Pagination information in responses.
+응답의 페이지네이션 정보.
 
-| 이름          | 타입    | 필수    | 설명                                                                                  |
-| ------------- | ------- | ------- | ------------------------------------------------------------------------------------- |
-| cursor        | string  | No      | Cursor to fetch the next page of results. MUST be present when has_next_page is true. |
-| has_next_page | boolean | **Yes** | Whether more results are available.                                                   |
-| total_count   | integer | No      | Total number of matching items, if available.                                         |
+| 이름          | 타입    | 필수   | 설명                                                                                        |
+| ------------- | ------- | ------ | ------------------------------------------------------------------------------------------- |
+| cursor        | string  | 아니요 | 다음 결과 페이지를 가져오기 위한 커서. has_next_page가 true이면 반드시 있어야 합니다(MUST). |
+| has_next_page | boolean | **예** | 추가 결과가 있는지 여부.                                                                    |
+| total_count   | integer | 아니요 | 사용 가능한 경우, 일치하는 항목의 총개수.                                                   |
 
 ## 전송 방식 바인딩
 

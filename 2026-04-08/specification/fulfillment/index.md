@@ -33,29 +33,29 @@
 
 ### 속성
 
-| 이름        | 타입                                                                                | 필수 | 설명                 |
-| ----------- | ----------------------------------------------------------------------------------- | ---- | -------------------- |
-| fulfillment | [Fulfillment](/ucp-ko/2026-04-08/2026-04-08/specification/fulfillment/#fulfillment) | No   | Fulfillment details. |
+| 이름        | 타입                                                                                | 필수   | 설명                |
+| ----------- | ----------------------------------------------------------------------------------- | ------ | ------------------- |
+| fulfillment | [Fulfillment](/ucp-ko/2026-04-08/2026-04-08/specification/fulfillment/#fulfillment) | 아니요 | 풀필먼트 세부 정보. |
 
 ### 엔티티
 
 #### 풀필먼트
 
-| 이름              | 타입                                                                                                                         | 필수 | 설명                                |
-| ----------------- | ---------------------------------------------------------------------------------------------------------------------------- | ---- | ----------------------------------- |
-| methods           | Array\[[Fulfillment Method](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#fulfillment-method)\]                     | No   | Fulfillment methods for cart items. |
-| available_methods | Array\[[Fulfillment Available Method](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#fulfillment-available-method)\] | No   | Inventory availability hints.       |
+| 이름              | 타입                                                                                                                         | 필수   | 설명                           |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------- | ------ | ------------------------------ |
+| methods           | Array\[[Fulfillment Method](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#fulfillment-method)\]                     | 아니요 | 장바구니 상품의 풀필먼트 방식. |
+| available_methods | Array\[[Fulfillment Available Method](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#fulfillment-available-method)\] | 아니요 | 재고 가용성 힌트.              |
 
 #### 풀필먼트 방법
 
-| 이름                    | 타입                                                                                                               | 필수    | 설명                                                                                                         |
-| ----------------------- | ------------------------------------------------------------------------------------------------------------------ | ------- | ------------------------------------------------------------------------------------------------------------ |
-| id                      | string                                                                                                             | **Yes** | Unique fulfillment method identifier.                                                                        |
-| type                    | string                                                                                                             | **Yes** | Fulfillment method type. **Enum:** `shipping`, `pickup`                                                      |
-| line_item_ids           | Array[string]                                                                                                      | **Yes** | Line item IDs fulfilled via this method.                                                                     |
-| destinations            | Array\[[Fulfillment Destination](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#fulfillment-destination)\] | No      | Available destinations. For shipping: addresses. For pickup: retail locations.                               |
-| selected_destination_id | ['string', 'null']                                                                                                 | No      | ID of the selected destination.                                                                              |
-| groups                  | Array\[[Fulfillment Group](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#fulfillment-group)\]             | No      | Fulfillment groups for selecting options. Agent sets selected_option_id on groups to choose shipping method. |
+| 이름                    | 타입                                                                                                               | 필수   | 설명                                                                                                  |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------ | ------ | ----------------------------------------------------------------------------------------------------- |
+| id                      | string                                                                                                             | **예** | 고유 풀필먼트 방식 식별자.                                                                            |
+| type                    | string                                                                                                             | **예** | 풀필먼트 방식 유형. **허용 값:** `shipping`, `pickup`                                                 |
+| line_item_ids           | Array[string]                                                                                                      | **예** | 이 방식으로 풀필먼트되는 라인 아이템 ID.                                                              |
+| destinations            | Array\[[Fulfillment Destination](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#fulfillment-destination)\] | 아니요 | 사용 가능한 목적지. 배송은 주소, 픽업은 소매 매장.                                                    |
+| selected_destination_id | ['string', 'null']                                                                                                 | 아니요 | 선택한 목적지의 ID.                                                                                   |
+| groups                  | Array\[[Fulfillment Group](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#fulfillment-group)\]             | 아니요 | 옵션 선택을 위한 풀필먼트 그룹. 에이전트는 그룹에 selected_option_id를 설정해 배송 방식을 선택합니다. |
 
 #### 풀필먼트 목적지
 
@@ -63,78 +63,78 @@ This object MUST be one of the following types: [Shipping Destination](/ucp-ko/2
 
 #### 배송 목적지
 
-| 이름             | 타입   | 필수    | 설명                                                                                                                                                                                                                                      |
-| ---------------- | ------ | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| extended_address | string | No      | An address extension such as an apartment number, C/O or alternative name.                                                                                                                                                                |
-| street_address   | string | No      | The street address.                                                                                                                                                                                                                       |
-| address_locality | string | No      | The locality in which the street address is, and which is in the region. For example, Mountain View.                                                                                                                                      |
-| address_region   | string | No      | The region in which the locality is, and which is in the country. Required for applicable countries (i.e. state in US, province in CA). For example, California or another appropriate first-level Administrative division.               |
-| address_country  | string | No      | The country. Recommended to be in 2-letter ISO 3166-1 alpha-2 format, for example "US". For backward compatibility, a 3-letter ISO 3166-1 alpha-3 country code such as "SGP" or a full country name such as "Singapore" can also be used. |
-| postal_code      | string | No      | The postal code. For example, 94043.                                                                                                                                                                                                      |
-| first_name       | string | No      | Optional. First name of the contact associated with the address.                                                                                                                                                                          |
-| last_name        | string | No      | Optional. Last name of the contact associated with the address.                                                                                                                                                                           |
-| phone_number     | string | No      | Optional. Phone number of the contact associated with the address.                                                                                                                                                                        |
-| id               | string | **Yes** | ID specific to this shipping destination.                                                                                                                                                                                                 |
+| 이름             | 타입   | 필수   | 설명                                                                                                                                                                              |
+| ---------------- | ------ | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| extended_address | string | 아니요 | 아파트 호수, C/O, 대체 이름 같은 주소 보충 정보.                                                                                                                                  |
+| street_address   | string | 아니요 | 도로명 주소.                                                                                                                                                                      |
+| address_locality | string | 아니요 | 도로명 주소가 속하고 해당 지역 안에 있는 시·군·구. 예: Mountain View.                                                                                                             |
+| address_region   | string | 아니요 | 시·군·구가 속하고 해당 국가 안에 있는 지역. 해당하는 국가에서는 필수입니다(예: 미국의 주, 캐나다의 주). 예: California 또는 그 밖의 적절한 1차 행정 구역.                         |
+| address_country  | string | 아니요 | 국가. 2자리 ISO 3166-1 alpha-2 형식(예: "US")을 권장합니다. 하위 호환성을 위해 "SGP" 같은 3자리 ISO 3166-1 alpha-3 국가 코드나 "Singapore" 같은 전체 국가명도 사용할 수 있습니다. |
+| postal_code      | string | 아니요 | 우편번호. 예: 94043.                                                                                                                                                              |
+| first_name       | string | 아니요 | 선택 사항. 주소와 연결된 연락처의 이름.                                                                                                                                           |
+| last_name        | string | 아니요 | 선택 사항. 주소와 연결된 연락처의 성.                                                                                                                                             |
+| phone_number     | string | 아니요 | 선택 사항. 주소와 연결된 연락처의 전화번호.                                                                                                                                       |
+| id               | string | **예** | 이 배송 목적지에 고유한 ID.                                                                                                                                                       |
 
 #### 매장 위치
 
-| 이름    | 타입                                                                                    | 필수    | 설명                              |
-| ------- | --------------------------------------------------------------------------------------- | ------- | --------------------------------- |
-| id      | string                                                                                  | **Yes** | Unique location identifier.       |
-| name    | string                                                                                  | **Yes** | Location name (e.g., store name). |
-| address | [Postal Address](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#postal-address) | No      | Physical address of the location. |
+| 이름    | 타입                                                                                    | 필수   | 설명                      |
+| ------- | --------------------------------------------------------------------------------------- | ------ | ------------------------- |
+| id      | string                                                                                  | **예** | 고유 위치 식별자.         |
+| name    | string                                                                                  | **예** | 위치 이름(예: 매장 이름). |
+| address | [Postal Address](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#postal-address) | 아니요 | 장소의 실제 주소.         |
 
 #### 풀필먼트 그룹
 
-| 이름               | 타입                                                                                                     | 필수    | 설명                                                                   |
-| ------------------ | -------------------------------------------------------------------------------------------------------- | ------- | ---------------------------------------------------------------------- |
-| id                 | string                                                                                                   | **Yes** | Group identifier for referencing merchant-generated groups in updates. |
-| line_item_ids      | Array[string]                                                                                            | **Yes** | Line item IDs included in this group/package.                          |
-| options            | Array\[[Fulfillment Option](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#fulfillment-option)\] | No      | Available fulfillment options for this group.                          |
-| selected_option_id | ['string', 'null']                                                                                       | No      | ID of the selected fulfillment option for this group.                  |
+| 이름               | 타입                                                                                                     | 필수   | 설명                                                          |
+| ------------------ | -------------------------------------------------------------------------------------------------------- | ------ | ------------------------------------------------------------- |
+| id                 | string                                                                                                   | **예** | 업데이트 시 판매자가 생성한 그룹을 참조하기 위한 그룹 식별자. |
+| line_item_ids      | Array[string]                                                                                            | **예** | 이 그룹/패키지에 포함된 라인 아이템 ID.                       |
+| options            | Array\[[Fulfillment Option](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#fulfillment-option)\] | 아니요 | 이 그룹에 사용할 수 있는 풀필먼트 옵션.                       |
+| selected_option_id | ['string', 'null']                                                                                       | 아니요 | 이 그룹에서 선택한 풀필먼트 옵션의 ID.                        |
 
 #### 풀필먼트 옵션
 
-| 이름                      | 타입                                                                           | 필수    | 설명                                                                       |
-| ------------------------- | ------------------------------------------------------------------------------ | ------- | -------------------------------------------------------------------------- |
-| id                        | string                                                                         | **Yes** | Unique fulfillment option identifier.                                      |
-| title                     | string                                                                         | **Yes** | Short label (e.g., 'Express Shipping', 'Curbside Pickup').                 |
-| description               | string                                                                         | No      | Complete context for buyer decision (e.g., 'Arrives Dec 12-15 via FedEx'). |
-| carrier                   | string                                                                         | No      | Carrier name (for shipping).                                               |
-| earliest_fulfillment_time | string                                                                         | No      | Earliest fulfillment date.                                                 |
-| latest_fulfillment_time   | string                                                                         | No      | Latest fulfillment date.                                                   |
-| totals                    | Array\[[Total](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#total)\] | **Yes** | Fulfillment option totals breakdown.                                       |
+| 이름                      | 타입                                                                           | 필수   | 설명                                                             |
+| ------------------------- | ------------------------------------------------------------------------------ | ------ | ---------------------------------------------------------------- |
+| id                        | string                                                                         | **예** | 고유 풀필먼트 옵션 식별자.                                       |
+| title                     | string                                                                         | **예** | 짧은 레이블(예: 'Express Shipping', 'Curbside Pickup').          |
+| description               | string                                                                         | 아니요 | 구매자 결정을 위한 전체 맥락(예: 'Arrives Dec 12-15 via FedEx'). |
+| carrier                   | string                                                                         | 아니요 | 운송사 이름(배송용).                                             |
+| earliest_fulfillment_time | string                                                                         | 아니요 | 가장 이른 풀필먼트 날짜.                                         |
+| latest_fulfillment_time   | string                                                                         | 아니요 | 가장 늦은 풀필먼트 날짜.                                         |
+| totals                    | Array\[[Total](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#total)\] | **예** | 풀필먼트 옵션 합계 내역.                                         |
 
 #### 풀필먼트 가능 방법
 
-| 이름           | 타입               | 필수    | 설명                                                                                     |
-| -------------- | ------------------ | ------- | ---------------------------------------------------------------------------------------- |
-| type           | string             | **Yes** | Fulfillment method type this availability applies to. **Enum:** `shipping`, `pickup`     |
-| line_item_ids  | Array[string]      | **Yes** | Line items available for this fulfillment method.                                        |
-| fulfillable_on | ['string', 'null'] | No      | 'now' for immediate availability, or ISO 8601 date for future (preorders, transfers).    |
-| description    | string             | No      | Human-readable availability info (e.g., 'Available for pickup at Downtown Store today'). |
+| 이름           | 타입               | 필수   | 설명                                                                                 |
+| -------------- | ------------------ | ------ | ------------------------------------------------------------------------------------ |
+| type           | string             | **예** | 이 가용성이 적용되는 풀필먼트 방식 유형. **허용 값:** `shipping`, `pickup`           |
+| line_item_ids  | Array[string]      | **예** | 이 풀필먼트 방식에 사용할 수 있는 라인 아이템.                                       |
+| fulfillable_on | ['string', 'null'] | 아니요 | 즉시 구매 가능하면 'now', 향후 구매 가능(예약 주문, 이관)이면 ISO 8601 날짜.         |
+| description    | string             | 아니요 | 사람이 읽을 수 있는 가용성 정보(예: 'Available for pickup at Downtown Store today'). |
 
 #### 합계
 
-| 이름         | 타입                                                                                  | 필수    | 설명                                                                                                                                                                                                                                                                                        |
-| ------------ | ------------------------------------------------------------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| type         | string                                                                                | **Yes** | Cost category. Well-known values: subtotal, items_discount, discount, fulfillment, tax, fee, total. Businesses MAY use additional values.                                                                                                                                                   |
-| display_text | string                                                                                | No      | Text to display against the amount. Should reflect appropriate method (e.g., 'Shipping', 'Delivery').                                                                                                                                                                                       |
-| amount       | [Signed Amount](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#signed-amount) | **Yes** | Monetary amount in the currency's minor unit as defined by ISO 4217. Refer to the currency's exponent to determine minor-to-major ratio (e.g., 2 for USD, 0 for JPY, 3 for KWD). May be negative — the sign is intrinsic to the value (e.g., discounts are negative, charges are positive). |
+| 이름         | 타입                                                                                  | 필수   | 설명                                                                                                                                                                                                                        |
+| ------------ | ------------------------------------------------------------------------------------- | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| type         | string                                                                                | **예** | 비용 범주. 잘 알려진 값: subtotal, items_discount, discount, fulfillment, tax, fee, total. 비즈니스는 추가 값을 사용할 수 있습니다(MAY).                                                                                    |
+| display_text | string                                                                                | 아니요 | 금액 옆에 표시할 텍스트. 적절한 방식을 반영해야 합니다(예: 'Shipping', 'Delivery').                                                                                                                                         |
+| amount       | [Signed Amount](/ucp-ko/2026-04-08/2026-04-08/specification/reference/#signed-amount) | **예** | ISO 4217에 정의된 통화의 최소 단위로 나타낸 금액. 최소 단위와 기본 단위의 비율은 통화의 지수를 참고합니다(예: USD는 2, JPY는 0, KWD는 3). 음수일 수 있으며, 부호는 값 자체에 포함됩니다(예: 할인은 음수, 청구 금액은 양수). |
 
 #### 우편 주소
 
-| 이름             | 타입   | 필수 | 설명                                                                                                                                                                                                                                      |
-| ---------------- | ------ | ---- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| extended_address | string | No   | An address extension such as an apartment number, C/O or alternative name.                                                                                                                                                                |
-| street_address   | string | No   | The street address.                                                                                                                                                                                                                       |
-| address_locality | string | No   | The locality in which the street address is, and which is in the region. For example, Mountain View.                                                                                                                                      |
-| address_region   | string | No   | The region in which the locality is, and which is in the country. Required for applicable countries (i.e. state in US, province in CA). For example, California or another appropriate first-level Administrative division.               |
-| address_country  | string | No   | The country. Recommended to be in 2-letter ISO 3166-1 alpha-2 format, for example "US". For backward compatibility, a 3-letter ISO 3166-1 alpha-3 country code such as "SGP" or a full country name such as "Singapore" can also be used. |
-| postal_code      | string | No   | The postal code. For example, 94043.                                                                                                                                                                                                      |
-| first_name       | string | No   | Optional. First name of the contact associated with the address.                                                                                                                                                                          |
-| last_name        | string | No   | Optional. Last name of the contact associated with the address.                                                                                                                                                                           |
-| phone_number     | string | No   | Optional. Phone number of the contact associated with the address.                                                                                                                                                                        |
+| 이름             | 타입   | 필수   | 설명                                                                                                                                                                              |
+| ---------------- | ------ | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| extended_address | string | 아니요 | 아파트 호수, C/O, 대체 이름 같은 주소 보충 정보.                                                                                                                                  |
+| street_address   | string | 아니요 | 도로명 주소.                                                                                                                                                                      |
+| address_locality | string | 아니요 | 도로명 주소가 속하고 해당 지역 안에 있는 시·군·구. 예: Mountain View.                                                                                                             |
+| address_region   | string | 아니요 | 시·군·구가 속하고 해당 국가 안에 있는 지역. 해당하는 국가에서는 필수입니다(예: 미국의 주, 캐나다의 주). 예: California 또는 그 밖의 적절한 1차 행정 구역.                         |
+| address_country  | string | 아니요 | 국가. 2자리 ISO 3166-1 alpha-2 형식(예: "US")을 권장합니다. 하위 호환성을 위해 "SGP" 같은 3자리 ISO 3166-1 alpha-3 국가 코드나 "Singapore" 같은 전체 국가명도 사용할 수 있습니다. |
+| postal_code      | string | 아니요 | 우편번호. 예: 94043.                                                                                                                                                              |
+| first_name       | string | 아니요 | 선택 사항. 주소와 연결된 연락처의 이름.                                                                                                                                           |
+| last_name        | string | 아니요 | 선택 사항. 주소와 연결된 연락처의 성.                                                                                                                                             |
+| phone_number     | string | 아니요 | 선택 사항. 주소와 연결된 연락처의 전화번호.                                                                                                                                       |
 
 ### 예시
 
@@ -300,9 +300,9 @@ This object MUST be one of the following types: [Shipping Destination](/ucp-ko/2
 
 플랫폼은 `platform_schema`로 자신의 렌더링 능력을 선언합니다.
 
-| 이름                 | 타입    | 필수 | 설명                                |
-| -------------------- | ------- | ---- | ----------------------------------- |
-| supports_multi_group | boolean | No   | Enables multiple groups per method. |
+| 이름                 | 타입    | 필수   | 설명                                      |
+| -------------------- | ------- | ------ | ----------------------------------------- |
+| supports_multi_group | boolean | 아니요 | 방식당 여러 그룹을 사용할 수 있게 합니다. |
 
 config를 생략하거나 `supports_multi_group: false`로 설정한 플랫폼은 단일 그룹 응답을 받습니다. 응답 형태는 항상 `methods[].groups[]`이며, 차이는 방법마다 `groups.length`가 1을 넘을 수 있느냐뿐입니다.
 
@@ -318,10 +318,10 @@ config를 생략하거나 `supports_multi_group: false`로 설정한 플랫폼�
 
 비즈니스는 `merchant_config`로 지원하는 풀필먼트 구성을 선언합니다.
 
-| 이름                       | 타입         | 필수 | 설명                                           |
-| -------------------------- | ------------ | ---- | ---------------------------------------------- |
-| allows_multi_destination   | object       | No   | Permits multiple destinations per method type. |
-| allows_method_combinations | Array[array] | No   | Allowed method type combinations.              |
+| 이름                       | 타입         | 필수   | 설명                                    |
+| -------------------------- | ------------ | ------ | --------------------------------------- |
+| allows_multi_destination   | object       | 아니요 | 방법 유형별로 여러 목적지를 허용합니다. |
+| allows_method_combinations | Array[array] | 아니요 | 허용되는 결제 방법 유형 조합.           |
 
 ```json
 {

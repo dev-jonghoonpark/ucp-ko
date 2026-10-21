@@ -2768,74 +2768,74 @@
 <tr>
 <td style="text-align: left;">ucp</td>
 <td style="text-align: left;">any</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">UCP metadata for order responses. No payment handlers needed post-purchase.</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">주문 응답용 UCP 메타데이터. 구매 후에는 결제 핸들러가 필요 없습니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">Unique order identifier.</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">고유 주문 식별자.</td>
 </tr>
 <tr>
 <td style="text-align: left;">label</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Human-readable label for identifying the order. MUST only be provided by the business.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">주문을 식별하기 위한 사람이 읽을 수 있는 라벨. 반드시 비즈니스만 제공해야 합니다(MUST).</td>
 </tr>
 <tr>
 <td style="text-align: left;">checkout_id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">Associated checkout ID for reconciliation.</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">정산 대사를 위한 연관 체크아웃 ID.</td>
 </tr>
 <tr>
 <td style="text-align: left;">permalink_url</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">Permalink to access the order on merchant site.</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">판매자 사이트에서 주문에 접근하는 퍼머링크.</td>
 </tr>
 <tr>
 <td style="text-align: left;">line_items</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/2026-04-08/2026-04-08/specification/reference/#order-line-item">Order Line Item</a>]</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">Line items representing what was purchased — can change post-order via edits or exchanges.</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">구매한 항목을 나타내는 라인 아이템. 주문 후 수정이나 교환으로 바뀔 수 있습니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">fulfillment</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">Fulfillment data: buyer expectations and what actually happened.</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">풀필먼트 데이터: 구매자 예상 정보와 실제로 일어난 일.</td>
 </tr>
 <tr>
 <td style="text-align: left;">adjustments</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/2026-04-08/2026-04-08/specification/reference/#adjustment">Adjustment</a>]</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Post-order events (refunds, returns, credits, disputes, cancellations, etc.) that exist independently of fulfillment.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">풀필먼트와 독립적으로 존재하는 주문 후 이벤트(환불, 반품, 크레딧, 분쟁, 취소 등).</td>
 </tr>
 <tr>
 <td style="text-align: left;">currency</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">ISO 4217 currency code. MUST match the currency from the originating checkout session.</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">ISO 4217 통화 코드. 반드시 원래 체크아웃 세션의 통화와 일치해야 합니다(MUST).</td>
 </tr>
 <tr>
 <td style="text-align: left;">totals</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-04-08/2026-04-08/specification/reference/#totals">Totals</a></td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">Different totals for the order.</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">주문의 각종 합계.</td>
 </tr>
 <tr>
 <td style="text-align: left;">messages</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/2026-04-08/2026-04-08/specification/reference/#message">Message</a>]</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Business outcome messages (errors, warnings, informational). Present when the business needs to communicate status or issues to the platform.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">비즈니스 결과 메시지(오류, 경고, 정보). 비즈니스가 플랫폼에 상태나 문제를 전달해야 할 때 포함됩니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">attribution</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-04-08/2026-04-08/specification/reference/#attribution">Attribution</a></td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Snapshot of the attribution associated with the originating checkout. Read-only on the order.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">원래 체크아웃과 연결된 어트리뷰션의 스냅샷입니다. 주문에서는 읽기 전용입니다.</td>
 </tr>
 </tbody>
 </table>
@@ -2976,58 +2976,58 @@
 <tbody>
 <tr>
 <td style="text-align: left;"><code>Authorization</code></td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Should contain oauth token representing the following 2 schemes: 1. Platform self authenticating (client_credentials). 2. Platform authenticating on behalf of end user (authorization_code).</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">다음 두 방식을 나타내는 OAuth 토큰을 담아야 합니다. 1. 플랫폼 자체 인증(client_credentials). 2. 최종 사용자를 대신한 플랫폼 인증(authorization_code).</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>X-API-Key</code></td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Authenticates the platform with a reusable api key allocated to the platform by the business.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">비즈니스가 플랫폼에 할당한 재사용 가능한 API 키로 플랫폼을 인증합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>Signature</code></td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">RFC 9421 HTTP Message Signature. Required when using HTTP Message Signatures for authentication. Format: <code>sig1=:&lt;base64-signature&gt;:</code>.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">RFC 9421 HTTP Message Signature입니다. 인증에 HTTP Message Signatures를 사용할 때 필수입니다. 형식: <code>sig1=:&lt;base64-signature&gt;:</code>.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>Signature-Input</code></td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">RFC 9421 Signature-Input header. Required when using HTTP Message Signatures for authentication. Format: <code>sig1=("@method" "@path" ...);created=&lt;timestamp&gt;;keyid="&lt;key-id&gt;"</code>.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">RFC 9421 Signature-Input 헤더입니다. 인증에 HTTP Message Signatures를 사용할 때 필수입니다. 형식: <code>sig1=("@method" "@path" ...);created=&lt;timestamp&gt;;keyid="&lt;key-id&gt;"</code>.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>Request-Id</code></td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">For tracing the requests across network layers and components.</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">네트워크 계층과 구성 요소 전반에서 요청을 추적하기 위한 값.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>User-Agent</code></td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Identifies the user agent string making the call.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">호출하는 사용자 에이전트 문자열을 식별합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>UCP-Agent</code></td>
-<td style="text-align: left;"><strong>Yes</strong></td>
-<td style="text-align: left;">Identifies the UCP agent making the call. All requests MUST include the UCP-Agent header containing the signer's profile URI using RFC 8941 Dictionary syntax. The URL MUST point to /.well-known/ucp. Format: profile="https://example.com/.well-known/ucp".</td>
+<td style="text-align: left;"><strong>예</strong></td>
+<td style="text-align: left;">호출하는 UCP 에이전트를 식별합니다. 모든 요청은 반드시 RFC 8941 Dictionary 구문으로 서명자의 프로필 URI를 담은 UCP-Agent 헤더를 포함해야 합니다(MUST). URL은 반드시 /.well-known/ucp를 가리켜야 합니다(MUST). 형식: profile="https://example.com/.well-known/ucp".</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>Content-Type</code></td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Representation Metadata. Tells the receiver what the data in the message body actually is.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">표현 메타데이터(Representation Metadata)입니다. 메시지 본문의 데이터가 실제로 무엇인지 수신자에게 알려 줍니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>Accept</code></td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Content Negotiation. The client tells the server what data formats it is capable of understanding.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">콘텐츠 협상. 클라이언트가 이해할 수 있는 데이터 형식을 서버에 알립니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>Accept-Language</code></td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Localization. Tells the receiver the user's preferred natural languages, often with "weights" or priorities.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">현지화. 사용자가 선호하는 자연어를 수신자에게 알리며, 흔히 "가중치"나 우선순위가 함께 붙습니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>Accept-Encoding</code></td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Compression. The client tells the server which content-codings it supports, usually for compression.</td>
+<td style="text-align: left;">아니요</td>
+<td style="text-align: left;">압축. 클라이언트가 지원하는 콘텐츠 인코딩(주로 압축)을 서버에 알립니다.</td>
 </tr>
 </tbody>
 </table>
