@@ -4522,8 +4522,8 @@
 <tr>
 <td style="text-align: left;">fulfillment</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-08-25/2026-08-25/specification/shopping/extensions/fulfillment/#fulfillment"> Fulfillment</a></td>
-<td style="text-align: left;">Optional; omitted on complete</td>
-<td style="text-align: left;">Fulfillment details.</td>
+<td style="text-align: left;">선택; complete 시 생략</td>
+<td style="text-align: left;">풀필먼트 세부 정보.</td>
 </tr>
 </tbody>
 </table>
@@ -4542,14 +4542,14 @@
 <tr>
 <td style="text-align: left;">methods</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#fulfillment-method">Fulfillment Method</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Fulfillment methods for cart items.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">장바구니 상품의 풀필먼트 방식.</td>
 </tr>
 <tr>
 <td style="text-align: left;">available_methods</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#fulfillment-available-method">Fulfillment Available Method</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Inventory availability hints.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">재고 가용성 힌트.</td>
 </tr>
 </tbody>
 </table>
@@ -4567,38 +4567,38 @@
 <tr>
 <td style="text-align: left;">id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Unique fulfillment method identifier.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">고유 풀필먼트 방식 식별자.</td>
 </tr>
 <tr>
 <td style="text-align: left;">type</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Fulfillment method type. Well-known values: <code>shipping</code>, <code>pickup</code>. Businesses MAY use additional values.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">풀필먼트 방식 유형. 잘 알려진 값: <code>shipping</code>, <code>pickup</code>. 비즈니스는 추가 값을 사용할 수 있습니다(MAY).</td>
 </tr>
 <tr>
 <td style="text-align: left;">line_item_ids</td>
 <td style="text-align: left;">Array[string]</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Line item IDs fulfilled via this method.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">이 방식으로 풀필먼트되는 라인 아이템 ID.</td>
 </tr>
 <tr>
 <td style="text-align: left;">destinations</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#fulfillment-destination">Fulfillment Destination</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Available destinations for this method. In Business responses, each destination carries a <code>type</code> and <code>id</code>.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 방법에 사용할 수 있는 목적지. 비즈니스 응답에서 각 목적지에는 <code>type</code>과 <code>id</code>가 있습니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">selected_destination_id</td>
 <td style="text-align: left;">['string', 'null']</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">ID of the selected destination. Accepts any stable, Business-scoped ID the Business recognizes for this method, including Location IDs not yet enumerated in <code>destinations</code>.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">선택한 목적지의 ID. 비즈니스가 이 방식에 대해 인식하는 안정적인 비즈니스 범위 ID라면 무엇이든 받으며, 아직 <code>destinations</code>에 나열되지 않은 위치 ID도 포함합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">groups</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#fulfillment-group">Fulfillment Group</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Fulfillment groups for selecting options. Agent sets selected_option_id on groups to choose shipping method.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">옵션 선택을 위한 풀필먼트 그룹. 에이전트는 그룹에 selected_option_id를 설정해 배송 방식을 선택합니다.</td>
 </tr>
 </tbody>
 </table>
@@ -4616,14 +4616,14 @@
 <tr>
 <td style="text-align: left;">type</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Destination contract discriminator. Required in Business responses and optional in Platform requests. Well-known values: <code>shipping_address</code>, <code>business_location</code>. The enclosing method contract defines request defaults and which fields the Platform may write; negotiated extensions define additional values.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">목적지 계약 판별자. 비즈니스 응답에서는 필수이고 플랫폼 요청에서는 선택입니다. 잘 알려진 값: <code>shipping_address</code>, <code>business_location</code>. 요청 기본값과 플랫폼이 쓸 수 있는 필드는 이를 감싸는 방식 계약이 정의하며, 협상된 확장이 추가 값을 정의합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Fulfillment destination identifier.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">풀필먼트 목적지 식별자.</td>
 </tr>
 </tbody>
 </table>
@@ -4641,68 +4641,68 @@
 <tr>
 <td style="text-align: left;">extended_address</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">An address extension such as an apartment number, C/O or alternative name.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">아파트 호수, C/O, 대체 이름 같은 주소 보충 정보.</td>
 </tr>
 <tr>
 <td style="text-align: left;">street_address</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">The street address.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">도로명 주소.</td>
 </tr>
 <tr>
 <td style="text-align: left;">address_locality</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">The locality in which the street address is, and which is in the region. For example, Mountain View.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">도로명 주소가 속하고 해당 지역 안에 있는 시·군·구. 예: Mountain View.</td>
 </tr>
 <tr>
 <td style="text-align: left;">address_region</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">The region in which the locality is, and which is in the country. Required for applicable countries (i.e. state in US, province in CA). For example, California or another appropriate first-level Administrative division.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">시·군·구가 속하고 해당 국가 안에 있는 지역. 해당하는 국가에서는 필수입니다(예: 미국의 주, 캐나다의 주). 예: California 또는 그 밖의 적절한 1차 행정 구역.</td>
 </tr>
 <tr>
 <td style="text-align: left;">address_country</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">The country. Recommended to be in 2-letter ISO 3166-1 alpha-2 format, for example "US". For backward compatibility, a 3-letter ISO 3166-1 alpha-3 country code such as "SGP" or a full country name such as "Singapore" can also be used.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">국가. 2자리 ISO 3166-1 alpha-2 형식(예: "US")을 권장합니다. 하위 호환성을 위해 "SGP" 같은 3자리 ISO 3166-1 alpha-3 국가 코드나 "Singapore" 같은 전체 국가명도 사용할 수 있습니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">postal_code</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">The postal code. For example, 94043.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">우편번호. 예: 94043.</td>
 </tr>
 <tr>
 <td style="text-align: left;">first_name</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Optional. First name of the contact associated with the address.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">선택 사항. 주소와 연결된 연락처의 이름.</td>
 </tr>
 <tr>
 <td style="text-align: left;">last_name</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Optional. Last name of the contact associated with the address.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">선택 사항. 주소와 연결된 연락처의 성.</td>
 </tr>
 <tr>
 <td style="text-align: left;">phone_number</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Optional. Phone number of the contact associated with the address.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">선택 사항. 주소와 연결된 연락처의 전화번호.</td>
 </tr>
 <tr>
 <td style="text-align: left;">id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">ID specific to this shipping destination.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">이 배송 목적지에 고유한 ID.</td>
 </tr>
 <tr>
 <td style="text-align: left;">type</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;"><strong>Constant = shipping_address</strong>. Destination type discriminator.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;"><strong>상수 = shipping_address</strong>. 목적지 유형 판별자.</td>
 </tr>
 </tbody>
 </table>
@@ -4720,26 +4720,26 @@
 <tr>
 <td style="text-align: left;">id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Stable, opaque, Business-scoped Location identifier.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">비즈니스 범위의 안정적이고 불투명한 위치 식별자.</td>
 </tr>
 <tr>
 <td style="text-align: left;">name</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Buyer-facing, Business-owned display name.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">구매자에게 표시되는, 비즈니스가 소유한 표시 이름.</td>
 </tr>
 <tr>
 <td style="text-align: left;">address</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#postal-address">Postal Address</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Physical address of the location.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">장소의 실제 주소.</td>
 </tr>
 <tr>
 <td style="text-align: left;">type</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;"><strong>Constant = business_location</strong>. Destination type discriminator. Response-only.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;"><strong>상수 = business_location</strong>. 목적지 유형 판별자. 응답 전용.</td>
 </tr>
 </tbody>
 </table>
@@ -4757,20 +4757,20 @@
 <tr>
 <td style="text-align: left;">id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Stable, opaque, Business-scoped Location identifier.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">비즈니스 범위의 안정적이고 불투명한 위치 식별자.</td>
 </tr>
 <tr>
 <td style="text-align: left;">name</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Buyer-facing, Business-owned display name.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">구매자에게 표시되는, 비즈니스가 소유한 표시 이름.</td>
 </tr>
 <tr>
 <td style="text-align: left;">address</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#postal-address">Postal Address</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Physical address of the location.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">장소의 실제 주소.</td>
 </tr>
 </tbody>
 </table>
@@ -4788,26 +4788,26 @@
 <tr>
 <td style="text-align: left;">id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Group identifier for referencing merchant-generated groups in updates.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">업데이트 시 판매자가 생성한 그룹을 참조하기 위한 그룹 식별자.</td>
 </tr>
 <tr>
 <td style="text-align: left;">line_item_ids</td>
 <td style="text-align: left;">Array[string]</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Line item IDs included in this group/package.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">이 그룹/패키지에 포함된 라인 아이템 ID.</td>
 </tr>
 <tr>
 <td style="text-align: left;">options</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#fulfillment-option">Fulfillment Option</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Available fulfillment options for this group.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 그룹에 사용할 수 있는 풀필먼트 옵션.</td>
 </tr>
 <tr>
 <td style="text-align: left;">selected_option_id</td>
 <td style="text-align: left;">['string', 'null']</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">ID of the selected fulfillment option for this group.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 그룹에서 선택한 풀필먼트 옵션의 ID.</td>
 </tr>
 </tbody>
 </table>
@@ -4825,44 +4825,44 @@
 <tr>
 <td style="text-align: left;">id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Unique identifier for this fulfillment option.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">이 풀필먼트 옵션의 고유 식별자.</td>
 </tr>
 <tr>
 <td style="text-align: left;">title</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Short label that distinguishes this option from its siblings (e.g. 'Standard', 'Express Shipping', 'Curbside Pickup').</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">형제 옵션과 이 옵션을 구분하는 짧은 레이블(예: 'Standard', 'Express Shipping', 'Curbside Pickup').</td>
 </tr>
 <tr>
 <td style="text-align: left;">description</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#description">Description</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Supplementary context for the title (e.g. 'Arrives in 4 business days', 'Arrives Dec 12-15 via FedEx'). Directly renderable; MUST NOT repeat the title.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">제목을 보충하는 맥락 정보(예: 'Arrives in 4 business days', 'Arrives Dec 12-15 via FedEx'). 그대로 렌더링할 수 있으며, 제목을 반복해서는 안 됩니다(MUST NOT).</td>
 </tr>
 <tr>
 <td style="text-align: left;">carrier</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Carrier name (for shipping).</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">운송사 이름(배송용).</td>
 </tr>
 <tr>
 <td style="text-align: left;">earliest_fulfillment_time</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Earliest fulfillment date.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">가장 이른 풀필먼트 날짜.</td>
 </tr>
 <tr>
 <td style="text-align: left;">latest_fulfillment_time</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Latest fulfillment date.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">가장 늦은 풀필먼트 날짜.</td>
 </tr>
 <tr>
 <td style="text-align: left;">totals</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#total">Total Response</a>]</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Fulfillment option totals breakdown.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">풀필먼트 옵션 합계 내역.</td>
 </tr>
 </tbody>
 </table>
@@ -4880,26 +4880,26 @@
 <tr>
 <td style="text-align: left;">type</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Fulfillment method type this availability applies to. Well-known values: <code>shipping</code>, <code>pickup</code>; businesses MAY use additional values.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">이 가용성이 적용되는 풀필먼트 방식 유형. 잘 알려진 값: <code>shipping</code>, <code>pickup</code>. 비즈니스는 추가 값을 사용할 수 있습니다(MAY).</td>
 </tr>
 <tr>
 <td style="text-align: left;">line_item_ids</td>
 <td style="text-align: left;">Array[string]</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Line items available for this fulfillment method.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">이 풀필먼트 방식에 사용할 수 있는 라인 아이템.</td>
 </tr>
 <tr>
 <td style="text-align: left;">fulfillable_on</td>
 <td style="text-align: left;">['string', 'null']</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">'now' for immediate availability, or ISO 8601 date for future (preorders, transfers).</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">즉시 구매 가능하면 'now', 향후 구매 가능(예약 주문, 이관)이면 ISO 8601 날짜.</td>
 </tr>
 <tr>
 <td style="text-align: left;">description</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Human-readable availability info (e.g., 'Available for pickup at Downtown Store today').</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">사람이 읽을 수 있는 가용성 정보(예: 'Available for pickup at Downtown Store today').</td>
 </tr>
 </tbody>
 </table>
@@ -4917,20 +4917,20 @@
 <tr>
 <td style="text-align: left;">type</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Cost category. Well-known values: subtotal, items_discount, discount, fulfillment, tax, fee, total. Businesses MAY use additional values.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">비용 범주. 잘 알려진 값: subtotal, items_discount, discount, fulfillment, tax, fee, total. 비즈니스는 추가 값을 사용할 수 있습니다(MAY).</td>
 </tr>
 <tr>
 <td style="text-align: left;">display_text</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Text to display against the amount. Should reflect appropriate method (e.g., 'Shipping', 'Delivery').</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">금액 옆에 표시할 텍스트. 적절한 방식을 반영해야 합니다(예: 'Shipping', 'Delivery').</td>
 </tr>
 <tr>
 <td style="text-align: left;">amount</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#signed-amount">Signed Amount</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Monetary amount in the currency's minor unit as defined by ISO 4217. Refer to the currency's exponent to determine minor-to-major ratio (e.g., 2 for USD, 0 for JPY, 3 for KWD). May be negative — the sign is intrinsic to the value (e.g., discounts are negative, charges are positive).</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">ISO 4217에 정의된 통화의 최소 단위로 나타낸 금액. 최소 단위와 기본 단위의 비율은 통화의 지수를 참고합니다(예: USD는 2, JPY는 0, KWD는 3). 음수일 수 있으며, 부호는 값 자체에 포함됩니다(예: 할인은 음수, 청구 금액은 양수).</td>
 </tr>
 </tbody>
 </table>
@@ -4948,56 +4948,56 @@
 <tr>
 <td style="text-align: left;">extended_address</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">An address extension such as an apartment number, C/O or alternative name.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">아파트 호수, C/O, 대체 이름 같은 주소 보충 정보.</td>
 </tr>
 <tr>
 <td style="text-align: left;">street_address</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">The street address.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">도로명 주소.</td>
 </tr>
 <tr>
 <td style="text-align: left;">address_locality</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">The locality in which the street address is, and which is in the region. For example, Mountain View.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">도로명 주소가 속하고 해당 지역 안에 있는 시·군·구. 예: Mountain View.</td>
 </tr>
 <tr>
 <td style="text-align: left;">address_region</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">The region in which the locality is, and which is in the country. Required for applicable countries (i.e. state in US, province in CA). For example, California or another appropriate first-level Administrative division.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">시·군·구가 속하고 해당 국가 안에 있는 지역. 해당하는 국가에서는 필수입니다(예: 미국의 주, 캐나다의 주). 예: California 또는 그 밖의 적절한 1차 행정 구역.</td>
 </tr>
 <tr>
 <td style="text-align: left;">address_country</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">The country. Recommended to be in 2-letter ISO 3166-1 alpha-2 format, for example "US". For backward compatibility, a 3-letter ISO 3166-1 alpha-3 country code such as "SGP" or a full country name such as "Singapore" can also be used.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">국가. 2자리 ISO 3166-1 alpha-2 형식(예: "US")을 권장합니다. 하위 호환성을 위해 "SGP" 같은 3자리 ISO 3166-1 alpha-3 국가 코드나 "Singapore" 같은 전체 국가명도 사용할 수 있습니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">postal_code</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">The postal code. For example, 94043.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">우편번호. 예: 94043.</td>
 </tr>
 <tr>
 <td style="text-align: left;">first_name</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Optional. First name of the contact associated with the address.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">선택 사항. 주소와 연결된 연락처의 이름.</td>
 </tr>
 <tr>
 <td style="text-align: left;">last_name</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Optional. Last name of the contact associated with the address.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">선택 사항. 주소와 연결된 연락처의 성.</td>
 </tr>
 <tr>
 <td style="text-align: left;">phone_number</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Optional. Phone number of the contact associated with the address.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">선택 사항. 주소와 연결된 연락처의 전화번호.</td>
 </tr>
 </tbody>
 </table>
@@ -5409,7 +5409,7 @@ Downtown Store에서 픽업할 수 있습니다.</p>
 바뀌므로, 단일 상품 기준으로 찾은 옵션이 체크아웃에서는 달라질 수 있습니다.</p>
 <h3 id="shapes">형태<a class="headerlink" href="#shapes" title="Permanent link">&para;</a></h3>
 <h4 id="catalog-fulfillment">카탈로그 풀필먼트<a class="headerlink" href="#catalog-fulfillment" title="Permanent link">&para;</a></h4>
-<p>How a catalog variant can be fulfilled. Mirrors checkout <code>fulfillment</code>.</p>
+<p>카탈로그 변형을 풀필먼트하는 방식. 체크아웃 <code>fulfillment</code>와 같은 구조입니다.</p>
 <table>
 <thead>
 <tr>
@@ -5423,13 +5423,13 @@ Downtown Store에서 픽업할 수 있습니다.</p>
 <tr>
 <td style="text-align: left;">methods</td>
 <td style="text-align: left;">Array[object]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Fulfillment methods for this variant.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 변형의 풀필먼트 방식.</td>
 </tr>
 </tbody>
 </table>
 <h4 id="catalog-fulfillment-method">카탈로그 풀필먼트 방법<a class="headerlink" href="#catalog-fulfillment-method" title="Permanent link">&para;</a></h4>
-<p>A fulfillment method on a catalog variant: how the variant can be fulfilled, and its availability.</p>
+<p>카탈로그 변형의 풀필먼트 방법: 변형을 어떻게 풀필먼트할 수 있는지와 그 재고 상황.</p>
 <table>
 <thead>
 <tr>
@@ -5443,32 +5443,32 @@ Downtown Store에서 픽업할 수 있습니다.</p>
 <tr>
 <td style="text-align: left;">type</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Fulfillment method type. Well-known values: <code>shipping</code>, <code>pickup</code>. Businesses MAY use additional values.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">풀필먼트 방식 유형. 잘 알려진 값: <code>shipping</code>, <code>pickup</code>. 비즈니스는 추가 값을 사용할 수 있습니다(MAY).</td>
 </tr>
 <tr>
 <td style="text-align: left;">description</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Short buyer-facing summary (e.g. 'Ships in 2–4 business days').</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">구매자에게 보여 주는 짧은 요약(예: 'Ships in 2–4 business days').</td>
 </tr>
 <tr>
 <td style="text-align: left;">availability</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Availability of this variant via this method at the specified or inferred location.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">지정되거나 추론된 장소에서 이 방법으로 이 변형을 구할 수 있는지 여부.</td>
 </tr>
 <tr>
 <td style="text-align: left;">location</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Stable, opaque identifier for the Business Location resolved for this place-based fulfillment method. The Business recognizes the same ID when submitted as <code>selected_destination_id</code> for that method; recognition does not reserve inventory or guarantee eligibility, and current terms are revalidated.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 장소 기반 풀필먼트 방식에 대해 결정된 비즈니스 위치의 안정적이고 불투명한 식별자. 해당 방식의 <code>selected_destination_id</code>로 같은 ID가 제출되면 비즈니스가 이를 인식합니다. 인식했다고 해서 재고를 예약하거나 적격성을 보장하지는 않으며, 현재 조건은 다시 검증됩니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">options</td>
 <td style="text-align: left;">Array[object]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Representative fulfillment options for this method (e.g. Standard, Express). Without a destination or full cart, a Business SHOULD preview meaningful boundary options (e.g. cheapest, fastest); more specific options are negotiated in Checkout once line items and destination are known.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 방식의 대표 풀필먼트 옵션(예: Standard, Express)입니다. 배송지나 전체 장바구니가 없을 때 비즈니스는 의미 있는 양극단 옵션(예: 가장 저렴한 옵션, 가장 빠른 옵션)을 미리 보여 줘야 합니다(SHOULD). 더 구체적인 옵션은 라인 아이템과 배송지가 정해진 뒤 체크아웃에서 협상합니다.</td>
 </tr>
 </tbody>
 </table>
@@ -5486,20 +5486,20 @@ Downtown Store에서 픽업할 수 있습니다.</p>
 <tr>
 <td style="text-align: left;">id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Unique identifier for this fulfillment option.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">이 풀필먼트 옵션의 고유 식별자.</td>
 </tr>
 <tr>
 <td style="text-align: left;">title</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Short label that distinguishes this option from its siblings (e.g. 'Standard', 'Express Shipping', 'Curbside Pickup').</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">형제 옵션과 이 옵션을 구분하는 짧은 레이블(예: 'Standard', 'Express Shipping', 'Curbside Pickup').</td>
 </tr>
 <tr>
 <td style="text-align: left;">description</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#description">Description</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Supplementary context for the title (e.g. 'Arrives in 4 business days', 'Arrives Dec 12-15 via FedEx'). Directly renderable; MUST NOT repeat the title.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">제목을 보충하는 맥락 정보(예: 'Arrives in 4 business days', 'Arrives Dec 12-15 via FedEx'). 그대로 렌더링할 수 있으며, 제목을 반복해서는 안 됩니다(MUST NOT).</td>
 </tr>
 </tbody>
 </table>
@@ -5517,14 +5517,14 @@ Downtown Store에서 픽업할 수 있습니다.</p>
 <tr>
 <td style="text-align: left;">available</td>
 <td style="text-align: left;">boolean</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Whether this can be obtained. See status for fulfillment details.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">구할 수 있는지 여부. 풀필먼트 세부 정보는 status를 참고하세요.</td>
 </tr>
 <tr>
 <td style="text-align: left;">status</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Qualifies available with fulfillment state. Well-known values: <code>in_stock</code>, <code>backorder</code>, <code>preorder</code>, <code>out_of_stock</code>, <code>discontinued</code>.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">available을 풀필먼트 상태로 세분화합니다. 잘 알려진 값: <code>in_stock</code>, <code>backorder</code>, <code>preorder</code>, <code>out_of_stock</code>, <code>discontinued</code>.</td>
 </tr>
 </tbody>
 </table>
@@ -5542,26 +5542,26 @@ Downtown Store에서 픽업할 수 있습니다.</p>
 <tr>
 <td style="text-align: left;">address_country</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">The country, as a 2-letter ISO 3166-1 alpha-2 code (e.g. "US"). A 3-letter alpha-3 code or full country name MAY also be used.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">2자리 ISO 3166-1 alpha-2 코드로 표기한 국가(예: "US"). 3자리 alpha-3 코드나 전체 국가명을 사용할 수도 있습니다(MAY).</td>
 </tr>
 <tr>
 <td style="text-align: left;">address_region</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">The first-level administrative region within the country (e.g. a state or province such as California).</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">국가 안의 1차 행정 구역(예: California 같은 주 또는 도).</td>
 </tr>
 <tr>
 <td style="text-align: left;">postal_code</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">The postal code (e.g. "94043").</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">우편번호(예: "94043").</td>
 </tr>
 <tr>
 <td style="text-align: left;">location</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">A reference to the destination (e.g. store, pickup location, saved address).</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">목적지 참조(예: 매장, 픽업 장소, 저장된 주소).</td>
 </tr>
 </tbody>
 </table>
@@ -5666,8 +5666,8 @@ Downtown Store에서 픽업할 수 있습니다.</p>
 <tr>
 <td style="text-align: left;">supports_multi_group</td>
 <td style="text-align: left;">boolean</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Enables multiple groups per method.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">방식당 여러 그룹을 사용할 수 있게 합니다.</td>
 </tr>
 </tbody>
 </table>
@@ -5726,14 +5726,14 @@ Downtown Store에서 픽업할 수 있습니다.</p>
 <tr>
 <td style="text-align: left;">multi_destination</td>
 <td style="text-align: left;">Array[object]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Method types that permit multiple destinations within one cart (e.g. split shipping across addresses). Listing a method permits it; an omitted method does not. Open — businesses MAY list any method type.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">하나의 장바구니 안에서 여러 목적지를 허용하는 방법 유형(예: 여러 주소로 나누어 배송). 목록에 있는 방법은 허용되고, 빠진 방법은 허용되지 않습니다. 열린 목록이므로 비즈니스는 어떤 방법 유형이든 나열할 수 있습니다(MAY).</td>
 </tr>
 <tr>
 <td style="text-align: left;">method_combinations</td>
 <td style="text-align: left;">Array[array]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Method-type combinations the business permits within one cart. Each inner array is a permitted set of method <code>type</code> values (e.g. shipping + pickup).</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">비즈니스가 하나의 장바구니 안에서 허용하는 방법 유형 조합. 각 내부 배열은 허용되는 방법 <code>type</code> 값의 집합입니다(예: 배송 + 픽업).</td>
 </tr>
 </tbody>
 </table>

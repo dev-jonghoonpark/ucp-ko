@@ -4456,92 +4456,92 @@ ECaP 세션이 이어지는 동안 바뀌어서는 안 됩니다(<strong>MUST NO
 <tr>
 <td style="text-align: left;">ucp</td>
 <td style="text-align: left;">any</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">UCP metadata for cart responses. No payment handlers needed pre-checkout.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">장바구니 응답용 UCP 메타데이터. 체크아웃 전에는 결제 핸들러가 필요 없습니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Unique cart identifier.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">고유 장바구니 식별자.</td>
 </tr>
 <tr>
 <td style="text-align: left;">line_items</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#line-item">Line Item Response</a>]</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Cart line items. Same structure as checkout. Full replacement on update.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">장바구니 라인 아이템. 체크아웃과 구조가 같습니다. 업데이트 시 전체를 교체합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">context</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#context">Context</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Buyer signals for localization (country, region, postal_code). Merchant uses for pricing, availability, currency. Falls back to geo-IP if omitted.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">현지화를 위한 구매자 신호(country, region, postal_code). 판매자는 이를 가격, 재고, 통화를 정하는 데 사용합니다. 생략하면 geo-IP로 대체합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">signals</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#signals">Signals</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Environment data provided by the platform to support authorization and abuse prevention. Values MUST NOT be buyer-asserted claims — platforms provide signals based on direct observation or independently verifiable third-party attestations. All signal keys MUST use reverse-domain naming to ensure provenance and prevent collisions when multiple extensions contribute to the shared namespace.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">승인과 악용 방지를 돕기 위해 플랫폼이 제공하는 환경 데이터. 값은 구매자가 주장한 내용이어서는 안 됩니다(MUST NOT). 플랫폼은 직접 관찰했거나 독립적으로 검증 가능한 제3자 증명에 근거한 신호를 제공합니다. 여러 확장이 공유 네임스페이스에 값을 추가할 때 출처를 보장하고 충돌을 막기 위해, 모든 신호 키는 반드시 역도메인 이름을 사용해야 합니다(MUST).</td>
 </tr>
 <tr>
 <td style="text-align: left;">attribution</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#attribution">Attribution</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Platform-emitted referral and conversion-event context — campaign identifiers, click IDs, source/medium markers, etc. The same parameters platforms communicate via URL query parameters in browser-based flows.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">플랫폼이 내보내는 추천 및 전환 이벤트 맥락: 캠페인 식별자, 클릭 ID, source/medium 마커 등. 브라우저 기반 흐름에서 플랫폼이 URL 쿼리 매개변수로 전달하는 것과 같은 매개변수입니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">buyer</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#buyer">Buyer</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Optional buyer information for personalized estimates.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">개인화된 견적을 위한 구매자 정보(선택 사항).</td>
 </tr>
 <tr>
 <td style="text-align: left;">currency</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">ISO 4217 currency code. Determined by merchant based on context or geo-IP.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">ISO 4217 통화 코드. 판매자가 컨텍스트나 geo-IP를 바탕으로 결정합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">totals</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#totals">Totals</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Estimated cost breakdown. May be partial if shipping/tax not yet calculable.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">예상 비용 내역. 배송비·세금을 아직 계산할 수 없으면 일부만 포함될 수 있습니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">actions</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#actions">Actions</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Outstanding extension-defined Actions for this cart.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 장바구니에 대해 확장이 정의한 미해결 Action.</td>
 </tr>
 <tr>
 <td style="text-align: left;">messages</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#message">Message</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Validation messages, warnings, or informational notices.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">검증 메시지, 경고 또는 안내성 알림.</td>
 </tr>
 <tr>
 <td style="text-align: left;">links</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#link">Link</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Optional merchant links (policies, FAQs).</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">판매자 링크(선택 사항, 정책, FAQ).</td>
 </tr>
 <tr>
 <td style="text-align: left;">policies</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#policy">Policy</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Policies (e.g., return/refund terms) that apply to the items in this cart. <code>applies_to</code> targets are relative to the response root; when absent or empty, refer to the URLs in <code>links[]</code>.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 장바구니의 항목에 적용되는 정책(예: 반품/환불 조건). <code>applies_to</code> 대상은 응답 루트를 기준으로 하며, 없거나 비어 있으면 <code>links[]</code>의 URL을 참조합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">continue_url</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">URL for cart handoff and session recovery. Enables sharing and human-in-the-loop flows.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">장바구니 핸드오프와 세션 복구용 URL. 공유와 사람이 개입하는(human-in-the-loop) 흐름을 지원합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">expires_at</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Cart expiry timestamp (RFC 3339). Optional.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">장바구니 만료 타임스탬프(RFC 3339). 선택 사항.</td>
 </tr>
 </tbody>
 </table>

@@ -3663,7 +3663,7 @@
 <h3 id="payment-instrument-split-payments">결제 수단(분할 결제)<a class="headerlink" href="#payment-instrument-split-payments" title="Permanent link">&para;</a></h3>
 <p>이 기능이 활성화되면 <code>checkout.payment.instruments</code>의 각 결제 수단에
 선택적 <code>amount</code> 필드가 추가됩니다.</p>
-<p>Payment instrument extended with an optional per-instrument amount for split payments.</p>
+<p>분할 결제를 위해 결제 수단별 금액(선택 사항)으로 확장된 결제 수단.</p>
 <table>
 <thead>
 <tr>
@@ -3677,44 +3677,44 @@
 <tr>
 <td style="text-align: left;">id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">A unique identifier for this instrument instance. Typically assigned by the platform for instruments it collects. For a business-owned saved instrument returned on an identity-linked response, this identifier is assigned by the business; the platform MUST treat it as an opaque, business-scoped reference, and the business resolves it server-side when the buyer selects it.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">이 결제 수단 인스턴스의 고유 식별자. 플랫폼이 수집하는 결제 수단은 보통 플랫폼이 할당합니다. 신원 연결된 응답으로 반환되는, 비즈니스가 소유한 저장 결제 수단이라면 비즈니스가 이 식별자를 할당합니다. 플랫폼은 반드시 이를 불투명한 비즈니스 범위 참조로 취급해야 하며(MUST), 구매자가 선택하면 비즈니스가 서버 측에서 해석합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">handler_id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">The unique identifier for the handler instance that produced this instrument. This corresponds to the 'id' field in the Payment Handler definition.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">이 결제 수단을 생성한 핸들러 인스턴스의 고유 식별자. 결제 핸들러 정의의 'id' 필드에 해당합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">type</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">The broad category of the instrument (e.g., 'card', 'tokenized_card'). Specific schemas will constrain this to a constant value.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">결제 수단의 대분류(예: 'card', 'tokenized_card'). 구체적인 스키마에서 이 값을 상수로 제한합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">billing_address</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">The billing address associated with this payment method.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 결제 방법에 연결된 청구지 주소.</td>
 </tr>
 <tr>
 <td style="text-align: left;">credential</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">The base definition for any payment credential. Handlers define specific credential types.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">모든 결제 자격 증명의 기본 정의. 구체적인 자격 증명 유형은 핸들러가 정의합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">display</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Display information for this payment instrument. Each payment instrument schema defines its specific display properties, as outlined by the payment handler.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 결제 수단의 표시 정보. 각 결제 수단 스키마가 결제 핸들러의 설명에 따라 고유한 표시 속성을 정의합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">amount</td>
 <td style="text-align: left;">integer</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Contribution amount for this instrument expressed in ISO 4217 minor units of the containing capability object's <code>currency</code>. On request: the platform's requested contribution (omit for open-amount). On response: the actual amount authorized or charged (omitted when not finally processed).</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 결제 수단의 분담 금액으로, 이를 포함하는 기능 객체의 <code>currency</code> 기준 ISO 4217 최소 단위로 표현합니다. 요청 시: 플랫폼이 요청하는 분담 금액(금액을 정하지 않으면 생략). 응답 시: 실제로 승인되거나 청구된 금액(최종 처리되지 않았으면 생략).</td>
 </tr>
 </tbody>
 </table>
@@ -3734,8 +3734,8 @@
 <tr>
 <td style="text-align: left;">allowed_combinations</td>
 <td style="text-align: left;">Array[array]</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Array of valid instrument combinations. Each combination is an array of instrument groups. A payment is valid if it matches any combination.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">유효한 결제 수단 조합의 배열. 각 조합은 결제 수단 그룹의 배열입니다. 결제가 어느 한 조합과 일치하면 유효합니다.</td>
 </tr>
 </tbody>
 </table>
@@ -3760,20 +3760,20 @@
 <tr>
 <td style="text-align: left;">types</td>
 <td style="text-align: left;">Array[string]</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Instrument types accepted by this group (OR logic). Any listed type qualifies.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">이 그룹이 받는 결제 수단 유형(OR 논리). 나열된 유형 중 하나면 충족합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">min</td>
 <td style="text-align: left;">integer</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Minimum number of instruments required from this group. Defaults to 0 (optional).</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 그룹에서 필요한 최소 결제 수단 개수. 기본값은 0(선택 사항)입니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">max</td>
 <td style="text-align: left;">integer</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Maximum number of instruments allowed from this group. Defaults to 1. MUST be greater than or equal to <code>min</code>.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 그룹에서 허용되는 최대 결제 수단 개수. 기본값은 1입니다. 반드시 <code>min</code> 이상이어야 합니다(MUST).</td>
 </tr>
 </tbody>
 </table>

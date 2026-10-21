@@ -6357,56 +6357,56 @@ HTTP 클라이언트 힌트로 구매자의 시스템 설정을 사용할 수 �
 <tr>
 <td style="text-align: left;">extended_address</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">An address extension such as an apartment number, C/O or alternative name.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">아파트 호수, C/O, 대체 이름 같은 주소 보충 정보.</td>
 </tr>
 <tr>
 <td style="text-align: left;">street_address</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">The street address.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">도로명 주소.</td>
 </tr>
 <tr>
 <td style="text-align: left;">address_locality</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">The locality in which the street address is, and which is in the region. For example, Mountain View.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">도로명 주소가 속하고 해당 지역 안에 있는 시·군·구. 예: Mountain View.</td>
 </tr>
 <tr>
 <td style="text-align: left;">address_region</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">The region in which the locality is, and which is in the country. Required for applicable countries (i.e. state in US, province in CA). For example, California or another appropriate first-level Administrative division.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">시·군·구가 속하고 해당 국가 안에 있는 지역. 해당하는 국가에서는 필수입니다(예: 미국의 주, 캐나다의 주). 예: California 또는 그 밖의 적절한 1차 행정 구역.</td>
 </tr>
 <tr>
 <td style="text-align: left;">address_country</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">The country. Recommended to be in 2-letter ISO 3166-1 alpha-2 format, for example "US". For backward compatibility, a 3-letter ISO 3166-1 alpha-3 country code such as "SGP" or a full country name such as "Singapore" can also be used.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">국가. 2자리 ISO 3166-1 alpha-2 형식(예: "US")을 권장합니다. 하위 호환성을 위해 "SGP" 같은 3자리 ISO 3166-1 alpha-3 국가 코드나 "Singapore" 같은 전체 국가명도 사용할 수 있습니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">postal_code</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">The postal code. For example, 94043.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">우편번호. 예: 94043.</td>
 </tr>
 <tr>
 <td style="text-align: left;">first_name</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Optional. First name of the contact associated with the address.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">선택 사항. 주소와 연결된 연락처의 이름.</td>
 </tr>
 <tr>
 <td style="text-align: left;">last_name</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Optional. Last name of the contact associated with the address.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">선택 사항. 주소와 연결된 연락처의 성.</td>
 </tr>
 <tr>
 <td style="text-align: left;">phone_number</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Optional. Phone number of the contact associated with the address.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">선택 사항. 주소와 연결된 연락처의 전화번호.</td>
 </tr>
 </tbody>
 </table>
@@ -6564,110 +6564,110 @@ HTTP 클라이언트 힌트로 구매자의 시스템 설정을 사용할 수 �
 <tr>
 <td style="text-align: left;">ucp</td>
 <td style="text-align: left;">any</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">UCP metadata for checkout responses.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">체크아웃 응답용 UCP 메타데이터.</td>
 </tr>
 <tr>
 <td style="text-align: left;">id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Unique identifier of the checkout session.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">체크아웃 세션의 고유 식별자.</td>
 </tr>
 <tr>
 <td style="text-align: left;">line_items</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#line-item">Line Item Response</a>]</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">List of line items being checked out.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">체크아웃 중인 라인 아이템 목록.</td>
 </tr>
 <tr>
 <td style="text-align: left;">buyer</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#buyer">Buyer</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Representation of the buyer.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">구매자 정보.</td>
 </tr>
 <tr>
 <td style="text-align: left;">context</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#context">Context</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Provisional buyer signals for relevance and localization—not authoritative data. Businesses SHOULD use these values when verified inputs (e.g., shipping address) are absent, and MAY ignore or down-rank them if inconsistent with higher-confidence signals (authenticated account, risk detection) or regulatory constraints (export controls). Eligibility and policy enforcement MUST occur at checkout time using binding transaction data. Context SHOULD be non-identifying and can be disclosed progressively—coarse signals early, finer resolution as the session progresses. Higher-resolution data (shipping address, billing address) supersedes context.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">관련성 판단과 현지화를 위한 잠정적 구매자 신호로, 권위 있는 데이터가 아닙니다. 검증된 입력(예: 배송 주소)이 없으면 비즈니스는 이 값을 사용해야 하며(SHOULD), 더 신뢰도 높은 신호(인증된 계정, 위험 탐지)나 규제 제약(수출 통제)과 맞지 않으면 무시하거나 우선순위를 낮출 수 있습니다(MAY). 자격 판단과 정책 적용은 반드시 체크아웃 시점에 구속력 있는 거래 데이터로 수행해야 합니다(MUST). 컨텍스트는 개인을 식별할 수 없어야 하며(SHOULD), 단계적으로 공개할 수 있습니다. 초기에는 대략적인 신호를, 세션이 진행되면서 더 세밀한 정보를 제공합니다. 더 세밀한 데이터(배송 주소, 청구 주소)가 컨텍스트보다 우선합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">signals</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#signals">Signals</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Environment data provided by the platform to support authorization and abuse prevention. Values MUST NOT be buyer-asserted claims — platforms provide signals based on direct observation or independently verifiable third-party attestations. All signal keys MUST use reverse-domain naming to ensure provenance and prevent collisions when multiple extensions contribute to the shared namespace.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">승인과 악용 방지를 돕기 위해 플랫폼이 제공하는 환경 데이터. 값은 구매자가 주장한 내용이어서는 안 됩니다(MUST NOT). 플랫폼은 직접 관찰했거나 독립적으로 검증 가능한 제3자 증명에 근거한 신호를 제공합니다. 여러 확장이 공유 네임스페이스에 값을 추가할 때 출처를 보장하고 충돌을 막기 위해, 모든 신호 키는 반드시 역도메인 이름을 사용해야 합니다(MUST).</td>
 </tr>
 <tr>
 <td style="text-align: left;">attribution</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#attribution">Attribution</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Platform-emitted referral and conversion-event context — campaign identifiers, click IDs, source/medium markers, etc. The same parameters platforms communicate via URL query parameters in browser-based flows.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">플랫폼이 내보내는 추천 및 전환 이벤트 맥락: 캠페인 식별자, 클릭 ID, source/medium 마커 등. 브라우저 기반 흐름에서 플랫폼이 URL 쿼리 매개변수로 전달하는 것과 같은 매개변수입니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">status</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Checkout state indicating the current phase and required processing. See Checkout Status lifecycle documentation for state transition details.<br><strong>Enum:</strong> <code>incomplete</code>, <code>requires_escalation</code>, <code>ready_for_complete</code>, <code>complete_in_progress</code>, <code>completed</code>, <code>canceled</code></td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">현재 단계와 필요한 처리를 나타내는 체크아웃 상태. 상태 전이에 대한 자세한 내용은 체크아웃 상태 수명 주기 문서를 참고하세요.<br><strong>허용 값:</strong> <code>incomplete</code>, <code>requires_escalation</code>, <code>ready_for_complete</code>, <code>complete_in_progress</code>, <code>completed</code>, <code>canceled</code></td>
 </tr>
 <tr>
 <td style="text-align: left;">currency</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">ISO 4217 currency code reflecting the merchant's market determination. Derived from address, context, and geo IP—buyers provide signals, merchants determine currency.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">판매자가 판단한 시장을 반영하는 ISO 4217 통화 코드. 주소, 컨텍스트, geo IP로 결정합니다. 구매자는 신호를 제공하고 통화는 판매자가 결정합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">totals</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#totals">Totals</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Different cart totals.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">장바구니의 각종 합계.</td>
 </tr>
 <tr>
 <td style="text-align: left;">actions</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#actions">Actions</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Outstanding extension-defined Actions for this checkout.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 체크아웃에 대해 확장이 정의한 미해결 Action.</td>
 </tr>
 <tr>
 <td style="text-align: left;">messages</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#message">Message</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">List of messages with error and info about the checkout session state.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">체크아웃 세션 상태에 대한 오류·정보 메시지 목록.</td>
 </tr>
 <tr>
 <td style="text-align: left;">links</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#link">Link</a>]</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Links to be displayed by the platform (Privacy Policy, TOS). Mandatory for legal compliance.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">플랫폼이 표시할 링크(개인정보처리방침, 이용약관). 법적 준수를 위해 필수입니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">policies</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#policy">Policy</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Policies (e.g., return/refund terms) that apply to the items in this checkout. <code>applies_to</code> targets are relative to the response root; when absent or empty, refer to the URLs in <code>links[]</code>.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 체크아웃의 항목에 적용되는 정책(예: 반품/환불 조건). <code>applies_to</code> 대상은 응답 루트를 기준으로 하며, 없거나 비어 있으면 <code>links[]</code>의 URL을 참조합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">expires_at</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">RFC 3339 expiry timestamp. Default TTL is 6 hours from creation if not sent.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">RFC 3339 만료 타임스탬프입니다. 보내지 않으면 기본 TTL은 생성 시점부터 6시간입니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">continue_url</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">URL for checkout handoff and session recovery. MUST be provided when status is requires_escalation. See specification for format and availability requirements.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">체크아웃 핸드오프와 세션 복구용 URL. status가 requires_escalation이면 반드시 제공해야 합니다(MUST). 형식과 가용성 요구 사항은 명세를 참고하세요.</td>
 </tr>
 <tr>
 <td style="text-align: left;">payment</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#payment">Payment</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Payment configuration containing handlers.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">핸들러를 포함한 결제 구성.</td>
 </tr>
 <tr>
 <td style="text-align: left;">order</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#order-confirmation">Order Confirmation</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Details about an order created for this checkout session.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 체크아웃 세션으로 생성된 주문의 세부 정보.</td>
 </tr>
 </tbody>
 </table>
@@ -6687,80 +6687,80 @@ HTTP 클라이언트 힌트로 구매자의 시스템 설정을 사용할 수 �
 <tr>
 <td style="text-align: left;">ucp</td>
 <td style="text-align: left;">any</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">UCP metadata for order responses. No payment handlers needed post-purchase.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">주문 응답용 UCP 메타데이터. 구매 후에는 결제 핸들러가 필요 없습니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Unique order identifier.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">고유 주문 식별자.</td>
 </tr>
 <tr>
 <td style="text-align: left;">label</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Human-readable label for identifying the order. MUST only be provided by the business.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">주문을 식별하기 위한 사람이 읽을 수 있는 라벨. 반드시 비즈니스만 제공해야 합니다(MUST).</td>
 </tr>
 <tr>
 <td style="text-align: left;">checkout_id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Associated checkout ID for reconciliation.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">정산 대사를 위한 연관 체크아웃 ID.</td>
 </tr>
 <tr>
 <td style="text-align: left;">permalink_url</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Permalink to access the order on merchant site.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">판매자 사이트에서 주문에 접근하는 퍼머링크.</td>
 </tr>
 <tr>
 <td style="text-align: left;">line_items</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#order-line-item">Order Line Item</a>]</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Line items representing what was purchased — can change post-order via edits or exchanges.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">구매한 항목을 나타내는 라인 아이템. 주문 후 수정이나 교환으로 바뀔 수 있습니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">fulfillment</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Fulfillment data: buyer expectations and what actually happened.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">풀필먼트 데이터: 구매자 예상 정보와 실제로 일어난 일.</td>
 </tr>
 <tr>
 <td style="text-align: left;">adjustments</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#adjustment">Adjustment</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Post-order events (refunds, returns, credits, disputes, cancellations, etc.) that exist independently of fulfillment.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">풀필먼트와 독립적으로 존재하는 주문 후 이벤트(환불, 반품, 크레딧, 분쟁, 취소 등).</td>
 </tr>
 <tr>
 <td style="text-align: left;">currency</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">ISO 4217 currency code. MUST match the currency from the originating checkout session.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">ISO 4217 통화 코드. 반드시 원래 체크아웃 세션의 통화와 일치해야 합니다(MUST).</td>
 </tr>
 <tr>
 <td style="text-align: left;">totals</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#totals">Totals</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Different totals for the order.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">주문의 각종 합계.</td>
 </tr>
 <tr>
 <td style="text-align: left;">policies</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#policy">Policy</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Snapshot of the policies that applied to the items at checkout, captured on the order as a durable record. <code>applies_to</code> targets are relative to the response root.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">체크아웃 시 항목에 적용된 정책의 스냅샷으로, 지속적인 기록으로 주문에 저장됩니다. <code>applies_to</code> 대상은 응답 루트를 기준으로 합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">messages</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#message">Message</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Business outcome messages (errors, warnings, informational). Present when the business needs to communicate status or issues to the platform.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">비즈니스 결과 메시지(오류, 경고, 정보). 비즈니스가 플랫폼에 상태나 문제를 전달해야 할 때 포함됩니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">attribution</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#attribution">Attribution</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Snapshot of the attribution associated with the originating checkout. Read-only on the order.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">원래 체크아웃과 연결된 어트리뷰션의 스냅샷입니다. 주문에서는 읽기 전용입니다.</td>
 </tr>
 </tbody>
 </table>
@@ -6778,8 +6778,8 @@ HTTP 클라이언트 힌트로 구매자의 시스템 설정을 사용할 수 �
 <tr>
 <td style="text-align: left;">instruments</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#payment-instrument-selected-payment-instrument">Payment Instrument Selected Payment Instrument</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">The payment instruments available for this payment. Each instrument is associated with a specific handler via the handler_id field. Handlers can extend the base payment_instrument schema to add handler-specific fields.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 결제에 사용할 수 있는 결제 수단. 각 결제 수단은 handler_id 필드로 특정 핸들러와 연결됩니다. 핸들러는 기본 payment_instrument 스키마를 확장해 핸들러별 필드를 추가할 수 있습니다.</td>
 </tr>
 </tbody>
 </table>
@@ -6799,43 +6799,43 @@ HTTP 클라이언트 힌트로 구매자의 시스템 설정을 사용할 수 �
 <tr>
 <td style="text-align: left;">id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">A unique identifier for this instrument instance. Typically assigned by the platform for instruments it collects. For a business-owned saved instrument returned on an identity-linked response, this identifier is assigned by the business; the platform MUST treat it as an opaque, business-scoped reference, and the business resolves it server-side when the buyer selects it.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">이 결제 수단 인스턴스의 고유 식별자. 플랫폼이 수집하는 결제 수단은 보통 플랫폼이 할당합니다. 신원 연결된 응답으로 반환되는, 비즈니스가 소유한 저장 결제 수단이라면 비즈니스가 이 식별자를 할당합니다. 플랫폼은 반드시 이를 불투명한 비즈니스 범위 참조로 취급해야 하며(MUST), 구매자가 선택하면 비즈니스가 서버 측에서 해석합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">handler_id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">The unique identifier for the handler instance that produced this instrument. This corresponds to the 'id' field in the Payment Handler definition.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">이 결제 수단을 생성한 핸들러 인스턴스의 고유 식별자. 결제 핸들러 정의의 'id' 필드에 해당합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">type</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">The broad category of the instrument (e.g., 'card', 'tokenized_card'). Specific schemas will constrain this to a constant value.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">결제 수단의 대분류(예: 'card', 'tokenized_card'). 구체적인 스키마에서 이 값을 상수로 제한합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">billing_address</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#postal-address">Postal Address</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">The billing address associated with this payment method.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 결제 방법에 연결된 청구지 주소.</td>
 </tr>
 <tr>
 <td style="text-align: left;">credential</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#payment-credential">Payment Credential</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">The base definition for any payment credential. Handlers define specific credential types.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">모든 결제 자격 증명의 기본 정의. 구체적인 자격 증명 유형은 핸들러가 정의합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">display</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Display information for this payment instrument. Each payment instrument schema defines its specific display properties, as outlined by the payment handler.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 결제 수단의 표시 정보. 각 결제 수단 스키마가 결제 핸들러의 설명에 따라 고유한 표시 속성을 정의합니다.</td>
 </tr>
 </tbody>
 </table>
 <h4 id="selected-payment-instrument">선택된 결제 수단<a class="headerlink" href="#selected-payment-instrument" title="Permanent link">&para;</a></h4>
-<p>A payment instrument with selection state.</p>
+<p>선택 상태가 포함된 결제 수단.</p>
 <table>
 <thead>
 <tr>
@@ -6849,44 +6849,44 @@ HTTP 클라이언트 힌트로 구매자의 시스템 설정을 사용할 수 �
 <tr>
 <td style="text-align: left;">id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">A unique identifier for this instrument instance. Typically assigned by the platform for instruments it collects. For a business-owned saved instrument returned on an identity-linked response, this identifier is assigned by the business; the platform MUST treat it as an opaque, business-scoped reference, and the business resolves it server-side when the buyer selects it.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">이 결제 수단 인스턴스의 고유 식별자. 플랫폼이 수집하는 결제 수단은 보통 플랫폼이 할당합니다. 신원 연결된 응답으로 반환되는, 비즈니스가 소유한 저장 결제 수단이라면 비즈니스가 이 식별자를 할당합니다. 플랫폼은 반드시 이를 불투명한 비즈니스 범위 참조로 취급해야 하며(MUST), 구매자가 선택하면 비즈니스가 서버 측에서 해석합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">handler_id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">The unique identifier for the handler instance that produced this instrument. This corresponds to the 'id' field in the Payment Handler definition.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">이 결제 수단을 생성한 핸들러 인스턴스의 고유 식별자. 결제 핸들러 정의의 'id' 필드에 해당합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">type</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">The broad category of the instrument (e.g., 'card', 'tokenized_card'). Specific schemas will constrain this to a constant value.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">결제 수단의 대분류(예: 'card', 'tokenized_card'). 구체적인 스키마에서 이 값을 상수로 제한합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">billing_address</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">The billing address associated with this payment method.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 결제 방법에 연결된 청구지 주소.</td>
 </tr>
 <tr>
 <td style="text-align: left;">credential</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">The base definition for any payment credential. Handlers define specific credential types.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">모든 결제 자격 증명의 기본 정의. 구체적인 자격 증명 유형은 핸들러가 정의합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">display</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Display information for this payment instrument. Each payment instrument schema defines its specific display properties, as outlined by the payment handler.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 결제 수단의 표시 정보. 각 결제 수단 스키마가 결제 핸들러의 설명에 따라 고유한 표시 속성을 정의합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">selected</td>
 <td style="text-align: left;">boolean</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Whether this instrument is selected by the user.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">사용자가 이 결제 수단을 선택했는지 여부.</td>
 </tr>
 </tbody>
 </table>
@@ -6904,56 +6904,56 @@ HTTP 클라이언트 힌트로 구매자의 시스템 설정을 사용할 수 �
 <tr>
 <td style="text-align: left;">id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">A unique identifier for this instrument instance. Typically assigned by the platform for instruments it collects. For a business-owned saved instrument returned on an identity-linked response, this identifier is assigned by the business; the platform MUST treat it as an opaque, business-scoped reference, and the business resolves it server-side when the buyer selects it.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">이 결제 수단 인스턴스의 고유 식별자. 플랫폼이 수집하는 결제 수단은 보통 플랫폼이 할당합니다. 신원 연결된 응답으로 반환되는, 비즈니스가 소유한 저장 결제 수단이라면 비즈니스가 이 식별자를 할당합니다. 플랫폼은 반드시 이를 불투명한 비즈니스 범위 참조로 취급해야 하며(MUST), 구매자가 선택하면 비즈니스가 서버 측에서 해석합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">handler_id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">The unique identifier for the handler instance that produced this instrument. This corresponds to the 'id' field in the Payment Handler definition.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">이 결제 수단을 생성한 핸들러 인스턴스의 고유 식별자. 결제 핸들러 정의의 'id' 필드에 해당합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">type</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">The broad category of the instrument (e.g., 'card', 'tokenized_card'). Specific schemas will constrain this to a constant value.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">결제 수단의 대분류(예: 'card', 'tokenized_card'). 구체적인 스키마에서 이 값을 상수로 제한합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">billing_address</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#postal-address">Postal Address</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">The billing address associated with this payment method.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 결제 방법에 연결된 청구지 주소.</td>
 </tr>
 <tr>
 <td style="text-align: left;">credential</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#payment-credential">Payment Credential</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">The base definition for any payment credential. Handlers define specific credential types.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">모든 결제 자격 증명의 기본 정의. 구체적인 자격 증명 유형은 핸들러가 정의합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">display</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Display information for this payment instrument. Each payment instrument schema defines its specific display properties, as outlined by the payment handler.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 결제 수단의 표시 정보. 각 결제 수단 스키마가 결제 핸들러의 설명에 따라 고유한 표시 속성을 정의합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">type</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;"><strong>Constant = card</strong>. Indicates this is a card payment instrument.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;"><strong>상수 = card</strong>. 카드 결제 수단임을 나타냅니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">network</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Card network elected for this transaction, typically a co-badged selection. When present, the business MAY decline if the card cannot route over it and MUST NOT substitute another.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 거래에 선택된 카드 네트워크로, 보통 공동 브랜드(co-badged) 카드에서 선택한 네트워크입니다. 이 값이 있을 때 카드를 해당 네트워크로 라우팅할 수 없으면 비즈니스는 거절할 수 있으며(MAY), 다른 네트워크로 대체해서는 안 됩니다(MUST NOT).</td>
 </tr>
 <tr>
 <td style="text-align: left;">display</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Display information for this card payment instrument.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 카드 결제 수단의 표시 정보.</td>
 </tr>
 </tbody>
 </table>
@@ -6971,8 +6971,8 @@ HTTP 클라이언트 힌트로 구매자의 시스템 설정을 사용할 수 �
 <tr>
 <td style="text-align: left;">type</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">The credential type discriminator. Specific schemas will constrain this to a constant value.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">자격 증명 유형 판별자. 구체적인 스키마에서 이 값을 상수로 제한합니다.</td>
 </tr>
 </tbody>
 </table>
@@ -6990,14 +6990,14 @@ HTTP 클라이언트 힌트로 구매자의 시스템 설정을 사용할 수 �
 <tr>
 <td style="text-align: left;">type</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">The credential type discriminator. Specific schemas will constrain this to a constant value.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">자격 증명 유형 판별자. 구체적인 스키마에서 이 값을 상수로 제한합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">type</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">The specific type of token produced by the handler (e.g., 'stripe_token').</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">핸들러가 생성한 토큰의 구체적인 유형(예: 'stripe_token').</td>
 </tr>
 </tbody>
 </table>
@@ -7015,69 +7015,69 @@ HTTP 클라이언트 힌트로 구매자의 시스템 설정을 사용할 수 �
 <tr>
 <td style="text-align: left;">type</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">The credential type discriminator. Specific schemas will constrain this to a constant value.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">자격 증명 유형 판별자. 구체적인 스키마에서 이 값을 상수로 제한합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">type</td>
 <td style="text-align: left;">any</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;"><strong>Constant = card</strong>. The credential type identifier for card credentials.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;"><strong>상수 = card</strong>. 카드 자격 증명의 자격 증명 유형 식별자.</td>
 </tr>
 <tr>
 <td style="text-align: left;">card_number_type</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Deprecated: the credential type now carries this distinction. The type of card number. Network tokens are preferred with fallback to FPAN. See PCI Scope for more details.<br><strong>Enum:</strong> <code>fpan</code>, <code>network_token</code>, <code>dpan</code></td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">지원 중단(deprecated): 이제 자격 증명 유형이 이 구분을 나타냅니다. 카드 번호의 유형. 네트워크 토큰을 우선하며 FPAN으로 대체합니다. 자세한 내용은 PCI Scope를 참고하세요.<br><strong>허용 값:</strong> <code>fpan</code>, <code>network_token</code>, <code>dpan</code></td>
 </tr>
 <tr>
 <td style="text-align: left;">number</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Card number.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">카드 번호.</td>
 </tr>
 <tr>
 <td style="text-align: left;">expiry_month</td>
 <td style="text-align: left;">integer</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">The month of the card's expiration date (1-12).</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">카드 만료일의 월(1-12).</td>
 </tr>
 <tr>
 <td style="text-align: left;">expiry_year</td>
 <td style="text-align: left;">integer</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">The year of the card's expiration date.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">카드 만료일의 연도.</td>
 </tr>
 <tr>
 <td style="text-align: left;">name</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Cardholder name.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">카드 소유자 이름.</td>
 </tr>
 <tr>
 <td style="text-align: left;">cvc</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Card CVC number.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">카드 CVC 번호.</td>
 </tr>
 <tr>
 <td style="text-align: left;">cryptogram</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Cryptogram provided with network tokens.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">네트워크 토큰과 함께 제공되는 크립토그램.</td>
 </tr>
 <tr>
 <td style="text-align: left;">eci_value</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Electronic Commerce Indicator / Security Level Indicator provided with network tokens.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">네트워크 토큰과 함께 제공되는 ECI(Electronic Commerce Indicator) / SLI(Security Level Indicator).</td>
 </tr>
 </tbody>
 </table>
 <h3 id="payment-handler">결제 핸들러<a class="headerlink" href="#payment-handler" title="Permanent link">&para;</a></h3>
 <p>특정 결제 수단의 인증과 처리를 담당하는 처리자 또는 지갑 제공자(예: Google Pay, Stripe,
 은행 앱)를 나타냅니다.</p>
-<p>Handler reference in responses. May include full config state for runtime usage of the handler.</p>
+<p>응답에 포함되는 핸들러 참조. 핸들러를 런타임에 사용하기 위한 전체 구성 상태를 포함할 수 있습니다.</p>
 <table>
 <thead>
 <tr>
@@ -7091,38 +7091,38 @@ HTTP 클라이언트 힌트로 구매자의 시스템 설정을 사용할 수 �
 <tr>
 <td style="text-align: left;">version</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Entity version in YYYY-MM-DD format.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">YYYY-MM-DD 형식의 엔티티 버전.</td>
 </tr>
 <tr>
 <td style="text-align: left;">spec</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">URL to human-readable specification document.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">사람이 읽을 수 있는 명세 문서의 URL.</td>
 </tr>
 <tr>
 <td style="text-align: left;">schema</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">URL to JSON Schema defining this entity's structure and payloads.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 엔터티의 구조와 페이로드를 정의하는 JSON Schema의 URL.</td>
 </tr>
 <tr>
 <td style="text-align: left;">id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Unique identifier for this entity instance. Used to disambiguate when multiple instances exist.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">이 엔터티 인스턴스의 고유 식별자. 인스턴스가 여러 개일 때 구분하는 데 사용합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">config</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Entity-specific configuration. Structure defined by each entity's schema.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">엔티티별 구성. 구조는 각 엔티티의 스키마가 정의합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">available_instruments</td>
 <td style="text-align: left;">Array[object]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Instrument types this handler supports, with optional constraints. When absent, every instrument should be considered available.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 핸들러가 지원하는 결제 수단 유형과 선택적 제약 조건. 없으면 모든 결제 수단을 사용 가능한 것으로 간주합니다.</td>
 </tr>
 </tbody>
 </table>

@@ -59,121 +59,121 @@
 
 ### 속성
 
-| 이름        | 타입                                                                                                    | 필수 여부                     | 설명                 |
-| ----------- | ------------------------------------------------------------------------------------------------------- | ----------------------------- | -------------------- |
-| fulfillment | [Fulfillment](/ucp-ko/2026-08-25/2026-08-25/specification/shopping/extensions/fulfillment/#fulfillment) | Optional; omitted on complete | Fulfillment details. |
+| 이름        | 타입                                                                                                    | 필수 여부              | 설명                |
+| ----------- | ------------------------------------------------------------------------------------------------------- | ---------------------- | ------------------- |
+| fulfillment | [Fulfillment](/ucp-ko/2026-08-25/2026-08-25/specification/shopping/extensions/fulfillment/#fulfillment) | 선택; complete 시 생략 | 풀필먼트 세부 정보. |
 
 ### 엔티티
 
 #### 풀필먼트
 
-| 이름              | 타입                                                                                                                         | 필수 여부 | 설명                                |
-| ----------------- | ---------------------------------------------------------------------------------------------------------------------------- | --------- | ----------------------------------- |
-| methods           | Array\[[Fulfillment Method](/ucp-ko/2026-08-25/2026-08-25/specification/reference/#fulfillment-method)\]                     | Optional  | Fulfillment methods for cart items. |
-| available_methods | Array\[[Fulfillment Available Method](/ucp-ko/2026-08-25/2026-08-25/specification/reference/#fulfillment-available-method)\] | Optional  | Inventory availability hints.       |
+| 이름              | 타입                                                                                                                         | 필수 여부 | 설명                           |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------- | --------- | ------------------------------ |
+| methods           | Array\[[Fulfillment Method](/ucp-ko/2026-08-25/2026-08-25/specification/reference/#fulfillment-method)\]                     | 선택      | 장바구니 상품의 풀필먼트 방식. |
+| available_methods | Array\[[Fulfillment Available Method](/ucp-ko/2026-08-25/2026-08-25/specification/reference/#fulfillment-available-method)\] | 선택      | 재고 가용성 힌트.              |
 
 #### 풀필먼트 방법
 
-| 이름                    | 타입                                                                                                               | 필수 여부    | 설명                                                                                                                                                                         |
-| ----------------------- | ------------------------------------------------------------------------------------------------------------------ | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| id                      | string                                                                                                             | **Required** | Unique fulfillment method identifier.                                                                                                                                        |
-| type                    | string                                                                                                             | **Required** | Fulfillment method type. Well-known values: `shipping`, `pickup`. Businesses MAY use additional values.                                                                      |
-| line_item_ids           | Array[string]                                                                                                      | **Required** | Line item IDs fulfilled via this method.                                                                                                                                     |
-| destinations            | Array\[[Fulfillment Destination](/ucp-ko/2026-08-25/2026-08-25/specification/reference/#fulfillment-destination)\] | Optional     | Available destinations for this method. In Business responses, each destination carries a `type` and `id`.                                                                   |
-| selected_destination_id | ['string', 'null']                                                                                                 | Optional     | ID of the selected destination. Accepts any stable, Business-scoped ID the Business recognizes for this method, including Location IDs not yet enumerated in `destinations`. |
-| groups                  | Array\[[Fulfillment Group](/ucp-ko/2026-08-25/2026-08-25/specification/reference/#fulfillment-group)\]             | Optional     | Fulfillment groups for selecting options. Agent sets selected_option_id on groups to choose shipping method.                                                                 |
+| 이름                    | 타입                                                                                                               | 필수 여부 | 설명                                                                                                                                                            |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------ | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| id                      | string                                                                                                             | **필수**  | 고유 풀필먼트 방식 식별자.                                                                                                                                      |
+| type                    | string                                                                                                             | **필수**  | 풀필먼트 방식 유형. 잘 알려진 값: `shipping`, `pickup`. 비즈니스는 추가 값을 사용할 수 있습니다(MAY).                                                           |
+| line_item_ids           | Array[string]                                                                                                      | **필수**  | 이 방식으로 풀필먼트되는 라인 아이템 ID.                                                                                                                        |
+| destinations            | Array\[[Fulfillment Destination](/ucp-ko/2026-08-25/2026-08-25/specification/reference/#fulfillment-destination)\] | 선택      | 이 방법에 사용할 수 있는 목적지. 비즈니스 응답에서 각 목적지에는 `type`과 `id`가 있습니다.                                                                      |
+| selected_destination_id | ['string', 'null']                                                                                                 | 선택      | 선택한 목적지의 ID. 비즈니스가 이 방식에 대해 인식하는 안정적인 비즈니스 범위 ID라면 무엇이든 받으며, 아직 `destinations`에 나열되지 않은 위치 ID도 포함합니다. |
+| groups                  | Array\[[Fulfillment Group](/ucp-ko/2026-08-25/2026-08-25/specification/reference/#fulfillment-group)\]             | 선택      | 옵션 선택을 위한 풀필먼트 그룹. 에이전트는 그룹에 selected_option_id를 설정해 배송 방식을 선택합니다.                                                           |
 
 #### 풀필먼트 목적지
 
-| 이름 | 타입   | 필수 여부    | 설명                                                                                                                                                                                                                                                                                                              |
-| ---- | ------ | ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| type | string | **Required** | Destination contract discriminator. Required in Business responses and optional in Platform requests. Well-known values: `shipping_address`, `business_location`. The enclosing method contract defines request defaults and which fields the Platform may write; negotiated extensions define additional values. |
-| id   | string | **Required** | Fulfillment destination identifier.                                                                                                                                                                                                                                                                               |
+| 이름 | 타입   | 필수 여부 | 설명                                                                                                                                                                                                                                                 |
+| ---- | ------ | --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| type | string | **필수**  | 목적지 계약 판별자. 비즈니스 응답에서는 필수이고 플랫폼 요청에서는 선택입니다. 잘 알려진 값: `shipping_address`, `business_location`. 요청 기본값과 플랫폼이 쓸 수 있는 필드는 이를 감싸는 방식 계약이 정의하며, 협상된 확장이 추가 값을 정의합니다. |
+| id   | string | **필수**  | 풀필먼트 목적지 식별자.                                                                                                                                                                                                                              |
 
 #### 배송 목적지
 
-| 이름             | 타입   | 필수 여부    | 설명                                                                                                                                                                                                                                      |
-| ---------------- | ------ | ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| extended_address | string | Optional     | An address extension such as an apartment number, C/O or alternative name.                                                                                                                                                                |
-| street_address   | string | Optional     | The street address.                                                                                                                                                                                                                       |
-| address_locality | string | Optional     | The locality in which the street address is, and which is in the region. For example, Mountain View.                                                                                                                                      |
-| address_region   | string | Optional     | The region in which the locality is, and which is in the country. Required for applicable countries (i.e. state in US, province in CA). For example, California or another appropriate first-level Administrative division.               |
-| address_country  | string | Optional     | The country. Recommended to be in 2-letter ISO 3166-1 alpha-2 format, for example "US". For backward compatibility, a 3-letter ISO 3166-1 alpha-3 country code such as "SGP" or a full country name such as "Singapore" can also be used. |
-| postal_code      | string | Optional     | The postal code. For example, 94043.                                                                                                                                                                                                      |
-| first_name       | string | Optional     | Optional. First name of the contact associated with the address.                                                                                                                                                                          |
-| last_name        | string | Optional     | Optional. Last name of the contact associated with the address.                                                                                                                                                                           |
-| phone_number     | string | Optional     | Optional. Phone number of the contact associated with the address.                                                                                                                                                                        |
-| id               | string | **Required** | ID specific to this shipping destination.                                                                                                                                                                                                 |
-| type             | string | **Required** | **Constant = shipping_address**. Destination type discriminator.                                                                                                                                                                          |
+| 이름             | 타입   | 필수 여부 | 설명                                                                                                                                                                              |
+| ---------------- | ------ | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| extended_address | string | 선택      | 아파트 호수, C/O, 대체 이름 같은 주소 보충 정보.                                                                                                                                  |
+| street_address   | string | 선택      | 도로명 주소.                                                                                                                                                                      |
+| address_locality | string | 선택      | 도로명 주소가 속하고 해당 지역 안에 있는 시·군·구. 예: Mountain View.                                                                                                             |
+| address_region   | string | 선택      | 시·군·구가 속하고 해당 국가 안에 있는 지역. 해당하는 국가에서는 필수입니다(예: 미국의 주, 캐나다의 주). 예: California 또는 그 밖의 적절한 1차 행정 구역.                         |
+| address_country  | string | 선택      | 국가. 2자리 ISO 3166-1 alpha-2 형식(예: "US")을 권장합니다. 하위 호환성을 위해 "SGP" 같은 3자리 ISO 3166-1 alpha-3 국가 코드나 "Singapore" 같은 전체 국가명도 사용할 수 있습니다. |
+| postal_code      | string | 선택      | 우편번호. 예: 94043.                                                                                                                                                              |
+| first_name       | string | 선택      | 선택 사항. 주소와 연결된 연락처의 이름.                                                                                                                                           |
+| last_name        | string | 선택      | 선택 사항. 주소와 연결된 연락처의 성.                                                                                                                                             |
+| phone_number     | string | 선택      | 선택 사항. 주소와 연결된 연락처의 전화번호.                                                                                                                                       |
+| id               | string | **필수**  | 이 배송 목적지에 고유한 ID.                                                                                                                                                       |
+| type             | string | **필수**  | **상수 = shipping_address**. 목적지 유형 판별자.                                                                                                                                  |
 
 #### 비즈니스 위치 목적지
 
-| 이름    | 타입                                                                                    | 필수 여부    | 설명                                                                             |
-| ------- | --------------------------------------------------------------------------------------- | ------------ | -------------------------------------------------------------------------------- |
-| id      | string                                                                                  | **Required** | Stable, opaque, Business-scoped Location identifier.                             |
-| name    | string                                                                                  | **Required** | Buyer-facing, Business-owned display name.                                       |
-| address | [Postal Address](/ucp-ko/2026-08-25/2026-08-25/specification/reference/#postal-address) | Optional     | Physical address of the location.                                                |
-| type    | string                                                                                  | **Required** | **Constant = business_location**. Destination type discriminator. Response-only. |
+| 이름    | 타입                                                                                    | 필수 여부 | 설명                                                         |
+| ------- | --------------------------------------------------------------------------------------- | --------- | ------------------------------------------------------------ |
+| id      | string                                                                                  | **필수**  | 비즈니스 범위의 안정적이고 불투명한 위치 식별자.             |
+| name    | string                                                                                  | **필수**  | 구매자에게 표시되는, 비즈니스가 소유한 표시 이름.            |
+| address | [Postal Address](/ucp-ko/2026-08-25/2026-08-25/specification/reference/#postal-address) | 선택      | 장소의 실제 주소.                                            |
+| type    | string                                                                                  | **필수**  | **상수 = business_location**. 목적지 유형 판별자. 응답 전용. |
 
 #### 위치 요약
 
-| 이름    | 타입                                                                                    | 필수 여부    | 설명                                                 |
-| ------- | --------------------------------------------------------------------------------------- | ------------ | ---------------------------------------------------- |
-| id      | string                                                                                  | **Required** | Stable, opaque, Business-scoped Location identifier. |
-| name    | string                                                                                  | **Required** | Buyer-facing, Business-owned display name.           |
-| address | [Postal Address](/ucp-ko/2026-08-25/2026-08-25/specification/reference/#postal-address) | Optional     | Physical address of the location.                    |
+| 이름    | 타입                                                                                    | 필수 여부 | 설명                                              |
+| ------- | --------------------------------------------------------------------------------------- | --------- | ------------------------------------------------- |
+| id      | string                                                                                  | **필수**  | 비즈니스 범위의 안정적이고 불투명한 위치 식별자.  |
+| name    | string                                                                                  | **필수**  | 구매자에게 표시되는, 비즈니스가 소유한 표시 이름. |
+| address | [Postal Address](/ucp-ko/2026-08-25/2026-08-25/specification/reference/#postal-address) | 선택      | 장소의 실제 주소.                                 |
 
 #### 풀필먼트 그룹
 
-| 이름               | 타입                                                                                                     | 필수 여부    | 설명                                                                   |
-| ------------------ | -------------------------------------------------------------------------------------------------------- | ------------ | ---------------------------------------------------------------------- |
-| id                 | string                                                                                                   | **Required** | Group identifier for referencing merchant-generated groups in updates. |
-| line_item_ids      | Array[string]                                                                                            | **Required** | Line item IDs included in this group/package.                          |
-| options            | Array\[[Fulfillment Option](/ucp-ko/2026-08-25/2026-08-25/specification/reference/#fulfillment-option)\] | Optional     | Available fulfillment options for this group.                          |
-| selected_option_id | ['string', 'null']                                                                                       | Optional     | ID of the selected fulfillment option for this group.                  |
+| 이름               | 타입                                                                                                     | 필수 여부 | 설명                                                          |
+| ------------------ | -------------------------------------------------------------------------------------------------------- | --------- | ------------------------------------------------------------- |
+| id                 | string                                                                                                   | **필수**  | 업데이트 시 판매자가 생성한 그룹을 참조하기 위한 그룹 식별자. |
+| line_item_ids      | Array[string]                                                                                            | **필수**  | 이 그룹/패키지에 포함된 라인 아이템 ID.                       |
+| options            | Array\[[Fulfillment Option](/ucp-ko/2026-08-25/2026-08-25/specification/reference/#fulfillment-option)\] | 선택      | 이 그룹에 사용할 수 있는 풀필먼트 옵션.                       |
+| selected_option_id | ['string', 'null']                                                                                       | 선택      | 이 그룹에서 선택한 풀필먼트 옵션의 ID.                        |
 
 #### 풀필먼트 옵션
 
-| 이름                      | 타입                                                                                    | 필수 여부    | 설명                                                                                                                                                    |
-| ------------------------- | --------------------------------------------------------------------------------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| id                        | string                                                                                  | **Required** | Unique identifier for this fulfillment option.                                                                                                          |
-| title                     | string                                                                                  | **Required** | Short label that distinguishes this option from its siblings (e.g. 'Standard', 'Express Shipping', 'Curbside Pickup').                                  |
-| description               | [Description](/ucp-ko/2026-08-25/2026-08-25/specification/reference/#description)       | Optional     | Supplementary context for the title (e.g. 'Arrives in 4 business days', 'Arrives Dec 12-15 via FedEx'). Directly renderable; MUST NOT repeat the title. |
-| carrier                   | string                                                                                  | Optional     | Carrier name (for shipping).                                                                                                                            |
-| earliest_fulfillment_time | string                                                                                  | Optional     | Earliest fulfillment date.                                                                                                                              |
-| latest_fulfillment_time   | string                                                                                  | Optional     | Latest fulfillment date.                                                                                                                                |
-| totals                    | Array\[[Total Response](/ucp-ko/2026-08-25/2026-08-25/specification/reference/#total)\] | **Required** | Fulfillment option totals breakdown.                                                                                                                    |
+| 이름                      | 타입                                                                                    | 필수 여부 | 설명                                                                                                                                                          |
+| ------------------------- | --------------------------------------------------------------------------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| id                        | string                                                                                  | **필수**  | 이 풀필먼트 옵션의 고유 식별자.                                                                                                                               |
+| title                     | string                                                                                  | **필수**  | 형제 옵션과 이 옵션을 구분하는 짧은 레이블(예: 'Standard', 'Express Shipping', 'Curbside Pickup').                                                            |
+| description               | [Description](/ucp-ko/2026-08-25/2026-08-25/specification/reference/#description)       | 선택      | 제목을 보충하는 맥락 정보(예: 'Arrives in 4 business days', 'Arrives Dec 12-15 via FedEx'). 그대로 렌더링할 수 있으며, 제목을 반복해서는 안 됩니다(MUST NOT). |
+| carrier                   | string                                                                                  | 선택      | 운송사 이름(배송용).                                                                                                                                          |
+| earliest_fulfillment_time | string                                                                                  | 선택      | 가장 이른 풀필먼트 날짜.                                                                                                                                      |
+| latest_fulfillment_time   | string                                                                                  | 선택      | 가장 늦은 풀필먼트 날짜.                                                                                                                                      |
+| totals                    | Array\[[Total Response](/ucp-ko/2026-08-25/2026-08-25/specification/reference/#total)\] | **필수**  | 풀필먼트 옵션 합계 내역.                                                                                                                                      |
 
 #### 풀필먼트 가능 방법
 
-| 이름           | 타입               | 필수 여부    | 설명                                                                                                                                 |
-| -------------- | ------------------ | ------------ | ------------------------------------------------------------------------------------------------------------------------------------ |
-| type           | string             | **Required** | Fulfillment method type this availability applies to. Well-known values: `shipping`, `pickup`; businesses MAY use additional values. |
-| line_item_ids  | Array[string]      | **Required** | Line items available for this fulfillment method.                                                                                    |
-| fulfillable_on | ['string', 'null'] | Optional     | 'now' for immediate availability, or ISO 8601 date for future (preorders, transfers).                                                |
-| description    | string             | Optional     | Human-readable availability info (e.g., 'Available for pickup at Downtown Store today').                                             |
+| 이름           | 타입               | 필수 여부 | 설명                                                                                                                       |
+| -------------- | ------------------ | --------- | -------------------------------------------------------------------------------------------------------------------------- |
+| type           | string             | **필수**  | 이 가용성이 적용되는 풀필먼트 방식 유형. 잘 알려진 값: `shipping`, `pickup`. 비즈니스는 추가 값을 사용할 수 있습니다(MAY). |
+| line_item_ids  | Array[string]      | **필수**  | 이 풀필먼트 방식에 사용할 수 있는 라인 아이템.                                                                             |
+| fulfillable_on | ['string', 'null'] | 선택      | 즉시 구매 가능하면 'now', 향후 구매 가능(예약 주문, 이관)이면 ISO 8601 날짜.                                               |
+| description    | string             | 선택      | 사람이 읽을 수 있는 가용성 정보(예: 'Available for pickup at Downtown Store today').                                       |
 
 #### 합계
 
-| 이름         | 타입                                                                                  | 필수 여부    | 설명                                                                                                                                                                                                                                                                                        |
-| ------------ | ------------------------------------------------------------------------------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| type         | string                                                                                | **Required** | Cost category. Well-known values: subtotal, items_discount, discount, fulfillment, tax, fee, total. Businesses MAY use additional values.                                                                                                                                                   |
-| display_text | string                                                                                | Optional     | Text to display against the amount. Should reflect appropriate method (e.g., 'Shipping', 'Delivery').                                                                                                                                                                                       |
-| amount       | [Signed Amount](/ucp-ko/2026-08-25/2026-08-25/specification/reference/#signed-amount) | **Required** | Monetary amount in the currency's minor unit as defined by ISO 4217. Refer to the currency's exponent to determine minor-to-major ratio (e.g., 2 for USD, 0 for JPY, 3 for KWD). May be negative — the sign is intrinsic to the value (e.g., discounts are negative, charges are positive). |
+| 이름         | 타입                                                                                  | 필수 여부 | 설명                                                                                                                                                                                                                        |
+| ------------ | ------------------------------------------------------------------------------------- | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| type         | string                                                                                | **필수**  | 비용 범주. 잘 알려진 값: subtotal, items_discount, discount, fulfillment, tax, fee, total. 비즈니스는 추가 값을 사용할 수 있습니다(MAY).                                                                                    |
+| display_text | string                                                                                | 선택      | 금액 옆에 표시할 텍스트. 적절한 방식을 반영해야 합니다(예: 'Shipping', 'Delivery').                                                                                                                                         |
+| amount       | [Signed Amount](/ucp-ko/2026-08-25/2026-08-25/specification/reference/#signed-amount) | **필수**  | ISO 4217에 정의된 통화의 최소 단위로 나타낸 금액. 최소 단위와 기본 단위의 비율은 통화의 지수를 참고합니다(예: USD는 2, JPY는 0, KWD는 3). 음수일 수 있으며, 부호는 값 자체에 포함됩니다(예: 할인은 음수, 청구 금액은 양수). |
 
 #### 우편 주소
 
-| 이름             | 타입   | 필수 여부 | 설명                                                                                                                                                                                                                                      |
-| ---------------- | ------ | --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| extended_address | string | Optional  | An address extension such as an apartment number, C/O or alternative name.                                                                                                                                                                |
-| street_address   | string | Optional  | The street address.                                                                                                                                                                                                                       |
-| address_locality | string | Optional  | The locality in which the street address is, and which is in the region. For example, Mountain View.                                                                                                                                      |
-| address_region   | string | Optional  | The region in which the locality is, and which is in the country. Required for applicable countries (i.e. state in US, province in CA). For example, California or another appropriate first-level Administrative division.               |
-| address_country  | string | Optional  | The country. Recommended to be in 2-letter ISO 3166-1 alpha-2 format, for example "US". For backward compatibility, a 3-letter ISO 3166-1 alpha-3 country code such as "SGP" or a full country name such as "Singapore" can also be used. |
-| postal_code      | string | Optional  | The postal code. For example, 94043.                                                                                                                                                                                                      |
-| first_name       | string | Optional  | Optional. First name of the contact associated with the address.                                                                                                                                                                          |
-| last_name        | string | Optional  | Optional. Last name of the contact associated with the address.                                                                                                                                                                           |
-| phone_number     | string | Optional  | Optional. Phone number of the contact associated with the address.                                                                                                                                                                        |
+| 이름             | 타입   | 필수 여부 | 설명                                                                                                                                                                              |
+| ---------------- | ------ | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| extended_address | string | 선택      | 아파트 호수, C/O, 대체 이름 같은 주소 보충 정보.                                                                                                                                  |
+| street_address   | string | 선택      | 도로명 주소.                                                                                                                                                                      |
+| address_locality | string | 선택      | 도로명 주소가 속하고 해당 지역 안에 있는 시·군·구. 예: Mountain View.                                                                                                             |
+| address_region   | string | 선택      | 시·군·구가 속하고 해당 국가 안에 있는 지역. 해당하는 국가에서는 필수입니다(예: 미국의 주, 캐나다의 주). 예: California 또는 그 밖의 적절한 1차 행정 구역.                         |
+| address_country  | string | 선택      | 국가. 2자리 ISO 3166-1 alpha-2 형식(예: "US")을 권장합니다. 하위 호환성을 위해 "SGP" 같은 3자리 ISO 3166-1 alpha-3 국가 코드나 "Singapore" 같은 전체 국가명도 사용할 수 있습니다. |
+| postal_code      | string | 선택      | 우편번호. 예: 94043.                                                                                                                                                              |
+| first_name       | string | 선택      | 선택 사항. 주소와 연결된 연락처의 이름.                                                                                                                                           |
+| last_name        | string | 선택      | 선택 사항. 주소와 연결된 연락처의 성.                                                                                                                                             |
+| phone_number     | string | 선택      | 선택 사항. 주소와 연결된 연락처의 전화번호.                                                                                                                                       |
 
 ### 예시
 
@@ -479,47 +479,47 @@
 
 #### 카탈로그 풀필먼트
 
-How a catalog variant can be fulfilled. Mirrors checkout `fulfillment`.
+카탈로그 변형을 풀필먼트하는 방식. 체크아웃 `fulfillment`와 같은 구조입니다.
 
-| 이름    | 타입          | 필수 여부 | 설명                                  |
-| ------- | ------------- | --------- | ------------------------------------- |
-| methods | Array[object] | Optional  | Fulfillment methods for this variant. |
+| 이름    | 타입          | 필수 여부 | 설명                     |
+| ------- | ------------- | --------- | ------------------------ |
+| methods | Array[object] | 선택      | 이 변형의 풀필먼트 방식. |
 
 #### 카탈로그 풀필먼트 방법
 
-A fulfillment method on a catalog variant: how the variant can be fulfilled, and its availability.
+카탈로그 변형의 풀필먼트 방법: 변형을 어떻게 풀필먼트할 수 있는지와 그 재고 상황.
 
-| 이름         | 타입          | 필수 여부    | 설명                                                                                                                                                                                                                                                                                                       |
-| ------------ | ------------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| type         | string        | **Required** | Fulfillment method type. Well-known values: `shipping`, `pickup`. Businesses MAY use additional values.                                                                                                                                                                                                    |
-| description  | object        | Optional     | Short buyer-facing summary (e.g. 'Ships in 2–4 business days').                                                                                                                                                                                                                                            |
-| availability | object        | Optional     | Availability of this variant via this method at the specified or inferred location.                                                                                                                                                                                                                        |
-| location     | string        | Optional     | Stable, opaque identifier for the Business Location resolved for this place-based fulfillment method. The Business recognizes the same ID when submitted as `selected_destination_id` for that method; recognition does not reserve inventory or guarantee eligibility, and current terms are revalidated. |
-| options      | Array[object] | Optional     | Representative fulfillment options for this method (e.g. Standard, Express). Without a destination or full cart, a Business SHOULD preview meaningful boundary options (e.g. cheapest, fastest); more specific options are negotiated in Checkout once line items and destination are known.               |
+| 이름         | 타입          | 필수 여부 | 설명                                                                                                                                                                                                                                                                             |
+| ------------ | ------------- | --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| type         | string        | **필수**  | 풀필먼트 방식 유형. 잘 알려진 값: `shipping`, `pickup`. 비즈니스는 추가 값을 사용할 수 있습니다(MAY).                                                                                                                                                                            |
+| description  | object        | 선택      | 구매자에게 보여 주는 짧은 요약(예: 'Ships in 2–4 business days').                                                                                                                                                                                                                |
+| availability | object        | 선택      | 지정되거나 추론된 장소에서 이 방법으로 이 변형을 구할 수 있는지 여부.                                                                                                                                                                                                            |
+| location     | string        | 선택      | 이 장소 기반 풀필먼트 방식에 대해 결정된 비즈니스 위치의 안정적이고 불투명한 식별자. 해당 방식의 `selected_destination_id`로 같은 ID가 제출되면 비즈니스가 이를 인식합니다. 인식했다고 해서 재고를 예약하거나 적격성을 보장하지는 않으며, 현재 조건은 다시 검증됩니다.           |
+| options      | Array[object] | 선택      | 이 방식의 대표 풀필먼트 옵션(예: Standard, Express)입니다. 배송지나 전체 장바구니가 없을 때 비즈니스는 의미 있는 양극단 옵션(예: 가장 저렴한 옵션, 가장 빠른 옵션)을 미리 보여 줘야 합니다(SHOULD). 더 구체적인 옵션은 라인 아이템과 배송지가 정해진 뒤 체크아웃에서 협상합니다. |
 
 #### 풀필먼트 옵션 기반
 
-| 이름        | 타입                                                                              | 필수 여부    | 설명                                                                                                                                                    |
-| ----------- | --------------------------------------------------------------------------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| id          | string                                                                            | **Required** | Unique identifier for this fulfillment option.                                                                                                          |
-| title       | string                                                                            | **Required** | Short label that distinguishes this option from its siblings (e.g. 'Standard', 'Express Shipping', 'Curbside Pickup').                                  |
-| description | [Description](/ucp-ko/2026-08-25/2026-08-25/specification/reference/#description) | Optional     | Supplementary context for the title (e.g. 'Arrives in 4 business days', 'Arrives Dec 12-15 via FedEx'). Directly renderable; MUST NOT repeat the title. |
+| 이름        | 타입                                                                              | 필수 여부 | 설명                                                                                                                                                          |
+| ----------- | --------------------------------------------------------------------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| id          | string                                                                            | **필수**  | 이 풀필먼트 옵션의 고유 식별자.                                                                                                                               |
+| title       | string                                                                            | **필수**  | 형제 옵션과 이 옵션을 구분하는 짧은 레이블(예: 'Standard', 'Express Shipping', 'Curbside Pickup').                                                            |
+| description | [Description](/ucp-ko/2026-08-25/2026-08-25/specification/reference/#description) | 선택      | 제목을 보충하는 맥락 정보(예: 'Arrives in 4 business days', 'Arrives Dec 12-15 via FedEx'). 그대로 렌더링할 수 있으며, 제목을 반복해서는 안 됩니다(MUST NOT). |
 
 #### 가용성
 
-| 이름      | 타입    | 필수 여부 | 설명                                                                                                                                |
-| --------- | ------- | --------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| available | boolean | Optional  | Whether this can be obtained. See status for fulfillment details.                                                                   |
-| status    | string  | Optional  | Qualifies available with fulfillment state. Well-known values: `in_stock`, `backorder`, `preorder`, `out_of_stock`, `discontinued`. |
+| 이름      | 타입    | 필수 여부 | 설명                                                                                                                         |
+| --------- | ------- | --------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| available | boolean | 선택      | 구할 수 있는지 여부. 풀필먼트 세부 정보는 status를 참고하세요.                                                               |
+| status    | string  | 선택      | available을 풀필먼트 상태로 세분화합니다. 잘 알려진 값: `in_stock`, `backorder`, `preorder`, `out_of_stock`, `discontinued`. |
 
 #### 풀필먼트 목적지 필터
 
-| 이름            | 타입   | 필수 여부 | 설명                                                                                                                           |
-| --------------- | ------ | --------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| address_country | string | Optional  | The country, as a 2-letter ISO 3166-1 alpha-2 code (e.g. "US"). A 3-letter alpha-3 code or full country name MAY also be used. |
-| address_region  | string | Optional  | The first-level administrative region within the country (e.g. a state or province such as California).                        |
-| postal_code     | string | Optional  | The postal code (e.g. "94043").                                                                                                |
-| location        | string | Optional  | A reference to the destination (e.g. store, pickup location, saved address).                                                   |
+| 이름            | 타입   | 필수 여부 | 설명                                                                                                                 |
+| --------------- | ------ | --------- | -------------------------------------------------------------------------------------------------------------------- |
+| address_country | string | 선택      | 2자리 ISO 3166-1 alpha-2 코드로 표기한 국가(예: "US"). 3자리 alpha-3 코드나 전체 국가명을 사용할 수도 있습니다(MAY). |
+| address_region  | string | 선택      | 국가 안의 1차 행정 구역(예: California 같은 주 또는 도).                                                             |
+| postal_code     | string | 선택      | 우편번호(예: "94043").                                                                                               |
+| location        | string | 선택      | 목적지 참조(예: 매장, 픽업 장소, 저장된 주소).                                                                       |
 
 ### 위치와 방법: `context`와 `filters`
 
@@ -598,9 +598,9 @@ A fulfillment method on a catalog variant: how the variant can be fulfilled, and
 
 플랫폼은 `platform_schema`로 자신의 렌더링 능력을 선언합니다.
 
-| 이름                 | 타입    | 필수 여부 | 설명                                |
-| -------------------- | ------- | --------- | ----------------------------------- |
-| supports_multi_group | boolean | Optional  | Enables multiple groups per method. |
+| 이름                 | 타입    | 필수 여부 | 설명                                      |
+| -------------------- | ------- | --------- | ----------------------------------------- |
+| supports_multi_group | boolean | 선택      | 방식당 여러 그룹을 사용할 수 있게 합니다. |
 
 config를 생략하거나 `supports_multi_group: false`로 설정한 플랫폼은 단일 그룹 응답을 받습니다. 응답 형태는 항상 `methods[].groups[]`이며, 차이는 방법마다 `groups.length`가 1을 넘을 수 있느냐뿐입니다.
 
@@ -649,10 +649,10 @@ config를 생략하거나 `supports_multi_group: false`로 설정한 플랫폼�
 
 비즈니스는 `business_config`로 지원하는 풀필먼트 구성을 선언합니다.
 
-| 이름                | 타입          | 필수 여부 | 설명                                                                                                                                                                                                        |
-| ------------------- | ------------- | --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| multi_destination   | Array[object] | Optional  | Method types that permit multiple destinations within one cart (e.g. split shipping across addresses). Listing a method permits it; an omitted method does not. Open — businesses MAY list any method type. |
-| method_combinations | Array[array]  | Optional  | Method-type combinations the business permits within one cart. Each inner array is a permitted set of method `type` values (e.g. shipping + pickup).                                                        |
+| 이름                | 타입          | 필수 여부 | 설명                                                                                                                                                                                                                     |
+| ------------------- | ------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| multi_destination   | Array[object] | 선택      | 하나의 장바구니 안에서 여러 목적지를 허용하는 방법 유형(예: 여러 주소로 나누어 배송). 목록에 있는 방법은 허용되고, 빠진 방법은 허용되지 않습니다. 열린 목록이므로 비즈니스는 어떤 방법 유형이든 나열할 수 있습니다(MAY). |
+| method_combinations | Array[array]  | 선택      | 비즈니스가 하나의 장바구니 안에서 허용하는 방법 유형 조합. 각 내부 배열은 허용되는 방법 `type` 값의 집합입니다(예: 배송 + 픽업).                                                                                         |
 
 ```json
 {

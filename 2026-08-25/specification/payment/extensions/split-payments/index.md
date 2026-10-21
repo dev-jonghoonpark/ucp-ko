@@ -25,17 +25,17 @@
 
 이 기능이 활성화되면 `checkout.payment.instruments`의 각 결제 수단에 선택적 `amount` 필드가 추가됩니다.
 
-Payment instrument extended with an optional per-instrument amount for split payments.
+분할 결제를 위해 결제 수단별 금액(선택 사항)으로 확장된 결제 수단.
 
-| 이름            | 타입    | 필수 여부    | 설명                                                                                                                                                                                                                                                                                                                                                                                  |
-| --------------- | ------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| id              | string  | **Required** | A unique identifier for this instrument instance. Typically assigned by the platform for instruments it collects. For a business-owned saved instrument returned on an identity-linked response, this identifier is assigned by the business; the platform MUST treat it as an opaque, business-scoped reference, and the business resolves it server-side when the buyer selects it. |
-| handler_id      | string  | **Required** | The unique identifier for the handler instance that produced this instrument. This corresponds to the 'id' field in the Payment Handler definition.                                                                                                                                                                                                                                   |
-| type            | string  | **Required** | The broad category of the instrument (e.g., 'card', 'tokenized_card'). Specific schemas will constrain this to a constant value.                                                                                                                                                                                                                                                      |
-| billing_address | object  | Optional     | The billing address associated with this payment method.                                                                                                                                                                                                                                                                                                                              |
-| credential      | object  | Optional     | The base definition for any payment credential. Handlers define specific credential types.                                                                                                                                                                                                                                                                                            |
-| display         | object  | Optional     | Display information for this payment instrument. Each payment instrument schema defines its specific display properties, as outlined by the payment handler.                                                                                                                                                                                                                          |
-| amount          | integer | Optional     | Contribution amount for this instrument expressed in ISO 4217 minor units of the containing capability object's `currency`. On request: the platform's requested contribution (omit for open-amount). On response: the actual amount authorized or charged (omitted when not finally processed).                                                                                      |
+| 이름            | 타입    | 필수 여부 | 설명                                                                                                                                                                                                                                                                                                                               |
+| --------------- | ------- | --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| id              | string  | **필수**  | 이 결제 수단 인스턴스의 고유 식별자. 플랫폼이 수집하는 결제 수단은 보통 플랫폼이 할당합니다. 신원 연결된 응답으로 반환되는, 비즈니스가 소유한 저장 결제 수단이라면 비즈니스가 이 식별자를 할당합니다. 플랫폼은 반드시 이를 불투명한 비즈니스 범위 참조로 취급해야 하며(MUST), 구매자가 선택하면 비즈니스가 서버 측에서 해석합니다. |
+| handler_id      | string  | **필수**  | 이 결제 수단을 생성한 핸들러 인스턴스의 고유 식별자. 결제 핸들러 정의의 'id' 필드에 해당합니다.                                                                                                                                                                                                                                    |
+| type            | string  | **필수**  | 결제 수단의 대분류(예: 'card', 'tokenized_card'). 구체적인 스키마에서 이 값을 상수로 제한합니다.                                                                                                                                                                                                                                   |
+| billing_address | object  | 선택      | 이 결제 방법에 연결된 청구지 주소.                                                                                                                                                                                                                                                                                                 |
+| credential      | object  | 선택      | 모든 결제 자격 증명의 기본 정의. 구체적인 자격 증명 유형은 핸들러가 정의합니다.                                                                                                                                                                                                                                                    |
+| display         | object  | 선택      | 이 결제 수단의 표시 정보. 각 결제 수단 스키마가 결제 핸들러의 설명에 따라 고유한 표시 속성을 정의합니다.                                                                                                                                                                                                                           |
+| amount          | integer | 선택      | 이 결제 수단의 분담 금액으로, 이를 포함하는 기능 객체의 `currency` 기준 ISO 4217 최소 단위로 표현합니다. 요청 시: 플랫폼이 요청하는 분담 금액(금액을 정하지 않으면 생략). 응답 시: 실제로 승인되거나 청구된 금액(최종 처리되지 않았으면 생략).                                                                                     |
 
 ## 구성
 
@@ -43,9 +43,9 @@ Payment instrument extended with an optional per-instrument amount for split pay
 
 ### 비즈니스 프로필
 
-| 이름                 | 타입         | 필수 여부    | 설명                                                                                                                                         |
-| -------------------- | ------------ | ------------ | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| allowed_combinations | Array[array] | **Required** | Array of valid instrument combinations. Each combination is an array of instrument groups. A payment is valid if it matches any combination. |
+| 이름                 | 타입         | 필수 여부 | 설명                                                                                                            |
+| -------------------- | ------------ | --------- | --------------------------------------------------------------------------------------------------------------- |
+| allowed_combinations | Array[array] | **필수**  | 유효한 결제 수단 조합의 배열. 각 조합은 결제 수단 그룹의 배열입니다. 결제가 어느 한 조합과 일치하면 유효합니다. |
 
 #### `allowed_combinations`
 
@@ -57,11 +57,11 @@ Payment instrument extended with an optional per-instrument amount for split pay
 
 조합 내의 각 그룹은 특정 결제 수단 유형을 받아들이는 "슬롯"을 정의합니다.
 
-| 이름  | 타입          | 필수 여부    | 설명                                                                                                          |
-| ----- | ------------- | ------------ | ------------------------------------------------------------------------------------------------------------- |
-| types | Array[string] | **Required** | Instrument types accepted by this group (OR logic). Any listed type qualifies.                                |
-| min   | integer       | Optional     | Minimum number of instruments required from this group. Defaults to 0 (optional).                             |
-| max   | integer       | Optional     | Maximum number of instruments allowed from this group. Defaults to 1. MUST be greater than or equal to `min`. |
+| 이름  | 타입          | 필수 여부 | 설명                                                                                              |
+| ----- | ------------- | --------- | ------------------------------------------------------------------------------------------------- |
+| types | Array[string] | **필수**  | 이 그룹이 받는 결제 수단 유형(OR 논리). 나열된 유형 중 하나면 충족합니다.                         |
+| min   | integer       | 선택      | 이 그룹에서 필요한 최소 결제 수단 개수. 기본값은 0(선택 사항)입니다.                              |
+| max   | integer       | 선택      | 이 그룹에서 허용되는 최대 결제 수단 개수. 기본값은 1입니다. 반드시 `min` 이상이어야 합니다(MUST). |
 
 **일치 알고리즘:** 제출된 각 결제 수단을 정확히 하나의 그룹에 할당하되 다음 조건을 만족하는 할당이 있으면 해당 제출은 그 조합과 일치합니다.
 

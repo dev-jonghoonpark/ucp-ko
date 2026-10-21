@@ -4280,80 +4280,80 @@
 <tr>
 <td style="text-align: left;">ucp</td>
 <td style="text-align: left;">any</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">UCP metadata for order responses. No payment handlers needed post-purchase.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">주문 응답용 UCP 메타데이터. 구매 후에는 결제 핸들러가 필요 없습니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Unique order identifier.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">고유 주문 식별자.</td>
 </tr>
 <tr>
 <td style="text-align: left;">label</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Human-readable label for identifying the order. MUST only be provided by the business.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">주문을 식별하기 위한 사람이 읽을 수 있는 라벨. 반드시 비즈니스만 제공해야 합니다(MUST).</td>
 </tr>
 <tr>
 <td style="text-align: left;">checkout_id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Associated checkout ID for reconciliation.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">정산 대사를 위한 연관 체크아웃 ID.</td>
 </tr>
 <tr>
 <td style="text-align: left;">permalink_url</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Permalink to access the order on merchant site.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">판매자 사이트에서 주문에 접근하는 퍼머링크.</td>
 </tr>
 <tr>
 <td style="text-align: left;">line_items</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#order-line-item">Order Line Item</a>]</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Line items representing what was purchased — can change post-order via edits or exchanges.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">구매한 항목을 나타내는 라인 아이템. 주문 후 수정이나 교환으로 바뀔 수 있습니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">fulfillment</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Fulfillment data: buyer expectations and what actually happened.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">풀필먼트 데이터: 구매자 예상 정보와 실제로 일어난 일.</td>
 </tr>
 <tr>
 <td style="text-align: left;">adjustments</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#adjustment">Adjustment</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Post-order events (refunds, returns, credits, disputes, cancellations, etc.) that exist independently of fulfillment.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">풀필먼트와 독립적으로 존재하는 주문 후 이벤트(환불, 반품, 크레딧, 분쟁, 취소 등).</td>
 </tr>
 <tr>
 <td style="text-align: left;">currency</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">ISO 4217 currency code. MUST match the currency from the originating checkout session.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">ISO 4217 통화 코드. 반드시 원래 체크아웃 세션의 통화와 일치해야 합니다(MUST).</td>
 </tr>
 <tr>
 <td style="text-align: left;">totals</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#totals">Totals</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Different totals for the order.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">주문의 각종 합계.</td>
 </tr>
 <tr>
 <td style="text-align: left;">policies</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#policy">Policy</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Snapshot of the policies that applied to the items at checkout, captured on the order as a durable record. <code>applies_to</code> targets are relative to the response root.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">체크아웃 시 항목에 적용된 정책의 스냅샷으로, 지속적인 기록으로 주문에 저장됩니다. <code>applies_to</code> 대상은 응답 루트를 기준으로 합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">messages</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#message">Message</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Business outcome messages (errors, warnings, informational). Present when the business needs to communicate status or issues to the platform.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">비즈니스 결과 메시지(오류, 경고, 정보). 비즈니스가 플랫폼에 상태나 문제를 전달해야 할 때 포함됩니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">attribution</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#attribution">Attribution</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Snapshot of the attribution associated with the originating checkout. Read-only on the order.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">원래 체크아웃과 연결된 어트리뷰션의 스냅샷입니다. 주문에서는 읽기 전용입니다.</td>
 </tr>
 </tbody>
 </table>
@@ -4372,38 +4372,38 @@
 <tr>
 <td style="text-align: left;">id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Line item identifier.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">라인 아이템 식별자.</td>
 </tr>
 <tr>
 <td style="text-align: left;">item</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#item">Item</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Purchased item data, including identity, price, and sale basis.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">식별 정보, 가격, 판매 기준을 포함한 구매 항목 데이터.</td>
 </tr>
 <tr>
 <td style="text-align: left;">quantity</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Tracks the line item's original, current active, and fulfilled quantities. All three values use the same inherited <code>item.quantity_unit</code>. When <code>item.quantity_unit</code> is absent on an authoritative order response, each step is one whole item (<code>each</code>) under the shared default.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">라인 아이템의 원래 수량, 현재 유효 수량, 풀필먼트된 수량을 추적합니다. 세 값 모두 상속된 같은 <code>item.quantity_unit</code>을 사용합니다. 권위 있는 주문 응답에 <code>item.quantity_unit</code>이 없으면 공통 기본값에 따라 각 단계는 상품 하나 단위(<code>each</code>)입니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">totals</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#total">Total Response</a>]</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Line item totals breakdown.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">라인 아이템 합계 내역.</td>
 </tr>
 <tr>
 <td style="text-align: left;">status</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Derived status: removed if quantity.total == 0, fulfilled if quantity.total &gt; 0 and quantity.fulfilled == quantity.total, partial if quantity.total &gt; 0 and quantity.fulfilled &gt; 0, otherwise processing.<br><strong>Enum:</strong> <code>processing</code>, <code>partial</code>, <code>fulfilled</code>, <code>removed</code></td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">파생 상태: quantity.total == 0이면 removed, quantity.total &gt; 0이고 quantity.fulfilled == quantity.total이면 fulfilled, quantity.total &gt; 0이고 quantity.fulfilled &gt; 0이면 partial, 그 밖에는 processing.<br><strong>허용 값:</strong> <code>processing</code>, <code>partial</code>, <code>fulfilled</code>, <code>removed</code></td>
 </tr>
 <tr>
 <td style="text-align: left;">parent_id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Parent line item identifier for any nested structures.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">중첩 구조에 사용하는 상위 라인 아이템 식별자.</td>
 </tr>
 </tbody>
 </table>
@@ -4442,38 +4442,38 @@
 <tr>
 <td style="text-align: left;">id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Expectation identifier.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">예상 정보 식별자.</td>
 </tr>
 <tr>
 <td style="text-align: left;">line_items</td>
 <td style="text-align: left;">Array[object]</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Which line items and quantities are in this expectation.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">이 예상 배송에 포함된 라인 아이템과 수량.</td>
 </tr>
 <tr>
 <td style="text-align: left;">method_type</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Delivery method type. Well-known values: <code>shipping</code>, <code>pickup</code>, <code>digital</code>; additional values MAY be used.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">배송 방식 유형. 잘 알려진 값: <code>shipping</code>, <code>pickup</code>, <code>digital</code>. 추가 값을 사용할 수 있습니다(MAY).</td>
 </tr>
 <tr>
 <td style="text-align: left;">destination</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#postal-address">Postal Address</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Delivery destination address.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">배송 목적지 주소.</td>
 </tr>
 <tr>
 <td style="text-align: left;">description</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Human-readable delivery description (e.g., 'Arrives in 5-8 business days').</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">사람이 읽을 수 있는 배송 설명(예: 'Arrives in 5-8 business days').</td>
 </tr>
 <tr>
 <td style="text-align: left;">fulfillable_on</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">When this expectation can be fulfilled: 'now' or ISO 8601 timestamp for future date (backorder, pre-order).</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 예상 배송을 이행할 수 있는 시점: 'now' 또는 향후 날짜(이월 주문, 사전 주문)에 대한 ISO 8601 타임스탬프.</td>
 </tr>
 </tbody>
 </table>
@@ -4493,50 +4493,50 @@
 <tr>
 <td style="text-align: left;">id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Fulfillment event identifier.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">풀필먼트 이벤트 식별자.</td>
 </tr>
 <tr>
 <td style="text-align: left;">occurred_at</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">RFC 3339 timestamp when this fulfillment event occurred.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">이 풀필먼트 이벤트가 발생한 시점의 RFC 3339 타임스탬프.</td>
 </tr>
 <tr>
 <td style="text-align: left;">type</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Fulfillment event type. Common values include: processing (preparing to ship), shipped (handed to carrier), in_transit (in delivery network), delivered (received by buyer), failed_attempt (delivery attempt failed), canceled (fulfillment canceled), undeliverable (cannot be delivered), returned_to_sender (returned to merchant).</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">풀필먼트 이벤트 유형. 일반적인 값: processing(배송 준비 중), shipped(운송사에 인계됨), in_transit(배송망에서 이동 중), delivered(구매자가 수령함), failed_attempt(배송 시도 실패), canceled(풀필먼트 취소됨), undeliverable(배송 불가), returned_to_sender(판매자에게 반송됨).</td>
 </tr>
 <tr>
 <td style="text-align: left;">line_items</td>
 <td style="text-align: left;">Array[object]</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Which line items and quantities are fulfilled in this event.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">이 이벤트에서 풀필먼트된 라인 아이템과 수량.</td>
 </tr>
 <tr>
 <td style="text-align: left;">tracking_number</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Carrier tracking number (required if type != processing).</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">운송사 추적 번호(type != processing이면 필수).</td>
 </tr>
 <tr>
 <td style="text-align: left;">tracking_url</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">URL to track this shipment (required if type != processing).</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 배송을 추적하는 URL(type != processing이면 필수).</td>
 </tr>
 <tr>
 <td style="text-align: left;">carrier</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Carrier name (e.g., 'FedEx', 'USPS').</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">운송사 이름(예: 'FedEx', 'USPS').</td>
 </tr>
 <tr>
 <td style="text-align: left;">description</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Human-readable description of the shipment status or delivery information (e.g., 'Delivered to front door', 'Out for delivery').</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">사람이 읽을 수 있는 배송 상태 또는 배송 정보 설명(예: 'Delivered to front door', 'Out for delivery').</td>
 </tr>
 </tbody>
 </table>
@@ -4558,44 +4558,44 @@
 <tr>
 <td style="text-align: left;">id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Adjustment event identifier.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">조정 이벤트 식별자.</td>
 </tr>
 <tr>
 <td style="text-align: left;">type</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Type of adjustment (open string). Typically money-related like: refund, return, credit, price_adjustment, dispute, cancellation. Can be any value that makes sense for the merchant's business.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">조정 유형(개방형 문자열). 일반적으로 refund, return, credit, price_adjustment, dispute, cancellation처럼 금전과 관련된 값입니다. 판매자 비즈니스에 맞는 어떤 값이든 사용할 수 있습니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">occurred_at</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">RFC 3339 timestamp when this adjustment occurred.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">이 조정이 발생한 시점의 RFC 3339 타임스탬프.</td>
 </tr>
 <tr>
 <td style="text-align: left;">status</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Adjustment status.<br><strong>Enum:</strong> <code>pending</code>, <code>completed</code>, <code>failed</code></td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">조정 상태.<br><strong>허용 값:</strong> <code>pending</code>, <code>completed</code>, <code>failed</code></td>
 </tr>
 <tr>
 <td style="text-align: left;">line_items</td>
 <td style="text-align: left;">Array[object]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Which line items and quantities are affected (optional).</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">영향을 받는 라인 아이템과 수량(선택 사항).</td>
 </tr>
 <tr>
 <td style="text-align: left;">totals</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#total">Total Response</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Adjustment totals breakdown. Signed values - negative for money returned to buyer (refunds, credits), positive for additional charges (exchanges).</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">조정 합계 내역. 부호가 있는 값으로, 구매자에게 돌려주는 금액(환불, 크레딧)은 음수, 추가 청구(교환)는 양수입니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">description</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Human-readable reason or description (e.g., 'Defective item', 'Customer requested').</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">사람이 읽을 수 있는 사유 또는 설명(예: 'Defective item', 'Customer requested').</td>
 </tr>
 </tbody>
 </table>
@@ -5118,62 +5118,62 @@ HTTP Message Signatures 중 하나)으로 주문 데이터 요청을 반드시 �
 <tr>
 <td style="text-align: left;">ucp</td>
 <td style="text-align: left;">any</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">UCP metadata for order responses. No payment handlers needed post-purchase.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">주문 응답용 UCP 메타데이터. 구매 후에는 결제 핸들러가 필요 없습니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Unique order identifier.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">고유 주문 식별자.</td>
 </tr>
 <tr>
 <td style="text-align: left;">label</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Human-readable label for identifying the order. MUST only be provided by the business.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">주문을 식별하기 위한 사람이 읽을 수 있는 라벨. 반드시 비즈니스만 제공해야 합니다(MUST).</td>
 </tr>
 <tr>
 <td style="text-align: left;">checkout_id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Associated checkout ID for reconciliation.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">정산 대사를 위한 연관 체크아웃 ID.</td>
 </tr>
 <tr>
 <td style="text-align: left;">permalink_url</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Permalink to access the order on merchant site.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">판매자 사이트에서 주문에 접근하는 퍼머링크.</td>
 </tr>
 <tr>
 <td style="text-align: left;">line_items</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#order-line-item">Order Line Item</a>]</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Line items representing what was purchased — can change post-order via edits or exchanges.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">구매한 항목을 나타내는 라인 아이템. 주문 후 수정이나 교환으로 바뀔 수 있습니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">fulfillment</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Fulfillment data: buyer expectations and what actually happened.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">풀필먼트 데이터: 구매자 예상 정보와 실제로 일어난 일.</td>
 </tr>
 <tr>
 <td style="text-align: left;">adjustments</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#adjustment">Adjustment</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Post-order events (refunds, returns, credits, disputes, cancellations, etc.) that exist independently of fulfillment.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">풀필먼트와 독립적으로 존재하는 주문 후 이벤트(환불, 반품, 크레딧, 분쟁, 취소 등).</td>
 </tr>
 <tr>
 <td style="text-align: left;">totals</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#totals">Totals</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Different totals for the order.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">주문의 각종 합계.</td>
 </tr>
 <tr>
 <td style="text-align: left;">messages</td>
 <td style="text-align: left;">Array[<a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#message">Message</a>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Business outcome messages (errors, warnings, informational). Present when the business needs to communicate status or issues to the platform.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">비즈니스 결과 메시지(오류, 경고, 정보). 비즈니스가 플랫폼에 상태나 문제를 전달해야 할 때 포함됩니다.</td>
 </tr>
 </tbody>
 </table>
@@ -5191,7 +5191,7 @@ HTTP Message Signatures 중 하나)으로 주문 데이터 요청을 반드시 �
 <tr>
 <td style="text-align: left;">ucp</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-08-25/2026-08-25/specification/shopping/order/#ucp">Ucp</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
+<td style="text-align: left;"><strong>필수</strong></td>
 <td style="text-align: left;"></td>
 </tr>
 </tbody>
@@ -5199,7 +5199,7 @@ HTTP Message Signatures 중 하나)으로 주문 데이터 요청을 반드시 �
 <h3 id="webhook-url-configuration">웹훅 URL 설정<a class="headerlink" href="#webhook-url-configuration" title="Permanent link">&para;</a></h3>
 <p>플랫폼은 기능 협상 과정에서 주문 기능의 <code>config</code> 필드에 웹훅 URL을 넣어 둡니다. 비즈니스는
 플랫폼 프로필에서 이 URL을 찾아 주문 수명 주기 이벤트를 보낼 때 사용합니다.</p>
-<p>Platform's order capability configuration.</p>
+<p>플랫폼의 주문 기능 구성.</p>
 <table>
 <thead>
 <tr>
@@ -5213,8 +5213,8 @@ HTTP Message Signatures 중 하나)으로 주문 데이터 요청을 반드시 �
 <tr>
 <td style="text-align: left;">webhook_url</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">URL where merchant sends order lifecycle events (webhooks).</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">판매자가 주문 수명 주기 이벤트(웹훅)를 보내는 URL.</td>
 </tr>
 </tbody>
 </table>
@@ -5337,38 +5337,38 @@ HTTP Message Signatures 중 하나)으로 주문 데이터 요청을 반드시 �
 <tr>
 <td style="text-align: left;">id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">The product identifier, often the SKU, required to resolve the product details associated with this line item. Should be recognized by both the Platform, and the Business.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">이 라인 아이템에 연결된 상품 세부 정보를 확인하는 데 필요한 상품 식별자로, 주로 SKU입니다. 플랫폼과 비즈니스 모두 인식할 수 있어야 합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">title</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Product title.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">상품 제목.</td>
 </tr>
 <tr>
 <td style="text-align: left;">price</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#amount">Amount</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Unit price in ISO 4217 minor units. Price is the amount per one whole <code>quantity_unit.unit</code> (for example, per lb or per hour); when <code>quantity_unit</code> is absent, it is per <code>each</code>.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">ISO 4217 최소 단위로 표시한 단가. 가격은 <code>quantity_unit.unit</code> 하나(예: lb당 또는 시간당)에 대한 금액이며, <code>quantity_unit</code>이 없으면 <code>each</code> 기준입니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">quantity_unit</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#quantity-unit">Quantity Unit</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Sale basis this item's <code>quantity</code> is denominated in. On an authoritative Business response, absence encodes the default <code>each</code> machine identity (<code>C62</code>, 0); the Business MUST include this descriptor for every non-<code>each</code> response. On Platform requests, omission makes no assertion: the Business interprets <code>quantity</code> using the item's authoritative sale basis. If the Platform includes this descriptor, it asserts the unit-descriptor machine identity. The Business MUST compare that machine identity (<code>unit</code>, effective <code>scale</code>), ignore <code>display_text</code> and <code>increment</code>, and resolve a mismatch by conversion surfaced as a visible line revision with a warning, or by rejection with a recoverable business outcome; silent reinterpretation is forbidden. An explicit <code>C62</code> descriptor at effective scale 0 matches an authoritative basis represented by an absent descriptor.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 항목의 <code>quantity</code>가 표시되는 판매 기준입니다. 권위 있는 비즈니스 응답에서 이 값이 없으면 기본값인 <code>each</code>의 기계적 정체성(<code>C62</code>, 0)을 뜻하며, <code>each</code>가 아닌 모든 응답에는 비즈니스가 반드시 이 기술자를 포함해야 합니다(MUST). 플랫폼 요청에서는 생략해도 아무것도 주장하지 않으며, 비즈니스는 항목의 권위 있는 판매 기준으로 <code>quantity</code>를 해석합니다. 플랫폼이 이 기술자를 포함하면 단위 기술자의 기계적 정체성을 주장하는 것입니다. 비즈니스는 반드시 그 기계적 정체성(<code>unit</code>, 실효 <code>scale</code>)을 비교하고(MUST), <code>display_text</code>와 <code>increment</code>는 무시하며, 불일치는 경고와 함께 눈에 보이는 라인 수정으로 드러나는 변환이나 복구 가능한 비즈니스 결과로 거부하는 방식으로 해결해야 합니다. 조용히 다르게 해석하는 것은 금지됩니다. 실효 scale 0의 명시적 <code>C62</code> 기술자는 기술자가 없는 것으로 표현된 권위 있는 판매 기준과 일치합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">unit_price</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#unit-price">Unit Price</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Pricing basis for this item. On an authoritative Business response, the Business MUST include <code>unit_price</code> on every line whose pricing basis differs from its sale basis (for example, priced per pound but sold per <code>each</code>); presence on a line marks the rate as transactional rather than display-only. When the pricing basis is the sale basis, <code>item.price</code> fully denominates the charge and this field MAY be omitted.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 항목의 가격 책정 기준입니다. 권위 있는 비즈니스 응답에서는 가격 책정 기준이 판매 기준과 다른 모든 라인(예: 파운드당 가격이지만 <code>each</code> 단위로 판매)에 비즈니스가 반드시 <code>unit_price</code>를 포함해야 합니다(MUST). 라인에 이 값이 있으면 해당 단가는 표시용이 아니라 거래에 쓰이는 값입니다. 가격 책정 기준이 판매 기준과 같으면 <code>item.price</code>만으로 청구 금액이 온전히 정해지므로 이 필드는 생략할 수 있습니다(MAY).</td>
 </tr>
 <tr>
 <td style="text-align: left;">image_url</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Product image URI.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">상품 이미지 URI.</td>
 </tr>
 </tbody>
 </table>
@@ -5386,61 +5386,61 @@ HTTP Message Signatures 중 하나)으로 주문 데이터 요청을 반드시 �
 <tr>
 <td style="text-align: left;">extended_address</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">An address extension such as an apartment number, C/O or alternative name.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">아파트 호수, C/O, 대체 이름 같은 주소 보충 정보.</td>
 </tr>
 <tr>
 <td style="text-align: left;">street_address</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">The street address.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">도로명 주소.</td>
 </tr>
 <tr>
 <td style="text-align: left;">address_locality</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">The locality in which the street address is, and which is in the region. For example, Mountain View.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">도로명 주소가 속하고 해당 지역 안에 있는 시·군·구. 예: Mountain View.</td>
 </tr>
 <tr>
 <td style="text-align: left;">address_region</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">The region in which the locality is, and which is in the country. Required for applicable countries (i.e. state in US, province in CA). For example, California or another appropriate first-level Administrative division.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">시·군·구가 속하고 해당 국가 안에 있는 지역. 해당하는 국가에서는 필수입니다(예: 미국의 주, 캐나다의 주). 예: California 또는 그 밖의 적절한 1차 행정 구역.</td>
 </tr>
 <tr>
 <td style="text-align: left;">address_country</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">The country. Recommended to be in 2-letter ISO 3166-1 alpha-2 format, for example "US". For backward compatibility, a 3-letter ISO 3166-1 alpha-3 country code such as "SGP" or a full country name such as "Singapore" can also be used.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">국가. 2자리 ISO 3166-1 alpha-2 형식(예: "US")을 권장합니다. 하위 호환성을 위해 "SGP" 같은 3자리 ISO 3166-1 alpha-3 국가 코드나 "Singapore" 같은 전체 국가명도 사용할 수 있습니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">postal_code</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">The postal code. For example, 94043.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">우편번호. 예: 94043.</td>
 </tr>
 <tr>
 <td style="text-align: left;">first_name</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Optional. First name of the contact associated with the address.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">선택 사항. 주소와 연결된 연락처의 이름.</td>
 </tr>
 <tr>
 <td style="text-align: left;">last_name</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Optional. Last name of the contact associated with the address.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">선택 사항. 주소와 연결된 연락처의 성.</td>
 </tr>
 <tr>
 <td style="text-align: left;">phone_number</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Optional. Phone number of the contact associated with the address.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">선택 사항. 주소와 연결된 연락처의 전화번호.</td>
 </tr>
 </tbody>
 </table>
 <h3 id="response">응답<a class="headerlink" href="#response" title="Permanent link">&para;</a></h3>
-<p>Capability reference in responses. Only name/version required to confirm active capabilities.</p>
+<p>응답의 기능 참조. 활성 기능을 확인하는 데는 name/version만 있으면 됩니다.</p>
 <table>
 <thead>
 <tr>
@@ -5454,38 +5454,38 @@ HTTP Message Signatures 중 하나)으로 주문 데이터 요청을 반드시 �
 <tr>
 <td style="text-align: left;">version</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Entity version in YYYY-MM-DD format.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">YYYY-MM-DD 형식의 엔티티 버전.</td>
 </tr>
 <tr>
 <td style="text-align: left;">spec</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">URL to human-readable specification document.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">사람이 읽을 수 있는 명세 문서의 URL.</td>
 </tr>
 <tr>
 <td style="text-align: left;">schema</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">URL to JSON Schema defining this entity's structure and payloads.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 엔터티의 구조와 페이로드를 정의하는 JSON Schema의 URL.</td>
 </tr>
 <tr>
 <td style="text-align: left;">id</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Unique identifier for this entity instance. Used to disambiguate when multiple instances exist.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 엔터티 인스턴스의 고유 식별자. 인스턴스가 여러 개일 때 구분하는 데 사용합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">config</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Entity-specific configuration. Structure defined by each entity's schema.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">엔티티별 구성. 구조는 각 엔티티의 스키마가 정의합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">extends</td>
 <td style="text-align: left;">OneOf[<code>string</code>, <code>array</code>]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Parent capability(s) this extends. Present for extensions, absent for root capabilities. Use array for multi-parent extensions.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 항목이 확장하는 상위 기능. 확장에는 있고 루트 기능에는 없습니다. 상위가 여럿인 확장은 배열을 사용합니다.</td>
 </tr>
 </tbody>
 </table>
@@ -5503,25 +5503,25 @@ HTTP Message Signatures 중 하나)으로 주문 데이터 요청을 반드시 �
 <tr>
 <td style="text-align: left;">type</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Cost category. Well-known values: subtotal, items_discount, discount, fulfillment, tax, fee, total. Businesses MAY use additional values.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">비용 범주. 잘 알려진 값: subtotal, items_discount, discount, fulfillment, tax, fee, total. 비즈니스는 추가 값을 사용할 수 있습니다(MAY).</td>
 </tr>
 <tr>
 <td style="text-align: left;">display_text</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Text to display against the amount. Should reflect appropriate method (e.g., 'Shipping', 'Delivery').</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">금액 옆에 표시할 텍스트. 적절한 방식을 반영해야 합니다(예: 'Shipping', 'Delivery').</td>
 </tr>
 <tr>
 <td style="text-align: left;">amount</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#signed-amount">Signed Amount</a></td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Monetary amount in the currency's minor unit as defined by ISO 4217. Refer to the currency's exponent to determine minor-to-major ratio (e.g., 2 for USD, 0 for JPY, 3 for KWD). May be negative — the sign is intrinsic to the value (e.g., discounts are negative, charges are positive).</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">ISO 4217에 정의된 통화의 최소 단위로 나타낸 금액. 최소 단위와 기본 단위의 비율은 통화의 지수를 참고합니다(예: USD는 2, JPY는 0, KWD는 3). 음수일 수 있으며, 부호는 값 자체에 포함됩니다(예: 할인은 음수, 청구 금액은 양수).</td>
 </tr>
 </tbody>
 </table>
 <h3 id="ucp-response-order-schema">UCP 응답 주문 스키마 <span id="ucp"></span><a class="headerlink" href="#ucp-response-order-schema" title="Permanent link">&para;</a></h3>
-<p>UCP metadata for order responses. No payment handlers needed post-purchase.</p>
+<p>주문 응답용 UCP 메타데이터. 구매 후에는 결제 핸들러가 필요 없습니다.</p>
 <table>
 <thead>
 <tr>
@@ -5535,43 +5535,43 @@ HTTP Message Signatures 중 하나)으로 주문 데이터 요청을 반드시 �
 <tr>
 <td style="text-align: left;">version</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Version identifier in YYYY-MM-DD format.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">YYYY-MM-DD 형식의 버전 식별자.</td>
 </tr>
 <tr>
 <td style="text-align: left;">map_order</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Preferred key-traversal order for sibling registry fields inside the root <code>ucp</code> envelope (<code>services</code>, <code>capabilities</code>, and <code>payment_handlers</code>).</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">루트 <code>ucp</code> 엔벌로프 안에 있는 형제 레지스트리 필드(<code>services</code>, <code>capabilities</code>, <code>payment_handlers</code>)의 선호 키 순회 순서.</td>
 </tr>
 <tr>
 <td style="text-align: left;">status</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Application-level status of the UCP operation.<br><strong>Enum:</strong> <code>success</code>, <code>error</code></td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">UCP 작업의 애플리케이션 수준 상태.<br><strong>허용 값:</strong> <code>success</code>, <code>error</code></td>
 </tr>
 <tr>
 <td style="text-align: left;">services</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Service registry keyed by reverse-domain name.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">역도메인 이름을 키로 하는 서비스 레지스트리.</td>
 </tr>
 <tr>
 <td style="text-align: left;">capabilities</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Capability registry keyed by reverse-domain name.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">역도메인 이름을 키로 하는 기능 레지스트리.</td>
 </tr>
 <tr>
 <td style="text-align: left;">payment_handlers</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Payment handler registry keyed by reverse-domain name.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">역 도메인 이름을 키로 하는 결제 핸들러 레지스트리.</td>
 </tr>
 <tr>
 <td style="text-align: left;">capabilities</td>
 <td style="text-align: left;">any</td>
-<td style="text-align: left;">Optional</td>
+<td style="text-align: left;">선택</td>
 <td style="text-align: left;"></td>
 </tr>
 </tbody>

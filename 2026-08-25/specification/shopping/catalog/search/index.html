@@ -3520,38 +3520,38 @@
 <tr>
 <td style="text-align: left;">query</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Free-text search query.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">자유 텍스트 검색어.</td>
 </tr>
 <tr>
 <td style="text-align: left;">context</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Provisional buyer signals for relevance and localization—not authoritative data. Businesses SHOULD use these values when verified inputs (e.g., shipping address) are absent, and MAY ignore or down-rank them if inconsistent with higher-confidence signals (authenticated account, risk detection) or regulatory constraints (export controls). Eligibility and policy enforcement MUST occur at checkout time using binding transaction data. Context SHOULD be non-identifying and can be disclosed progressively—coarse signals early, finer resolution as the session progresses. Higher-resolution data (shipping address, billing address) supersedes context.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">관련성 판단과 현지화를 위한 잠정적 구매자 신호로, 권위 있는 데이터가 아닙니다. 검증된 입력(예: 배송 주소)이 없으면 비즈니스는 이 값을 사용해야 하며(SHOULD), 더 신뢰도 높은 신호(인증된 계정, 위험 탐지)나 규제 제약(수출 통제)과 맞지 않으면 무시하거나 우선순위를 낮출 수 있습니다(MAY). 자격 판단과 정책 적용은 반드시 체크아웃 시점에 구속력 있는 거래 데이터로 수행해야 합니다(MUST). 컨텍스트는 개인을 식별할 수 없어야 하며(SHOULD), 단계적으로 공개할 수 있습니다. 초기에는 대략적인 신호를, 세션이 진행되면서 더 세밀한 정보를 제공합니다. 더 세밀한 데이터(배송 주소, 청구 주소)가 컨텍스트보다 우선합니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">signals</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Environment data provided by the platform to support authorization and abuse prevention. Values MUST NOT be buyer-asserted claims — platforms provide signals based on direct observation or independently verifiable third-party attestations. All signal keys MUST use reverse-domain naming to ensure provenance and prevent collisions when multiple extensions contribute to the shared namespace.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">승인과 악용 방지를 돕기 위해 플랫폼이 제공하는 환경 데이터. 값은 구매자가 주장한 내용이어서는 안 됩니다(MUST NOT). 플랫폼은 직접 관찰했거나 독립적으로 검증 가능한 제3자 증명에 근거한 신호를 제공합니다. 여러 확장이 공유 네임스페이스에 값을 추가할 때 출처를 보장하고 충돌을 막기 위해, 모든 신호 키는 반드시 역도메인 이름을 사용해야 합니다(MUST).</td>
 </tr>
 <tr>
 <td style="text-align: left;">attribution</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Platform-emitted referral and conversion-event context — campaign identifiers, click IDs, source/medium markers, etc. The same parameters platforms communicate via URL query parameters in browser-based flows.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">플랫폼이 내보내는 추천 및 전환 이벤트 맥락: 캠페인 식별자, 클릭 ID, source/medium 마커 등. 브라우저 기반 흐름에서 플랫폼이 URL 쿼리 매개변수로 전달하는 것과 같은 매개변수입니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">filters</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Filter criteria to narrow search results. All specified filters combine with AND logic.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">검색 결과를 좁히는 필터 조건. 지정한 모든 필터는 AND 논리로 결합됩니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">pagination</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Pagination parameters for requests.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">요청의 페이지네이션 매개변수.</td>
 </tr>
 </tbody>
 </table>
@@ -3569,38 +3569,38 @@
 <tr>
 <td style="text-align: left;">ucp</td>
 <td style="text-align: left;">any</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">UCP metadata for catalog responses.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">카탈로그 응답용 UCP 메타데이터.</td>
 </tr>
 <tr>
 <td style="text-align: left;">products</td>
 <td style="text-align: left;">Array[object]</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Products matching the search criteria.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">검색 조건과 일치하는 상품.</td>
 </tr>
 <tr>
 <td style="text-align: left;">pagination</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Pagination information in responses.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">응답의 페이지네이션 정보.</td>
 </tr>
 <tr>
 <td style="text-align: left;">actions</td>
 <td style="text-align: left;">object</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Outstanding extension-defined Actions for this catalog search response.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 카탈로그 검색 응답에 대해 확장이 정의한 미해결 Action.</td>
 </tr>
 <tr>
 <td style="text-align: left;">messages</td>
 <td style="text-align: left;">Array[object]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Errors, warnings, or informational messages about the search results.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">검색 결과에 관한 오류, 경고, 정보 메시지.</td>
 </tr>
 <tr>
 <td style="text-align: left;">policies</td>
 <td style="text-align: left;">Array[object]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Policies (e.g., return/refund terms) that apply to the products in these search results. <code>applies_to</code> targets are relative to the response root; when absent or empty, refer to the URLs in <code>links[]</code>.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이 검색 결과의 상품에 적용되는 정책(예: 반품/환불 조건). <code>applies_to</code> 대상은 응답 루트를 기준으로 하며, 없거나 비어 있으면 <code>links[]</code>의 URL을 참조합니다.</td>
 </tr>
 </tbody>
 </table>
@@ -3631,14 +3631,14 @@
 <tr>
 <td style="text-align: left;">categories</td>
 <td style="text-align: left;">Array[string]</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Filter by product categories (OR logic — matches products in any listed categories). Values match against the value field in product category entries. Valid values can be discovered from the categories field in search results, merchant documentation, or standard taxonomies that businesses may align with.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">상품 카테고리로 필터링합니다(OR 논리 — 나열된 카테고리 중 하나라도 속한 상품과 일치). 값은 상품 카테고리 항목의 value 필드와 비교합니다. 유효한 값은 검색 결과의 categories 필드, 판매자 문서, 또는 비즈니스가 따를 수 있는 표준 분류 체계에서 찾을 수 있습니다.</td>
 </tr>
 <tr>
 <td style="text-align: left;">price</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#price-filter">Price Filter</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Price range filter denominated in context.currency. When context.currency matches the presentment currency, businesses apply the filter directly. When it differs, businesses SHOULD convert filter values to the presentment currency before applying; if conversion is not supported, businesses MAY ignore the filter and SHOULD indicate this via a message. When context.currency is absent, filter denomination is ambiguous and businesses MAY ignore it.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">context.currency 통화로 표시한 가격 범위 필터입니다. context.currency가 표시 통화와 같으면 비즈니스는 필터를 그대로 적용합니다. 다르면 비즈니스는 적용 전에 필터 값을 표시 통화로 변환해야 합니다(SHOULD). 변환을 지원하지 않으면 필터를 무시할 수 있으며(MAY), 이 사실을 메시지로 알려야 합니다(SHOULD). context.currency가 없으면 필터의 통화 단위가 모호하므로 비즈니스는 필터를 무시할 수 있습니다(MAY).</td>
 </tr>
 </tbody>
 </table>
@@ -3656,14 +3656,14 @@
 <tr>
 <td style="text-align: left;">min</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#amount">Amount</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Minimum price in ISO 4217 minor units.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">ISO 4217 최소 단위로 나타낸 최저 가격.</td>
 </tr>
 <tr>
 <td style="text-align: left;">max</td>
 <td style="text-align: left;"><a href="/ucp-ko/2026-08-25/2026-08-25/specification/reference/#amount">Amount</a></td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Maximum price in ISO 4217 minor units.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">ISO 4217 최소 단위로 나타낸 최고 가격.</td>
 </tr>
 </tbody>
 </table>
@@ -3679,7 +3679,7 @@
 있으며(<strong>MAY</strong>), 최대 페이지 크기를 적용하는 경우도 여기에 해당합니다. 플랫폼은 응답에
 담긴 결과 개수가 두 값 중 어느 하나와 같다고 가정해서는 안 됩니다(<strong>MUST NOT</strong>).</p>
 <h3 id="pagination-request">페이지네이션 요청<a class="headerlink" href="#pagination-request" title="Permanent link">&para;</a></h3>
-<p>Pagination parameters for requests.</p>
+<p>요청의 페이지네이션 매개변수.</p>
 <table>
 <thead>
 <tr>
@@ -3693,19 +3693,19 @@
 <tr>
 <td style="text-align: left;">cursor</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Opaque cursor from previous response.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">이전 응답에서 받은 불투명 커서.</td>
 </tr>
 <tr>
 <td style="text-align: left;">limit</td>
 <td style="text-align: left;">integer</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Requested page size, not a guaranteed result count. When omitted, the Business MUST apply a default page size. A default of 10 is RECOMMENDED, but the Business MAY choose another value. The Business MAY return fewer results than the requested or default page size, including when enforcing its maximum page size. A Platform MUST NOT assume that the response count equals either value.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">요청 페이지 크기로, 결과 개수를 보장하지 않습니다. 생략하면 비즈니스는 반드시 기본 페이지 크기를 적용해야 합니다(MUST). 기본값은 10을 권장하지만(RECOMMENDED), 비즈니스는 다른 값을 선택할 수 있습니다(MAY). 비즈니스는 최대 페이지 크기를 적용하는 경우를 포함해 요청한 크기나 기본 크기보다 적은 결과를 반환할 수 있습니다(MAY). 플랫폼은 응답 개수가 두 값 중 어느 것과 같다고 가정해서는 안 됩니다(MUST NOT).</td>
 </tr>
 </tbody>
 </table>
 <h3 id="pagination-response">페이지네이션 응답<a class="headerlink" href="#pagination-response" title="Permanent link">&para;</a></h3>
-<p>Pagination information in responses.</p>
+<p>응답의 페이지네이션 정보.</p>
 <table>
 <thead>
 <tr>
@@ -3719,20 +3719,20 @@
 <tr>
 <td style="text-align: left;">cursor</td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Cursor to fetch the next page of results. MUST be present when has_next_page is true.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">다음 결과 페이지를 가져오기 위한 커서. has_next_page가 true이면 반드시 있어야 합니다(MUST).</td>
 </tr>
 <tr>
 <td style="text-align: left;">has_next_page</td>
 <td style="text-align: left;">boolean</td>
-<td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Whether more results are available.</td>
+<td style="text-align: left;"><strong>필수</strong></td>
+<td style="text-align: left;">추가 결과가 있는지 여부.</td>
 </tr>
 <tr>
 <td style="text-align: left;">total_count</td>
 <td style="text-align: left;">integer</td>
-<td style="text-align: left;">Optional</td>
-<td style="text-align: left;">Total number of matching items, if available.</td>
+<td style="text-align: left;">선택</td>
+<td style="text-align: left;">사용 가능한 경우, 일치하는 항목의 총개수.</td>
 </tr>
 </tbody>
 </table>
